@@ -22,8 +22,6 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction func loginBTNPressed(_ sender: Any) {
-        print("now trying")
-        print(self.urltextfield.text?.lengthOfBytes(using: .utf8) as Any)
         if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
             (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
             (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
@@ -31,7 +29,7 @@ class LoginViewController: UIViewController {
             logInServer(url:self.urltextfield.text!,
                         username: self.usernametextfield.text!,
                         password: self.passwordtextfield.text!) {
-                            result in
+                            isSuccess,result in
                 
             }
         }

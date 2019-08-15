@@ -15,7 +15,7 @@ func getServerAddr() -> String {
     urlStr.append("/api")
     return urlStr
 }
-func logInServer(url:String, username:String, password:String, completion: @escaping (Any?) -> Void) {
+func logInServer(url:String, username:String, password:String, completion: @escaping (Bool,String) -> Void) {
     UserDefaults.standard.set(url, forKey: "serveraddr")
     var urlstr = getServerAddr()
     
@@ -23,12 +23,10 @@ func logInServer(url:String, username:String, password:String, completion: @esca
     urlstr.append("/user/login")
     
     let postdata = ["name":username, "password":password, "remmember":true] as [String : Any]
-    print("try login...")
     AF.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
         
         //save cookies from response
         saveCookies(response: response)
-        
         
         print(response.result)
         //completion(response.result)
