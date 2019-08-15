@@ -9,7 +9,6 @@
 import UIKit
 
 class LoginViewController: UIViewController {
-
     @IBOutlet weak var urltextfield: UITextField!
     @IBOutlet weak var usernametextfield: UITextField!
     @IBOutlet weak var passwordtextfield: UITextField!
@@ -30,7 +29,7 @@ class LoginViewController: UIViewController {
             }
         }
     }
-
+    
     /*
     // MARK: - Navigation
 

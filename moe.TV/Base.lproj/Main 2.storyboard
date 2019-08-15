@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Tabbar View Controller-->
+        <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
             <objects>
-                <tabBarController id="49e-Tb-3d3" customClass="TabbarViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController id="49e-Tb-3d3" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="120"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -63,7 +63,7 @@
         <!--Login View Controller-->
         <scene sceneID="2hS-un-Gzs">
             <objects>
-                <viewController storyboardIdentifier="LoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r3k-Iy-FC9" customClass="LoginViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="r3k-Iy-FC9" customClass="LoginViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Cdf-yg-X0C"/>
                         <viewControllerLayoutGuide type="bottom" id="wfO-wM-n2l"/>
@@ -91,15 +91,15 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wEe-Oa-fAg">
                                 <rect key="frame" x="790" y="731" width="340" height="86"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="Save &amp; Login in"/>
+                                <state key="normal" title="Save &amp; Login"/>
                                 <connections>
-                                    <action selector="loginBTNPressed:" destination="r3k-Iy-FC9" eventType="touchUpInside" id="MOK-8M-h4U"/>
+                                    <action selector="loginBTNPressed:" destination="r3k-Iy-FC9" eventType="primaryActionTriggered" id="ytl-P2-n7f"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Login In  Your Albireo Services" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i5h-xv-IOF">
@@ -113,20 +113,20 @@
                         <viewLayoutGuide key="safeArea" id="aAq-mO-OFk"/>
                     </view>
                     <connections>
-                        <outlet property="loginbutton" destination="wEe-Oa-fAg" id="PPv-uX-t3i"/>
-                        <outlet property="passwordtextfield" destination="KoI-C9-nZk" id="hoe-qL-eJa"/>
-                        <outlet property="urltextfield" destination="TaZ-wU-eM6" id="Z7T-4i-61n"/>
-                        <outlet property="usernametextfield" destination="okb-tE-Bpe" id="F3c-3P-cBk"/>
+                        <outlet property="loginbutton" destination="wEe-Oa-fAg" id="aUy-dd-dqJ"/>
+                        <outlet property="passwordtextfield" destination="KoI-C9-nZk" id="xES-io-taX"/>
+                        <outlet property="urltextfield" destination="TaZ-wU-eM6" id="kLW-oO-Qv5"/>
+                        <outlet property="usernametextfield" destination="okb-tE-Bpe" id="sMD-QX-3eE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pvs-un-qa1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1138" y="-466"/>
         </scene>
-        <!--Bangumi Detail View Controller-->
+        <!--View Controller-->
         <scene sceneID="mhT-7y-ySm">
             <objects>
-                <viewController id="pAJ-vZ-xXW" customClass="BangumiDetailViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="pAJ-vZ-xXW" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8KR-EL-1iZ"/>
                         <viewControllerLayoutGuide type="bottom" id="v0e-8x-Wj4"/>
@@ -139,12 +139,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="txN-x7-szD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5905" y="360"/>
+            <point key="canvasLocation" x="5905" y="151"/>
         </scene>
         <!--Root View Controller-->
         <scene sceneID="L1y-ek-MOU">
             <objects>
-                <tableViewController clearsSelectionOnViewWillAppear="NO" id="iag-b5-2OM" customClass="MyBangumiListViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController clearsSelectionOnViewWillAppear="NO" id="iag-b5-2OM" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" sectionHeaderHeight="66" sectionFooterHeight="66" id="R82-lX-ala">
                         <rect key="frame" x="0.0" y="0.0" width="634" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -188,7 +188,7 @@
         <!--My Bangumi-->
         <scene sceneID="2pD-9N-qSh">
             <objects>
-                <splitViewController id="u7D-EJ-SFQ" customClass="SplitViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController id="u7D-EJ-SFQ" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="My Bangumi" id="9NU-7B-m6T"/>
                     <connections>
                         <segue destination="9Kk-lk-dhr" kind="relationship" relationship="masterViewController" id="Xl9-tY-rpc"/>
@@ -199,92 +199,5 @@
             </objects>
             <point key="canvasLocation" x="3766" y="-423"/>
         </scene>
-        <!--Search View Controller-->
-        <scene sceneID="2T3-Br-F2k">
-            <objects>
-                <viewController storyboardIdentifier="SearchViewController" id="ZLj-Fy-p7v" customClass="SearchViewController" customModule="UIKitCatalog" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="9fd-jm-dPQ"/>
-                        <viewControllerLayoutGuide type="bottom" id="W2D-4c-eyM"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="ZmB-qY-jRy">
-                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yIt-Il-MAR">
-                                <rect key="frame" x="723" y="80" width="474" height="86"/>
-                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="Show Search Controller"/>
-                                <connections>
-                                    <action selector="showSearchController:" destination="ZLj-Fy-p7v" eventType="primaryActionTriggered" id="T2Y-mo-lqV"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="yIt-Il-MAR" firstAttribute="centerX" secondItem="ZmB-qY-jRy" secondAttribute="centerX" id="p1b-Z0-aOa"/>
-                            <constraint firstItem="yIt-Il-MAR" firstAttribute="top" secondItem="9fd-jm-dPQ" secondAttribute="bottom" constant="20" id="t3n-1h-DOC"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="cDT-1e-wwg"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="dsc-Vc-F78"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="S6R-ET-XFY" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="424" y="5526"/>
-        </scene>
-        <!--Search Results View Controller-->
-        <scene sceneID="Lym-0U-RwF">
-            <objects>
-                <collectionViewController storyboardIdentifier="SearchResultsViewController" id="u83-Sr-Tjf" customClass="SearchResultsViewController" customModule="UIKitCatalog" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="syO-dI-yXb">
-                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="40" minimumInteritemSpacing="40" id="Gbh-2I-dGI">
-                            <size key="itemSize" width="300" height="370"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="60" minY="60" maxX="60" maxY="60"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DataItemCell" id="8Hl-YO-VV2" customClass="DataItemCollectionViewCell" customModule="UIKitCatalog" customModuleProvider="target">
-                                <rect key="frame" x="60" y="60" width="300" height="370"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="370"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView opaque="NO" multipleTouchEnabled="YES" contentMode="scaleAspectFill" fixedFrame="YES" image="Iceland 1.jpg" adjustsImageWhenAncestorFocused="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Djy-3d-Lyg">
-                                            <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cLG-2i-wKR">
-                                            <rect key="frame" x="0.0" y="335" width="300" height="35"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                </view>
-                                <connections>
-                                    <outlet property="imageView" destination="Djy-3d-Lyg" id="gpI-gA-1yD"/>
-                                    <outlet property="label" destination="cLG-2i-wKR" id="6Q2-YB-cws"/>
-                                </connections>
-                            </collectionViewCell>
-                        </cells>
-                        <connections>
-                            <outlet property="dataSource" destination="u83-Sr-Tjf" id="ZdA-Jj-RJD"/>
-                            <outlet property="delegate" destination="u83-Sr-Tjf" id="aMS-ds-eiH"/>
-                        </connections>
-                    </collectionView>
-                    <navigationItem key="navigationItem" id="SzA-2N-LRb"/>
-                </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="QNb-Bb-VbX" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2556" y="5526"/>
-        </scene>
     </scenes>
-    <resources>
-        <image name="Iceland 1.jpg" width="16" height="16"/>
-    </resources>
 </document>

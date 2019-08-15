@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         UserDefaults.standard.register(defaults: ["savedCookies" : []])
+        UserDefaults.standard.register(defaults: ["loggedin" : false])
         UserDefaults.standard.register(defaults: ["serveraddr" : ""])
         
         if let tabController = window?.rootViewController as? UITabBarController {
@@ -56,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      */
     func packagedSearchController() -> UIViewController {
         // Load a `SearchResultsViewController` from its storyboard.
-        let storyboard = UIStoryboard(name: "ViewControllerSamples", bundle: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let searchResultsController = storyboard.instantiateViewController(withIdentifier: SearchResultsViewController.storyboardIdentifier) as? SearchResultsViewController else {
             fatalError("Unable to instatiate a SearchResultsViewController from the storyboard.")
         }
