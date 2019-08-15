@@ -10,16 +10,20 @@ import Alamofire
 import Foundation
 
 func getServerAddr() -> String {
-    var urlStr = UserDefaults.standard.string(forKey: "serveraddr")!
+    var urlStr = "https://"
+    urlStr.append(UserDefaults.standard.string(forKey: "serveraddr")!)
     urlStr.append("/api")
     return urlStr
 }
-func logInServer(username:String, password:String, completion: @escaping (Any?) -> Void) {
+func logInServer(url:String, username:String, password:String, completion: @escaping (Any?) -> Void) {
+    UserDefaults.standard.set(url, forKey: "serveraddr")
     var urlstr = getServerAddr()
+    
+    
     urlstr.append("/user/login")
     
     let postdata = ["name":username, "password":password, "remmember":true] as [String : Any]
-    
+    print("try login...")
     AF.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
         
         //save cookies from response
