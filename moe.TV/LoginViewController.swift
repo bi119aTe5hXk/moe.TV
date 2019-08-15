@@ -31,8 +31,10 @@ class LoginViewController: UIViewController {
                         password: self.passwordtextfield.text!) {
                             isSuccess,result in
                             
-                            if isSuccess == true{
+                            if isSuccess{
                                 self.dismiss(animated: true, completion: nil)
+                            }else{
+                                //TODO
                             }
                             
                 

@@ -33,7 +33,8 @@ func logInServer(url:String, username:String, password:String, completion: @esca
             if let JSON = value as? [String: Any] {
                 let status = JSON["msg"] as! String
                 UserDefaults.standard.set(true, forKey: "loggedin")
-                print(status)
+                //print(status)
+                completion(true,status)
             }
             break
             
@@ -50,30 +51,61 @@ func logInServer(url:String, username:String, password:String, completion: @esca
 }
 
 
-func getMyBangumiList(completion: @escaping (Any?) -> Void) {
+func getMyBangumiList(completion: @escaping (Bool,Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/home/my_bangumi?status=3")
     loadCookies()
     AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         
-        print(response.result)
-        //completion(response.result)
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [String: Any] {
+                let data = JSON["data"] as Any
+                //print(data)
+                completion(true,data)
+            }
+            break
+            
+        case .failure(let error):
+            // error handling
+            UserDefaults.standard.set(false, forKey: "loggedin")
+            
+            completion(false, error.localizedDescription)
+         
+            break
+        }
     }
     
 }
 
-func getOnAirList(completion: @escaping (Any?) -> Void) {
+func getOnAirList(completion: @escaping (Bool,Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/home/on_air")
     loadCookies()
     AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         
-        print(response.result)
-        //completion(response.result)
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [String: Any] {
+                let data = JSON["data"] as Any
+                //print(data)
+                completion(true,data)
+            }
+            break
+            
+        case .failure(let error):
+            // error handling
+            UserDefaults.standard.set(false, forKey: "loggedin")
+            completion(false, error.localizedDescription)
+         
+            break
+        }
     }
 }
 
-func getAllBangumiList(page:Int, name:String, completion: @escaping (Any?) -> Void) {
+func getAllBangumiList(page:Int, name:String, completion: @escaping (Bool,Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/home/bangumi?page=")
     urlstr.append(String(page))
@@ -84,12 +116,27 @@ func getAllBangumiList(page:Int, name:String, completion: @escaping (Any?) -> Vo
     
     AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         
-        print(response.result)
-        //completion(response.result)
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [String: Any] {
+                let data = JSON["data"] as Any
+                //print(data)
+                completion(true,data)
+            }
+            break
+            
+        case .failure(let error):
+            // error handling
+            UserDefaults.standard.set(false, forKey: "loggedin")
+            completion(false, error.localizedDescription)
+         
+            break
+        }
     }
     
 }
-func getBangumiDetail(id:String, completion: @escaping (Any?) -> Void) {
+func getBangumiDetail(id:String, completion: @escaping (Bool,Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/home/bangumi/")
     urlstr.append(id)
@@ -97,11 +144,26 @@ func getBangumiDetail(id:String, completion: @escaping (Any?) -> Void) {
     
     AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         
-        print(response.result)
-        //completion(response.result)
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [String: Any] {
+                let data = JSON["data"] as Any
+                //print(data)
+                completion(true,data)
+            }
+            break
+            
+        case .failure(let error):
+            // error handling
+            UserDefaults.standard.set(false, forKey: "loggedin")
+            completion(false, error.localizedDescription)
+         
+            break
+        }
     }
 }
-func getEpisodeDetail(ep_id:String,completion: @escaping (Any?) -> Void) {
+func getEpisodeDetail(ep_id:String,completion: @escaping (Bool,Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/home/episode/")
     urlstr.append(ep_id)
@@ -109,8 +171,21 @@ func getEpisodeDetail(ep_id:String,completion: @escaping (Any?) -> Void) {
     
     AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         
-        print(response.result)
-        //completion(response.result)
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [String: Any] {
+                //print(JSON)
+                completion(true,JSON)
+            }
+            break
+            
+        case .failure(let error):
+            // error handling
+            UserDefaults.standard.set(false, forKey: "loggedin")
+            completion(false, error.localizedDescription)
+            break
+        }
     }
 }
 
