@@ -9,14 +9,27 @@
 import UIKit
 
 class LoginViewController: UIViewController {
-
+    @IBOutlet weak var urltextfield: UITextField!
+    @IBOutlet weak var usernametextfield: UITextField!
+    @IBOutlet weak var passwordtextfield: UITextField!
+    @IBOutlet weak var loginbutton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
 
-
+    @IBAction func loginBTNPressed(_ sender: Any) {
+        if urltextfield.text?.lengthOfBytes(using: .utf8) != 0 &&
+            usernametextfield.text?.lengthOfBytes(using: .utf8) != 0 &&
+            passwordtextfield.text?.lengthOfBytes(using: .utf8) != 0{
+            logInServer(username: usernametextfield.text!, password: passwordtextfield.text!) { result in
+                
+            }
+        }
+    }
+    
     /*
     // MARK: - Navigation
 

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="14490.70" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
-    <device id="appleTV" orientation="landscape">
-        <adaptation id="light"/>
-    </device>
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="14854.2" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+    <device id="appleTV" appearance="light"/>
     <dependencies>
         <deployment identifier="tvOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14806.4"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -99,7 +97,10 @@
                                 <rect key="frame" x="790" y="731" width="340" height="86"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="Save &amp; Login in"/>
+                                <state key="normal" title="Save &amp; Login"/>
+                                <connections>
+                                    <action selector="loginBTNPressed:" destination="r3k-Iy-FC9" eventType="primaryActionTriggered" id="ytl-P2-n7f"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Login In  Your Albireo Services" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i5h-xv-IOF">
                                 <rect key="frame" x="702" y="149" width="516" height="46"/>
@@ -111,6 +112,12 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aAq-mO-OFk"/>
                     </view>
+                    <connections>
+                        <outlet property="loginbutton" destination="wEe-Oa-fAg" id="aUy-dd-dqJ"/>
+                        <outlet property="passwordtextfield" destination="KoI-C9-nZk" id="xES-io-taX"/>
+                        <outlet property="urltextfield" destination="TaZ-wU-eM6" id="kLW-oO-Qv5"/>
+                        <outlet property="usernametextfield" destination="okb-tE-Bpe" id="sMD-QX-3eE"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pvs-un-qa1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -125,7 +132,7 @@
                         <viewControllerLayoutGuide type="bottom" id="v0e-8x-Wj4"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="y93-3k-YhC">
-                        <rect key="frame" x="0.0" y="0.0" width="1285" height="1080"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1285.5" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="NF9-K8-BzW"/>
                     </view>
