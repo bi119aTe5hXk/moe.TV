@@ -1,5 +1,5 @@
 //
-//  MyBangumiListViewController.swift
+//  OnAirListViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2019/08/16.
@@ -10,8 +10,8 @@ import UIKit
 
 private let reuseIdentifier = "Cell"
 
-class MyBangumiListViewController: UICollectionViewController,UICollectionViewDelegateFlowLayout {
-    var bgmList:Array<Any> = []
+class OnAirListViewController: UICollectionViewController {
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -22,16 +22,6 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
-        
-        getMyBangumiList {
-            (isSuccess,result) in
-            print(result as Any)
-            
-            if isSuccess {
-                self.bgmList = result as! Array<Any>
-                self.collectionView.reloadData()
-            }
-        }
     }
 
     /*
@@ -48,49 +38,21 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 0
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return self.bgmList.count
+        return 0
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BangumiCell", for: indexPath) as! BangumiCell
-        guard let rowarr = bgmList[indexPath.row] as? Dictionary<String, Any> else{
-            return cell
-        }
-        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+    
         // Configure the cell
-        cell.titleTextField?.text = (rowarr["name"] as! String)
-        //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
-        if let imgurlstr = rowarr["image"] {
-        if (imgurlstr as! String).lengthOfBytes(using: .utf8) <= 0{
-                           //no img
-            cell.iconView?.image = nil
-                       }else{
-            cell.iconView?.image = nil
-                           DispatchQueue.global().async {
-                               do {
-                                let imgdata = try Data.init(contentsOf: URL(string: imgurlstr as! String)!)
-                                   let image = UIImage.init(data: imgdata)
-                                   
-                                   DispatchQueue.main.async {
-                                    cell.iconView?.image = image
-                                   }
-                               } catch { }
-                           }
-               }
-               
-        }
-        
     
         return cell
-    }
-     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 500, height: 500)
     }
 
     // MARK: UICollectionViewDelegate

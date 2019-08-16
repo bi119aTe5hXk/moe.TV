@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		47433AE12306C1AC007794E1 /* OnAirListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47433AE02306C1AC007794E1 /* OnAirListViewController.swift */; };
 		4775A9EE2305C30400B84382 /* BangumiDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */; };
 		4775A9F02305C5C400B84382 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9EF2305C5C400B84382 /* SplitViewController.swift */; };
 		4775A9F22305C60300B84382 /* TabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F12305C60300B84382 /* TabbarViewController.swift */; };
 		4775A9F62306B3A500B84382 /* MyBangumiListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */; };
+		4775A9FA2306BA1700B84382 /* BangumiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F92306BA1700B84382 /* BangumiCell.swift */; };
 		477749102305AAC6002E2D25 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4777490F2305AAC6002E2D25 /* Alamofire */; };
 		863CF9F8230594F800CA958F /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
 		86D97C912301CF6B00CF5F03 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97C902301CF6B00CF5F03 /* AppDelegate.swift */; };
@@ -40,10 +42,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		47433AE02306C1AC007794E1 /* OnAirListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnAirListViewController.swift; sourceTree = "<group>"; };
 		4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailViewController.swift; sourceTree = "<group>"; };
 		4775A9EF2305C5C400B84382 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		4775A9F12305C60300B84382 /* TabbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarViewController.swift; sourceTree = "<group>"; };
 		4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBangumiListViewController.swift; sourceTree = "<group>"; };
+		4775A9F92306BA1700B84382 /* BangumiCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BangumiCell.swift; sourceTree = "<group>"; };
 		863CF9F7230594F800CA958F /* ServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHandler.swift; sourceTree = "<group>"; };
 		86D97C8D2301CF6B00CF5F03 /* moe.TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = moe.TV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		86D97C902301CF6B00CF5F03 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -114,7 +118,9 @@
 				86D97CBF2301D5F900CF5F03 /* LoginViewController.swift */,
 				4775A9EF2305C5C400B84382 /* SplitViewController.swift */,
 				4775A9F12305C60300B84382 /* TabbarViewController.swift */,
+				47433AE02306C1AC007794E1 /* OnAirListViewController.swift */,
 				4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */,
+				4775A9F92306BA1700B84382 /* BangumiCell.swift */,
 				4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */,
 				86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */,
 				86D97C962301CF6B00CF5F03 /* Main.storyboard */,
@@ -278,7 +284,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4775A9FA2306BA1700B84382 /* BangumiCell.swift in Sources */,
 				4775A9F22305C60300B84382 /* TabbarViewController.swift in Sources */,
+				47433AE12306C1AC007794E1 /* OnAirListViewController.swift in Sources */,
 				4775A9F02305C5C400B84382 /* SplitViewController.swift in Sources */,
 				86D97CC02301D5F900CF5F03 /* LoginViewController.swift in Sources */,
 				86D97CBE2301CFF800CF5F03 /* SearchResultsViewController.swift in Sources */,
