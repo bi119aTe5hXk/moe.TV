@@ -5,6 +5,7 @@
         <deployment identifier="tvOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14806.4"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,8 +19,8 @@
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
-                        <segue destination="u7D-EJ-SFQ" kind="relationship" relationship="viewControllers" id="S3z-7K-r5l"/>
                         <segue destination="7g1-5g-a49" kind="relationship" relationship="viewControllers" id="Nl9-y2-YKs"/>
+                        <segue destination="G4M-8Y-3eR" kind="relationship" relationship="viewControllers" id="5wv-Rw-QFd"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
@@ -54,7 +55,7 @@
                             <outlet property="delegate" destination="7g1-5g-a49" id="H15-2k-ihR"/>
                         </connections>
                     </collectionView>
-                    <tabBarItem key="tabBarItem" title="On Air" id="Qae-aD-VZR"/>
+                    <tabBarItem key="tabBarItem" title="On Air" image="calendar" catalog="system" id="Qae-aD-VZR"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GR1-Mo-yPW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -123,97 +124,55 @@
             </objects>
             <point key="canvasLocation" x="1138" y="-466"/>
         </scene>
-        <!--Bangumi Detail View Controller-->
-        <scene sceneID="mhT-7y-ySm">
+        <!--MyBangumi-->
+        <scene sceneID="kpK-gu-3kX">
             <objects>
-                <viewController id="pAJ-vZ-xXW" customClass="BangumiDetailViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="8KR-EL-1iZ"/>
-                        <viewControllerLayoutGuide type="bottom" id="v0e-8x-Wj4"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="y93-3k-YhC">
-                        <rect key="frame" x="0.0" y="0.0" width="1285.5" height="1080"/>
+                <collectionViewController storyboardIdentifier="MyBangumiListViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="G4M-8Y-3eR" customClass="MyBangumiListViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="SFz-zT-Pka">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="NF9-K8-BzW"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="txN-x7-szD" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5905" y="360"/>
-        </scene>
-        <!--Root View Controller-->
-        <scene sceneID="L1y-ek-MOU">
-            <objects>
-                <tableViewController clearsSelectionOnViewWillAppear="NO" id="iag-b5-2OM" customClass="MyBangumiListViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" sectionHeaderHeight="66" sectionFooterHeight="66" id="R82-lX-ala">
-                        <rect key="frame" x="0.0" y="0.0" width="634" height="1080"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="t3z-5v-2IL" detailTextLabel="i5A-Z7-MSl" rowHeight="100" style="IBUITableViewCellStyleSubtitle" id="X23-4q-Njg">
-                                <rect key="frame" x="90" y="66" width="499" height="100"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="X23-4q-Njg" id="xhe-RL-uSC">
-                                    <rect key="frame" x="0.0" y="0.0" width="499" height="100"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="pCY-4z-H9B">
+                            <size key="itemSize" width="469" height="247"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="BangumiCell" id="kEN-za-2AF">
+                                <rect key="frame" x="0.0" y="0.0" width="469" height="258"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
+                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="yLf-BB-KXW">
+                                    <rect key="frame" x="0.0" y="0.0" width="469" height="258"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="t3z-5v-2IL">
-                                            <rect key="frame" x="20" y="4" width="71" height="46"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="38"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="i5A-Z7-MSl">
-                                            <rect key="frame" x="20" y="50" width="125" height="46"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="38"/>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zHp-nW-eJA">
+                                            <rect key="frame" x="0.0" y="0.0" width="469" height="247"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zMP-tj-RWC">
+                                            <rect key="frame" x="0.0" y="165" width="469" height="74"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
+                                </collectionViewCellContentView>
+                            </collectionViewCell>
+                        </cells>
                         <connections>
-                            <outlet property="dataSource" destination="iag-b5-2OM" id="eng-Sz-l1J"/>
-                            <outlet property="delegate" destination="iag-b5-2OM" id="A2n-jf-6Ql"/>
+                            <outlet property="dataSource" destination="G4M-8Y-3eR" id="Dj7-ed-Van"/>
+                            <outlet property="delegate" destination="G4M-8Y-3eR" id="PHE-VP-JqQ"/>
                         </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="AxU-RU-FeD"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="p0b-ei-Eah" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="8046" y="-1000"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="dTl-xe-xOB">
-            <objects>
-                <navigationController id="9Kk-lk-dhr" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="2ht-SE-FBg">
-                        <rect key="frame" x="0.0" y="0.0" width="634" height="145"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
+                    </collectionView>
+                    <tabBarItem key="tabBarItem" title="MyBangumi" image="suit.heart" catalog="system" id="89f-D7-RjT"/>
                     <connections>
-                        <segue destination="iag-b5-2OM" kind="relationship" relationship="rootViewController" id="c4Q-Jo-Zv9"/>
+                        <outlet property="tabBarObservedScrollView" destination="SFz-zT-Pka" id="F8w-l7-C9R"/>
                     </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="BXb-RV-N2N" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KFK-4E-u7O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5905" y="-1000"/>
-        </scene>
-        <!--My Bangumi-->
-        <scene sceneID="2pD-9N-qSh">
-            <objects>
-                <splitViewController id="u7D-EJ-SFQ" customClass="SplitViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="My Bangumi" id="9NU-7B-m6T"/>
-                    <connections>
-                        <segue destination="9Kk-lk-dhr" kind="relationship" relationship="masterViewController" id="Xl9-tY-rpc"/>
-                        <segue destination="pAJ-vZ-xXW" kind="relationship" relationship="detailViewController" id="rqe-ob-K8Q"/>
-                    </connections>
-                </splitViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="yCX-Mz-A9k" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3766" y="-423"/>
+            <point key="canvasLocation" x="3348" y="-838"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="2T3-Br-F2k">
@@ -302,5 +261,7 @@
     </scenes>
     <resources>
         <image name="Iceland 1.jpg" width="16" height="16"/>
+        <image name="calendar" catalog="system" width="32" height="27"/>
+        <image name="suit.heart" catalog="system" width="32" height="28"/>
     </resources>
 </document>
