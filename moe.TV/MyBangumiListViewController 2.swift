@@ -23,18 +23,15 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
 
         // Do any additional setup after loading the view.
         
-        if self.bgmList.count <= 0 {
-            getMyBangumiList {
-                (isSuccess,result) in
-                //print(result as Any)
-                
-                if isSuccess {
-                    self.bgmList = result as! Array<Any>
-                    self.collectionView.reloadData()
-                }
+        getMyBangumiList {
+            (isSuccess,result) in
+            print(result as Any)
+            
+            if isSuccess {
+                self.bgmList = result as! Array<Any>
+                self.collectionView.reloadData()
             }
         }
-        
     }
 
     /*

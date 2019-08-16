@@ -1,5 +1,5 @@
 //
-//  MyBangumiListViewController.swift
+//  OnAirListViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2019/08/16.
@@ -10,7 +10,7 @@ import UIKit
 
 private let reuseIdentifier = "Cell"
 
-class MyBangumiListViewController: UICollectionViewController,UICollectionViewDelegateFlowLayout {
+class OnAirListViewController: UICollectionViewController {
     var bgmList:Array<Any> = []
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,19 +22,12 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
-        
-        if self.bgmList.count <= 0 {
-            getMyBangumiList {
-                (isSuccess,result) in
-                //print(result as Any)
-                
-                if isSuccess {
-                    self.bgmList = result as! Array<Any>
-                    self.collectionView.reloadData()
-                }
+        getOnAirList { (isSuccess, result) in
+            if isSuccess{
+                self.bgmList = result as! Array<Any>
+                self.collectionView.reloadData()
             }
         }
-        
     }
 
     /*
@@ -87,12 +80,7 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
                            }
                }
         }
-        
-    
         return cell
-    }
-     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 500, height: 500)
     }
 
     // MARK: UICollectionViewDelegate

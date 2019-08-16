@@ -11,7 +11,7 @@ import UIKit
 private let reuseIdentifier = "Cell"
 
 class OnAirListViewController: UICollectionViewController {
-
+    var bgmList:Array<Any> = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -22,6 +22,16 @@ class OnAirListViewController: UICollectionViewController {
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
+        if self.bgmList.count <= 0 {
+            getOnAirList { (isSuccess, result) in
+                if isSuccess{
+                    print(result as Any)
+                    self.bgmList = result as! Array<Any>
+                    self.collectionView.reloadData()
+                }
+            }
+        }
+        
     }
 
     /*
@@ -38,20 +48,42 @@ class OnAirListViewController: UICollectionViewController {
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return 0
+        return self.bgmList.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-    
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BangumiCell", for: indexPath) as! BangumiCell
+        guard let rowarr = bgmList[indexPath.row] as? Dictionary<String, Any> else{
+            return cell
+        }
+        
         // Configure the cell
-    
+        cell.titleTextField?.text = (rowarr["name"] as! String)
+        //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
+        if let imgurlstr = rowarr["image"] {
+        if (imgurlstr as! String).lengthOfBytes(using: .utf8) <= 0{
+                           //no img
+            cell.iconView?.image = nil
+                       }else{
+            cell.iconView?.image = nil
+                           DispatchQueue.global().async {
+                               do {
+                                let imgdata = try Data.init(contentsOf: URL(string: imgurlstr as! String)!)
+                                   let image = UIImage.init(data: imgdata)
+                                   
+                                   DispatchQueue.main.async {
+                                    cell.iconView?.image = image
+                                   }
+                               } catch { }
+                           }
+               }
+        }
         return cell
     }
 
