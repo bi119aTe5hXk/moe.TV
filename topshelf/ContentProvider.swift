@@ -24,11 +24,9 @@ class ContentProvider: TVTopShelfContentProvider {
                 item.imageShape = .poster
                 item.setImageURL(URL(string: dic["image"] as! String), for: .screenScale2x)
                 items.append(item)
-                
             }
-            let itemCollection = TVTopShelfItemCollection(items: items)
-            
-            let content = TVTopShelfSectionedContent(sections: itemCollection)
+            let itemConllections = [TVTopShelfItemCollection(items: items)]
+            let content = TVTopShelfSectionedContent(sections: itemConllections as! [TVTopShelfItemCollection<TVTopShelfSectionedItem>])
             completionHandler(content);
         }else{
             completionHandler(nil);
