@@ -9,6 +9,7 @@
 import UIKit
 
 class BangumiDetailViewController: UIViewController {
+    var bangumiUUID = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()

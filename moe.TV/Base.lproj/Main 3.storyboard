@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="14854.2" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <deployment identifier="tvOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14806.4"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Tabbar View Controller-->
+        <scene sceneID="yl2-sM-qoP">
+            <objects>
+                <tabBarController id="49e-Tb-3d3" customClass="TabbarViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="120"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="G4M-8Y-3eR" kind="relationship" relationship="viewControllers" id="5wv-Rw-QFd"/>
+                        <segue destination="7g1-5g-a49" kind="relationship" relationship="viewControllers" id="iO1-wt-sDh"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1138" y="962"/>
+        </scene>
+        <!--On Air-->
+        <scene sceneID="bhn-ub-Yq5">
+            <objects>
+                <collectionViewController id="7g1-5g-a49" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="DgV-kn-5M4">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="I6o-AA-TYo">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" id="GhJ-Bb-Fj1">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="7g1-5g-a49" id="y5Y-oj-UOR"/>
+                            <outlet property="delegate" destination="7g1-5g-a49" id="H15-2k-ihR"/>
+                        </connections>
+                    </collectionView>
+                    <tabBarItem key="tabBarItem" title="On Air" image="calendar" catalog="system" id="Qae-aD-VZR"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GR1-Mo-yPW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3424" y="1533"/>
+        </scene>
+        <!--Login View Controller-->
+        <scene sceneID="2hS-un-Gzs">
+            <objects>
+                <viewController storyboardIdentifier="LoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r3k-Iy-FC9" customClass="LoginViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Cdf-yg-X0C"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfO-wM-n2l"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="L8Q-3u-W9Y">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Server URL" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TaZ-wU-eM6">
+                                <rect key="frame" x="673" y="300" width="575" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="okb-tE-Bpe">
+                                <rect key="frame" x="673" y="421" width="575" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Passowrd" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KoI-C9-nZk">
+                                <rect key="frame" x="673" y="565" width="575" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wEe-Oa-fAg">
+                                <rect key="frame" x="790" y="731" width="340" height="86"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Save &amp; Login in"/>
+                                <connections>
+                                    <action selector="loginBTNPressed:" destination="r3k-Iy-FC9" eventType="primaryActionTriggered" id="TK8-Un-F2q"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Login In  Your Albireo Services" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i5h-xv-IOF">
+                                <rect key="frame" x="702" y="149" width="516" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="aAq-mO-OFk"/>
+                    </view>
+                    <connections>
+                        <outlet property="loginbutton" destination="wEe-Oa-fAg" id="PPv-uX-t3i"/>
+                        <outlet property="passwordtextfield" destination="KoI-C9-nZk" id="hoe-qL-eJa"/>
+                        <outlet property="urltextfield" destination="TaZ-wU-eM6" id="Z7T-4i-61n"/>
+                        <outlet property="usernametextfield" destination="okb-tE-Bpe" id="F3c-3P-cBk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pvs-un-qa1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1138" y="-466"/>
+        </scene>
+        <!--MyBangumi-->
+        <scene sceneID="kpK-gu-3kX">
+            <objects>
+                <collectionViewController storyboardIdentifier="MyBangumiListViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="G4M-8Y-3eR" customClass="MyBangumiListViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="SFz-zT-Pka">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="15" minimumInteritemSpacing="15" id="pCY-4z-H9B">
+                            <size key="itemSize" width="502" height="505"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="50" minY="50" maxX="50" maxY="50"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BangumiCell" reuseIdentifier="BangumiCell" id="kEN-za-2AF" customClass="BangumiCell" customModule="moe_TV" customModuleProvider="target">
+                                <rect key="frame" x="50" y="50" width="502" height="505"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="502" height="505"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView opaque="NO" multipleTouchEnabled="YES" tag="2" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" adjustsImageWhenAncestorFocused="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zHp-nW-eJA">
+                                            <rect key="frame" x="0.0" y="0.0" width="502" height="388"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zMP-tj-RWC">
+                                            <rect key="frame" x="1" y="434" width="499" height="71"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                            <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </view>
+                                <connections>
+                                    <outlet property="iconView" destination="zHp-nW-eJA" id="y7e-aO-H1s"/>
+                                    <outlet property="titleTextField" destination="zMP-tj-RWC" id="txU-I4-awT"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="G4M-8Y-3eR" id="Dj7-ed-Van"/>
+                            <outlet property="delegate" destination="G4M-8Y-3eR" id="PHE-VP-JqQ"/>
+                        </connections>
+                    </collectionView>
+                    <tabBarItem key="tabBarItem" title="MyBangumi" image="suit.heart" catalog="system" id="89f-D7-RjT"/>
+                    <connections>
+                        <outlet property="tabBarObservedScrollView" destination="SFz-zT-Pka" id="F8w-l7-C9R"/>
+                    </connections>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KFK-4E-u7O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3452" y="19"/>
+        </scene>
+        <!--Detail View Controller-->
+        <scene sceneID="cyq-2v-9CW">
+            <objects>
+                <viewController storyboardIdentifier="DetailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uzW-vX-ob7" customClass="DetailViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="v4s-7f-0Vc"/>
+                        <viewControllerLayoutGuide type="bottom" id="m15-Bl-jcI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="l2q-FF-Xcq">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="fle-vV-TqE"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KXd-5P-R6J" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5661" y="19"/>
+        </scene>
+        <!--Search View Controller-->
+        <scene sceneID="2T3-Br-F2k">
+            <objects>
+                <viewController storyboardIdentifier="SearchViewController" id="ZLj-Fy-p7v" customClass="SearchViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9fd-jm-dPQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="W2D-4c-eyM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ZmB-qY-jRy">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yIt-Il-MAR">
+                                <rect key="frame" x="723" y="80" width="474" height="86"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Show Search Controller"/>
+                                <connections>
+                                    <action selector="showSearchController:" destination="ZLj-Fy-p7v" eventType="primaryActionTriggered" id="T2Y-mo-lqV"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="yIt-Il-MAR" firstAttribute="centerX" secondItem="ZmB-qY-jRy" secondAttribute="centerX" id="p1b-Z0-aOa"/>
+                            <constraint firstItem="yIt-Il-MAR" firstAttribute="top" secondItem="9fd-jm-dPQ" secondAttribute="bottom" constant="20" id="t3n-1h-DOC"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cDT-1e-wwg"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="dsc-Vc-F78"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="S6R-ET-XFY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="424" y="5526"/>
+        </scene>
+        <!--Search Results View Controller-->
+        <scene sceneID="Lym-0U-RwF">
+            <objects>
+                <collectionViewController storyboardIdentifier="SearchResultsViewController" id="u83-Sr-Tjf" customClass="SearchResultsViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="syO-dI-yXb">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="40" minimumInteritemSpacing="40" id="Gbh-2I-dGI">
+                            <size key="itemSize" width="300" height="370"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="60" minY="60" maxX="60" maxY="60"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DataItemCell" id="8Hl-YO-VV2" customClass="DataItemCollectionViewCell" customModule="moe_TV" customModuleProvider="target">
+                                <rect key="frame" x="60" y="60" width="300" height="370"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="370"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView opaque="NO" multipleTouchEnabled="YES" contentMode="scaleAspectFill" fixedFrame="YES" image="Iceland 1.jpg" adjustsImageWhenAncestorFocused="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Djy-3d-Lyg">
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cLG-2i-wKR">
+                                            <rect key="frame" x="0.0" y="335" width="300" height="35"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </view>
+                                <connections>
+                                    <outlet property="imageView" destination="Djy-3d-Lyg" id="gpI-gA-1yD"/>
+                                    <outlet property="label" destination="cLG-2i-wKR" id="6Q2-YB-cws"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="u83-Sr-Tjf" id="ZdA-Jj-RJD"/>
+                            <outlet property="delegate" destination="u83-Sr-Tjf" id="aMS-ds-eiH"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="SzA-2N-LRb"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QNb-Bb-VbX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2556" y="5526"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Iceland 1.jpg" width="16" height="16"/>
+        <image name="calendar" catalog="system" width="32" height="27"/>
+        <image name="suit.heart" catalog="system" width="32" height="28"/>
+    </resources>
+</document>
