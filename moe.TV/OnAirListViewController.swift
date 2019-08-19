@@ -86,6 +86,15 @@ class OnAirListViewController: UICollectionViewController {
         }
         return cell
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("trying to show detail")
+        let row = indexPath.row
+        let arr = self.bgmList[row] as! Dictionary<String,Any>
+        let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
+        detailvc.bangumiUUID = arr["id"] as! String
+        self.present(detailvc, animated: true)
+    }
 
     // MARK: UICollectionViewDelegate
 

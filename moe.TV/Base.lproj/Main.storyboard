@@ -58,7 +58,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GR1-Mo-yPW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3673" y="1448"/>
+            <point key="canvasLocation" x="3424" y="1533"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="2hS-un-Gzs">
@@ -175,7 +175,25 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KFK-4E-u7O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3348" y="-838"/>
+            <point key="canvasLocation" x="3452" y="19"/>
+        </scene>
+        <!--Bangumi Detail View Controller-->
+        <scene sceneID="cyq-2v-9CW">
+            <objects>
+                <viewController storyboardIdentifier="BangumiDetailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uzW-vX-ob7" customClass="BangumiDetailViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="v4s-7f-0Vc"/>
+                        <viewControllerLayoutGuide type="bottom" id="m15-Bl-jcI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="l2q-FF-Xcq">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="fle-vV-TqE"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KXd-5P-R6J" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5661" y="19"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="2T3-Br-F2k">
