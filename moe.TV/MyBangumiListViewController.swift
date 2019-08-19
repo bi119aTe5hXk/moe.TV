@@ -30,6 +30,7 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
                 
                 if isSuccess {
                     self.bgmList = result as! Array<Any>
+                    UserDefaults.standard.set(self.bgmList, forKey: "topShelfArr")
                     self.collectionView.reloadData()
                 }
             }
