@@ -14,7 +14,7 @@ class ContentProvider: TVTopShelfContentProvider {
         
     override func loadTopShelfContent(completionHandler: @escaping (TVTopShelfContent?) -> Void) {
         // Fetch content and call completionHandler
-        let topShelfArr = UserDefaults.init(suiteName: "topShelf")?.array(forKey: "topShelfArr")
+        let topShelfArr = UserDefaults.
         print(topShelfArr as Any)
         if topShelfArr != nil && topShelfArr!.count > 0 {
             
