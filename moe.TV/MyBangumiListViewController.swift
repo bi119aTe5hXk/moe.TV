@@ -30,7 +30,7 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
                 
                 if isSuccess {
                     self.bgmList = result as! Array<Any>
-                    UserDefaults.init(suiteName: "topShelf")?.set(self.bgmList, forKey: "topShelfArr")
+                    UserDefaults.init(suiteName: "group.moe.TV")?.set(self.bgmList, forKey: "topShelfArr")
                     self.collectionView.reloadData()
                 }
             }
