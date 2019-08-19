@@ -10,18 +10,26 @@ import TVServices
 
 
 class ContentProvider: TVTopShelfContentProvider {
-    //let topitems = TVTopShelfContent()
-        
+    
     override func loadTopShelfContent(completionHandler: @escaping (TVTopShelfContent?) -> Void) {
         // Fetch content and call completionHandler
         let topShelfArr = UserDefaults.init(suiteName: "group.moe.TV")?.array(forKey: "topShelfArr")
-        print(topShelfArr as Any)
+        //print(topShelfArr as Any)
         if topShelfArr != nil && topShelfArr!.count > 0 {
+            var items = [] as Array<TVTopShelfItem>
+            for item in topShelfArr! {
+                let dic = item as! Dictionary<String,Any>
+                //print(dic["id"] as Any)
+                let item  = TVTopShelfSectionedItem(identifier:dic["id"] as! String)
+                item.imageShape = .poster
+                item.setImageURL(URL(string: dic["image"] as! String), for: .screenScale2x)
+                items.append(item)
+                
+            }
+            let itemCollection = TVTopShelfItemCollection(items: items)
             
-            
-            
-            let content  = TVTopShelfSectionedItem(identifier: "id")
-            completionHandler((content as! TVTopShelfContent));
+            let content = TVTopShelfSectionedContent(sections: itemCollection)
+            completionHandler(content);
         }else{
             completionHandler(nil);
         }
