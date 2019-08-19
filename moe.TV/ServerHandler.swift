@@ -4,6 +4,7 @@
 //
 //  Created by billgateshxk on 2019/08/15.
 //  Copyright © 2019 bi119aTe5hXk. All rights reserved.
+//  Doc:https://albireo.docs.apiary.io/
 //
 import Alamofire
 import Foundation
