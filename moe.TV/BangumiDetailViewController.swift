@@ -84,7 +84,8 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
 
         cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
         //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
-        let imgurlstr = "https://" + UserDefaults.standard.string(forKey: "serveraddr")! + (rowarr["thumbnail"] as! String)
+        let imgurlstr = getServerAddr() + (rowarr["thumbnail"] as! String)
+        
         cell.iconView?.image = nil
         DispatchQueue.global().async {
             do {
@@ -96,6 +97,7 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                 }
             } catch { }
         }
+        
 
 
         return cell
@@ -127,7 +129,7 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                 if videoList.count == 1{
                     //only one video
                     let arr = videoList[0] as! Dictionary<String,Any>
-                    let videoURLstr = "https://" + UserDefaults.standard.string(forKey: "serveraddr")! + (arr["url"] as! String)
+                    let videoURLstr = getServerAddr() + (arr["url"] as! String)
                     self.startPlayVideo(fromURL: videoURLstr)
                 }else if videoList.count > 1{
                     //more than one video source, user shoule select

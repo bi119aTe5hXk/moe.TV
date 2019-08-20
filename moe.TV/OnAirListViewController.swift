@@ -66,23 +66,17 @@ class OnAirListViewController: UICollectionViewController {
         // Configure the cell
         cell.titleTextField?.text = (rowarr["name"] as! String)
         //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
-        if let imgurlstr = rowarr["image"] {
-            if (imgurlstr as! String).lengthOfBytes(using: .utf8) <= 0 {
-                //no img
-                cell.iconView?.image = nil
-            } else {
-                cell.iconView?.image = nil
-                DispatchQueue.global().async {
-                    do {
-                        let imgdata = try Data.init(contentsOf: URL(string: imgurlstr as! String)!)
-                        let image = UIImage.init(data: imgdata)
+        let imgurlstr = rowarr["image"] as! String
+        cell.iconView?.image = nil
+        DispatchQueue.global().async {
+            do {
+                let imgdata = try Data.init(contentsOf: URL(string: imgurlstr)!)
+                let image = UIImage.init(data: imgdata)
 
-                        DispatchQueue.main.async {
-                            cell.iconView?.image = image
-                        }
-                    } catch { }
+                DispatchQueue.main.async {
+                    cell.iconView?.image = image
                 }
-            }
+            } catch { }
         }
         return cell
     }

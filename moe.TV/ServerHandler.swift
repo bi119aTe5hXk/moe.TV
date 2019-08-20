@@ -12,15 +12,13 @@ import Foundation
 func getServerAddr() -> String {
     var urlStr = "https://"
     urlStr.append(UserDefaults.standard.string(forKey: "serveraddr")!)
-    urlStr.append("/api")
     return urlStr
 }
 func logInServer(url:String, username:String, password:String, completion: @escaping (Bool,String) -> Void) {
     UserDefaults.standard.set(url, forKey: "serveraddr")
     var urlstr = getServerAddr()
     
-    
-    urlstr.append("/user/login")
+    urlstr.append("/api/user/login")
     
     let postdata = ["name":username, "password":password, "remmember":true] as [String : Any]
     AF.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
@@ -53,7 +51,7 @@ func logInServer(url:String, username:String, password:String, completion: @esca
 
 func getMyBangumiList(completion: @escaping (Bool,Any?) -> Void) {
     var urlstr = getServerAddr()
-    urlstr.append("/home/my_bangumi?status=3")
+    urlstr.append("/api/home/my_bangumi?status=3")
     loadCookies()
     AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         
@@ -81,7 +79,7 @@ func getMyBangumiList(completion: @escaping (Bool,Any?) -> Void) {
 
 func getOnAirList(completion: @escaping (Bool,Any?) -> Void) {
     var urlstr = getServerAddr()
-    urlstr.append("/home/on_air")
+    urlstr.append("/api/home/on_air")
     loadCookies()
     AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         
@@ -107,7 +105,7 @@ func getOnAirList(completion: @escaping (Bool,Any?) -> Void) {
 
 func getAllBangumiList(page:Int, name:String, completion: @escaping (Bool,Any?) -> Void) {
     var urlstr = getServerAddr()
-    urlstr.append("/home/bangumi?page=")
+    urlstr.append("/api/home/bangumi?page=")
     urlstr.append(String(page))
     urlstr.append("&count=10&sort_field=air_date&sort_order=desc&name=")
     urlstr.append(name)
@@ -138,7 +136,7 @@ func getAllBangumiList(page:Int, name:String, completion: @escaping (Bool,Any?) 
 }
 func getBangumiDetail(id:String, completion: @escaping (Bool,Any?) -> Void) {
     var urlstr = getServerAddr()
-    urlstr.append("/home/bangumi/")
+    urlstr.append("/api/home/bangumi/")
     urlstr.append(id)
     loadCookies()
     
@@ -165,7 +163,7 @@ func getBangumiDetail(id:String, completion: @escaping (Bool,Any?) -> Void) {
 }
 func getEpisodeDetail(ep_id:String,completion: @escaping (Bool,Any?) -> Void) {
     var urlstr = getServerAddr()
-    urlstr.append("/home/episode/")
+    urlstr.append("/api/home/episode/")
     urlstr.append(ep_id)
     loadCookies()
     
