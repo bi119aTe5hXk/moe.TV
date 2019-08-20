@@ -25,6 +25,14 @@ class ContentProvider: TVTopShelfContentProvider {
                 item.setImageURL(URL(string: dic["image"] as! String), for: .screenScale2x)
                 item.title = (dic["name"] as! String)
                 item.displayAction = TVTopShelfAction(url: URL(string: "moetv://detail/\(dic["id"]!)/")!)
+                
+                if let unwatched_count = dic["unwatched_count"] {
+                    let count = unwatched_count as! Int
+                    let ep_count = (dic["eps"] as! Int)
+                    let progress = Double(count) / Double(ep_count)
+                    item.playbackProgress = progress
+                }
+                
                 items.append(item)
             }
             

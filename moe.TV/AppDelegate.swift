@@ -29,7 +29,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        print("Will open URL from Top Shelf. URL=%@", url as NSURL)
+        //print("Will open URL from Top Shelf. URL=%@", url as NSURL)
+        
+        let host = url.host
+        let path = url.pathComponents[1] // 0 is '/' ╮(╯▽╰)╭
+        if host == "detail" {
+            print(path)
+        }
+        
+        
         return true
     }
 
