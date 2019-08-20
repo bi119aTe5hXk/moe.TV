@@ -23,9 +23,15 @@ class ContentProvider: TVTopShelfContentProvider {
                 let item  = TVTopShelfSectionedItem(identifier:dic["id"] as! String)
                 item.imageShape = .poster
                 item.setImageURL(URL(string: dic["image"] as! String), for: .screenScale2x)
+                item.title = (dic["name"] as! String)
+                item.displayAction = TVTopShelfAction(url: URL(string: "moetv://detail/\(dic["id"]!)/")!)
                 items.append(item)
             }
-            let itemConllections = [TVTopShelfItemCollection(items: items)]
+            
+            let collection = TVTopShelfItemCollection(items: items)
+            collection.title = "My Bangumi List"
+            let itemConllections = [collection]
+            
             let content = TVTopShelfSectionedContent(sections: itemConllections as! [TVTopShelfItemCollection<TVTopShelfSectionedItem>])
             completionHandler(content);
         }else{

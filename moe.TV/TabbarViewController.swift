@@ -23,8 +23,9 @@ class TabbarViewController: UITabBarController {
             print("notlogin")
             let loginVC = self.storyboard?.instantiateViewController(identifier: "LoginViewController")
             self.present(loginVC!, animated: false, completion: nil)
-            
         }
+        self.tabBarController?.tabBar.isHidden = false
+        self.tabBar.isHidden = false
     }
 
 
