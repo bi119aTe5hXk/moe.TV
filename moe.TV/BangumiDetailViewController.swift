@@ -163,9 +163,13 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                     let arr = videoList as! Array<Any>
                     if arr.count == 1{
                         //only one video
-                        let arr = arr[0] as! Dictionary<String,Any>
-                        let videoURLstr = getServerAddr() + (arr["url"] as! String)
-                        self.startPlayVideo(fromURL: videoURLstr)
+                        let dic2 = arr[0] as! Dictionary<String,Any>
+                        let videoURLstr = getServerAddr() + (dic2["url"] as! String)
+                        var seektime = 0.0
+                        if let last_watch_position = dic2["last_watch_position"]{
+                            seektime = (last_watch_position as! Double)
+                        }
+                        self.startPlayVideo(fromURL: videoURLstr, seekTime: seektime)
                     }else if arr.count > 1{
                         //more than one video source, user shoule select
                     }else{
@@ -177,12 +181,21 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
         }
     }
     
-    func startPlayVideo(fromURL:String) {
+    func startPlayVideo(fromURL:String, seekTime:Double) {
         let player = AVPlayer(url: URL(string: urlEncode(string: fromURL) )!)
         let controller = AVPlayerViewController()
         controller.player = player
         present(controller, animated: true) {
+            if seekTime > 0.0{
+                print("seekingto:",seekTime)
+                
+                var currentTime:Float64 = CMTimeGetSeconds(player.currentTime())
+                currentTime += seekTime
+                player.seek(to: CMTimeMakeWithSeconds(currentTime,preferredTimescale: Int32(NSEC_PER_SEC)), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+            }
+            
             player.play()
+            
         }
     }
     
