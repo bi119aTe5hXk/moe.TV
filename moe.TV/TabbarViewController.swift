@@ -23,11 +23,30 @@ class TabbarViewController: UITabBarController {
             print("notlogin")
             let loginVC = self.storyboard?.instantiateViewController(identifier: "LoginViewController")
             self.present(loginVC!, animated: false, completion: nil)
+        }else{
+//            self.tabBarController?.tabBar.isHidden = false
+//            self.tabBar.isHidden = false
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(getTopShelf), name: NSNotification.Name(rawValue: "topshelf"), object: nil)
         }
-        self.tabBarController?.tabBar.isHidden = false
-        self.tabBar.isHidden = false
+        
+        
+        
     }
 
+    
+    @objc func getTopShelf(notification:Notification) {
+        let dic = notification.userInfo
+        let url = dic!["url"] as! URL
+        
+        let host = url.host
+        let bangumiUUID = url.pathComponents[1] // 0 is '/' ╮(╯▽╰)╭
+        if host == "detail" {
+            let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
+            detailvc.bangumiUUID = bangumiUUID
+            self.present(detailvc, animated: true)
+        }
+    }
 
     /*
     // MARK: - Navigation
