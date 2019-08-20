@@ -7,7 +7,8 @@
 //
 
 import UIKit
-
+import Alamofire
+import AlamofireImage
 private let reuseIdentifier = "Cell"
 
 class MyBangumiListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
@@ -71,16 +72,19 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         cell.titleTextField?.text = (rowarr["name"] as! String)
         //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
         let imgurlstr = rowarr["image"] as! String
-            cell.iconView?.image = nil
-            DispatchQueue.global().async {
-                do {
-                    let imgdata = try Data.init(contentsOf: URL(string: imgurlstr)!)
-                    let image = UIImage.init(data: imgdata)
-
-                    DispatchQueue.main.async {
-                        cell.iconView?.image = image
+            AF.request(imgurlstr).responseImage { (response) in
+                switch response.result {
+                case .success(let value):
+                    if let image = value as? Image{
+                        cell.iconView.image = image
                     }
-                } catch { }
+                    break
+                    
+                case .failure(let error):
+                    // error handling
+                    
+                    break
+                }
             }
         
 

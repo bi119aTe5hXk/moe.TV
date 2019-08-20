@@ -13,6 +13,7 @@
 		47433AE12306C1AC007794E1 /* OnAirListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47433AE02306C1AC007794E1 /* OnAirListViewController.swift */; };
 		4766B1F8230C750700E5828B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4766B1F7230C750700E5828B /* AVFoundation.framework */; };
 		4766B1FA230C755600E5828B /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4766B1F9230C755600E5828B /* AVKit.framework */; };
+		4766B1FD230C819100E5828B /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 4766B1FC230C819100E5828B /* AlamofireImage */; };
 		4775A9EE2305C30400B84382 /* BangumiDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */; };
 		4775A9F02305C5C400B84382 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9EF2305C5C400B84382 /* SplitViewController.swift */; };
 		4775A9F22305C60300B84382 /* TabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F12305C60300B84382 /* TabbarViewController.swift */; };
@@ -114,6 +115,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4766B1F8230C750700E5828B /* AVFoundation.framework in Frameworks */,
+				4766B1FD230C819100E5828B /* AlamofireImage in Frameworks */,
 				477749102305AAC6002E2D25 /* Alamofire in Frameworks */,
 				4766B1FA230C755600E5828B /* AVKit.framework in Frameworks */,
 			);
@@ -256,6 +258,7 @@
 			name = moe.TV;
 			packageProductDependencies = (
 				4777490F2305AAC6002E2D25 /* Alamofire */,
+				4766B1FC230C819100E5828B /* AlamofireImage */,
 			);
 			productName = moe.TV;
 			productReference = 86D97C8D2301CF6B00CF5F03 /* moe.TV.app */;
@@ -334,6 +337,7 @@
 			mainGroup = 86D97C842301CF6B00CF5F03;
 			packageReferences = (
 				4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				4766B1FB230C819100E5828B /* XCRemoteSwiftPackageReference "AlamofireImage" */,
 			);
 			productRefGroup = 86D97C8E2301CF6B00CF5F03 /* Products */;
 			projectDirPath = "";
@@ -786,6 +790,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4766B1FB230C819100E5828B /* XCRemoteSwiftPackageReference "AlamofireImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/AlamofireImage";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -797,6 +809,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4766B1FC230C819100E5828B /* AlamofireImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4766B1FB230C819100E5828B /* XCRemoteSwiftPackageReference "AlamofireImage" */;
+			productName = AlamofireImage;
+		};
 		4777490F2305AAC6002E2D25 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */;

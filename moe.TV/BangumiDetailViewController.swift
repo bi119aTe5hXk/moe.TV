@@ -9,6 +9,8 @@
 import UIKit
 import AVKit
 import AVFoundation
+import Alamofire
+import AlamofireImage
 
 class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
 
@@ -81,23 +83,55 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
         guard let rowarr = bgmEPlist[indexPath.row] as? Dictionary<String, Any> else {
             return cell
         }
-
-        cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
-        //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
-        let imgurlstr = getServerAddr() + (rowarr["thumbnail"] as! String)
         
-        cell.iconView?.image = nil
-        DispatchQueue.global().async {
-            do {
-                let imgdata = try Data.init(contentsOf: URL(string: imgurlstr)!)
-                let image = UIImage.init(data: imgdata)
-
-                DispatchQueue.main.async {
-                    cell.iconView?.image = image
+        if (rowarr["name"] as! String).lengthOfBytes(using: .utf8) > 0 {
+            cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
+            //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
+            let imgurlstr = getServerAddr() + (rowarr["thumbnail"] as! String)
+            
+            AF.request(imgurlstr).responseImage { (response) in
+                switch response.result {
+                case .success(let value):
+                    if let image = value as? Image{
+                        cell.iconView.image = image
+                    }
+                    break
+                    
+                case .failure(let error):
+                    // error handling
+                    
+                    break
                 }
-            } catch { }
+            }
+            
+//            cell.iconView?.image = nil
+//            DispatchQueue.global().async {
+//                do {
+//                    let imgdata = try Data.init(contentsOf: URL(string: imgurlstr)!)
+//                    let image = UIImage.init(data: imgdata)
+//
+//                    DispatchQueue.main.async {
+//                        cell.iconView?.image = image
+//                    }
+//                } catch { }
+//            }
+            
+            if let watch_progress = rowarr["watch_progress"]{
+                let wpdic = watch_progress as! Dictionary<String,Any>
+                let percent = wpdic["percentage"] as! Double
+                cell.progressBar.isHidden = false
+                cell.progressBar.setProgress(Float(percent), animated: true)
+                
+            }else{
+                cell.progressBar.setProgress(0, animated: false)
+                cell.progressBar.isHidden = true
+            }
+        }else{
+            cell.iconView.image = nil
+            cell.titleText.text = String(rowarr["episode_no"] as! Int)
+            cell.progressBar.setProgress(0, animated: false)
+            cell.progressBar.isHidden = true
         }
-        
 
 
         return cell
@@ -125,17 +159,20 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
         getEpisodeDetail(ep_id: epid) { (isSuccess, result) in
             if isSuccess {
                 let dic = result as! Dictionary<String,Any>
-                let videoList = dic["video_files"] as! Array<Any>
-                if videoList.count == 1{
-                    //only one video
-                    let arr = videoList[0] as! Dictionary<String,Any>
-                    let videoURLstr = getServerAddr() + (arr["url"] as! String)
-                    self.startPlayVideo(fromURL: videoURLstr)
-                }else if videoList.count > 1{
-                    //more than one video source, user shoule select
-                }else{
-                    //no video
+                if let videoList = dic["video_files"]{
+                    let arr = videoList as! Array<Any>
+                    if arr.count == 1{
+                        //only one video
+                        let arr = arr[0] as! Dictionary<String,Any>
+                        let videoURLstr = getServerAddr() + (arr["url"] as! String)
+                        self.startPlayVideo(fromURL: videoURLstr)
+                    }else if arr.count > 1{
+                        //more than one video source, user shoule select
+                    }else{
+                        //no video
+                    }
                 }
+                
             }
         }
     }

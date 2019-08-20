@@ -262,11 +262,16 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="OXA-7b-UTk">
+                                                    <rect key="frame" x="0.0" y="162" width="278" height="10"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </progressView>
                                             </subviews>
                                         </view>
                                         <size key="customSize" width="278" height="250"/>
                                         <connections>
                                             <outlet property="iconView" destination="qZb-wo-N1Z" id="Wdp-sN-EpK"/>
+                                            <outlet property="progressBar" destination="OXA-7b-UTk" id="lMg-QP-6ld"/>
                                             <outlet property="titleText" destination="LRR-6b-SPK" id="Uaz-A8-oZS"/>
                                         </connections>
                                     </collectionViewCell>
