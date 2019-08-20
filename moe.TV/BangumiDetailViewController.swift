@@ -19,6 +19,8 @@ class BangumiDetailViewController: UIViewController {
             getBangumiDetail(id: bangumiUUID) { (isSuccess, result) in
                 if isSuccess {
                     self.bgmDic = result as! [String : Any]
+                    
+                    
                 }else{
                     //TODO - show error
                 }

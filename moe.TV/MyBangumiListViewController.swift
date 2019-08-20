@@ -30,8 +30,8 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
                 
                 if isSuccess {
                     self.bgmList = result as! Array<Any>
-                    UserDefaults.init(suiteName: "group.moe.TV")?.set(self.bgmList, forKey: "topShelfArr")
                     self.collectionView.reloadData()
+                    UserDefaults.init(suiteName: "group.moe.TV")?.set(self.bgmList, forKey: "topShelfArr")
                 }
             }
         }
@@ -93,7 +93,7 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
         return cell
     }
      func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 500, height: 500)
+        return CGSize(width: 359, height: 600)
     }
 
     // MARK: UICollectionViewDelegate
