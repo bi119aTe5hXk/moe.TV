@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AVKit
+import AVFoundation
 
 class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
 
@@ -114,11 +116,39 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
     */
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //let row = indexPath.row
-//        let arr = self.bgmList[row] as! Dictionary<String, Any>
-//        let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
-//        detailvc.bangumiUUID = arr["id"] as! String
-//        self.present(detailvc, animated: true)
+        let row = indexPath.row
+        let arr = self.bgmEPlist[row] as! Dictionary<String, Any>
+        let epid = arr["id"] as! String
+        
+        getEpisodeDetail(ep_id: epid) { (isSuccess, result) in
+            if isSuccess {
+                let dic = result as! Dictionary<String,Any>
+                let videoList = dic["video_files"] as! Array<Any>
+                if videoList.count == 1{
+                    //only one video
+                    let arr = videoList[0] as! Dictionary<String,Any>
+                    let videoURLstr = "https://" + UserDefaults.standard.string(forKey: "serveraddr")! + (arr["url"] as! String)
+                    self.startPlayVideo(fromURL: videoURLstr)
+                }else if videoList.count > 1{
+                    //more than one video source, user shoule select
+                }else{
+                    //no video
+                }
+            }
+        }
+    }
+    
+    func startPlayVideo(fromURL:String) {
+        let player = AVPlayer(url: URL(string: urlEncode(string: fromURL) )!)
+        let controller = AVPlayerViewController()
+        controller.player = player
+        present(controller, animated: true) {
+            player.play()
+        }
+    }
+    
+    func urlEncode(string: String) -> String {
+        return string.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
     }
 
 }
