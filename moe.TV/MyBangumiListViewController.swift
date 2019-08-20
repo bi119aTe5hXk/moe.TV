@@ -10,8 +10,8 @@ import UIKit
 
 private let reuseIdentifier = "Cell"
 
-class MyBangumiListViewController: UICollectionViewController,UICollectionViewDelegateFlowLayout {
-    var bgmList:Array<Any> = []
+class MyBangumiListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+    var bgmList: Array<Any> = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -22,12 +22,12 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
-        
+
         if self.bgmList.count <= 0 {
             getMyBangumiList {
-                (isSuccess,result) in
+                (isSuccess, result) in
                 //print(result as Any)
-                
+
                 if isSuccess {
                     self.bgmList = result as! Array<Any>
                     self.collectionView.reloadData()
@@ -35,7 +35,7 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
                 }
             }
         }
-        
+
     }
 
     /*
@@ -63,36 +63,36 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BangumiCell", for: indexPath) as! BangumiCell
-        guard let rowarr = bgmList[indexPath.row] as? Dictionary<String, Any> else{
+        guard let rowarr = bgmList[indexPath.row] as? Dictionary<String, Any> else {
             return cell
         }
-        
+
         // Configure the cell
         cell.titleTextField?.text = (rowarr["name"] as! String)
         //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
         if let imgurlstr = rowarr["image"] {
-        if (imgurlstr as! String).lengthOfBytes(using: .utf8) <= 0{
-                           //no img
-            cell.iconView?.image = nil
-                       }else{
-            cell.iconView?.image = nil
-                           DispatchQueue.global().async {
-                               do {
-                                let imgdata = try Data.init(contentsOf: URL(string: imgurlstr as! String)!)
-                                   let image = UIImage.init(data: imgdata)
-                                   
-                                   DispatchQueue.main.async {
-                                    cell.iconView?.image = image
-                                   }
-                               } catch { }
-                           }
-               }
+            if (imgurlstr as! String).lengthOfBytes(using: .utf8) <= 0 {
+                //no img
+                cell.iconView?.image = nil
+            } else {
+                cell.iconView?.image = nil
+                DispatchQueue.global().async {
+                    do {
+                        let imgdata = try Data.init(contentsOf: URL(string: imgurlstr as! String)!)
+                        let image = UIImage.init(data: imgdata)
+
+                        DispatchQueue.main.async {
+                            cell.iconView?.image = image
+                        }
+                    } catch { }
+                }
+            }
         }
-        
-    
+
+
         return cell
     }
-     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 359, height: 600)
     }
 
@@ -111,11 +111,10 @@ class MyBangumiListViewController: UICollectionViewController,UICollectionViewDe
         return true
     }
     */
-    
+
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("trying to show detail")
         let row = indexPath.row
-        let arr = self.bgmList[row] as! Dictionary<String,Any>
+        let arr = self.bgmList[row] as! Dictionary<String, Any>
         let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
         detailvc.bangumiUUID = arr["id"] as! String
         self.present(detailvc, animated: true)
