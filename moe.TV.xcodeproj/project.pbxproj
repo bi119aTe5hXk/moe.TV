@@ -25,8 +25,6 @@
 		86D97C912301CF6B00CF5F03 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97C902301CF6B00CF5F03 /* AppDelegate.swift */; };
 		86D97C982301CF6B00CF5F03 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86D97C962301CF6B00CF5F03 /* Main.storyboard */; };
 		86D97C9A2301CF6E00CF5F03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86D97C992301CF6E00CF5F03 /* Assets.xcassets */; };
-		86D97CA52301CF6E00CF5F03 /* moe_TVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97CA42301CF6E00CF5F03 /* moe_TVTests.swift */; };
-		86D97CB02301CF6E00CF5F03 /* moe_TVUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97CAF2301CF6E00CF5F03 /* moe_TVUITests.swift */; };
 		86D97CBE2301CFF800CF5F03 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */; };
 		86D97CC02301D5F900CF5F03 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97CBF2301D5F900CF5F03 /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
@@ -38,20 +36,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4706FD7B230A871F00094B78;
 			remoteInfo = topshelf;
-		};
-		86D97CA12301CF6E00CF5F03 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 86D97C852301CF6B00CF5F03 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 86D97C8C2301CF6B00CF5F03;
-			remoteInfo = moe.TV;
-		};
-		86D97CAC2301CF6E00CF5F03 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 86D97C852301CF6B00CF5F03 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 86D97C8C2301CF6B00CF5F03;
-			remoteInfo = moe.TV;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -91,12 +75,6 @@
 		86D97C972301CF6B00CF5F03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		86D97C992301CF6E00CF5F03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		86D97C9B2301CF6E00CF5F03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		86D97CA02301CF6E00CF5F03 /* moe.TVTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = moe.TVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		86D97CA42301CF6E00CF5F03 /* moe_TVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moe_TVTests.swift; sourceTree = "<group>"; };
-		86D97CA62301CF6E00CF5F03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		86D97CAB2301CF6E00CF5F03 /* moe.TVUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = moe.TVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		86D97CAF2301CF6E00CF5F03 /* moe_TVUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moe_TVUITests.swift; sourceTree = "<group>"; };
-		86D97CB12301CF6E00CF5F03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		86D97CBF2301D5F900CF5F03 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -118,20 +96,6 @@
 				4766B1FD230C819100E5828B /* AlamofireImage in Frameworks */,
 				477749102305AAC6002E2D25 /* Alamofire in Frameworks */,
 				4766B1FA230C755600E5828B /* AVKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		86D97C9D2301CF6E00CF5F03 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		86D97CA82301CF6E00CF5F03 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,8 +126,6 @@
 			isa = PBXGroup;
 			children = (
 				86D97C8F2301CF6B00CF5F03 /* moe.TV */,
-				86D97CA32301CF6E00CF5F03 /* moe.TVTests */,
-				86D97CAE2301CF6E00CF5F03 /* moe.TVUITests */,
 				4706FD80230A871F00094B78 /* topshelf */,
 				4706FD7D230A871F00094B78 /* Frameworks */,
 				86D97C8E2301CF6B00CF5F03 /* Products */,
@@ -174,8 +136,6 @@
 			isa = PBXGroup;
 			children = (
 				86D97C8D2301CF6B00CF5F03 /* moe.TV.app */,
-				86D97CA02301CF6E00CF5F03 /* moe.TVTests.xctest */,
-				86D97CAB2301CF6E00CF5F03 /* moe.TVUITests.xctest */,
 				4706FD7C230A871F00094B78 /* topshelf.appex */,
 			);
 			name = Products;
@@ -201,24 +161,6 @@
 				86D97C9B2301CF6E00CF5F03 /* Info.plist */,
 			);
 			path = moe.TV;
-			sourceTree = "<group>";
-		};
-		86D97CA32301CF6E00CF5F03 /* moe.TVTests */ = {
-			isa = PBXGroup;
-			children = (
-				86D97CA42301CF6E00CF5F03 /* moe_TVTests.swift */,
-				86D97CA62301CF6E00CF5F03 /* Info.plist */,
-			);
-			path = moe.TVTests;
-			sourceTree = "<group>";
-		};
-		86D97CAE2301CF6E00CF5F03 /* moe.TVUITests */ = {
-			isa = PBXGroup;
-			children = (
-				86D97CAF2301CF6E00CF5F03 /* moe_TVUITests.swift */,
-				86D97CB12301CF6E00CF5F03 /* Info.plist */,
-			);
-			path = moe.TVUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,42 +206,6 @@
 			productReference = 86D97C8D2301CF6B00CF5F03 /* moe.TV.app */;
 			productType = "com.apple.product-type.application";
 		};
-		86D97C9F2301CF6E00CF5F03 /* moe.TVTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 86D97CB72301CF6E00CF5F03 /* Build configuration list for PBXNativeTarget "moe.TVTests" */;
-			buildPhases = (
-				86D97C9C2301CF6E00CF5F03 /* Sources */,
-				86D97C9D2301CF6E00CF5F03 /* Frameworks */,
-				86D97C9E2301CF6E00CF5F03 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				86D97CA22301CF6E00CF5F03 /* PBXTargetDependency */,
-			);
-			name = moe.TVTests;
-			productName = moe.TVTests;
-			productReference = 86D97CA02301CF6E00CF5F03 /* moe.TVTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		86D97CAA2301CF6E00CF5F03 /* moe.TVUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 86D97CBA2301CF6E00CF5F03 /* Build configuration list for PBXNativeTarget "moe.TVUITests" */;
-			buildPhases = (
-				86D97CA72301CF6E00CF5F03 /* Sources */,
-				86D97CA82301CF6E00CF5F03 /* Frameworks */,
-				86D97CA92301CF6E00CF5F03 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				86D97CAD2301CF6E00CF5F03 /* PBXTargetDependency */,
-			);
-			name = moe.TVUITests;
-			productName = moe.TVUITests;
-			productReference = 86D97CAB2301CF6E00CF5F03 /* moe.TVUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -315,14 +221,6 @@
 					};
 					86D97C8C2301CF6B00CF5F03 = {
 						CreatedOnToolsVersion = 10.3;
-					};
-					86D97C9F2301CF6E00CF5F03 = {
-						CreatedOnToolsVersion = 10.3;
-						TestTargetID = 86D97C8C2301CF6B00CF5F03;
-					};
-					86D97CAA2301CF6E00CF5F03 = {
-						CreatedOnToolsVersion = 10.3;
-						TestTargetID = 86D97C8C2301CF6B00CF5F03;
 					};
 				};
 			};
@@ -344,8 +242,6 @@
 			projectRoot = "";
 			targets = (
 				86D97C8C2301CF6B00CF5F03 /* moe.TV */,
-				86D97C9F2301CF6E00CF5F03 /* moe.TVTests */,
-				86D97CAA2301CF6E00CF5F03 /* moe.TVUITests */,
 				4706FD7B230A871F00094B78 /* topshelf */,
 			);
 		};
@@ -365,20 +261,6 @@
 			files = (
 				86D97C9A2301CF6E00CF5F03 /* Assets.xcassets in Resources */,
 				86D97C982301CF6B00CF5F03 /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		86D97C9E2301CF6E00CF5F03 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		86D97CA92301CF6E00CF5F03 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,22 +293,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		86D97C9C2301CF6E00CF5F03 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				86D97CA52301CF6E00CF5F03 /* moe_TVTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		86D97CA72301CF6E00CF5F03 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				86D97CB02301CF6E00CF5F03 /* moe_TVUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -434,16 +300,6 @@
 			isa = PBXTargetDependency;
 			target = 4706FD7B230A871F00094B78 /* topshelf */;
 			targetProxy = 4706FD84230A871F00094B78 /* PBXContainerItemProxy */;
-		};
-		86D97CA22301CF6E00CF5F03 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 86D97C8C2301CF6B00CF5F03 /* moe.TV */;
-			targetProxy = 86D97CA12301CF6E00CF5F03 /* PBXContainerItemProxy */;
-		};
-		86D97CAD2301CF6E00CF5F03 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 86D97C8C2301CF6B00CF5F03 /* moe.TV */;
-			targetProxy = 86D97CAC2301CF6E00CF5F03 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -659,88 +515,6 @@
 			};
 			name = Release;
 		};
-		86D97CB82301CF6E00CF5F03 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HR66SGQEZ4;
-				INFOPLIST_FILE = moe.TVTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TVTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 3;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/moe.TV.app/moe.TV";
-			};
-			name = Debug;
-		};
-		86D97CB92301CF6E00CF5F03 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HR66SGQEZ4;
-				INFOPLIST_FILE = moe.TVTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TVTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 3;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/moe.TV.app/moe.TV";
-			};
-			name = Release;
-		};
-		86D97CBB2301CF6E00CF5F03 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HR66SGQEZ4;
-				INFOPLIST_FILE = moe.TVUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TVUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 3;
-				TEST_TARGET_NAME = moe.TV;
-			};
-			name = Debug;
-		};
-		86D97CBC2301CF6E00CF5F03 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HR66SGQEZ4;
-				INFOPLIST_FILE = moe.TVUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TVUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 3;
-				TEST_TARGET_NAME = moe.TV;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -767,24 +541,6 @@
 			buildConfigurations = (
 				86D97CB52301CF6E00CF5F03 /* Debug */,
 				86D97CB62301CF6E00CF5F03 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		86D97CB72301CF6E00CF5F03 /* Build configuration list for PBXNativeTarget "moe.TVTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				86D97CB82301CF6E00CF5F03 /* Debug */,
-				86D97CB92301CF6E00CF5F03 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		86D97CBA2301CF6E00CF5F03 /* Build configuration list for PBXNativeTarget "moe.TVUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				86D97CBB2301CF6E00CF5F03 /* Debug */,
-				86D97CBC2301CF6E00CF5F03 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
