@@ -10,6 +10,7 @@ import Alamofire
 import Foundation
 
 var requestManager = Alamofire.Session.default
+
 func getServerAddr() -> String {
     let proxyAddr = UserDefaults.standard.string(forKey: "proxy")
     let proxyPort = UserDefaults.standard.string(forKey: "proxyport")
@@ -22,7 +23,7 @@ func getServerAddr() -> String {
         proxyConfiguration[kCFNetworkProxiesHTTPPort] = proxyPort as AnyObject?
         proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 1 as AnyObject?
     }else{
-        print("GoWithoutProxy")
+        //print("GoWithoutProxy")
         proxyConfiguration[kCFNetworkProxiesHTTPProxy] = "" as AnyObject?
         proxyConfiguration[kCFNetworkProxiesHTTPPort] = "" as AnyObject?
         proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 0 as AnyObject?
@@ -30,6 +31,7 @@ func getServerAddr() -> String {
     
     let cfg = Alamofire.Session.default.session.configuration
     cfg.connectionProxyDictionary = proxyConfiguration
+    cfg.httpAdditionalHeaders = ["User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3864.0 Safari/537.36"]
     requestManager = Alamofire.Session(configuration: cfg)
     
     var urlStr = "https://"
@@ -46,7 +48,7 @@ func logInServer(url: String, username: String, password: String, completion: @e
 
     let postdata = ["name": username, "password": password, "remmember": true] as [String: Any]
     print(urlstr)
-    AF.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
+    requestManager.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
 
         
         //print(String(data: response.data!, encoding: .utf8) as Any)
@@ -86,7 +88,7 @@ func logOutServer(completion: @escaping (Bool, String) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/user/logout")
     loadCookies()
-    AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
 
         //print(response.result)
         switch response.result {
@@ -120,7 +122,7 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/home/my_bangumi?status=3")
     loadCookies()
-    AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         
         //print(String(data: response.data!, encoding: .utf8) as Any)
         switch response.result {
@@ -148,7 +150,7 @@ func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/home/on_air")
     loadCookies()
-    AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         //print(String(data: response.data!, encoding: .utf8) as Any)
         //print(response.result)
         switch response.result {
@@ -179,7 +181,7 @@ func getAllBangumiList(page: Int, name: String, completion: @escaping (Bool, Any
     urlstr.append("&type=-1")
     loadCookies()
 
-    AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
 
         //print(response.result)
         switch response.result {
@@ -207,7 +209,7 @@ func getBangumiDetail(id: String, completion: @escaping (Bool, Any?) -> Void) {
     urlstr.append(id)
     loadCookies()
 
-    AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
 
         //print(response.result)
         switch response.result {
@@ -234,7 +236,7 @@ func getEpisodeDetail(ep_id: String, completion: @escaping (Bool, Any?) -> Void)
     urlstr.append(ep_id)
     loadCookies()
 
-    AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
 
         //print(response.result)
         switch response.result {
@@ -277,7 +279,7 @@ func loadCookies() {
 }
 
 func cancelRequest(){
-    //requestManager.cancelAllRequests()
+    requestManager.cancelAllRequests()
 //    Alamofire.Session.default.session.getTasksWithCompletionHandler({ dataTasks, uploadTasks, downloadTasks in
 //    dataTasks.forEach { $0.cancel() }
 //    uploadTasks.forEach { $0.cancel() }
