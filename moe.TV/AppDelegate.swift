@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.init(suiteName: "group.moe.TV")?.register(defaults: ["topShelfArr" : []])
         UserDefaults.standard.register(defaults: ["loggedin" : false])
         UserDefaults.standard.register(defaults: ["serveraddr" : ""])
+        UserDefaults.standard.register(defaults: ["proxy" : ""])
+        UserDefaults.standard.register(defaults: ["proxyport" : ""])
         
         if let tabController = window?.rootViewController as? UITabBarController {
             tabController.viewControllers?.append(packagedSearchController())
@@ -33,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         catch {
             print("Setting category to AVAudioSessionCategoryPlayback failed.")
         }
+        
         
         return true
     }

@@ -39,7 +39,7 @@ class SettingsViewController: UIViewController {
             self.present(loginVC!, animated: false, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {(action) in
-            self.dismiss(animated: true, completion: nil)
+            //self.dismiss(animated: true, completion: nil)
         }))
         self.present(alert, animated: true, completion: nil)
         

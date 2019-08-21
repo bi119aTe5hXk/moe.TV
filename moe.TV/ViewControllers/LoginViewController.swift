@@ -14,12 +14,16 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var usernametextfield: UITextField!
     @IBOutlet weak var passwordtextfield: UITextField!
     @IBOutlet weak var loginbutton: UIButton!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.urltextfield.delegate = self
         self.usernametextfield.delegate = self
         self.passwordtextfield.delegate = self
+        self.loadingIndicator.isHidden = true
+        self.loadingIndicator.stopAnimating()
+        
 
         // Do any additional setup after loading the view.
         if let host = UserDefaults.standard.string(forKey: "serveraddr"){
@@ -32,12 +36,17 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
             (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
             (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
-            
+            self.loadingIndicator.isHidden = false
+            self.loadingIndicator.startAnimating()
+            self.loginbutton.isEnabled = false
             logInServer(url:self.urltextfield.text!,
                         username: self.usernametextfield.text!,
                         password: self.passwordtextfield.text!) {
                             isSuccess,result in
                             
+                            self.loadingIndicator.isHidden = true
+                            self.loadingIndicator.stopAnimating()
+                            self.loginbutton.isEnabled = true
                             if isSuccess{
                                 self.dismiss(animated: true, completion: nil)
                             }else{
@@ -45,7 +54,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                                 let err = result
                                 let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
                                 alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-                                    self.dismiss(animated: true, completion: nil)
+                                    //self.dismiss(animated: true, completion: nil)
                                 }))
                                 self.present(alert, animated: true, completion: nil)
                             }

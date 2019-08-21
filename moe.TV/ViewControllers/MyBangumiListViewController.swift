@@ -13,6 +13,9 @@ private let reuseIdentifier = "Cell"
 
 class MyBangumiListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var bgmList:Array<Any> = []
+    
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -28,14 +31,25 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
     override func viewDidAppear(_ animated: Bool) {
         self.loadData()
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        //cancelRequest()
+    }
+    
     func loadData(){
         let loggedin = UserDefaults.standard.bool(forKey: "loggedin")
         if loggedin {
             if self.bgmList.count <= 0 {
-                print("getMyBangumiList")
+                print("getingMyBangumiList")
+                self.loadingIndicator.isHidden = false
+                self.loadingIndicator.startAnimating()
+                
+                
                 getMyBangumiList {
                     (isSuccess, result) in
                     //print(result as Any)
+                    self.loadingIndicator.isHidden = true
+                    self.loadingIndicator.stopAnimating()
+                    
                     if isSuccess {
                         self.bgmList = result as! Array<Any>
                         self.collectionView.reloadData()
@@ -45,7 +59,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
                         let err = result as! String
                         let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-                            self.dismiss(animated: true, completion: nil)
+                            //self.dismiss(animated: true, completion: nil)
                         }))
                         self.present(alert, animated: true, completion: nil)
                     }

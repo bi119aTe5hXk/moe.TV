@@ -18,14 +18,18 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
     var bangumiUUID: String = ""
     var bgmDic = ["": ""] as Dictionary<String, Any>
     var bgmEPlist = [] as Array<Any>
-
+    
     @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var summaryText: UITextView!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var collectionView: UICollectionView!
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        //cancelRequest()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -33,14 +37,20 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
         self.subtitleLabel.text = ""
         self.summaryText.text = ""
         
-        print(bangumiUUID)
+        print("bangumiUUID:",bangumiUUID)
         // Do any additional setup after loading the view.
         if bangumiUUID.lengthOfBytes(using: .utf8) > 0 {
+            self.loadingIndicator.isHidden = false
+            self.loadingIndicator.startAnimating()
+            
             getBangumiDetail(id: bangumiUUID) { (isSuccess, result) in
+                
+                self.loadingIndicator.isHidden = true
+                self.loadingIndicator.stopAnimating()
+                
                 if isSuccess {
                     self.bgmDic = result as! [String: Any]
                     //print(result as Any)
-
                     self.bgmEPlist = self.bgmDic["episodes"] as! Array
                     self.titleLabel.text = (self.bgmDic["name"] as! String)
                     self.subtitleLabel.text = (self.bgmDic["name_cn"] as! String)
@@ -65,7 +75,7 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                     let err = result as! String
                     let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-                        self.dismiss(animated: true, completion: nil)
+                        //self.dismiss(animated: true, completion: nil)
                     }))
                     self.present(alert, animated: true, completion: nil)
                 }
@@ -87,6 +97,8 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
         guard let rowarr = bgmEPlist[indexPath.row] as? Dictionary<String, Any> else {
             return cell
         }
+        cell.loadingIndicator.isHidden = false
+        cell.loadingIndicator.startAnimating()
         
         if (rowarr["name"] as! String).lengthOfBytes(using: .utf8) > 0 {
             cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
@@ -94,6 +106,10 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
             let imgurlstr = getServerAddr() + (rowarr["thumbnail"] as! String)
             
             AF.request(imgurlstr).responseImage { (response) in
+                
+                cell.loadingIndicator.isHidden = true
+                cell.loadingIndicator.stopAnimating()
+                
                 switch response.result {
                 case .success(let value):
                     if let image = value as? Image{

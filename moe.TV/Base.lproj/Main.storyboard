@@ -21,6 +21,10 @@
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="50" minY="50" maxX="50" maxY="50"/>
                         </collectionViewFlowLayout>
+                        <activityIndicatorView key="backgroundView" hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" id="GbZ-hy-R9z">
+                            <rect key="frame" x="0.0" y="-157" width="1920" height="1080"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </activityIndicatorView>
                         <cells>
                             <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BangumiCell" reuseIdentifier="BangumiCell" id="NfZ-Nh-H5b" customClass="BangumiCell" customModule="moe_TV" customModuleProvider="target">
                                 <rect key="frame" x="50" y="50" width="359" height="600"/>
@@ -57,11 +61,12 @@
                     <tabBarItem key="tabBarItem" title="On Air" id="Qae-aD-VZR"/>
                     <connections>
                         <outlet property="collectionView" destination="DgV-kn-5M4" id="5Iz-Ob-JUr"/>
+                        <outlet property="loadingIndicator" destination="GbZ-hy-R9z" id="VFw-yX-lJY"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GR1-Mo-yPW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3424" y="1533"/>
+            <point key="canvasLocation" x="3267" y="2101"/>
         </scene>
         <!--Settings-->
         <scene sceneID="ZcH-x9-EDo">
@@ -98,6 +103,22 @@
                                     <action selector="logoutBTNPressed:" destination="rZc-EN-tog" eventType="primaryActionTriggered" id="0EN-XU-f7Y"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bR9-5Y-MvV">
+                                <rect key="frame" x="144" y="324" width="489" height="96"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Proxy Settings"/>
+                                <connections>
+                                    <segue destination="9iP-1W-6RR" kind="presentation" id="D6K-nz-5pq"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Change your HTTP proxy settings." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ifg-gH-eOh">
+                                <rect key="frame" x="705" y="349" width="1023" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="8qu-3a-b5z"/>
                     </view>
@@ -105,7 +126,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FNF-cC-l7g" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3424" y="2896"/>
+            <point key="canvasLocation" x="3267" y="3430"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="2hS-un-Gzs">
@@ -153,10 +174,24 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="juT-TT-lqs">
+                                <rect key="frame" x="790" y="883" width="340" height="83"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Proxy Settings"/>
+                                <connections>
+                                    <segue destination="9iP-1W-6RR" kind="presentation" id="LQT-Z4-YKe"/>
+                                </connections>
+                            </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="6qu-lC-Suq">
+                                <rect key="frame" x="940" y="754" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aAq-mO-OFk"/>
                     </view>
                     <connections>
+                        <outlet property="loadingIndicator" destination="6qu-lC-Suq" id="Zee-pr-J8V"/>
                         <outlet property="loginbutton" destination="wEe-Oa-fAg" id="PPv-uX-t3i"/>
                         <outlet property="passwordtextfield" destination="KoI-C9-nZk" id="hoe-qL-eJa"/>
                         <outlet property="urltextfield" destination="TaZ-wU-eM6" id="Z7T-4i-61n"/>
@@ -165,7 +200,75 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pvs-un-qa1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1138" y="-466"/>
+            <point key="canvasLocation" x="-1947" y="2417"/>
+        </scene>
+        <!--Proxy Setting View Controller-->
+        <scene sceneID="1Yq-7K-FUU">
+            <objects>
+                <viewController storyboardIdentifier="ProxySettingViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9iP-1W-6RR" customClass="ProxySettingViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="S19-KN-5XJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="Mvg-Kc-p03"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="hfV-EU-Hi4">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Proxy Address" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BAj-Kx-Vdg">
+                                <rect key="frame" x="590" y="330" width="546" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <textInputTraits key="textInputTraits" textContentType="url"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Port" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Kcz-20-6CC">
+                                <rect key="frame" x="1183" y="330" width="147" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text=":" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bF0-NB-7u6">
+                                <rect key="frame" x="1154" y="330" width="11" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rGE-xY-kxl">
+                                <rect key="frame" x="600" y="568" width="232" height="86"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Apply"/>
+                                <connections>
+                                    <action selector="applyBTNPressed:" destination="9iP-1W-6RR" eventType="primaryActionTriggered" id="jX3-tm-LPX"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YOA-8c-1qE">
+                                <rect key="frame" x="1103" y="568" width="217" height="92"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Reset"/>
+                                <connections>
+                                    <action selector="resetBTNPressed:" destination="9iP-1W-6RR" eventType="primaryActionTriggered" id="Zho-uZ-Ryl"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="HTTP proxy setttings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nsm-2f-r2i">
+                                <rect key="frame" x="738" y="168" width="445" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Eid-9i-oOC"/>
+                    </view>
+                    <connections>
+                        <outlet property="proxyIPField" destination="BAj-Kx-Vdg" id="h7i-Uy-dK0"/>
+                        <outlet property="proxyPortField" destination="Kcz-20-6CC" id="aJl-aF-ckt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QDc-ta-4XD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="614" y="4518"/>
         </scene>
         <!--TabbarViewController-->
         <scene sceneID="8Ty-D3-oRW">
@@ -184,7 +287,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n7M-y6-XBj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1166" y="1021"/>
+            <point key="canvasLocation" x="676" y="2417"/>
         </scene>
         <!--MyBangumi-->
         <scene sceneID="kpK-gu-3kX">
@@ -199,6 +302,10 @@
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="50" minY="50" maxX="50" maxY="50"/>
                         </collectionViewFlowLayout>
+                        <activityIndicatorView key="backgroundView" hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" id="TOZ-O8-j86">
+                            <rect key="frame" x="0.0" y="-157" width="1920" height="1080"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </activityIndicatorView>
                         <cells>
                             <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BangumiCell" reuseIdentifier="BangumiCell" id="kEN-za-2AF" customClass="BangumiCell" customModule="moe_TV" customModuleProvider="target">
                                 <rect key="frame" x="50" y="50" width="359" height="600"/>
@@ -235,11 +342,12 @@
                     <tabBarItem key="tabBarItem" title="MyBangumi" id="89f-D7-RjT"/>
                     <connections>
                         <outlet property="collectionView" destination="SFz-zT-Pka" id="i2e-AB-anO"/>
+                        <outlet property="loadingIndicator" destination="TOZ-O8-j86" id="rAX-H9-UVf"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KFK-4E-u7O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3452" y="19"/>
+            <point key="canvasLocation" x="3267" y="681"/>
         </scene>
         <!--Bangumi Detail View Controller-->
         <scene sceneID="cyq-2v-9CW">
@@ -280,6 +388,10 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="aoS-jn-R1p">
+                                <rect key="frame" x="302" y="377" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                             <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="EML-WW-lp9">
                                 <rect key="frame" x="92" y="770" width="1738" height="250"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -314,11 +426,16 @@
                                                     <rect key="frame" x="0.0" y="162" width="278" height="10"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </progressView>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="gdu-jR-jcd">
+                                                    <rect key="frame" x="119" y="105" width="40" height="40"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                         </view>
                                         <size key="customSize" width="278" height="250"/>
                                         <connections>
                                             <outlet property="iconView" destination="qZb-wo-N1Z" id="Wdp-sN-EpK"/>
+                                            <outlet property="loadingIndicator" destination="gdu-jR-jcd" id="Cze-9d-do5"/>
                                             <outlet property="progressBar" destination="OXA-7b-UTk" id="lMg-QP-6ld"/>
                                             <outlet property="titleText" destination="LRR-6b-SPK" id="Uaz-A8-oZS"/>
                                         </connections>
@@ -335,6 +452,7 @@
                     <connections>
                         <outlet property="collectionView" destination="EML-WW-lp9" id="b98-sS-bAa"/>
                         <outlet property="iconView" destination="HcS-yK-BHN" id="JZV-GR-nkR"/>
+                        <outlet property="loadingIndicator" destination="aoS-jn-R1p" id="JrN-jM-Z3S"/>
                         <outlet property="subtitleLabel" destination="9NL-kz-gth" id="FBo-Cr-PhB"/>
                         <outlet property="summaryText" destination="Qyn-hZ-X39" id="EbM-N9-5BN"/>
                         <outlet property="titleLabel" destination="8HV-PD-80O" id="YRr-IP-7QZ"/>
@@ -342,7 +460,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KXd-5P-R6J" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5661" y="19"/>
+            <point key="canvasLocation" x="5478" y="681"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="2T3-Br-F2k">
@@ -375,7 +493,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="S6R-ET-XFY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="424" y="5526"/>
+            <point key="canvasLocation" x="-511" y="6055"/>
         </scene>
         <!--Search Results View Controller-->
         <scene sceneID="Lym-0U-RwF">
@@ -426,10 +544,13 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QNb-Bb-VbX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2556" y="5526"/>
+            <point key="canvasLocation" x="2476" y="5981"/>
         </scene>
     </scenes>
     <resources>
         <image name="Iceland 1.jpg" width="16" height="16"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="D6K-nz-5pq"/>
+    </inferredMetricsTieBreakers>
 </document>

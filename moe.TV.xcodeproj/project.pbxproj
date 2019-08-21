@@ -11,6 +11,7 @@
 		4706FD82230A871F00094B78 /* ContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4706FD81230A871F00094B78 /* ContentProvider.swift */; };
 		4706FD86230A871F00094B78 /* topshelf.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4706FD7C230A871F00094B78 /* topshelf.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		471BBB16230DBE5D00CD5D73 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471BBB15230DBE5D00CD5D73 /* SettingsViewController.swift */; };
+		471BBB18230DC95E00CD5D73 /* ProxySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471BBB17230DC95E00CD5D73 /* ProxySettingViewController.swift */; };
 		47433AE12306C1AC007794E1 /* OnAirListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47433AE02306C1AC007794E1 /* OnAirListViewController.swift */; };
 		4766B1F8230C750700E5828B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4766B1F7230C750700E5828B /* AVFoundation.framework */; };
 		4766B1FA230C755600E5828B /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4766B1F9230C755600E5828B /* AVKit.framework */; };
@@ -62,6 +63,7 @@
 		4706FD8E230A9A9600094B78 /* moe.TV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = moe.TV.entitlements; sourceTree = "<group>"; };
 		4706FD8F230A9AB200094B78 /* topshelf.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = topshelf.entitlements; sourceTree = "<group>"; };
 		471BBB15230DBE5D00CD5D73 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		471BBB17230DC95E00CD5D73 /* ProxySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProxySettingViewController.swift; sourceTree = "<group>"; };
 		47433AE02306C1AC007794E1 /* OnAirListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnAirListViewController.swift; sourceTree = "<group>"; };
 		4766B1F7230C750700E5828B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4766B1F9230C755600E5828B /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
@@ -124,6 +126,31 @@
 			path = topshelf;
 			sourceTree = "<group>";
 		};
+		471BBB1A230DD47000CD5D73 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				471BBB17230DC95E00CD5D73 /* ProxySettingViewController.swift */,
+				86D97CBF2301D5F900CF5F03 /* LoginViewController.swift */,
+				4775A9EF2305C5C400B84382 /* SplitViewController.swift */,
+				4775A9F12305C60300B84382 /* TabbarViewController.swift */,
+				47433AE02306C1AC007794E1 /* OnAirListViewController.swift */,
+				4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */,
+				4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */,
+				86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */,
+				471BBB15230DBE5D00CD5D73 /* SettingsViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		471BBB1B230DD48E00CD5D73 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				4775A9F92306BA1700B84382 /* BangumiCell.swift */,
+				47D4490C230C69F4000F8C6C /* EPCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		86D97C842301CF6B00CF5F03 = {
 			isa = PBXGroup;
 			children = (
@@ -149,16 +176,8 @@
 				4706FD8E230A9A9600094B78 /* moe.TV.entitlements */,
 				86D97C902301CF6B00CF5F03 /* AppDelegate.swift */,
 				863CF9F7230594F800CA958F /* ServerHandler.swift */,
-				86D97CBF2301D5F900CF5F03 /* LoginViewController.swift */,
-				4775A9EF2305C5C400B84382 /* SplitViewController.swift */,
-				4775A9F12305C60300B84382 /* TabbarViewController.swift */,
-				47433AE02306C1AC007794E1 /* OnAirListViewController.swift */,
-				4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */,
-				4775A9F92306BA1700B84382 /* BangumiCell.swift */,
-				4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */,
-				47D4490C230C69F4000F8C6C /* EPCell.swift */,
-				86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */,
-				471BBB15230DBE5D00CD5D73 /* SettingsViewController.swift */,
+				471BBB1B230DD48E00CD5D73 /* Cells */,
+				471BBB1A230DD47000CD5D73 /* ViewControllers */,
 				86D97C962301CF6B00CF5F03 /* Main.storyboard */,
 				86D97C992301CF6E00CF5F03 /* Assets.xcassets */,
 				86D97C9B2301CF6E00CF5F03 /* Info.plist */,
@@ -290,6 +309,7 @@
 				86D97CBE2301CFF800CF5F03 /* SearchResultsViewController.swift in Sources */,
 				86D97C912301CF6B00CF5F03 /* AppDelegate.swift in Sources */,
 				4775A9F62306B3A500B84382 /* MyBangumiListViewController.swift in Sources */,
+				471BBB18230DC95E00CD5D73 /* ProxySettingViewController.swift in Sources */,
 				863CF9F8230594F800CA958F /* ServerHandler.swift in Sources */,
 				47D4490D230C69F4000F8C6C /* EPCell.swift in Sources */,
 				4775A9EE2305C30400B84382 /* BangumiDetailViewController.swift in Sources */,

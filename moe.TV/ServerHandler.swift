@@ -9,7 +9,29 @@
 import Alamofire
 import Foundation
 
+var requestManager = Alamofire.Session.default
 func getServerAddr() -> String {
+    let proxyAddr = UserDefaults.standard.string(forKey: "proxy")
+    let proxyPort = UserDefaults.standard.string(forKey: "proxyport")
+    var proxyConfiguration = [NSObject: AnyObject]()
+    
+    if (proxyAddr?.lengthOfBytes(using: .utf8))! > 0 &&
+        (proxyPort?.lengthOfBytes(using: .utf8))! > 0{
+        print("GoWithProxy:",proxyAddr as Any,":",proxyPort as Any)
+        proxyConfiguration[kCFNetworkProxiesHTTPProxy] = proxyAddr as AnyObject?
+        proxyConfiguration[kCFNetworkProxiesHTTPPort] = proxyPort as AnyObject?
+        proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 1 as AnyObject?
+    }else{
+        print("GoWithoutProxy")
+        proxyConfiguration[kCFNetworkProxiesHTTPProxy] = "" as AnyObject?
+        proxyConfiguration[kCFNetworkProxiesHTTPPort] = "" as AnyObject?
+        proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 0 as AnyObject?
+    }
+    
+    let cfg = Alamofire.Session.default.session.configuration
+    cfg.connectionProxyDictionary = proxyConfiguration
+    requestManager = Alamofire.Session(configuration: cfg)
+    
     var urlStr = "https://"
     urlStr.append(UserDefaults.standard.string(forKey: "serveraddr")!)
     return urlStr
@@ -26,15 +48,16 @@ func logInServer(url: String, username: String, password: String, completion: @e
     print(urlstr)
     AF.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
 
-        //save cookies from response
-        saveCookies(response: response)
-        print(String(data: response.data!, encoding: .utf8) as Any)
+        
+        //print(String(data: response.data!, encoding: .utf8) as Any)
 
         switch response.result {
         case .success(let value):
-
+            
             if let JSON = value as? [String: Any] {
                 if let status = JSON["msg"] {
+                    //save cookies from response
+                    saveCookies(response: response)
                     UserDefaults.standard.set(true, forKey: "loggedin")
                     //print(status)
                     completion(true, (status as! String))
@@ -98,7 +121,8 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
     urlstr.append("/api/home/my_bangumi?status=3")
     loadCookies()
     AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        print(response.result)
+        
+        //print(String(data: response.data!, encoding: .utf8) as Any)
         switch response.result {
         case .success(let value):
             if let JSON = value as? [String: Any] {
@@ -125,7 +149,7 @@ func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
     urlstr.append("/api/home/on_air")
     loadCookies()
     AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-
+        //print(String(data: response.data!, encoding: .utf8) as Any)
         //print(response.result)
         switch response.result {
         case .success(let value):
@@ -250,4 +274,13 @@ func loadCookies() {
             HTTPCookieStorage.shared.setCookie(cookie)
         }
     }
+}
+
+func cancelRequest(){
+    //requestManager.cancelAllRequests()
+//    Alamofire.Session.default.session.getTasksWithCompletionHandler({ dataTasks, uploadTasks, downloadTasks in
+//    dataTasks.forEach { $0.cancel() }
+//    uploadTasks.forEach { $0.cancel() }
+//    downloadTasks.forEach { $0.cancel() }
+//    })
 }
