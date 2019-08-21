@@ -179,7 +179,6 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                         }
                         self.startPlayVideo(fromURL: videoURLstr, seekTime: seektime)
                     }else if arr.count > 1{
-                        //more than one video source, user shoule select,TODO
                         let alert = UIAlertController.init(title: "Multiple video source", message: "There're more than one source of this video, please select", preferredStyle: .alert)
                         for item in arr {
                             let dic2 = item as! Dictionary<String,Any>

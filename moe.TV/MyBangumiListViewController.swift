@@ -12,7 +12,7 @@ import AlamofireImage
 private let reuseIdentifier = "Cell"
 
 class MyBangumiListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    var bgmList: Array<Any> = []
+    var bgmList:Array<Any> = []
     override func viewDidLoad() {
         super.viewDidLoad()
 

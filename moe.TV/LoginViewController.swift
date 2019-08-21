@@ -63,6 +63,14 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             self.loginbutton.isEnabled = false
         }
     }
+    func  textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == self.passwordtextfield{
+            //textField.resignFirstResponder()
+            self.loginBTNPressed(self)
+            return false
+        }
+        return true
+    }
 
     /*
     // MARK: - Navigation
