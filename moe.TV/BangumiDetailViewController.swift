@@ -35,13 +35,13 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
         
         
         
-        print(bangumiUUID)
+        //print(bangumiUUID)
         // Do any additional setup after loading the view.
         if bangumiUUID.lengthOfBytes(using: .utf8) > 0 {
             getBangumiDetail(id: bangumiUUID) { (isSuccess, result) in
                 if isSuccess {
                     self.bgmDic = result as! [String: Any]
-                    print(result as Any)
+                    //print(result as Any)
 
                     self.bgmEPlist = self.bgmDic["episodes"] as! Array
                     self.titleLabel.text = (self.bgmDic["name"] as! String)
@@ -103,7 +103,6 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                     break
                 }
             }
-            
 //            cell.iconView?.image = nil
 //            DispatchQueue.global().async {
 //                do {
@@ -119,8 +118,9 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
             if let watch_progress = rowarr["watch_progress"]{
                 let wpdic = watch_progress as! Dictionary<String,Any>
                 let percent = wpdic["percentage"] as! Double
+                //print("percent:",Float(percent))
                 cell.progressBar.isHidden = false
-                cell.progressBar.setProgress(Float(percent), animated: true)
+                cell.progressBar.setProgress(Float(percent), animated: true)//not work, TODO
                 
             }else{
                 cell.progressBar.setProgress(0, animated: false)
@@ -158,6 +158,7 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
         
         getEpisodeDetail(ep_id: epid) { (isSuccess, result) in
             if isSuccess {
+                print(result as Any)
                 let dic = result as! Dictionary<String,Any>
                 if let videoList = dic["video_files"]{
                     let arr = videoList as! Array<Any>
@@ -166,14 +167,17 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                         let dic2 = arr[0] as! Dictionary<String,Any>
                         let videoURLstr = getServerAddr() + (dic2["url"] as! String)
                         var seektime = 0.0
-                        if let last_watch_position = dic2["last_watch_position"]{
+                        if let watchProgressDic = dic["watch_progress"]{//not in dic2!!
+                            let dic3 = watchProgressDic as! Dictionary<String,Any>
+                            let last_watch_position = dic3["last_watch_position"]
                             seektime = (last_watch_position as! Double)
+                            print("seekingto:",seektime)
                         }
                         self.startPlayVideo(fromURL: videoURLstr, seekTime: seektime)
                     }else if arr.count > 1{
-                        //more than one video source, user shoule select
+                        //more than one video source, user shoule select,TODO
                     }else{
-                        //no video
+                        //no video,TODO
                     }
                 }
                 
@@ -187,11 +191,10 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
         controller.player = player
         present(controller, animated: true) {
             if seekTime > 0.0{
-                print("seekingto:",seekTime)
-                
-                var currentTime:Float64 = CMTimeGetSeconds(player.currentTime())
-                currentTime += seekTime
-                player.seek(to: CMTimeMakeWithSeconds(currentTime,preferredTimescale: Int32(NSEC_PER_SEC)), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                //var currentTime:Float64 = CMTimeGetSeconds(player.currentTime())
+                //currentTime += seekTime
+                let time:Float64 = seekTime
+                player.seek(to: CMTimeMakeWithSeconds(time,preferredTimescale: Int32(NSEC_PER_SEC)), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
             }
             
             player.play()
