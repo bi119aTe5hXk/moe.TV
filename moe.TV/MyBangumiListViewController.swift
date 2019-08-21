@@ -23,20 +23,35 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
-
-        if self.bgmList.count <= 0 {
-            getMyBangumiList {
-                (isSuccess, result) in
-                //print(result as Any)
-
-                if isSuccess {
-                    self.bgmList = result as! Array<Any>
-                    self.collectionView.reloadData()
-                    UserDefaults.init(suiteName: "group.moe.TV")?.set(self.bgmList, forKey: "topShelfArr")
+        self.loadData()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        self.loadData()
+    }
+    func loadData(){
+        let loggedin = UserDefaults.standard.bool(forKey: "loggedin")
+        if loggedin {
+            if self.bgmList.count <= 0 {
+                print("getMyBangumiList")
+                getMyBangumiList {
+                    (isSuccess, result) in
+                    //print(result as Any)
+                    if isSuccess {
+                        self.bgmList = result as! Array<Any>
+                        self.collectionView.reloadData()
+                        UserDefaults.init(suiteName: "group.moe.TV")?.set(self.bgmList, forKey: "topShelfArr")
+                    }else{
+                        print(result as Any)
+                        let err = result as! String
+                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                            self.dismiss(animated: true, completion: nil)
+                        }))
+                        self.present(alert, animated: true, completion: nil)
+                    }
                 }
             }
         }
-
     }
 
     /*
@@ -72,21 +87,21 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         cell.titleTextField?.text = (rowarr["name"] as! String)
         //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
         let imgurlstr = rowarr["image"] as! String
-            AF.request(imgurlstr).responseImage { (response) in
-                switch response.result {
-                case .success(let value):
-                    if let image = value as? Image{
-                        cell.iconView.image = image
-                    }
-                    break
-                    
-                case .failure(let error):
-                    // error handling
-                    print(error)
-                    break
+        AF.request(imgurlstr).responseImage { (response) in
+            switch response.result {
+            case .success(let value):
+                if let image = value as? Image {
+                    cell.iconView.image = image
                 }
+                break
+
+            case .failure(let error):
+                // error handling
+                print(error)
+                break
             }
-        
+        }
+
 
 
         return cell

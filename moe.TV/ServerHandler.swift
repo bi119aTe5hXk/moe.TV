@@ -14,6 +14,8 @@ func getServerAddr() -> String {
     urlStr.append(UserDefaults.standard.string(forKey: "serveraddr")!)
     return urlStr
 }
+
+
 func logInServer(url:String, username:String, password:String, completion: @escaping (Bool,String) -> Void) {
     UserDefaults.standard.set(url, forKey: "serveraddr")
     var urlstr = getServerAddr()
@@ -21,13 +23,16 @@ func logInServer(url:String, username:String, password:String, completion: @esca
     urlstr.append("/api/user/login")
     
     let postdata = ["name":username, "password":password, "remmember":true] as [String : Any]
+    print(urlstr)
     AF.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
         
         //save cookies from response
         saveCookies(response: response)
+        print(String(data: response.data!, encoding: .utf8) as Any)
         
         switch response.result {
         case .success(let value):
+            
             if let JSON = value as? [String: Any] {
                 let status = JSON["msg"] as! String
                 UserDefaults.standard.set(true, forKey: "loggedin")
@@ -40,7 +45,6 @@ func logInServer(url:String, username:String, password:String, completion: @esca
             // error handling
             UserDefaults.standard.set(false, forKey: "loggedin")
             completion(false, error.localizedDescription)
-         
             break
         }
         
@@ -54,8 +58,7 @@ func getMyBangumiList(completion: @escaping (Bool,Any?) -> Void) {
     urlstr.append("/api/home/my_bangumi?status=3")
     loadCookies()
     AF.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        
-        //print(response.result)
+        print(response.result)
         switch response.result {
         case .success(let value):
             if let JSON = value as? [String: Any] {

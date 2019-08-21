@@ -11,7 +11,7 @@
         <!--On Air-->
         <scene sceneID="bhn-ub-Yq5">
             <objects>
-                <collectionViewController id="7g1-5g-a49" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="OnAirListViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7g1-5g-a49" customClass="OnAirListViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="DgV-kn-5M4">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -55,6 +55,9 @@
                         </connections>
                     </collectionView>
                     <tabBarItem key="tabBarItem" title="On Air" id="Qae-aD-VZR"/>
+                    <connections>
+                        <outlet property="collectionView" destination="DgV-kn-5M4" id="5Iz-Ob-JUr"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GR1-Mo-yPW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -76,21 +79,21 @@
                                 <rect key="frame" x="673" y="300" width="575" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="URL" textContentType="url"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="okb-tE-Bpe">
                                 <rect key="frame" x="673" y="421" width="575" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" textContentType="username"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Passowrd" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KoI-C9-nZk">
                                 <rect key="frame" x="673" y="565" width="575" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wEe-Oa-fAg">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wEe-Oa-fAg">
                                 <rect key="frame" x="790" y="731" width="340" height="86"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -186,7 +189,7 @@
                     </collectionView>
                     <tabBarItem key="tabBarItem" title="MyBangumi" id="89f-D7-RjT"/>
                     <connections>
-                        <outlet property="tabBarObservedScrollView" destination="SFz-zT-Pka" id="F8w-l7-C9R"/>
+                        <outlet property="collectionView" destination="SFz-zT-Pka" id="i2e-AB-anO"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KFK-4E-u7O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

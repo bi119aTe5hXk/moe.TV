@@ -21,18 +21,38 @@ class OnAirListViewController: UICollectionViewController {
 
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
+        
         // Do any additional setup after loading the view.
-        if self.bgmList.count <= 0 {
-            getOnAirList { (isSuccess, result) in
-                if isSuccess {
-                    print(result as Any)
-                    self.bgmList = result as! Array<Any>
-                    self.collectionView.reloadData()
-                }
+        self.loadData()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        self.loadData()
+    }
+    
+    func loadData(){
+        let loggedin = UserDefaults.standard.bool(forKey: "loggedin")
+        if loggedin {
+            if self.bgmList.count <= 0 {
+                print("getOnAirList")
+                getOnAirList(completion: {
+                    (isSuccess, result) in
+                    //print(result as Any)
+                    if isSuccess {
+                        self.bgmList = result as! Array<Any>
+                        self.collectionView.reloadData()
+                        UserDefaults.init(suiteName: "group.moe.TV")?.set(self.bgmList, forKey: "topShelfArr")
+                    }else{
+                        print(result as Any)
+                        let err = result as! String
+                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                            self.dismiss(animated: true, completion: nil)
+                        }))
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                })
             }
         }
-
     }
 
     /*

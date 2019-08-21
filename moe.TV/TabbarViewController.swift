@@ -30,8 +30,8 @@ class TabbarViewController: UITabBarController {
 //            self.tabBarController?.tabBar.isHidden = false
 //            self.tabBar.isHidden = false
             
-            NotificationCenter.default.addObserver(self, selector: #selector(getTopShelf), name: NSNotification.Name(rawValue: "topshelf"), object: nil)
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(getTopShelf), name: NSNotification.Name(rawValue: "topshelf"), object: nil)
         
         
         

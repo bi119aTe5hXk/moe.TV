@@ -33,9 +33,7 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
         self.subtitleLabel.text = ""
         self.summaryText.text = ""
         
-        
-        
-        //print(bangumiUUID)
+        print(bangumiUUID)
         // Do any additional setup after loading the view.
         if bangumiUUID.lengthOfBytes(using: .utf8) > 0 {
             getBangumiDetail(id: bangumiUUID) { (isSuccess, result) in
@@ -63,7 +61,13 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                     self.collectionView.reloadData()
 
                 } else {
-                    //TODO - show error
+                    print(result as Any)
+                    let err = result as! String
+                    let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                        self.dismiss(animated: true, completion: nil)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
                 }
             }
         }
@@ -176,6 +180,22 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                         self.startPlayVideo(fromURL: videoURLstr, seekTime: seektime)
                     }else if arr.count > 1{
                         //more than one video source, user shoule select,TODO
+                        let alert = UIAlertController.init(title: "Multiple video source", message: "There're more than one source of this video, please select", preferredStyle: .alert)
+                        for item in arr {
+                            let dic2 = item as! Dictionary<String,Any>
+                            alert.addAction(UIAlertAction.init(title: (dic2["file_name"] as! String), style: .default, handler: { (action) in
+                                let videoURLstr = getServerAddr() + (dic2["url"] as! String)
+                                var seektime = 0.0
+                                if let watchProgressDic = dic["watch_progress"]{//not in dic2!!
+                                    let dic3 = watchProgressDic as! Dictionary<String,Any>
+                                    let last_watch_position = dic3["last_watch_position"]
+                                    seektime = (last_watch_position as! Double)
+                                    print("seekingto:",seektime)
+                                }
+                                self.startPlayVideo(fromURL: videoURLstr, seekTime: seektime)
+                            }))
+                            self.present(alert, animated: true, completion: nil)
+                        }
                     }else{
                         //no video,TODO
                     }
