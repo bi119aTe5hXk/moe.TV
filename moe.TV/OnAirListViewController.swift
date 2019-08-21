@@ -78,7 +78,7 @@ class OnAirListViewController: UICollectionViewController {
                 
             case .failure(let error):
                 // error handling
-                
+                print(error)
                 break
             }
         }

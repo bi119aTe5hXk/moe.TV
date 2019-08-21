@@ -82,7 +82,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
                     
                 case .failure(let error):
                     // error handling
-                    
+                    print(error)
                     break
                 }
             }

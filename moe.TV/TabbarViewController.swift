@@ -8,7 +8,7 @@
 
 import UIKit
 
-@available(tvOS 13.0, *)
+
 class TabbarViewController: UITabBarController {
 
     override func viewDidLoad() {
@@ -21,7 +21,10 @@ class TabbarViewController: UITabBarController {
         let loggedin = UserDefaults.standard.bool(forKey: "loggedin")
         if loggedin == false {
             print("notlogin")
-            let loginVC = self.storyboard?.instantiateViewController(identifier: "LoginViewController")
+            var loginVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController")
+            if #available(tvOS 13.0, *) {
+                loginVC = self.storyboard?.instantiateViewController(identifier: "LoginViewController")
+            }
             self.present(loginVC!, animated: false, completion: nil)
         }else{
 //            self.tabBarController?.tabBar.isHidden = false

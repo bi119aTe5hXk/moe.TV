@@ -54,7 +54,7 @@
                             <outlet property="delegate" destination="7g1-5g-a49" id="H15-2k-ihR"/>
                         </connections>
                     </collectionView>
-                    <tabBarItem key="tabBarItem" title="On Air" image="calendar" catalog="system" id="Qae-aD-VZR"/>
+                    <tabBarItem key="tabBarItem" title="On Air" id="Qae-aD-VZR"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GR1-Mo-yPW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -184,7 +184,7 @@
                             <outlet property="delegate" destination="G4M-8Y-3eR" id="PHE-VP-JqQ"/>
                         </connections>
                     </collectionView>
-                    <tabBarItem key="tabBarItem" title="MyBangumi" image="suit.heart" catalog="system" id="89f-D7-RjT"/>
+                    <tabBarItem key="tabBarItem" title="MyBangumi" id="89f-D7-RjT"/>
                     <connections>
                         <outlet property="tabBarObservedScrollView" destination="SFz-zT-Pka" id="F8w-l7-C9R"/>
                     </connections>
@@ -383,7 +383,5 @@
     </scenes>
     <resources>
         <image name="Iceland 1.jpg" width="16" height="16"/>
-        <image name="calendar" catalog="system" width="32" height="27"/>
-        <image name="suit.heart" catalog="system" width="32" height="28"/>
     </resources>
 </document>
