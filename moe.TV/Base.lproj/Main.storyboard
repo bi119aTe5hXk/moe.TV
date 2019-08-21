@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="14865.1" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="14865.1" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PIa-hG-JBS">
     <device id="appleTV" appearance="light"/>
     <dependencies>
         <deployment identifier="tvOS"/>
@@ -8,24 +8,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--tabbar-->
-        <scene sceneID="yl2-sM-qoP">
-            <objects>
-                <tabBarController storyboardIdentifier="TabbarViewController" title="tabbar" useStoryboardIdentifierAsRestorationIdentifier="YES" id="49e-Tb-3d3" customClass="TabbarViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
-                        <rect key="frame" x="0.0" y="0.0" width="1920" height="120"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="G4M-8Y-3eR" kind="relationship" relationship="viewControllers" id="qpJ-4o-s4i"/>
-                        <segue destination="7g1-5g-a49" kind="relationship" relationship="viewControllers" id="s3D-6R-Hug"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1138" y="962"/>
-        </scene>
         <!--On Air-->
         <scene sceneID="bhn-ub-Yq5">
             <objects>
@@ -137,6 +119,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pvs-un-qa1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1138" y="-466"/>
+        </scene>
+        <!--TabbarViewController-->
+        <scene sceneID="8Ty-D3-oRW">
+            <objects>
+                <tabBarController storyboardIdentifier="TabbarViewController" title="TabbarViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PIa-hG-JBS" customClass="TabbarViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VOe-m9-V1w">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="0.0"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="G4M-8Y-3eR" kind="relationship" relationship="viewControllers" id="tav-gm-SAZ"/>
+                        <segue destination="7g1-5g-a49" kind="relationship" relationship="viewControllers" id="2RF-Df-Ars"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n7M-y6-XBj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1166" y="1021"/>
         </scene>
         <!--MyBangumi-->
         <scene sceneID="kpK-gu-3kX">
@@ -318,10 +318,10 @@
                             </button>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="yIt-Il-MAR" firstAttribute="centerX" secondItem="ZmB-qY-jRy" secondAttribute="centerX" id="p1b-Z0-aOa"/>
-                            <constraint firstItem="yIt-Il-MAR" firstAttribute="top" secondItem="9fd-jm-dPQ" secondAttribute="bottom" constant="20" id="t3n-1h-DOC"/>
+                            <constraint firstItem="yIt-Il-MAR" firstAttribute="centerX" secondItem="ZmB-qY-jRy" secondAttribute="centerX" id="IpF-Ge-Qz0"/>
+                            <constraint firstItem="yIt-Il-MAR" firstAttribute="top" secondItem="9fd-jm-dPQ" secondAttribute="bottom" constant="20" id="QzU-Ij-7EH"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="cDT-1e-wwg"/>
+                        <viewLayoutGuide key="safeArea" id="DwQ-Ws-lDX"/>
                     </view>
                     <navigationItem key="navigationItem" id="dsc-Vc-F78"/>
                 </viewController>

@@ -9,6 +9,8 @@
 import TVServices
 
 
+
+@available(tvOSApplicationExtension 13.0, *)
 class ContentProvider: TVTopShelfContentProvider {
     
     override func loadTopShelfContent(completionHandler: @escaping (TVTopShelfContent?) -> Void) {
@@ -49,5 +51,36 @@ class ContentProvider: TVTopShelfContentProvider {
     
     
 
+}
+@available(tvOSApplicationExtension 12.0, *)
+class ServiceProvider: NSObject, TVTopShelfProvider {
+    var topShelfStyle: TVTopShelfContentStyle = .sectioned
+    
+    var topShelfItems: [TVContentItem]{
+        return sectionedTopShelfItems
+    }
+    
+    fileprivate var sectionedTopShelfItems: [TVContentItem]{
+        let topShelfArr = UserDefaults.init(suiteName: "group.moe.TV")?.array(forKey: "topShelfArr")
+        var items = [] as Array<TVContentItem>
+        
+        if topShelfArr != nil && topShelfArr!.count > 0 {
+            for item in topShelfArr! {
+                let dic = item as! Dictionary<String,Any>
+                
+                
+                let sectionID = (dic["id"] as! String)
+                guard let sectionIdentifier:TVContentIdentifier = TVContentIdentifier(identifier: sectionID, container: nil) else { fatalError("Error creating content identifier for section item.") }
+                guard let sectionItem:TVContentItem = TVContentItem(contentIdentifier: sectionIdentifier) else { fatalError("Error creating section content item.") }
+                sectionItem.imageShape = .poster
+                sectionItem.title = (dic["name"] as! String)
+                sectionItem.setImageURL(URL(string: dic["image"] as! String), forTraits: .screenScale2x)
+                sectionItem.displayURL = URL(string: "moetv://detail/\(dic["id"]!)/")!
+                items.append(sectionItem)
+            }
+        }
+        return items
+    }
+    
 }
 
