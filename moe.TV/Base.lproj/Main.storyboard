@@ -268,7 +268,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QDc-ta-4XD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="614" y="4518"/>
+            <point key="canvasLocation" x="942" y="4373"/>
         </scene>
         <!--TabbarViewController-->
         <scene sceneID="8Ty-D3-oRW">
@@ -507,7 +507,7 @@
         <!--Search View Controller-->
         <scene sceneID="2T3-Br-F2k">
             <objects>
-                <viewController storyboardIdentifier="SearchViewController" id="ZLj-Fy-p7v" customClass="SearchViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ZLj-Fy-p7v" customClass="SearchViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9fd-jm-dPQ"/>
                         <viewControllerLayoutGuide type="bottom" id="W2D-4c-eyM"/>
@@ -558,7 +558,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="300" height="370"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView opaque="NO" multipleTouchEnabled="YES" contentMode="scaleAspectFill" fixedFrame="YES" image="Iceland 1.jpg" adjustsImageWhenAncestorFocused="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Djy-3d-Lyg">
+                                        <imageView opaque="NO" multipleTouchEnabled="YES" contentMode="scaleAspectFill" fixedFrame="YES" adjustsImageWhenAncestorFocused="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Djy-3d-Lyg">
                                             <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
@@ -586,12 +586,9 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QNb-Bb-VbX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2476" y="5981"/>
+            <point key="canvasLocation" x="1666" y="6055"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="Iceland 1.jpg" width="16" height="16"/>
-    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="D6K-nz-5pq"/>
     </inferredMetricsTieBreakers>

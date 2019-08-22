@@ -12,7 +12,36 @@ private let reuseIdentifier = "Cell"
 
 class SearchResultsViewController: UICollectionViewController, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        
+        filterString = searchController.searchBar.text ?? ""
+    }
+    var resultArr = [] as Array<Any>
+    var pageNum:Int = 1
+    var filterString = "" {
+        didSet {
+            // Return if the filter string hasn't changed.
+            guard filterString != oldValue else { return }
+
+            // Apply the filter or show all items if the filter string is empty.
+            if filterString.isEmpty {
+                //show all
+                //filteredDataItems = allDataItems
+                
+            }
+            else {
+                //show search result
+                //filteredDataItems = allDataItems.filter { $0.title.localizedStandardContains(filterString) }
+                getAllBangumiList(page: pageNum, name: filterString) {
+                    (isSuccess, result) in
+                    if isSuccess{
+                        let resultDir = result as! Dictionary<String,Any>
+                        let arr = resultDir["data"] as! Array<Any>
+                        self.resultArr.append(arr)
+                    }
+                }
+            }
+            // Reload the collection view to reflect the changes.
+            collectionView?.reloadData()
+        }
     }
     
     static let storyboardIdentifier = "SearchResultsViewController"
@@ -25,7 +54,7 @@ class SearchResultsViewController: UICollectionViewController, UISearchResultsUp
 
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
+        
         // Do any additional setup after loading the view.
     }
 
@@ -38,18 +67,29 @@ class SearchResultsViewController: UICollectionViewController, UISearchResultsUp
         // Pass the selected object to the new view controller.
     }
     */
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {//no need if using didselect
+//        super.prepare(for: segue, sender: sender)
+//
+//        // Check if a DataItemViewController is being presented.
+////        if let dataItemViewController = segue.destination as? DataItemViewController {
+////            // Pass the selected `DataItem` to the `DataItemViewController`.
+////            guard let indexPath = collectionView?.indexPathsForSelectedItems?.first else { fatalError("Expected a cell to have been selected") }
+////            dataItemViewController.configure(with: filteredDataItems[indexPath.row])
+////        }
+//    }
 
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return 0
+        return self.resultArr.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
