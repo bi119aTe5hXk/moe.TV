@@ -12,7 +12,7 @@ import AVFoundation
 import Alamofire
 import AlamofireImage
 
-class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
+class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource, AVPlayerViewControllerDelegate {
 
 
     var bangumiUUID: String = ""
@@ -118,6 +118,9 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                     break
                     
                 case .failure(let error):
+                    cell.loadingIndicator.isHidden = true
+                    cell.loadingIndicator.stopAnimating()
+                    
                     // error handling
                     print(error)
                     break
@@ -151,8 +154,9 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
             cell.titleText.text = String(rowarr["episode_no"] as! Int)
             cell.progressBar.setProgress(0, animated: false)
             cell.progressBar.isHidden = true
+            cell.loadingIndicator.isHidden = true
+            cell.loadingIndicator.stopAnimating()
         }
-
 
         return cell
     }
@@ -224,6 +228,7 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
         let player = AVPlayer(url: URL(string: urlEncode(string: fromURL) )!)
         let controller = AVPlayerViewController()
         controller.player = player
+        controller.delegate = self
         present(controller, animated: true) {
             if seekTime > 0.0{
                 //var currentTime:Float64 = CMTimeGetSeconds(player.currentTime())
@@ -231,10 +236,14 @@ class BangumiDetailViewController: UIViewController, UICollectionViewDelegateFlo
                 let time:Float64 = seekTime
                 player.seek(to: CMTimeMakeWithSeconds(time,preferredTimescale: Int32(NSEC_PER_SEC)), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
             }
-            
             player.play()
-            
         }
+    }
+    func playerViewControllerShouldDismiss(_ playerViewController: AVPlayerViewController) -> Bool {
+        let player = playerViewController.player
+        var currentTime:Float64 = CMTimeGetSeconds(player!.currentTime())
+        
+        return true
     }
     
     func urlEncode(string: String) -> String {

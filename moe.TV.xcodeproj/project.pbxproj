@@ -22,6 +22,9 @@
 		4775A9F62306B3A500B84382 /* MyBangumiListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */; };
 		4775A9FA2306BA1700B84382 /* BangumiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F92306BA1700B84382 /* BangumiCell.swift */; };
 		477749102305AAC6002E2D25 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4777490F2305AAC6002E2D25 /* Alamofire */; };
+		47C75368230E54EC0010C0EE /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4706FD7E230A871F00094B78 /* TVServices.framework */; };
+		47C7536B230E54EC0010C0EE /* ContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C7536A230E54EC0010C0EE /* ContentProvider.swift */; };
+		47C7536F230E54EC0010C0EE /* topshelfold.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 47C75367230E54EC0010C0EE /* topshelfold.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		47D4490D230C69F4000F8C6C /* EPCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D4490C230C69F4000F8C6C /* EPCell.swift */; };
 		863CF9F8230594F800CA958F /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
 		86D97C912301CF6B00CF5F03 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97C902301CF6B00CF5F03 /* AppDelegate.swift */; };
@@ -39,6 +42,13 @@
 			remoteGlobalIDString = 4706FD7B230A871F00094B78;
 			remoteInfo = topshelf;
 		};
+		47C7536D230E54EC0010C0EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 86D97C852301CF6B00CF5F03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 47C75366230E54EC0010C0EE;
+			remoteInfo = topshelfold;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +59,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				4706FD86230A871F00094B78 /* topshelf.appex in Embed App Extensions */,
+				47C7536F230E54EC0010C0EE /* topshelfold.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -72,6 +83,9 @@
 		4775A9F12305C60300B84382 /* TabbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarViewController.swift; sourceTree = "<group>"; };
 		4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBangumiListViewController.swift; sourceTree = "<group>"; };
 		4775A9F92306BA1700B84382 /* BangumiCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BangumiCell.swift; sourceTree = "<group>"; };
+		47C75367230E54EC0010C0EE /* topshelfold.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = topshelfold.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		47C7536A230E54EC0010C0EE /* ContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentProvider.swift; sourceTree = "<group>"; };
+		47C7536C230E54EC0010C0EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47D4490C230C69F4000F8C6C /* EPCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCell.swift; sourceTree = "<group>"; };
 		863CF9F7230594F800CA958F /* ServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHandler.swift; sourceTree = "<group>"; };
 		86D97C8D2301CF6B00CF5F03 /* moe.TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = moe.TV.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,6 +103,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4706FD7F230A871F00094B78 /* TVServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		47C75364230E54EC0010C0EE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47C75368230E54EC0010C0EE /* TVServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,11 +173,21 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		47C75369230E54EC0010C0EE /* topshelfold */ = {
+			isa = PBXGroup;
+			children = (
+				47C7536A230E54EC0010C0EE /* ContentProvider.swift */,
+				47C7536C230E54EC0010C0EE /* Info.plist */,
+			);
+			path = topshelfold;
+			sourceTree = "<group>";
+		};
 		86D97C842301CF6B00CF5F03 = {
 			isa = PBXGroup;
 			children = (
 				86D97C8F2301CF6B00CF5F03 /* moe.TV */,
 				4706FD80230A871F00094B78 /* topshelf */,
+				47C75369230E54EC0010C0EE /* topshelfold */,
 				4706FD7D230A871F00094B78 /* Frameworks */,
 				86D97C8E2301CF6B00CF5F03 /* Products */,
 			);
@@ -166,6 +198,7 @@
 			children = (
 				86D97C8D2301CF6B00CF5F03 /* moe.TV.app */,
 				4706FD7C230A871F00094B78 /* topshelf.appex */,
+				47C75367230E54EC0010C0EE /* topshelfold.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -205,6 +238,23 @@
 			productReference = 4706FD7C230A871F00094B78 /* topshelf.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		47C75366230E54EC0010C0EE /* topshelfold */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 47C75372230E54EC0010C0EE /* Build configuration list for PBXNativeTarget "topshelfold" */;
+			buildPhases = (
+				47C75363230E54EC0010C0EE /* Sources */,
+				47C75364230E54EC0010C0EE /* Frameworks */,
+				47C75365230E54EC0010C0EE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = topshelfold;
+			productName = topshelfold;
+			productReference = 47C75367230E54EC0010C0EE /* topshelfold.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		86D97C8C2301CF6B00CF5F03 /* moe.TV */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 86D97CB42301CF6E00CF5F03 /* Build configuration list for PBXNativeTarget "moe.TV" */;
@@ -218,6 +268,7 @@
 			);
 			dependencies = (
 				4706FD85230A871F00094B78 /* PBXTargetDependency */,
+				47C7536E230E54EC0010C0EE /* PBXTargetDependency */,
 			);
 			name = moe.TV;
 			packageProductDependencies = (
@@ -239,6 +290,9 @@
 				ORGANIZATIONNAME = bi119aTe5hXk;
 				TargetAttributes = {
 					4706FD7B230A871F00094B78 = {
+						CreatedOnToolsVersion = 11.0;
+					};
+					47C75366230E54EC0010C0EE = {
 						CreatedOnToolsVersion = 11.0;
 					};
 					86D97C8C2301CF6B00CF5F03 = {
@@ -265,12 +319,20 @@
 			targets = (
 				86D97C8C2301CF6B00CF5F03 /* moe.TV */,
 				4706FD7B230A871F00094B78 /* topshelf */,
+				47C75366230E54EC0010C0EE /* topshelfold */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4706FD7A230A871F00094B78 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		47C75365230E54EC0010C0EE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -294,6 +356,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4706FD82230A871F00094B78 /* ContentProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		47C75363230E54EC0010C0EE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47C7536B230E54EC0010C0EE /* ContentProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +394,11 @@
 			isa = PBXTargetDependency;
 			target = 4706FD7B230A871F00094B78 /* topshelf */;
 			targetProxy = 4706FD84230A871F00094B78 /* PBXContainerItemProxy */;
+		};
+		47C7536E230E54EC0010C0EE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 47C75366230E54EC0010C0EE /* topshelfold */;
+			targetProxy = 47C7536D230E54EC0010C0EE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -361,7 +436,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 12.0;
+				TVOS_DEPLOYMENT_TARGET = 13.0;
 				WATCHOS_DEPLOYMENT_TARGET = 5.0;
 			};
 			name = Debug;
@@ -388,8 +463,50 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 12.0;
+				TVOS_DEPLOYMENT_TARGET = 13.0;
 				WATCHOS_DEPLOYMENT_TARGET = 5.0;
+			};
+			name = Release;
+		};
+		47C75370230E54EC0010C0EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 201908211659;
+				DEVELOPMENT_TEAM = HR66SGQEZ4;
+				INFOPLIST_FILE = topshelfold/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV.topshelfold";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
+			};
+			name = Debug;
+		};
+		47C75371230E54EC0010C0EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 201908211659;
+				DEVELOPMENT_TEAM = HR66SGQEZ4;
+				INFOPLIST_FILE = topshelfold/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV.topshelfold";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Release;
 		};
@@ -567,6 +684,15 @@
 			buildConfigurations = (
 				4706FD88230A871F00094B78 /* Debug */,
 				4706FD89230A871F00094B78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		47C75372230E54EC0010C0EE /* Build configuration list for PBXNativeTarget "topshelfold" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				47C75370230E54EC0010C0EE /* Debug */,
+				47C75371230E54EC0010C0EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
