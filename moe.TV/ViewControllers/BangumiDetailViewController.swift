@@ -16,7 +16,7 @@ class BangumiDetailViewController: UIViewController,
     UICollectionViewDelegateFlowLayout,
     UICollectionViewDelegate,
     UICollectionViewDataSource,
-    AVPlayerViewControllerDelegate{
+    AVPlayerViewControllerDelegate {
 
 
         var bangumiUUID: String = ""
@@ -28,6 +28,7 @@ class BangumiDetailViewController: UIViewController,
         @IBOutlet weak var subtitleLabel: UILabel!
         @IBOutlet weak var summaryText: UITextView!
         @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+        @IBOutlet weak var summaryDetailButton: UIButton!
 
         @IBOutlet weak var collectionView: UICollectionView!
 
@@ -40,6 +41,7 @@ class BangumiDetailViewController: UIViewController,
             self.titleLabel.text = ""
             self.subtitleLabel.text = ""
             self.summaryText.text = ""
+            summaryDetailButton.isHidden = true
 
             print("bangumiUUID:", bangumiUUID)
             // Do any additional setup after loading the view.
@@ -48,7 +50,7 @@ class BangumiDetailViewController: UIViewController,
                 self.loadingIndicator.startAnimating()
 
                 getBangumiDetail(id: bangumiUUID) { (isSuccess, result) in
-
+                    self.summaryDetailButton.isHidden = false
                     self.loadingIndicator.isHidden = true
                     self.loadingIndicator.stopAnimating()
 
@@ -86,16 +88,16 @@ class BangumiDetailViewController: UIViewController,
                 }
             }
         }
-    
-    
-    @IBAction func showMoreSummary(_ sender: Any) {
-        let sumdetailvc = self.storyboard?.instantiateViewController(withIdentifier: "SummaryDetailViewController") as! SummaryDetailViewController
-        sumdetailvc.summaryText = (self.bgmDic["summary"] as! String)
-        self.present(sumdetailvc, animated: true)
-    }
-    
-    
-    
+
+
+        @IBAction func showMoreSummary(_ sender: Any) {
+            let sumdetailvc = self.storyboard?.instantiateViewController(withIdentifier: "SummaryDetailViewController") as! SummaryDetailViewController
+            sumdetailvc.summaryText = (self.bgmDic["summary"] as! String)
+            self.present(sumdetailvc, animated: true)
+        }
+
+
+
         // MARK: - CollectionView
 
         func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -194,7 +196,7 @@ class BangumiDetailViewController: UIViewController,
             let row = indexPath.row
             let arr = self.bgmEPlist[row] as! Dictionary<String, Any>
             let epid = arr["id"] as! String
-            
+
 
             getEpisodeDetail(ep_id: epid) { (isSuccess, result) in
                 if isSuccess {
@@ -203,60 +205,76 @@ class BangumiDetailViewController: UIViewController,
                     if let videoList = dic["video_files"] {
                         let arr = videoList as! Array<Any>
                         if arr.count == 1 {
-                            //only one video
-                            
+                            print("only one video")
+
                             let dic2 = arr[0] as! Dictionary<String, Any>
                             let videoURLstr = getServerAddr() + (dic2["url"] as! String)
-                            
+
                             self.askToSeek(videoURLstr: videoURLstr, outSideDic: dic)
-                            
+
                         } else if arr.count > 1 {
                             let alert = UIAlertController.init(title: "Multiple video source", message: "There're more than one source of this video, please select", preferredStyle: .alert)
-                            
                             for item in arr {
                                 let dic2 = item as! Dictionary<String, Any>
                                 alert.addAction(UIAlertAction.init(title: (dic2["file_name"] as! String), style: .default, handler: { (action) in
-                                    
+
                                         let videoURLstr = getServerAddr() + (dic2["url"] as! String)
-                                    
+
                                         self.askToSeek(videoURLstr: videoURLstr, outSideDic: dic)
                                     }))
-                                
+
                                 self.present(alert, animated: true, completion: nil)
                             }
                         } else {
-                            //no video,ingore
+                            print("video list empty,ingore")
                         }
+                    } else {
+                        print("no video")
+                        let alert = UIAlertController(title: "No video source", message: "Not boardcast yet or video deleted.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
                     }
 
                 }
             }
         }
-    
-    //warning: watching progress record is outside of sub dictionary, should use root dir instand of "video_files"
-    func askToSeek(videoURLstr:String, outSideDic:Dictionary<String,Any>) {
-        var seektime = 0.0
-        if let watchProgressDic = outSideDic["watch_progress"] { //not in dic2!!
-            //waching in progress, ask to seek
-            let alert = UIAlertController(title: "Start form beginning?", message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
+
+        //warning: watching progress record is outside of sub dictionary, should use root dir instand of "video_files"
+        func askToSeek(videoURLstr: String, outSideDic: Dictionary<String, Any>) {
+            var seektime = 0.0
+
+            if let watchProgressDic = outSideDic["watch_progress"] { //not in dic2!!
+                let dic = watchProgressDic as! Dictionary<String, Any>
+                if (dic["watch_status"] as! Int) != 2 {//is marked as unwatch?
+                    //waching in progress, ask to seek
+                    let alert = UIAlertController(title: "Start form last watch position?", message: nil, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
+
+                        let last_watch_position = dic["last_watch_position"]
+                        seektime = (last_watch_position as! Double)
+                        print("seekingto:", seektime)
+                        self.startPlayVideo(fromURL: videoURLstr, seekTime: seektime)
+
+                    }))
+                    alert.addAction(UIAlertAction(title: "No, start from begening", style: .default, handler: { (action) in
+                        self.startPlayVideo(fromURL: videoURLstr, seekTime: 0)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                } else {
+                    //was wached, but should start from begening
+                    self.startPlayVideo(fromURL: videoURLstr, seekTime: 0)
+                }
+            } else {
+                //no watching record, start play form begening
                 self.startPlayVideo(fromURL: videoURLstr, seekTime: 0)
-            }))
-            alert.addAction(UIAlertAction(title: "Continue from last watching", style: .default, handler: { (action) in
-                let dic3 = watchProgressDic as! Dictionary<String, Any>
-                let last_watch_position = dic3["last_watch_position"]
-                seektime = (last_watch_position as! Double)
-                print("seekingto:", seektime)
-                self.startPlayVideo(fromURL: videoURLstr, seekTime: seektime)
-            }))
-            self.present(alert, animated: true, completion: nil)
+            }
+
         }
-        
-    }
-    
-    
-    // MARK: - Video
-    
+
+
+
+
+        // MARK: - Video
         func startPlayVideo(fromURL: String, seekTime: Double) {
             let player = AVPlayer(url: URL(string: urlEncode(string: fromURL))!)
             let controller = AVPlayerViewController()
@@ -278,21 +296,20 @@ class BangumiDetailViewController: UIViewController,
             let currentTime = CMTimeGetSeconds(currentItem!.currentTime())
             let percent = CMTimeGetSeconds(currentItem!.currentTime()) / CMTimeGetSeconds(currentItem!.duration)
             var isFinished = false
-            if percent > 0.95{
+            if percent > 0.95 {
                 isFinished = true
             }
-            
+
             let indexPaths = self.collectionView.indexPathsForSelectedItems
             let indexPath = indexPaths![0] as NSIndexPath
-            let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String,Any>
+            let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String, Any>
             sentEPWatchProgress(ep_id: (dic["id"] as! String),
-                                bangumi_id: (dic["bangumi_id"] as! String),
-                                last_watch_position: Float(currentTime),
-                                percentage: percent,
-                                is_finished: isFinished) { (isSuccess, result) in
-                                    if !isSuccess{
-                                        print("log progress failed:",result as Any)
-                                    }
+                bangumi_id: (dic["bangumi_id"] as! String),
+                last_watch_position: Float(currentTime),
+                percentage: percent,
+                is_finished: isFinished) { (isSuccess, result) in
+                print(result as Any)
+
             }
             return true
         }

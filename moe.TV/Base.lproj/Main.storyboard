@@ -361,7 +361,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ek-Ac-kte">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ek-Ac-kte">
                                 <rect key="frame" x="573" y="276" width="1241" height="299"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -462,6 +462,7 @@
                         <outlet property="iconView" destination="HcS-yK-BHN" id="JZV-GR-nkR"/>
                         <outlet property="loadingIndicator" destination="aoS-jn-R1p" id="JrN-jM-Z3S"/>
                         <outlet property="subtitleLabel" destination="9NL-kz-gth" id="FBo-Cr-PhB"/>
+                        <outlet property="summaryDetailButton" destination="3ek-Ac-kte" id="gZz-BR-tuI"/>
                         <outlet property="summaryText" destination="Qyn-hZ-X39" id="EbM-N9-5BN"/>
                         <outlet property="titleLabel" destination="8HV-PD-80O" id="YRr-IP-7QZ"/>
                     </connections>
