@@ -24,7 +24,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
 
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
+        self.collectionView?.delegate = self
         // Do any additional setup after loading the view.
         self.loadData()
     }
@@ -57,11 +57,11 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
                     }else{
                         print(result as Any)
                         let err = result as! String
-                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-                            //self.dismiss(animated: true, completion: nil)
-                        }))
-                        self.present(alert, animated: true, completion: nil)
+//                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+//                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+//                            //self.dismiss(animated: true, completion: nil)
+//                        }))
+//                        self.present(alert, animated: true, completion: nil)
                     }
                 }
             }

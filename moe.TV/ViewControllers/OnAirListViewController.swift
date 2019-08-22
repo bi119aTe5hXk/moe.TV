@@ -11,7 +11,7 @@ import Alamofire
 import AlamofireImage
 private let reuseIdentifier = "Cell"
 
-class OnAirListViewController: UICollectionViewController {
+class OnAirListViewController: UICollectionViewController,UICollectionViewDelegateFlowLayout {
     var bgmList: Array<Any> = []
     
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
@@ -21,7 +21,7 @@ class OnAirListViewController: UICollectionViewController {
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
+        
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView.delegate = self
@@ -54,11 +54,11 @@ class OnAirListViewController: UICollectionViewController {
                     }else{
                         print(result as Any)
                         let err = result as! String
-                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-                            //self.dismiss(animated: true, completion: nil)
-                        }))
-                        self.present(alert, animated: true, completion: nil)
+//                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+//                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+//                            //self.dismiss(animated: true, completion: nil)
+//                        }))
+//                        self.present(alert, animated: true, completion: nil)
                     }
                 })
             }

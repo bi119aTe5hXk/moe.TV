@@ -551,29 +551,30 @@
                             <inset key="sectionInset" minX="60" minY="60" maxX="60" maxY="60"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DataItemCell" id="8Hl-YO-VV2" customClass="DataItemCollectionViewCell" customModule="moe_TV" customModuleProvider="target">
-                                <rect key="frame" x="60" y="60" width="300" height="370"/>
+                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BangumiCell" reuseIdentifier="BangumiCell" id="wDQ-hL-1QP" customClass="BangumiCell" customModule="moe_TV" customModuleProvider="target">
+                                <rect key="frame" x="60" y="60" width="359" height="600"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="370"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="359" height="600"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView opaque="NO" multipleTouchEnabled="YES" contentMode="scaleAspectFill" fixedFrame="YES" adjustsImageWhenAncestorFocused="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Djy-3d-Lyg">
-                                            <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                                        <imageView opaque="NO" multipleTouchEnabled="YES" tag="2" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" adjustsImageWhenAncestorFocused="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dji-lD-cD8">
+                                            <rect key="frame" x="20" y="0.0" width="318" height="477"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cLG-2i-wKR">
-                                            <rect key="frame" x="0.0" y="335" width="300" height="35"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7y7-0L-rIl">
+                                            <rect key="frame" x="1" y="525" width="358" height="75"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                            <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                 </view>
+                                <size key="customSize" width="359" height="600"/>
                                 <connections>
-                                    <outlet property="imageView" destination="Djy-3d-Lyg" id="gpI-gA-1yD"/>
-                                    <outlet property="label" destination="cLG-2i-wKR" id="6Q2-YB-cws"/>
+                                    <outlet property="iconView" destination="Dji-lD-cD8" id="ebe-BU-FBE"/>
+                                    <outlet property="titleTextField" destination="7y7-0L-rIl" id="9qr-R0-I3f"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -583,6 +584,9 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="SzA-2N-LRb"/>
+                    <connections>
+                        <outlet property="collectionView" destination="syO-dI-yXb" id="4JF-Lz-ha2"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QNb-Bb-VbX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
