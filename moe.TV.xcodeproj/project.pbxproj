@@ -25,6 +25,7 @@
 		47C75368230E54EC0010C0EE /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4706FD7E230A871F00094B78 /* TVServices.framework */; };
 		47C7536B230E54EC0010C0EE /* ContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C7536A230E54EC0010C0EE /* ContentProvider.swift */; };
 		47C7536F230E54EC0010C0EE /* topshelfold.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 47C75367230E54EC0010C0EE /* topshelfold.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		47CB0CB1230E6604008D3034 /* SummaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */; };
 		47D4490D230C69F4000F8C6C /* EPCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D4490C230C69F4000F8C6C /* EPCell.swift */; };
 		863CF9F8230594F800CA958F /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
 		86D97C912301CF6B00CF5F03 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97C902301CF6B00CF5F03 /* AppDelegate.swift */; };
@@ -86,6 +87,8 @@
 		47C75367230E54EC0010C0EE /* topshelfold.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = topshelfold.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		47C7536A230E54EC0010C0EE /* ContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentProvider.swift; sourceTree = "<group>"; };
 		47C7536C230E54EC0010C0EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		47C75373230E5C5A0010C0EE /* topshelfold.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = topshelfold.entitlements; sourceTree = "<group>"; };
+		47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryDetailViewController.swift; sourceTree = "<group>"; };
 		47D4490C230C69F4000F8C6C /* EPCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCell.swift; sourceTree = "<group>"; };
 		863CF9F7230594F800CA958F /* ServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHandler.swift; sourceTree = "<group>"; };
 		86D97C8D2301CF6B00CF5F03 /* moe.TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = moe.TV.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -158,6 +161,7 @@
 				47433AE02306C1AC007794E1 /* OnAirListViewController.swift */,
 				4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */,
 				4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */,
+				47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */,
 				86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */,
 				471BBB15230DBE5D00CD5D73 /* SettingsViewController.swift */,
 			);
@@ -176,6 +180,7 @@
 		47C75369230E54EC0010C0EE /* topshelfold */ = {
 			isa = PBXGroup;
 			children = (
+				47C75373230E5C5A0010C0EE /* topshelfold.entitlements */,
 				47C7536A230E54EC0010C0EE /* ContentProvider.swift */,
 				47C7536C230E54EC0010C0EE /* Info.plist */,
 			);
@@ -375,6 +380,7 @@
 				4775A9F22305C60300B84382 /* TabbarViewController.swift in Sources */,
 				47433AE12306C1AC007794E1 /* OnAirListViewController.swift in Sources */,
 				4775A9F02305C5C400B84382 /* SplitViewController.swift in Sources */,
+				47CB0CB1230E6604008D3034 /* SummaryDetailViewController.swift in Sources */,
 				86D97CC02301D5F900CF5F03 /* LoginViewController.swift in Sources */,
 				86D97CBE2301CFF800CF5F03 /* SearchResultsViewController.swift in Sources */,
 				86D97C912301CF6B00CF5F03 /* AppDelegate.swift in Sources */,
@@ -424,20 +430,20 @@
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = topshelf/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV.topshelf";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 13.0;
-				WATCHOS_DEPLOYMENT_TARGET = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Debug;
 		};
@@ -451,62 +457,70 @@
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = topshelf/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV.topshelf";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 13.0;
-				WATCHOS_DEPLOYMENT_TARGET = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Release;
 		};
 		47C75370230E54EC0010C0EE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = topshelfold/topshelfold.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 201908211659;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				INFOPLIST_FILE = topshelfold/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV.topshelfold";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 12.0;
+				WATCHOS_DEPLOYMENT_TARGET = 5.0;
 			};
 			name = Debug;
 		};
 		47C75371230E54EC0010C0EE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = topshelfold/topshelfold.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 201908211659;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				INFOPLIST_FILE = topshelfold/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV.topshelfold";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 12.0;
+				WATCHOS_DEPLOYMENT_TARGET = 5.0;
 			};
 			name = Release;
 		};
@@ -566,7 +580,7 @@
 				SDKROOT = appletvos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TVOS_DEPLOYMENT_TARGET = 13.0;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Debug;
 		};
@@ -619,7 +633,7 @@
 				SDKROOT = appletvos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				TVOS_DEPLOYMENT_TARGET = 13.0;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

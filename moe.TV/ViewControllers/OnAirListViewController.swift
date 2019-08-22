@@ -24,7 +24,7 @@ class OnAirListViewController: UICollectionViewController {
 
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        
+        self.collectionView.delegate = self
         // Do any additional setup after loading the view.
         self.loadData()
     }

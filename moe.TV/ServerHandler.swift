@@ -40,19 +40,19 @@ func getServerAddr() -> String {
 }
 
 
-func logInServer(url: String, username: String, password: String, completion: @escaping (Bool, String) -> Void) {
+func logInServer(url: String,
+                 username: String,
+                 password: String,
+                 completion: @escaping (Bool, String) -> Void) {
+    
     UserDefaults.standard.set(url, forKey: "serveraddr")
     var urlstr = getServerAddr()
-
     urlstr.append("/api/user/login")
 
     let postdata = ["name": username, "password": password, "remmember": true] as [String: Any]
     print(urlstr)
     requestManager.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
-
-        
         //print(String(data: response.data!, encoding: .utf8) as Any)
-
         switch response.result {
         case .success(let value):
             
@@ -69,18 +69,14 @@ func logInServer(url: String, username: String, password: String, completion: @e
                     //print(status)
                     completion(false, (status as! String))
                 }
-
             }
             break
-
         case .failure(let error):
             // error handling
             UserDefaults.standard.set(false, forKey: "loggedin")
             completion(false, error.localizedDescription)
             break
         }
-
-        //completion(response.result)
     }
 }
 
@@ -89,7 +85,6 @@ func logOutServer(completion: @escaping (Bool, String) -> Void) {
     urlstr.append("/api/user/logout")
     loadCookies()
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-
         //print(response.result)
         switch response.result {
         case .success(let value):
@@ -104,10 +99,8 @@ func logOutServer(completion: @escaping (Bool, String) -> Void) {
                     //print(status)
                     completion(false, (status as! String))
                 }
-
             }
             break
-
         case .failure(let error):
             // error handling
             UserDefaults.standard.set(false, forKey: "loggedin")
@@ -123,7 +116,6 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
     urlstr.append("/api/home/my_bangumi?status=3")
     loadCookies()
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        
         //print(String(data: response.data!, encoding: .utf8) as Any)
         switch response.result {
         case .success(let value):
@@ -133,17 +125,13 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
                 completion(true, data)
             }
             break
-
         case .failure(let error):
             // error handling
             //UserDefaults.standard.set(false, forKey: "loggedin")
-
             completion(false, error.localizedDescription)
-
             break
         }
     }
-
 }
 
 func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
@@ -161,18 +149,18 @@ func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
                 completion(true, data)
             }
             break
-
         case .failure(let error):
             // error handling
             //UserDefaults.standard.set(false, forKey: "loggedin")
             completion(false, error.localizedDescription)
-
             break
         }
     }
 }
 
-func getAllBangumiList(page: Int, name: String, completion: @escaping (Bool, Any?) -> Void) {
+func getAllBangumiList(page: Int,
+                       name: String,
+                       completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/home/bangumi?page=")
     urlstr.append(String(page))
@@ -182,7 +170,6 @@ func getAllBangumiList(page: Int, name: String, completion: @escaping (Bool, Any
     loadCookies()
 
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-
         //print(response.result)
         switch response.result {
         case .success(let value):
@@ -192,25 +179,22 @@ func getAllBangumiList(page: Int, name: String, completion: @escaping (Bool, Any
                 completion(true, data)
             }
             break
-
         case .failure(let error):
             // error handling
             //UserDefaults.standard.set(false, forKey: "loggedin")
             completion(false, error.localizedDescription)
-
             break
         }
     }
-
 }
-func getBangumiDetail(id: String, completion: @escaping (Bool, Any?) -> Void) {
+func getBangumiDetail(id: String,
+                      completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/home/bangumi/")
     urlstr.append(id)
     loadCookies()
 
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-
         //print(response.result)
         switch response.result {
         case .success(let value):
@@ -220,24 +204,22 @@ func getBangumiDetail(id: String, completion: @escaping (Bool, Any?) -> Void) {
                 completion(true, data)
             }
             break
-
         case .failure(let error):
             // error handling
             //UserDefaults.standard.set(false, forKey: "loggedin")
             completion(false, error.localizedDescription)
-
             break
         }
     }
 }
-func getEpisodeDetail(ep_id: String, completion: @escaping (Bool, Any?) -> Void) {
+func getEpisodeDetail(ep_id: String,
+                      completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/home/episode/")
     urlstr.append(ep_id)
     loadCookies()
 
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-
         //print(response.result)
         switch response.result {
         case .success(let value):
@@ -246,7 +228,6 @@ func getEpisodeDetail(ep_id: String, completion: @escaping (Bool, Any?) -> Void)
                 completion(true, JSON)
             }
             break
-
         case .failure(let error):
             // error handling
             //UserDefaults.standard.set(false, forKey: "loggedin")
@@ -256,6 +237,34 @@ func getEpisodeDetail(ep_id: String, completion: @escaping (Bool, Any?) -> Void)
     }
 }
 
+func sentEPWatchProgress(ep_id: String,
+                         bangumi_id:String,
+                         last_watch_position:Float,
+                         percentage:Double,
+                         is_finished:Bool,
+                         completion: @escaping (Bool, Any?) -> Void){
+    var urlstr = getServerAddr()
+    urlstr.append("/api/watch/history/")
+    urlstr.append(ep_id)
+    loadCookies()
+    let postdata = ["bangumi_id": bangumi_id, "last_watch_position": last_watch_position, "percentage": percentage,"is_finished":is_finished] as [String: Any]
+    requestManager.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [String: Any] {
+                //print(JSON)
+                completion(true, JSON)
+            }
+            break
+        case .failure(let error):
+            // error handling
+            //UserDefaults.standard.set(false, forKey: "loggedin")
+            completion(false, error.localizedDescription)
+            break
+        }
+    }
+}
 
 
 func saveCookies(response: DataResponse<Any>) {
