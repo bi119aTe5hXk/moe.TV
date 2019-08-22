@@ -164,7 +164,7 @@ func getAllBangumiList(page: Int,
     var urlstr = getServerAddr()
     urlstr.append("/api/home/bangumi?page=")
     urlstr.append(String(page))
-    urlstr.append("&count=10&sort_field=air_date&sort_order=desc&name=")
+    urlstr.append("&count=12&sort_field=air_date&sort_order=desc&name=")
     urlstr.append(name)
     urlstr.append("&type=-1")
     loadCookies()
@@ -173,6 +173,8 @@ func getAllBangumiList(page: Int,
         //print(response.result)
         switch response.result {
         case .success(let value):
+            let dic = value as! Dictionary<String,Any>
+            print("result_count:",dic["total"] as Any)
             if let JSON = value as? [String: Any] {
                 let data = JSON["data"] as Any
                 //print(data)

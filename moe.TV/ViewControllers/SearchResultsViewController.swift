@@ -27,34 +27,16 @@ class SearchResultsViewController: UICollectionViewController,
                 
                 // Apply the filter or show all items if the filter string is empty.
                 if filterString.isEmpty {
+                    //clear all, reset
+                    self.resultArr.removeAll(keepingCapacity: false)
+                    self.collectionView?.reloadData()
+                    self.pageNum = 1
+                    
                     //show all
-                    //filteredDataItems = allDataItems
-                    getAllBangumiList(page: pageNum, name: filterString) {
-                        (isSuccess, result) in
-                        if isSuccess {
-                            //let resultDir = result as! Array<Any>//Dictionary<String,Any>
-                            let arr = result as! Array<Any>
-                            self.resultArr = arr//[arr[0]]
-                            //print(self.resultArr as Any)
-                            self.collectionView?.reloadData()
-                        } else {
-
-                        }
-                    }
+                    self.getBangumiList(name: "")
                 } else {
                     //show search result
-                    getAllBangumiList(page: pageNum, name: filterString) {
-                        (isSuccess, result) in
-                        if isSuccess {
-                            //let resultDir = result as! Array<Any>//Dictionary<String,Any>
-                            let arr = result as! Array<Any>
-                            self.resultArr.append(arr[0])
-                            //print(self.resultArr as Any)
-                            self.collectionView?.reloadData()
-                        } else {
-
-                        }
-                    }
+                    self.getBangumiList(name: filterString)
                 }
             }
         }
@@ -75,6 +57,20 @@ class SearchResultsViewController: UICollectionViewController,
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView?.delegate = self
         // Do any additional setup after loading the view.
+        //first time
+        self.getBangumiList(name: "")
+    }
+    func getBangumiList(name:String){
+        getAllBangumiList(page: pageNum, name: name) {
+            (isSuccess, result) in
+            if isSuccess {
+                //let resultDir = result as! Array<Any>//Dictionary<String,Any>
+                let arr = result as! Array<Any>
+                self.resultArr = arr//[arr[0]]
+                //print(self.resultArr as Any)
+                self.collectionView?.reloadData()
+            }
+        }
     }
 
         /*
@@ -108,18 +104,18 @@ class SearchResultsViewController: UICollectionViewController,
 
         override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
             // #warning Incomplete implementation, return the number of items
-            print("count:", self.resultArr.count)
             return self.resultArr.count
         }
 
         override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BangumiCell", for: indexPath) as! BangumiCell
             if let rowarr = resultArr[indexPath.row] as? Dictionary<String, Any> {
-                print(rowarr["id"] as Any)
+                //print(rowarr["id"] as Any)
                 // Configure the cell
                 cell.titleTextField?.text = (rowarr["name"] as! String)
                 //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
                 let imgurlstr = rowarr["image"] as! String
+                cell.iconView.image = nil
                 AF.request(imgurlstr).responseImage { (response) in
                     switch response.result {
                     case .success(let value):
@@ -127,50 +123,58 @@ class SearchResultsViewController: UICollectionViewController,
                             cell.iconView.image = image
                         }
                         break
-
                     case .failure(let error):
                         // error handling
                         print(error)
+                        cell.iconView.image = nil
                         break
                     }
                 }
+                
             }
             return cell
         }
 
         // MARK: UICollectionViewDelegate
-
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let row = indexPath.row
+        let arr = self.resultArr[row] as! Dictionary<String, Any>
+        let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
+        detailvc.bangumiUUID = arr["id"] as! String
+        self.present(detailvc, animated: true)
+    }
+    
+    
         /*
     // Uncomment this method to specify if the specified item should be highlighted during tracking
     override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         return true
     }
     */
-//    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BangumiCell", for: indexPath) as! BangumiCell
-//        if let rowarr = resultArr[indexPath.row] as? Dictionary<String, Any>{
-//            print(rowarr["id"] as Any)
-//            // Configure the cell
-//            cell.titleTextField?.text = (rowarr["name"] as! String)
-//            //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
-//            let imgurlstr = rowarr["image"] as! String
-//            AF.request(imgurlstr).responseImage { (response) in
-//                switch response.result {
-//                case .success(let value):
-//                    if let image = value as? Image{
-//                        cell.iconView.image = image
-//                    }
-//                    break
-//
-//                case .failure(let error):
-//                    // error handling
-//                    print(error)
-//                    break
-//                }
-//            }
-//        }
-//
-//    }
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        //print(indexPath.row)
+        if indexPath.row == (self.resultArr.count - 4){
+            
+            pageNum += 1
+            getAllBangumiList(page: pageNum, name: filterString) {
+                (isSuccess, result) in
+                if isSuccess {
+                    //let resultDir = result as! Array<Any>//Dictionary<String,Any>
+                    let arr = result as! Array<Any>
+                    //print(self.resultArr as Any)
+                    //self.collectionView?.reloadData()
+                    var paths = [IndexPath]()
+                    for item in 0..<arr.count {
+                        let index = IndexPath(row: item + self.resultArr.count, section: 0)
+                        paths.append(index)
+                    }
+                    self.resultArr.append(arr[0])
+                    self.collectionView.insertItems(at: paths)
+                }
+            }
+        }
+    }
         /*
     // Uncomment this method to specify if the specified item should be selected
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
