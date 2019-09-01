@@ -1,5 +1,5 @@
 //
-//  ContentProvider.swift
+//  ServiceProvider.swift
 //  topshelfold
 //
 //  Created by bi119aTe5hXk on 2019/08/22.
@@ -18,6 +18,8 @@ class ServiceProvider: NSObject, TVTopShelfProvider {
             return sectionedTopShelfItems
         case .inset:
             return insetTopShelfItems
+        @unknown default:
+            return []
         }
     }
     

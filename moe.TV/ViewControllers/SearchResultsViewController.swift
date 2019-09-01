@@ -24,14 +24,14 @@ class SearchResultsViewController: UICollectionViewController,
             didSet {
                 // Return if the filter string hasn't changed.
                 guard filterString != oldValue else { return }
-                
+
                 // Apply the filter or show all items if the filter string is empty.
                 if filterString.isEmpty {
                     //clear all, reset
                     self.resultArr.removeAll(keepingCapacity: false)
                     self.collectionView?.reloadData()
                     self.pageNum = 1
-                    
+
                     //show all
                     self.getBangumiList(name: "")
                 } else {
@@ -47,31 +47,31 @@ class SearchResultsViewController: UICollectionViewController,
 
         static let storyboardIdentifier = "SearchResultsViewController"
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+        override func viewDidLoad() {
+            super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+            // Uncomment the following line to preserve selection between presentations
+            // self.clearsSelectionOnViewWillAppear = false
 
-        // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.collectionView?.delegate = self
-        // Do any additional setup after loading the view.
-        //first time
-        self.getBangumiList(name: "")
-    }
-    func getBangumiList(name:String){
-        getAllBangumiList(page: pageNum, name: name) {
-            (isSuccess, result) in
-            if isSuccess {
-                //let resultDir = result as! Array<Any>//Dictionary<String,Any>
-                let arr = result as! Array<Any>
-                self.resultArr = arr//[arr[0]]
-                //print(self.resultArr as Any)
-                self.collectionView?.reloadData()
+            // Register cell classes
+            self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+            self.collectionView?.delegate = self
+            // Do any additional setup after loading the view.
+            //first time
+            self.getBangumiList(name: "")
+        }
+        func getBangumiList(name: String) {
+            getAllBangumiList(page: pageNum, name: name) {
+                (isSuccess, result) in
+                if isSuccess {
+                    //let resultDir = result as! Array<Any>//Dictionary<String,Any>
+                    let arr = result as! Array<Any>
+                    self.resultArr = arr//[arr[0]]
+                    //print(self.resultArr as Any)
+                    self.collectionView?.reloadData()
+                }
             }
         }
-    }
 
         /*
     // MARK: - Navigation
@@ -96,14 +96,15 @@ class SearchResultsViewController: UICollectionViewController,
 
         // MARK: UICollectionViewDataSource
 
-        override func numberOfSections(in collectionView: UICollectionView) -> Int {
-            // #warning Incomplete implementation, return the number of sections
-            return 1
-        }
+//        override func numberOfSections(in collectionView: UICollectionView) -> Int {
+//            // #warning Incomplete implementation, return the number of sections
+//            return 1
+//        }
 
 
         override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
             // #warning Incomplete implementation, return the number of items
+            //print("cell count:", self.resultArr.count)
             return self.resultArr.count
         }
 
@@ -130,51 +131,61 @@ class SearchResultsViewController: UICollectionViewController,
                         break
                     }
                 }
-                
+
             }
             return cell
         }
 
         // MARK: UICollectionViewDelegate
-    
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let row = indexPath.row
-        let arr = self.resultArr[row] as! Dictionary<String, Any>
-        let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
-        detailvc.bangumiUUID = arr["id"] as! String
-        self.present(detailvc, animated: true)
-    }
-    
-    
+
+        override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            let row = indexPath.row
+            let arr = self.resultArr[row] as! Dictionary<String, Any>
+            let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
+            detailvc.bangumiUUID = arr["id"] as! String
+            self.present(detailvc, animated: true)
+        }
+
+
         /*
     // Uncomment this method to specify if the specified item should be highlighted during tracking
     override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         return true
     }
     */
-    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        //print(indexPath.row)
-        if indexPath.row == (self.resultArr.count - 4){
-            
-            pageNum += 1
-            getAllBangumiList(page: pageNum, name: filterString) {
-                (isSuccess, result) in
-                if isSuccess {
-                    //let resultDir = result as! Array<Any>//Dictionary<String,Any>
-                    let arr = result as! Array<Any>
-                    //print(self.resultArr as Any)
-                    //self.collectionView?.reloadData()
-                    var paths = [IndexPath]()
-                    for item in 0..<arr.count {
-                        let index = IndexPath(row: item + self.resultArr.count, section: 0)
-                        paths.append(index)
+        override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+            //print(indexPath.row)
+            if indexPath.row == (self.resultArr.count - 1) { //will load more page at the end of the row
+                //print("start insert to", indexPath)
+                pageNum += 1
+                getAllBangumiList(page: pageNum, name: filterString) {
+                    (isSuccess, result) in
+                    if isSuccess {
+                        //let resultDir = result as! Array<Any>//Dictionary<String,Any>
+                        let arr = result as! Array<Any>
+                        //print(self.resultArr as Any)
+                        //self.collectionView?.reloadData()
+                        if arr.count > 0 {
+                            var paths = [IndexPath]()
+                            for item in 0..<arr.count {
+                                let count = self.resultArr.count + item
+                                let index = IndexPath(row: count, section: indexPath.section)
+                                //print(index)
+                                paths.append(index)
+                            }
+                            self.collectionView.performBatchUpdates({
+                                self.resultArr += arr
+                                //print("cell count2:", self.resultArr.count)
+                                self.collectionView.insertItems(at: paths)
+                            }, completion: nil)
+                            
+                        }
+
+
                     }
-                    self.resultArr.append(arr[0])
-                    self.collectionView.insertItems(at: paths)
                 }
             }
         }
-    }
         /*
     // Uncomment this method to specify if the specified item should be selected
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {

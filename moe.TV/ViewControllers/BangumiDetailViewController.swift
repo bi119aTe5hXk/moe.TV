@@ -121,7 +121,7 @@ class BangumiDetailViewController: UIViewController,
                 cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
                 //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
                 let imgurlstr = getServerAddr() + (rowarr["thumbnail"] as! String)
-
+                cell.iconView.image = nil
                 AF.request(imgurlstr).responseImage { (response) in
 
                     cell.loadingIndicator.isHidden = true
@@ -137,7 +137,7 @@ class BangumiDetailViewController: UIViewController,
                     case .failure(let error):
                         cell.loadingIndicator.isHidden = true
                         cell.loadingIndicator.stopAnimating()
-
+                        cell.iconView.image = nil
                         // error handling
                         print(error)
                         break

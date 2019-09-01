@@ -98,6 +98,7 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
         cell.titleTextField?.text = (rowarr["name"] as! String)
         //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
         let imgurlstr = rowarr["image"] as! String
+        cell.iconView.image = nil
         AF.request(imgurlstr).responseImage { (response) in
             switch response.result {
             case .success(let value):
@@ -109,6 +110,7 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
             case .failure(let error):
                 // error handling
                 print(error)
+                cell.iconView.image = nil
                 break
             }
         }

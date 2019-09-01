@@ -23,7 +23,7 @@
 		4775A9FA2306BA1700B84382 /* BangumiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F92306BA1700B84382 /* BangumiCell.swift */; };
 		477749102305AAC6002E2D25 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4777490F2305AAC6002E2D25 /* Alamofire */; };
 		47C75368230E54EC0010C0EE /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4706FD7E230A871F00094B78 /* TVServices.framework */; };
-		47C7536B230E54EC0010C0EE /* ContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C7536A230E54EC0010C0EE /* ContentProvider.swift */; };
+		47C7536B230E54EC0010C0EE /* ServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C7536A230E54EC0010C0EE /* ServiceProvider.swift */; };
 		47C7536F230E54EC0010C0EE /* topshelfold.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 47C75367230E54EC0010C0EE /* topshelfold.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		47CB0CB1230E6604008D3034 /* SummaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */; };
 		47D4490D230C69F4000F8C6C /* EPCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D4490C230C69F4000F8C6C /* EPCell.swift */; };
@@ -85,7 +85,7 @@
 		4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBangumiListViewController.swift; sourceTree = "<group>"; };
 		4775A9F92306BA1700B84382 /* BangumiCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BangumiCell.swift; sourceTree = "<group>"; };
 		47C75367230E54EC0010C0EE /* topshelfold.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = topshelfold.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		47C7536A230E54EC0010C0EE /* ContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentProvider.swift; sourceTree = "<group>"; };
+		47C7536A230E54EC0010C0EE /* ServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProvider.swift; sourceTree = "<group>"; };
 		47C7536C230E54EC0010C0EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47C75373230E5C5A0010C0EE /* topshelfold.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = topshelfold.entitlements; sourceTree = "<group>"; };
 		47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryDetailViewController.swift; sourceTree = "<group>"; };
@@ -181,7 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				47C75373230E5C5A0010C0EE /* topshelfold.entitlements */,
-				47C7536A230E54EC0010C0EE /* ContentProvider.swift */,
+				47C7536A230E54EC0010C0EE /* ServiceProvider.swift */,
 				47C7536C230E54EC0010C0EE /* Info.plist */,
 			);
 			path = topshelfold;
@@ -368,7 +368,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47C7536B230E54EC0010C0EE /* ContentProvider.swift in Sources */,
+				47C7536B230E54EC0010C0EE /* ServiceProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,7 +642,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -668,7 +667,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;

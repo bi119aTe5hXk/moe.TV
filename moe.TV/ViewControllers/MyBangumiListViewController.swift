@@ -26,9 +26,12 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView?.delegate = self
         // Do any additional setup after loading the view.
-        self.loadData()
+        //self.loadData()
     }
     override func viewDidAppear(_ animated: Bool) {
+        //self.loadData()
+    }
+    override func viewWillAppear(_ animated: Bool) {
         self.loadData()
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -51,6 +54,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
                     self.loadingIndicator.stopAnimating()
                     
                     if isSuccess {
+                        //print(result)
                         self.bgmList = result as! Array<Any>
                         self.collectionView.reloadData()
                         UserDefaults.init(suiteName: "group.moe.TV")?.set(self.bgmList, forKey: "topShelfArr")
@@ -101,6 +105,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         cell.titleTextField?.text = (rowarr["name"] as! String)
         //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
         let imgurlstr = rowarr["image"] as! String
+        cell.iconView.image = nil
         AF.request(imgurlstr).responseImage { (response) in
             switch response.result {
             case .success(let value):
@@ -112,6 +117,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
             case .failure(let error):
                 // error handling
                 print(error)
+                cell.iconView.image = nil
                 break
             }
         }
