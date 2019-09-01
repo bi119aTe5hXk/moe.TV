@@ -58,8 +58,15 @@ class BangumiDetailViewController: UIViewController,
                         self.summaryText.text = (self.bgmDic["summary"] as! String)
 
                         let imgurlstr = self.bgmDic["image"] as! String
-                        self.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
-                        self.iconView.roundedImage(corners: .allCorners, radius: 6)
+                        self.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
+                                                  placeholderImage: nil,
+                                                  filter: .none,
+                                                  progress: .none,
+                                                  progressQueue: .main,
+                                                  imageTransition: .noTransition,
+                                                  runImageTransitionIfCached: true) { (data) in
+                                                    self.iconView.roundedImage(corners: .allCorners, radius: 6)
+                        }
                         self.collectionView.reloadData()
 
                     } else {
@@ -106,8 +113,15 @@ class BangumiDetailViewController: UIViewController,
                 //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
                 let imgurlstr = getServerAddr() + (rowarr["thumbnail"] as! String)
                 cell.iconView.image = nil
-                cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
-                cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+                cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
+                                          placeholderImage: nil,
+                                          filter: .none,
+                                          progress: .none,
+                                          progressQueue: .main,
+                                          imageTransition: .noTransition,
+                                          runImageTransitionIfCached: true) { (data) in
+                                            cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+                }
 
                 if let watch_progress = rowarr["watch_progress"] {//watching or watched
                     let wpdic = watch_progress as! Dictionary<String, Any>

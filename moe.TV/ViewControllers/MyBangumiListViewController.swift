@@ -106,10 +106,18 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
         let imgurlstr = rowarr["image"] as! String
         cell.iconView.image = nil
-        cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
-        cell.iconView.roundedImage(corners: .allCorners, radius: 6)
-
+        //cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
         
+
+        cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
+                                  placeholderImage: nil,
+                                  filter: .none,
+                                  progress: .none,
+                                  progressQueue: .main,
+                                  imageTransition: .noTransition,
+                                  runImageTransitionIfCached: true) { (data) in
+                                    cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+        }
         
         
         return cell
