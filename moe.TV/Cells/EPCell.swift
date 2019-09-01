@@ -12,6 +12,5 @@ class EPCell: UICollectionViewCell {
     @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var titleText: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
 }

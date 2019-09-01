@@ -117,22 +117,8 @@ class SearchResultsViewController: UICollectionViewController,
                 //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
                 let imgurlstr = rowarr["image"] as! String
                 cell.iconView.image = nil
-                AF.request(imgurlstr).responseImage { (response) in
-                    switch response.result {
-                    case .success(let value):
-                        if let image = value as? Image {
-                            cell.iconView.image = image
-                            cell.iconView.adjustsImageWhenAncestorFocused = true
-                            cell.iconView.roundedImage(corners: UIRectCorner.allCorners, radius: 6)
-                        }
-                        break
-                    case .failure(let error):
-                        // error handling
-                        print(error)
-                        cell.iconView.image = nil
-                        break
-                    }
-                }
+                cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
+                cell.iconView.roundedImage(corners: .allCorners, radius: 6)
 
             }
             return cell

@@ -27,7 +27,6 @@ class BangumiDetailViewController: UIViewController,
         @IBOutlet weak var titleLabel: UILabel!
         @IBOutlet weak var subtitleLabel: UILabel!
         @IBOutlet weak var summaryText: UITextView!
-        @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
         @IBOutlet weak var summaryDetailButton: UIButton!
 
         @IBOutlet weak var collectionView: UICollectionView!
@@ -46,13 +45,9 @@ class BangumiDetailViewController: UIViewController,
             print("bangumiUUID:", bangumiUUID)
             // Do any additional setup after loading the view.
             if bangumiUUID.lengthOfBytes(using: .utf8) > 0 {
-                self.loadingIndicator.isHidden = false
-                self.loadingIndicator.startAnimating()
 
                 getBangumiDetail(id: bangumiUUID) { (isSuccess, result) in
                     self.summaryDetailButton.isHidden = false
-                    self.loadingIndicator.isHidden = true
-                    self.loadingIndicator.stopAnimating()
 
                     if isSuccess {
                         self.bgmDic = result as! [String: Any]
@@ -63,19 +58,8 @@ class BangumiDetailViewController: UIViewController,
                         self.summaryText.text = (self.bgmDic["summary"] as! String)
 
                         let imgurlstr = self.bgmDic["image"] as! String
-                        DispatchQueue.global().async {
-                            do {
-                                let imgdata = try Data.init(contentsOf: URL(string: imgurlstr)!)
-                                let image = UIImage.init(data: imgdata)
-
-                                DispatchQueue.main.async {
-                                    self.iconView?.image = image
-                                    self.iconView.adjustsImageWhenAncestorFocused = true
-                                    self.iconView.roundedImage(corners: UIRectCorner.allCorners, radius: 6)
-                                }
-                            } catch { }
-                        }
-
+                        self.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
+                        self.iconView.roundedImage(corners: .allCorners, radius: 6)
                         self.collectionView.reloadData()
 
                     } else {
@@ -116,36 +100,14 @@ class BangumiDetailViewController: UIViewController,
             guard let rowarr = bgmEPlist[indexPath.row] as? Dictionary<String, Any> else {
                 return cell
             }
-            cell.loadingIndicator.isHidden = false
-            cell.loadingIndicator.startAnimating()
 
             if (rowarr["name"] as! String).lengthOfBytes(using: .utf8) > 0 {
                 cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
                 //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
                 let imgurlstr = getServerAddr() + (rowarr["thumbnail"] as! String)
                 cell.iconView.image = nil
-                AF.request(imgurlstr).responseImage { (response) in
-                    cell.loadingIndicator.isHidden = true
-                    cell.loadingIndicator.stopAnimating()
-
-                    switch response.result {
-                    case .success(let value):
-                        if let image = value as? Image {
-                            cell.iconView.image = image
-                            cell.iconView.adjustsImageWhenAncestorFocused = true
-                            cell.iconView.roundedImage(corners: UIRectCorner.allCorners, radius: 6)
-                        }
-                        break
-
-                    case .failure(let error):
-                        cell.loadingIndicator.isHidden = true
-                        cell.loadingIndicator.stopAnimating()
-                        cell.iconView.image = nil
-                        // error handling
-                        print(error)
-                        break
-                    }
-                }
+                cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
+                cell.iconView.roundedImage(corners: .allCorners, radius: 6)
 
                 if let watch_progress = rowarr["watch_progress"] {//watching or watched
                     let wpdic = watch_progress as! Dictionary<String, Any>
@@ -166,8 +128,6 @@ class BangumiDetailViewController: UIViewController,
                 cell.titleText.text = String(rowarr["episode_no"] as! Int)
                 cell.progressBar.setProgress(0, animated: false)
                 cell.progressBar.isHidden = true
-                cell.loadingIndicator.isHidden = true
-                cell.loadingIndicator.stopAnimating()
             }
             
             return cell
@@ -356,7 +316,7 @@ class BangumiDetailViewController: UIViewController,
 
 
         @objc func playerDidFinishPlaying() {
-            self.playerViewControllerShouldDismiss(self.playerController)
+            _ = self.playerViewControllerShouldDismiss(self.playerController)
             playerController.dismiss(animated: true, completion: nil)
         }
         func playerViewControllerShouldDismiss(_ playerViewController: AVPlayerViewController) -> Bool {
