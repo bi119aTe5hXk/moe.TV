@@ -111,6 +111,8 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
             case .success(let value):
                 if let image = value as? Image {
                     cell.iconView.image = image
+                    cell.iconView.adjustsImageWhenAncestorFocused = true
+                    cell.iconView.roundedImage(corners: UIRectCorner.allCorners, radius: 6)
                 }
                 break
 
@@ -121,9 +123,9 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
                 break
             }
         }
-
-
-
+        
+        
+        
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -170,3 +172,4 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
     */
 
 }
+

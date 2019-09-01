@@ -70,6 +70,8 @@ class BangumiDetailViewController: UIViewController,
 
                                 DispatchQueue.main.async {
                                     self.iconView?.image = image
+                                    self.iconView.adjustsImageWhenAncestorFocused = true
+                                    self.iconView.roundedImage(corners: UIRectCorner.allCorners, radius: 6)
                                 }
                             } catch { }
                         }
@@ -130,6 +132,8 @@ class BangumiDetailViewController: UIViewController,
                     case .success(let value):
                         if let image = value as? Image {
                             cell.iconView.image = image
+                            cell.iconView.adjustsImageWhenAncestorFocused = true
+                            cell.iconView.roundedImage(corners: UIRectCorner.allCorners, radius: 6)
                         }
                         break
 
@@ -165,6 +169,7 @@ class BangumiDetailViewController: UIViewController,
                 cell.loadingIndicator.isHidden = true
                 cell.loadingIndicator.stopAnimating()
             }
+            
             return cell
         }
 
@@ -292,7 +297,7 @@ class BangumiDetailViewController: UIViewController,
             let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String, Any>
 
             // Build title item
-            let titleItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle.rawValue, value: (self.bgmDic["name"] as! String))
+            let titleItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle.rawValue, value: (self.bgmDic["name"] as! String) + (dic["name"] as! String))
             metadata.append(titleItem)
 
             // Build artwork item
@@ -314,7 +319,7 @@ class BangumiDetailViewController: UIViewController,
             }
 
             // Build description item
-            let descItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierDescription.rawValue, value: (dic["name"] as! String))
+            let descItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierDescription.rawValue, value: (self.bgmDic["summary"] as! String))
             metadata.append(descItem)
 
             // Build rating item

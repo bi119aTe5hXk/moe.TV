@@ -122,6 +122,8 @@ class SearchResultsViewController: UICollectionViewController,
                     case .success(let value):
                         if let image = value as? Image {
                             cell.iconView.image = image
+                            cell.iconView.adjustsImageWhenAncestorFocused = true
+                            cell.iconView.roundedImage(corners: UIRectCorner.allCorners, radius: 6)
                         }
                         break
                     case .failure(let error):

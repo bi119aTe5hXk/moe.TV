@@ -10,6 +10,7 @@
 		4706FD7F230A871F00094B78 /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4706FD7E230A871F00094B78 /* TVServices.framework */; };
 		4706FD82230A871F00094B78 /* ContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4706FD81230A871F00094B78 /* ContentProvider.swift */; };
 		4706FD86230A871F00094B78 /* topshelf.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4706FD7C230A871F00094B78 /* topshelf.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		471A1E3B231BEFFB0082F1E0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471A1E3A231BEFFB0082F1E0 /* Extensions.swift */; };
 		471BBB16230DBE5D00CD5D73 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471BBB15230DBE5D00CD5D73 /* SettingsViewController.swift */; };
 		471BBB18230DC95E00CD5D73 /* ProxySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471BBB17230DC95E00CD5D73 /* ProxySettingViewController.swift */; };
 		47433AE12306C1AC007794E1 /* OnAirListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47433AE02306C1AC007794E1 /* OnAirListViewController.swift */; };
@@ -74,6 +75,7 @@
 		4706FD83230A871F00094B78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4706FD8E230A9A9600094B78 /* moe.TV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = moe.TV.entitlements; sourceTree = "<group>"; };
 		4706FD8F230A9AB200094B78 /* topshelf.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = topshelf.entitlements; sourceTree = "<group>"; };
+		471A1E3A231BEFFB0082F1E0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		471BBB15230DBE5D00CD5D73 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		471BBB17230DC95E00CD5D73 /* ProxySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProxySettingViewController.swift; sourceTree = "<group>"; };
 		47433AE02306C1AC007794E1 /* OnAirListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnAirListViewController.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 				4706FD8E230A9A9600094B78 /* moe.TV.entitlements */,
 				86D97C902301CF6B00CF5F03 /* AppDelegate.swift */,
 				863CF9F7230594F800CA958F /* ServerHandler.swift */,
+				471A1E3A231BEFFB0082F1E0 /* Extensions.swift */,
 				471BBB1B230DD48E00CD5D73 /* Cells */,
 				471BBB1A230DD47000CD5D73 /* ViewControllers */,
 				86D97C962301CF6B00CF5F03 /* Main.storyboard */,
@@ -386,6 +389,7 @@
 				86D97C912301CF6B00CF5F03 /* AppDelegate.swift in Sources */,
 				4775A9F62306B3A500B84382 /* MyBangumiListViewController.swift in Sources */,
 				471BBB18230DC95E00CD5D73 /* ProxySettingViewController.swift in Sources */,
+				471A1E3B231BEFFB0082F1E0 /* Extensions.swift in Sources */,
 				863CF9F8230594F800CA958F /* ServerHandler.swift in Sources */,
 				47D4490D230C69F4000F8C6C /* EPCell.swift in Sources */,
 				4775A9EE2305C30400B84382 /* BangumiDetailViewController.swift in Sources */,
@@ -642,6 +646,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -667,6 +672,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;

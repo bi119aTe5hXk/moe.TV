@@ -11,9 +11,7 @@ import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
-
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -36,17 +34,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Setting category to AVAudioSessionCategoryPlayback failed.")
         }
         
-        
         return true
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         //print("Will open URL from Top Shelf. URL=%@", url as NSURL)
-        
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "topshelf"), object: nil, userInfo: ["url":url])
-        
-        
-        
         
         return true
     }
