@@ -18,7 +18,7 @@ class BangumiDetailViewController: UIViewController,
     UICollectionViewDataSource,
     AVPlayerViewControllerDelegate {
 
-
+        let playerController = AVPlayerViewController()
         var bangumiUUID: String = ""
         var bgmDic = ["": ""] as Dictionary<String, Any>
         var bgmEPlist = [] as Array<Any>
@@ -123,7 +123,6 @@ class BangumiDetailViewController: UIViewController,
                 let imgurlstr = getServerAddr() + (rowarr["thumbnail"] as! String)
                 cell.iconView.image = nil
                 AF.request(imgurlstr).responseImage { (response) in
-
                     cell.loadingIndicator.isHidden = true
                     cell.loadingIndicator.stopAnimating()
 
@@ -143,30 +142,22 @@ class BangumiDetailViewController: UIViewController,
                         break
                     }
                 }
-//            cell.iconView?.image = nil
-//            DispatchQueue.global().async {
-//                do {
-//                    let imgdata = try Data.init(contentsOf: URL(string: imgurlstr)!)
-//                    let image = UIImage.init(data: imgdata)
-//
-//                    DispatchQueue.main.async {
-//                        cell.iconView?.image = image
-//                    }
-//                } catch { }
-//            }
 
-                if let watch_progress = rowarr["watch_progress"] {
+                if let watch_progress = rowarr["watch_progress"] {//watching or watched
                     let wpdic = watch_progress as! Dictionary<String, Any>
                     let percent = wpdic["percentage"] as! Double
                     //print("percent:",Float(percent))
                     cell.progressBar.isHidden = false
-                    cell.progressBar.setProgress(Float(percent), animated: true)//not work, TODO
-
+                    DispatchQueue.main.async {
+                        cell.progressBar.setProgress(Float(percent), animated: true)//not work, TODO
+                    }
+                    
                 } else {
+                    //unwatched
                     cell.progressBar.setProgress(0, animated: false)
                     cell.progressBar.isHidden = true
                 }
-            } else {
+            } else {// name empty or not release yet
                 cell.iconView.image = nil
                 cell.titleText.text = String(rowarr["episode_no"] as! Int)
                 cell.progressBar.setProgress(0, animated: false)
@@ -174,7 +165,6 @@ class BangumiDetailViewController: UIViewController,
                 cell.loadingIndicator.isHidden = true
                 cell.loadingIndicator.stopAnimating()
             }
-
             return cell
         }
 
@@ -245,7 +235,7 @@ class BangumiDetailViewController: UIViewController,
 
             if let watchProgressDic = outSideDic["watch_progress"] { //not in dic2!!
                 let dic = watchProgressDic as! Dictionary<String, Any>
-                if (dic["watch_status"] as! Int) != 2 {//is marked as unwatch?
+                if (dic["watch_status"] as! Int) != 2 { //is marked as unwatch?
                     //waching in progress, ask to seek
                     let alert = UIAlertController(title: "Start form last watch position?", message: nil, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
@@ -277,10 +267,13 @@ class BangumiDetailViewController: UIViewController,
         // MARK: - Video
         func startPlayVideo(fromURL: String, seekTime: Double) {
             let player = AVPlayer(url: URL(string: urlEncode(string: fromURL))!)
-            let controller = AVPlayerViewController()
-            controller.player = player
-            controller.delegate = self
-            present(controller, animated: true) {
+            player.currentItem?.externalMetadata = makeExternalMetadata()
+            playerController.player = player
+            playerController.delegate = self
+
+            NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+
+            present(playerController, animated: true) {
                 if seekTime > 0.0 {
                     //var currentTime:Float64 = CMTimeGetSeconds(player.currentTime())
                     //currentTime += seekTime
@@ -289,6 +282,77 @@ class BangumiDetailViewController: UIViewController,
                 }
                 player.play()
             }
+        }
+
+
+        func makeExternalMetadata() -> [AVMetadataItem] {
+            var metadata = [AVMetadataItem]()
+            let indexPaths = self.collectionView.indexPathsForSelectedItems
+            let indexPath = indexPaths![0] as NSIndexPath
+            let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String, Any>
+
+            // Build title item
+            let titleItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle.rawValue, value: (self.bgmDic["name"] as! String))
+            metadata.append(titleItem)
+
+            // Build artwork item
+            let imgurlstr = self.bgmDic["image"] as! String
+            AF.request(imgurlstr).responseImage { (response) in
+                switch response.result {
+                case .success(let value):
+                    if let image = value as? Image {
+                        let artworkItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierArtwork.rawValue, value: image)
+                        metadata.append(artworkItem)
+                    }
+                    break
+
+                case .failure(let error):
+                    // error handling
+                    print(error)
+                    break
+                }
+            }
+
+            // Build description item
+            let descItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierDescription.rawValue, value: (dic["name"] as! String))
+            metadata.append(descItem)
+
+            // Build rating item
+            let ratingItem = makeMetadataItem(AVMetadataIdentifier.iTunesMetadataContentRating.rawValue, value: "PG")
+            metadata.append(ratingItem)
+
+            // Build genre item
+            var typeStr = ""
+            switch (self.bgmDic["type"] as! Int) {
+            case 2:
+                typeStr = "Anime"
+                break
+            case 6:
+                typeStr = "TV Shows"
+                break
+            default:
+                typeStr = "Other"
+                break
+            }
+
+            let genreItem = makeMetadataItem(AVMetadataIdentifier.quickTimeMetadataGenre.rawValue, value: typeStr)
+            metadata.append(genreItem)
+            return metadata
+        }
+
+        private func makeMetadataItem(_ identifier: String,
+            value: Any) -> AVMetadataItem {
+            let item = AVMutableMetadataItem()
+            item.identifier = AVMetadataIdentifier(rawValue: identifier)
+            item.value = value as? NSCopying & NSObjectProtocol
+            item.extendedLanguageTag = "und"
+            return item.copy() as! AVMetadataItem
+        }
+
+
+        @objc func playerDidFinishPlaying() {
+            self.playerViewControllerShouldDismiss(self.playerController)
+            playerController.dismiss(animated: true, completion: nil)
         }
         func playerViewControllerShouldDismiss(_ playerViewController: AVPlayerViewController) -> Bool {
             let player = playerViewController.player
@@ -312,6 +376,10 @@ class BangumiDetailViewController: UIViewController,
 
             }
             return true
+        }
+        func playerViewController(_ playerViewController: AVPlayerViewController,
+            restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: (Bool) -> Void) {
+
         }
 
         func urlEncode(string: String) -> String {

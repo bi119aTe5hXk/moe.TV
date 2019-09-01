@@ -323,8 +323,8 @@
 			projectRoot = "";
 			targets = (
 				86D97C8C2301CF6B00CF5F03 /* moe.TV */,
-				4706FD7B230A871F00094B78 /* topshelf */,
 				47C75366230E54EC0010C0EE /* topshelfold */,
+				4706FD7B230A871F00094B78 /* topshelf */,
 			);
 		};
 /* End PBXProject section */
