@@ -1,5 +1,5 @@
 //
-//  MyBangumiListViewController.swift
+//  OnAirListViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2019/08/16.
@@ -11,11 +11,8 @@ import Alamofire
 import AlamofireImage
 private let reuseIdentifier = "Cell"
 
-class MyBangumiListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    var bgmList:Array<Any> = []
-    
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
-    
+class OnAirListViewController: UICollectionViewController {
+    var bgmList: Array<Any> = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -24,54 +21,18 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
 
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.collectionView?.delegate = self
+
         // Do any additional setup after loading the view.
-        //self.loadData()
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        //self.loadData()
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        self.loadData()
-    }
-    override func viewWillDisappear(_ animated: Bool) {
-        //cancelRequest()
-    }
-    
-    func loadData(){
-        let loggedin = UserDefaults.standard.bool(forKey: "loggedin")
-        if loggedin {
-            if self.bgmList.count <= 0 {
-                print("getingMyBangumiList")
-                self.loadingIndicator.isHidden = false
-                self.loadingIndicator.startAnimating()
-                
-                
-                getMyBangumiList {
-                    (isSuccess, result) in
-                    //print(result as Any)
-                    self.loadingIndicator.isHidden = true
-                    self.loadingIndicator.stopAnimating()
-                    
-                    if isSuccess {
-                        //print(result)
-                        self.bgmList = result as! Array<Any>
-                        self.collectionView.reloadData()
-                        UserDefaults.init(suiteName: "group.moe.TV")?.set(self.bgmList, forKey: "topShelfArr")
-                        UserDefaults.init(suiteName: "group.moe.TV")?.synchronize()
-                        print("saved to topShelfArr")
-                    }else{
-                        print(result as Any)
-                        let err = result as! String
-//                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
-//                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-//                            //self.dismiss(animated: true, completion: nil)
-//                        }))
-//                        self.present(alert, animated: true, completion: nil)
-                    }
+        if self.bgmList.count <= 0 {
+            getOnAirList { (isSuccess, result) in
+                if isSuccess {
+                    print(result as Any)
+                    self.bgmList = result as! Array<Any>
+                    self.collectionView.reloadData()
                 }
             }
         }
+
     }
 
     /*
@@ -107,25 +68,33 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         cell.titleTextField?.text = (rowarr["name"] as! String)
         //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
         let imgurlstr = rowarr["image"] as! String
-        cell.iconView.image = nil
-        //cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
-        
-
-        cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
-                                  placeholderImage: nil,
-                                  filter: .none,
-                                  progress: .none,
-                                  progressQueue: .main,
-                                  imageTransition: .noTransition,
-                                  runImageTransitionIfCached: true) { (data) in
-                                    cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+        AF.request(imgurlstr).responseImage { (response) in
+            switch response.result {
+            case .success(let value):
+                if let image = value as? Image{
+                    cell.iconView.image = image
+                }
+                break
+                
+            case .failure(let error):
+                // error handling
+                print(error)
+                break
+            }
         }
-        
-        
         return cell
     }
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 359, height: 600)
+    }
+
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let row = indexPath.row
+        let arr = self.bgmList[row] as! Dictionary<String, Any>
+        let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
+        detailvc.bangumiUUID = arr["id"] as! String
+        self.present(detailvc, animated: true)
     }
 
     // MARK: UICollectionViewDelegate
@@ -144,28 +113,19 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
     }
     */
 
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let row = indexPath.row
-        let arr = self.bgmList[row] as! Dictionary<String, Any>
-        let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
-        detailvc.bangumiUUID = arr["id"] as! String
-        self.present(detailvc, animated: true)
-    }
-
     /*
     // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
     override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return true
+        return false
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return true
+        return false
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-        
+    
     }
     */
 
 }
-

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "86D97C8C2301CF6B00CF5F03"
-               BuildableName = "moe.TV.app"
+               BuildableName = "moeTV.app"
                BlueprintName = "moe.TV"
                ReferencedContainer = "container:moe.TV.xcodeproj">
             </BuildableReference>
@@ -65,7 +65,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "86D97C8C2301CF6B00CF5F03"
-            BuildableName = "moe.TV.app"
+            BuildableName = "moeTV.app"
             BlueprintName = "moe.TV"
             ReferencedContainer = "container:moe.TV.xcodeproj">
          </BuildableReference>
@@ -82,7 +82,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "86D97C8C2301CF6B00CF5F03"
-            BuildableName = "moe.TV.app"
+            BuildableName = "moeTV.app"
             BlueprintName = "moe.TV"
             ReferencedContainer = "container:moe.TV.xcodeproj">
          </BuildableReference>

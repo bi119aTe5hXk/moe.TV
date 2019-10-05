@@ -120,9 +120,13 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
         switch response.result {
         case .success(let value):
             if let JSON = value as? [String: Any] {
-                let data = JSON["data"] as Any
-                //print(data)
-                completion(true, data)
+                if let data = JSON["data"]{
+                    //print(data)
+                    completion(true, data)
+                }else{
+                    completion(false, "")
+                    break
+                }
             }
             break
         case .failure(let error):
@@ -269,7 +273,7 @@ func sentEPWatchProgress(ep_id: String,
 }
 
 
-func saveCookies(response: DataResponse<Any>) {
+func saveCookies(response: DataResponse<Any,AFError>) {
     let headerFields = response.response?.allHeaderFields as! [String: String]
     let url = response.response?.url
     let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url!)

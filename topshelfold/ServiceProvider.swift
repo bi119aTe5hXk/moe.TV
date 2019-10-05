@@ -9,10 +9,12 @@
 import TVServices
 
 class ServiceProvider: NSObject, TVTopShelfProvider {
+    
     let topShelfArr = UserDefaults.init(suiteName: "group.moe.TV")?.array(forKey: "topShelfArr")
     var topShelfStyle: TVTopShelfContentStyle = .sectioned
     
     var topShelfItems: [TVContentItem]{
+        print("topshelfold init.")
         switch topShelfStyle {
         case .sectioned:
             return sectionedTopShelfItems
@@ -64,7 +66,12 @@ class ServiceProvider: NSObject, TVTopShelfProvider {
         }
         contentItem.imageShape = .poster
         contentItem.title = (dataItem["name"] as! String)
-        contentItem.setImageURL(URL(string: dataItem["image"] as! String), forTraits: .screenScale2x)
+        if #available(tvOSApplicationExtension 11.0, *) {
+            contentItem.setImageURL(URL(string: dataItem["image"] as! String), forTraits: .screenScale2x)
+        } else {
+            // Fallback on earlier versions
+            contentItem.imageURL = URL(string: dataItem["image"] as! String)
+        }
         contentItem.displayURL = URL(string: "moetv://detail/\(dataItem["id"]!)/")!
 
         return contentItem

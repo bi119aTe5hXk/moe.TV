@@ -271,15 +271,16 @@ class BangumiDetailViewController: UIViewController,
             let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String, Any>
 
             // Build title item
-            let titleItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle.rawValue, value: (self.bgmDic["name"] as! String) + (dic["name"] as! String))
+            let titleItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle.rawValue, value: (self.bgmDic["name"] as! String) + " - " + String(dic["episode_no"] as! Int) + "." + (dic["name"] as! String))
             metadata.append(titleItem)
+            
 
             // Build artwork item
             let imgurlstr = self.bgmDic["image"] as! String
             AF.request(imgurlstr).responseImage { (response) in
                 switch response.result {
                 case .success(let value):
-                    if let image = value as? Image {
+                    if let image:UIImage = value {
                         let artworkItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierArtwork.rawValue, value: image)
                         metadata.append(artworkItem)
                     }
@@ -340,6 +341,7 @@ class BangumiDetailViewController: UIViewController,
             let percent = CMTimeGetSeconds(currentItem!.currentTime()) / CMTimeGetSeconds(currentItem!.duration)
             var isFinished = false
             if percent > 0.95 {
+                print("log it as finished")
                 isFinished = true
             }
 

@@ -28,6 +28,10 @@ func roundedImage(corners: UIRectCorner, radius: CGFloat)  {
 
         // This propagate the transparency to the the overlay layers,
         // like the one for the glowing effect.
+    if #available(tvOS 11.0, *) {
         self.masksFocusEffectToContents = true
+    } else {
+        // Fallback on earlier versions
+    }
     }
 }
