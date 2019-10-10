@@ -37,10 +37,15 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         switch (sender as AnyObject).selectedSegmentIndex {
         case 0:
             //Albireo
-            UserDefaults.standard.set("albireo", forKey: "")
+            UserDefaults.standard.set("albireo", forKey: UD_SERVICE_TYPE)
+            //set UI as albireo
+            
             break
         case 1:
             //Sonarr
+            UserDefaults.standard.set("sonarr", forKey: UD_SERVICE_TYPE)
+            //set UI as sonarr
+            
             
             break
         default:
