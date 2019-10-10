@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "tv",
-      "filename" : "moe.tv.ts-1.png",
+      "filename" : "moe.tv.ts-1.jpg",
       "scale" : "1x"
     },
     {
       "idiom" : "tv",
-      "filename" : "moe.tv.ts.png",
+      "filename" : "moe.tv.ts.jpg",
       "scale" : "2x"
     }
   ],

@@ -18,6 +18,8 @@
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSExtension</key>
@@ -38,7 +40,5 @@
 	<array>
 		<string>arm64</string>
 	</array>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 </dict>
 </plist>
