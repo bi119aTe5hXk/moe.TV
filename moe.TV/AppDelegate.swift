@@ -15,12 +15,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        UserDefaults.standard.register(defaults: ["savedCookies" : []])
-        UserDefaults.init(suiteName: "group.moe.TV")?.register(defaults: ["topShelfArr" : []])
-        UserDefaults.standard.register(defaults: ["loggedin" : false])
-        UserDefaults.standard.register(defaults: ["serveraddr" : ""])
-        UserDefaults.standard.register(defaults: ["proxy" : ""])
-        UserDefaults.standard.register(defaults: ["proxyport" : ""])
+        UserDefaults.standard.register(defaults: [UD_SAVED_COOKIES : []])
+        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_TOPSHELF_ARR : []])
+        UserDefaults.standard.register(defaults: [UD_LOGEDIN : false])
+        UserDefaults.standard.register(defaults: [UD_SERVICE_TYPE : ""])
+        UserDefaults.standard.register(defaults: [UD_SERVER_ADDR : ""])
+        UserDefaults.standard.register(defaults: [UD_PROXY_SERVER : ""])
+        UserDefaults.standard.register(defaults: [UD_PROXY_PORT : ""])
         
         if let tabController = window?.rootViewController as? UITabBarController {
             tabController.viewControllers?.append(packagedSearchController())

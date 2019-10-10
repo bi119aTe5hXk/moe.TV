@@ -15,28 +15,28 @@ class ProxySettingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        let proxyAddr = UserDefaults.standard.string(forKey: "proxy")
-        let proxyPort = UserDefaults.standard.string(forKey: "proxyport")
+        let proxyAddr = UserDefaults.standard.string(forKey: UD_PROXY_SERVER)
+        let proxyPort = UserDefaults.standard.string(forKey: UD_PROXY_PORT)
         self.proxyIPField.text = proxyAddr
         self.proxyPortField.text = proxyPort
     }
     @IBAction func applyBTNPressed(_ sender: Any) {
         if (self.proxyIPField.text?.lengthOfBytes(using: .utf8))! > 0 &&
             (self.proxyPortField.text?.lengthOfBytes(using: .utf8))! > 0{
-            UserDefaults.standard.set(self.proxyIPField.text, forKey: "proxy")
-            UserDefaults.standard.set(self.proxyPortField.text, forKey: "proxyport")
+            UserDefaults.standard.set(self.proxyIPField.text, forKey: UD_PROXY_SERVER)
+            UserDefaults.standard.set(self.proxyPortField.text, forKey: UD_PROXY_PORT)
             UserDefaults.standard.synchronize()
             
             self.dismiss(animated: true, completion: nil)
         }else{
-            UserDefaults.standard.set("", forKey: "proxy")
-            UserDefaults.standard.set("", forKey: "proxyport")
+            UserDefaults.standard.set("", forKey: UD_PROXY_SERVER)
+            UserDefaults.standard.set("", forKey: UD_PROXY_PORT)
             self.dismiss(animated: true, completion: nil)
         }
     }
     @IBAction func resetBTNPressed(_ sender: Any) {
-        UserDefaults.standard.set("", forKey: "proxy")
-        UserDefaults.standard.set("", forKey: "proxyport")
+        UserDefaults.standard.set("", forKey: UD_PROXY_SERVER)
+        UserDefaults.standard.set("", forKey: UD_PROXY_PORT)
         self.dismiss(animated: true, completion: nil)
     }
     

@@ -10,7 +10,7 @@ import TVServices
 
 class ServiceProvider: NSObject, TVTopShelfProvider {
     
-    let topShelfArr = UserDefaults.init(suiteName: "group.moe.TV")?.array(forKey: "topShelfArr")
+    let topShelfArr = UserDefaults.init(suiteName: UD_SUITE_NAME)?.array(forKey: UD_TOPSHELF_ARR)
     var topShelfStyle: TVTopShelfContentStyle = .sectioned
     
     var topShelfItems: [TVContentItem]{

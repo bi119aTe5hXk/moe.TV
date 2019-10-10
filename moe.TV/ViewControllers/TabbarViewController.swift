@@ -17,7 +17,7 @@ class TabbarViewController: UITabBarController {
         
     }
     override func viewDidAppear(_ animated: Bool) {
-        let loggedin = UserDefaults.standard.bool(forKey: "loggedin")
+        let loggedin = UserDefaults.standard.bool(forKey: UD_LOGEDIN)
         if loggedin == false {
             print("notlogin")
             var loginVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController")

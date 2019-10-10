@@ -24,7 +24,7 @@ class SettingsViewController: UIViewController {
                 
             }
             
-            UserDefaults.standard.set(false, forKey: "loggedin")
+            UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
             
             //cleanup bgmlist
             let mybgmvc = self.storyboard?.instantiateViewController(withIdentifier: "MyBangumiListViewController") as! MyBangumiListViewController

@@ -36,7 +36,7 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
     }
     
     func loadData(){
-        let loggedin = UserDefaults.standard.bool(forKey: "loggedin")
+        let loggedin = UserDefaults.standard.bool(forKey: UD_LOGEDIN)
         if loggedin {
             if self.bgmList.count <= 0 {
                 print("getOnAirList")
@@ -50,7 +50,7 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
                     if isSuccess {
                         self.bgmList = result as! Array<Any>
                         self.collectionView.reloadData()
-                        UserDefaults.init(suiteName: "group.moe.TV")?.set(self.bgmList, forKey: "topShelfArr")
+                        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(self.bgmList, forKey: UD_TOPSHELF_ARR)
                     }else{
                         print(result as Any)
                         let err = result as! String

@@ -12,8 +12,8 @@ import Foundation
 var requestManager = Alamofire.Session.default
 
 func getServerAddr() -> String {
-    let proxyAddr = UserDefaults.standard.string(forKey: "proxy")
-    let proxyPort = UserDefaults.standard.string(forKey: "proxyport")
+    let proxyAddr = UserDefaults.standard.string(forKey: UD_PROXY_SERVER)
+    let proxyPort = UserDefaults.standard.string(forKey: UD_PROXY_PORT)
     var proxyConfiguration = [NSObject: AnyObject]()
     
     if (proxyAddr?.lengthOfBytes(using: .utf8))! > 0 &&
@@ -35,7 +35,7 @@ func getServerAddr() -> String {
     requestManager = Alamofire.Session(configuration: cfg)
     
     var urlStr = "https://"
-    urlStr.append(UserDefaults.standard.string(forKey: "serveraddr")!)
+    urlStr.append(UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
     return urlStr
 }
 
@@ -45,7 +45,7 @@ func logInServer(url: String,
                  password: String,
                  completion: @escaping (Bool, String) -> Void) {
     
-    UserDefaults.standard.set(url, forKey: "serveraddr")
+    UserDefaults.standard.set(url, forKey: UD_SERVER_ADDR)
     var urlstr = getServerAddr()
     urlstr.append("/api/user/login")
 
@@ -60,12 +60,12 @@ func logInServer(url: String,
                 if let status = JSON["msg"] {
                     //save cookies from response
                     saveCookies(response: response)
-                    UserDefaults.standard.set(true, forKey: "loggedin")
+                    UserDefaults.standard.set(true, forKey: UD_LOGEDIN)
                     //print(status)
                     completion(true, (status as! String))
                 }
                 if let status = JSON["message"] {
-                    UserDefaults.standard.set(false, forKey: "loggedin")
+                    UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
                     //print(status)
                     completion(false, (status as! String))
                 }
@@ -73,7 +73,7 @@ func logInServer(url: String,
             break
         case .failure(let error):
             // error handling
-            UserDefaults.standard.set(false, forKey: "loggedin")
+            UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -90,12 +90,12 @@ func logOutServer(completion: @escaping (Bool, String) -> Void) {
         case .success(let value):
             if let JSON = value as? [String: Any] {
                 if let status = JSON["msg"] {
-                    UserDefaults.standard.set(true, forKey: "loggedin")
+                    UserDefaults.standard.set(true, forKey: UD_LOGEDIN)
                     //print(status)
                     completion(true, (status as! String))
                 }
                 if let status = JSON["message"] {
-                    UserDefaults.standard.set(false, forKey: "loggedin")
+                    UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
                     //print(status)
                     completion(false, (status as! String))
                 }
@@ -103,7 +103,7 @@ func logOutServer(completion: @escaping (Bool, String) -> Void) {
             break
         case .failure(let error):
             // error handling
-            UserDefaults.standard.set(false, forKey: "loggedin")
+            UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -131,7 +131,7 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: "loggedin")
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -155,7 +155,7 @@ func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: "loggedin")
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -187,7 +187,7 @@ func getAllBangumiList(page: Int,
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: "loggedin")
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -212,7 +212,7 @@ func getBangumiDetail(id: String,
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: "loggedin")
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -236,7 +236,7 @@ func getEpisodeDetail(ep_id: String,
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: "loggedin")
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -265,7 +265,7 @@ func sentEPWatchProgress(ep_id: String,
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: "loggedin")
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -281,11 +281,11 @@ func saveCookies(response: DataResponse<Any,AFError>) {
     for cookie in cookies {
         cookieArray.append(cookie.properties!)
     }
-    UserDefaults.standard.set(cookieArray, forKey: "savedCookies")
+    UserDefaults.standard.set(cookieArray, forKey: UD_SAVED_COOKIES)
     UserDefaults.standard.synchronize()
 }
 func loadCookies() {
-    guard let cookieArray = UserDefaults.standard.array(forKey: "savedCookies") as? [[HTTPCookiePropertyKey: Any]] else { return }
+    guard let cookieArray = UserDefaults.standard.array(forKey: UD_SAVED_COOKIES) as? [[HTTPCookiePropertyKey: Any]] else { return }
     for cookieProperties in cookieArray {
         if let cookie = HTTPCookie(properties: cookieProperties) {
             HTTPCookieStorage.shared.setCookie(cookie)

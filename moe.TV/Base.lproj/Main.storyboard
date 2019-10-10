@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="14865.1" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PIa-hG-JBS">
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="15400" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PIa-hG-JBS">
     <device id="appleTV" appearance="dark"/>
     <dependencies>
         <deployment identifier="tvOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14819.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,7 +11,7 @@
         <!--On Air-->
         <scene sceneID="bhn-ub-Yq5">
             <objects>
-                <collectionViewController storyboardIdentifier="OnAirListViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7g1-5g-a49" customClass="OnAirListViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="OnAirListViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7g1-5g-a49" customClass="OnAirListViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="DgV-kn-5M4">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -26,7 +26,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </activityIndicatorView>
                         <cells>
-                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BangumiCell" reuseIdentifier="BangumiCell" id="NfZ-Nh-H5b" customClass="BangumiCell" customModule="moe_TV" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BangumiCell" reuseIdentifier="BangumiCell" id="NfZ-Nh-H5b" customClass="BangumiCell" customModule="moeTV" customModuleProvider="target">
                                 <rect key="frame" x="50" y="50" width="359" height="600"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -71,7 +71,7 @@
         <!--Settings-->
         <scene sceneID="ZcH-x9-EDo">
             <objects>
-                <viewController storyboardIdentifier="SettingsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rZc-EN-tog" customClass="SettingsViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SettingsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rZc-EN-tog" customClass="SettingsViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="uh1-MZ-Blf"/>
                         <viewControllerLayoutGuide type="bottom" id="4qG-c6-JlB"/>
@@ -131,7 +131,7 @@
         <!--Login View Controller-->
         <scene sceneID="2hS-un-Gzs">
             <objects>
-                <viewController storyboardIdentifier="LoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r3k-Iy-FC9" customClass="LoginViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r3k-Iy-FC9" customClass="LoginViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Cdf-yg-X0C"/>
                         <viewControllerLayoutGuide type="bottom" id="wfO-wM-n2l"/>
@@ -140,7 +140,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Server URL" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TaZ-wU-eM6">
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Server:port" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TaZ-wU-eM6">
                                 <rect key="frame" x="673" y="300" width="575" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
@@ -167,13 +167,6 @@
                                     <action selector="loginBTNPressed:" destination="r3k-Iy-FC9" eventType="primaryActionTriggered" id="TK8-Un-F2q"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Login In  Your Albireo Services" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i5h-xv-IOF">
-                                <rect key="frame" x="702" y="149" width="516" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="juT-TT-lqs">
                                 <rect key="frame" x="790" y="883" width="340" height="83"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -187,6 +180,25 @@
                                 <rect key="frame" x="940" y="754" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yTw-XK-nCd">
+                                <rect key="frame" x="920" y="156" width="328" height="70"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.10000000000000001" colorSpace="calibratedWhite"/>
+                                <segments>
+                                    <segment title="Albireo"/>
+                                    <segment title="Sonarr"/>
+                                </segments>
+                                <connections>
+                                    <action selector="serviceTypeChanged:" destination="r3k-Iy-FC9" eventType="valueChanged" id="IMb-0E-ffk"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Service type:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i5h-xv-IOF">
+                                <rect key="frame" x="678" y="167" width="218" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aAq-mO-OFk"/>
                     </view>
@@ -194,6 +206,7 @@
                         <outlet property="loadingIndicator" destination="6qu-lC-Suq" id="Zee-pr-J8V"/>
                         <outlet property="loginbutton" destination="wEe-Oa-fAg" id="PPv-uX-t3i"/>
                         <outlet property="passwordtextfield" destination="KoI-C9-nZk" id="hoe-qL-eJa"/>
+                        <outlet property="servicetypeselect" destination="yTw-XK-nCd" id="NuX-HF-uZd"/>
                         <outlet property="urltextfield" destination="TaZ-wU-eM6" id="Z7T-4i-61n"/>
                         <outlet property="usernametextfield" destination="okb-tE-Bpe" id="F3c-3P-cBk"/>
                     </connections>
@@ -205,7 +218,7 @@
         <!--Proxy Setting View Controller-->
         <scene sceneID="1Yq-7K-FUU">
             <objects>
-                <viewController storyboardIdentifier="ProxySettingViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9iP-1W-6RR" customClass="ProxySettingViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProxySettingViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9iP-1W-6RR" customClass="ProxySettingViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="S19-KN-5XJ"/>
                         <viewControllerLayoutGuide type="bottom" id="Mvg-Kc-p03"/>
@@ -280,7 +293,7 @@
         <!--TabbarViewController-->
         <scene sceneID="8Ty-D3-oRW">
             <objects>
-                <tabBarController storyboardIdentifier="TabbarViewController" title="TabbarViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PIa-hG-JBS" customClass="TabbarViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabbarViewController" title="TabbarViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PIa-hG-JBS" customClass="TabbarViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VOe-m9-V1w">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -299,7 +312,7 @@
         <!--MyBangumi-->
         <scene sceneID="kpK-gu-3kX">
             <objects>
-                <collectionViewController storyboardIdentifier="MyBangumiListViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="G4M-8Y-3eR" customClass="MyBangumiListViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="MyBangumiListViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="G4M-8Y-3eR" customClass="MyBangumiListViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="SFz-zT-Pka">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -314,7 +327,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </activityIndicatorView>
                         <cells>
-                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BangumiCell" reuseIdentifier="BangumiCell" id="kEN-za-2AF" customClass="BangumiCell" customModule="moe_TV" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BangumiCell" reuseIdentifier="BangumiCell" id="kEN-za-2AF" customClass="BangumiCell" customModule="moeTV" customModuleProvider="target">
                                 <rect key="frame" x="50" y="50" width="359" height="600"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -359,7 +372,7 @@
         <!--Bangumi Detail View Controller-->
         <scene sceneID="cyq-2v-9CW">
             <objects>
-                <viewController storyboardIdentifier="BangumiDetailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uzW-vX-ob7" customClass="BangumiDetailViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BangumiDetailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uzW-vX-ob7" customClass="BangumiDetailViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="v4s-7f-0Vc"/>
                         <viewControllerLayoutGuide type="bottom" id="m15-Bl-jcI"/>
@@ -406,7 +419,7 @@
                                     <inset key="sectionInset" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="EPCell" reuseIdentifier="EPCell" id="lxc-7D-MSR" customClass="EPCell" customModule="moe_TV" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="EPCell" reuseIdentifier="EPCell" id="lxc-7D-MSR" customClass="EPCell" customModule="moeTV" customModuleProvider="target">
                                         <rect key="frame" x="30" y="0.0" width="278" height="250"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -471,7 +484,7 @@
         <!--Summary Detail View Controller-->
         <scene sceneID="gaO-fc-fx6">
             <objects>
-                <viewController storyboardIdentifier="SummaryDetailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qBw-mK-JnE" customClass="SummaryDetailViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SummaryDetailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qBw-mK-JnE" customClass="SummaryDetailViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="nrS-dq-5F1"/>
                         <viewControllerLayoutGuide type="bottom" id="IMV-8e-bCU"/>
@@ -504,7 +517,7 @@
         <!--Search View Controller-->
         <scene sceneID="2T3-Br-F2k">
             <objects>
-                <viewController storyboardIdentifier="SearchViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ZLj-Fy-p7v" customClass="SearchViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ZLj-Fy-p7v" customClass="SearchViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9fd-jm-dPQ"/>
                         <viewControllerLayoutGuide type="bottom" id="W2D-4c-eyM"/>
@@ -537,7 +550,7 @@
         <!--Search Results View Controller-->
         <scene sceneID="Lym-0U-RwF">
             <objects>
-                <collectionViewController storyboardIdentifier="SearchResultsViewController" id="u83-Sr-Tjf" customClass="SearchResultsViewController" customModule="moe_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="SearchResultsViewController" id="u83-Sr-Tjf" customClass="SearchResultsViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="syO-dI-yXb">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -548,7 +561,7 @@
                             <inset key="sectionInset" minX="60" minY="60" maxX="60" maxY="60"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BangumiCell" reuseIdentifier="BangumiCell" id="wDQ-hL-1QP" customClass="BangumiCell" customModule="moe_TV" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BangumiCell" reuseIdentifier="BangumiCell" id="wDQ-hL-1QP" customClass="BangumiCell" customModule="moeTV" customModuleProvider="target">
                                 <rect key="frame" x="60" y="60" width="359" height="600"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -591,6 +604,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="D6K-nz-5pq"/>
+        <segue reference="LQT-Z4-YKe"/>
     </inferredMetricsTieBreakers>
 </document>

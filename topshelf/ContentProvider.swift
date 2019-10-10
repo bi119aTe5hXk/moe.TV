@@ -13,7 +13,7 @@ class ContentProvider: TVTopShelfContentProvider {
     override func loadTopShelfContent(completionHandler: @escaping (TVTopShelfContent?) -> Void) {
         print("topshelf init.")
         // Fetch content and call completionHandler
-        let topShelfArr = UserDefaults.init(suiteName: "group.moe.TV")?.array(forKey: "topShelfArr")
+        let topShelfArr = UserDefaults.init(suiteName: UD_SUITE_NAME)?.array(forKey: UD_TOPSHELF_ARR)
         //print(topShelfArr as Any)
         if topShelfArr != nil && topShelfArr!.count > 0 {
             var items = [] as Array<TVTopShelfItem>

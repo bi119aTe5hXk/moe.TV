@@ -39,7 +39,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
     }
     
     func loadData(){
-        let loggedin = UserDefaults.standard.bool(forKey: "loggedin")
+        let loggedin = UserDefaults.standard.bool(forKey: UD_LOGEDIN)
         if loggedin {
             if self.bgmList.count <= 0 {
                 print("getingMyBangumiList")
@@ -57,8 +57,8 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
                         //print(result)
                         self.bgmList = result as! Array<Any>
                         self.collectionView.reloadData()
-                        UserDefaults.init(suiteName: "group.moe.TV")?.set(self.bgmList, forKey: "topShelfArr")
-                        UserDefaults.init(suiteName: "group.moe.TV")?.synchronize()
+                        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(self.bgmList, forKey: UD_TOPSHELF_ARR)
+                        UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
                         print("saved to topShelfArr")
                     }else{
                         print(result as Any)

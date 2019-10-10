@@ -9,7 +9,7 @@
 import UIKit
 
 class LoginViewController: UIViewController,UITextFieldDelegate {
-
+    @IBOutlet weak var servicetypeselect: UISegmentedControl!
     @IBOutlet weak var urltextfield: UITextField!
     @IBOutlet weak var usernametextfield: UITextField!
     @IBOutlet weak var passwordtextfield: UITextField!
@@ -24,14 +24,30 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         self.loadingIndicator.isHidden = true
         self.loadingIndicator.stopAnimating()
         
+        
 
         // Do any additional setup after loading the view.
-        if let host = UserDefaults.standard.string(forKey: "serveraddr"){
+        if let host = UserDefaults.standard.string(forKey: UD_SERVER_ADDR){
             self.urltextfield.text = host
         }
         
     }
 
+    @IBAction func serviceTypeChanged(_ sender: Any) {
+        switch (sender as AnyObject).selectedSegmentIndex {
+        case 0:
+            //Albireo
+            UserDefaults.standard.set("albireo", forKey: "")
+            break
+        case 1:
+            //Sonarr
+            
+            break
+        default:
+            print("null selected")
+            break
+        }
+    }
     @IBAction func loginBTNPressed(_ sender: Any) {
         if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
             (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
