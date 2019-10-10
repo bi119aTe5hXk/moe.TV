@@ -54,6 +54,7 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
                     }else{
                         print(result as Any)
                         let err = result as! String
+                        print(err)
 //                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
 //                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
 //                            //self.dismiss(animated: true, completion: nil)
