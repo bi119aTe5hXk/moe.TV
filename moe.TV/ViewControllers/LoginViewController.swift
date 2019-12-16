@@ -39,12 +39,18 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             //Albireo
             UserDefaults.standard.set("albireo", forKey: UD_SERVICE_TYPE)
             //set UI as albireo
+            self.usernametextfield.placeholder = "Username"
+            self.passwordtextfield.isEnabled = true
+            self.passwordtextfield.isHidden = false
             
             break
         case 1:
             //Sonarr
             UserDefaults.standard.set("sonarr", forKey: UD_SERVICE_TYPE)
             //set UI as sonarr
+            self.usernametextfield.placeholder = "API key"
+            self.passwordtextfield.isEnabled = false
+            self.passwordtextfield.isHidden = true
             
             
             break
@@ -52,37 +58,73 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             print("null selected")
             break
         }
+        UserDefaults.standard.synchronize()
     }
     @IBAction func loginBTNPressed(_ sender: Any) {
-        if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
-            (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
-            (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
-            self.loadingIndicator.isHidden = false
-            self.loadingIndicator.startAnimating()
-            self.loginbutton.isEnabled = false
-            logInServer(url:self.urltextfield.text!,
-                        username: self.usernametextfield.text!,
-                        password: self.passwordtextfield.text!) {
-                            isSuccess,result in
-                            
-                            self.loadingIndicator.isHidden = true
-                            self.loadingIndicator.stopAnimating()
-                            self.loginbutton.isEnabled = true
-                            if isSuccess{
-                                self.dismiss(animated: true, completion: nil)
-                            }else{
-                                print(result as Any)
-                                let err = result
-                                let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-                                    //self.dismiss(animated: true, completion: nil)
-                                }))
-                                self.present(alert, animated: true, completion: nil)
-                            }
-                            
-                
+        if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "albireo" {
+            if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
+                (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
+                (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
+                self.loadingIndicator.isHidden = false
+                self.loadingIndicator.startAnimating()
+                self.loginbutton.isEnabled = false
+                logInServer(url:self.urltextfield.text!,
+                            username: self.usernametextfield.text!,
+                            password: self.passwordtextfield.text!) {
+                                isSuccess,result in
+                                
+                                self.loadingIndicator.isHidden = true
+                                self.loadingIndicator.stopAnimating()
+                                self.loginbutton.isEnabled = true
+                                if isSuccess{
+                                    self.dismiss(animated: true, completion: nil)
+                                }else{
+                                    print(result as Any)
+                                    let err = result
+                                    let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+                                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                                        //self.dismiss(animated: true, completion: nil)
+                                    }))
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                                
+                    
+                }
             }
+        }else if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "sonarr"{
+            if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
+                (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0{
+                self.loadingIndicator.isHidden = false
+                self.loadingIndicator.startAnimating()
+                self.loginbutton.isEnabled = false
+                logInServer(url:self.urltextfield.text!,
+                            username: self.usernametextfield.text!,
+                            password: self.passwordtextfield.text!) {
+                                isSuccess,result in
+                                
+                                self.loadingIndicator.isHidden = true
+                                self.loadingIndicator.stopAnimating()
+                                self.loginbutton.isEnabled = true
+                                if isSuccess{
+                                    self.dismiss(animated: true, completion: nil)
+                                }else{
+                                    print(result as Any)
+                                    let err = result
+                                    let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+                                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                                        //self.dismiss(animated: true, completion: nil)
+                                    }))
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                                
+                    
+                }
+            }
+        }else{
+            print("Error: Service type unknown.")
+            return
         }
+        
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
