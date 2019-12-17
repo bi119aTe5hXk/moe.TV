@@ -97,28 +97,34 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
                 self.loginbutton.isEnabled = false
-                logInServer(url:self.urltextfield.text!,
-                            username: self.usernametextfield.text!,
-                            password: self.passwordtextfield.text!) {
-                                isSuccess,result in
-                                
-                                self.loadingIndicator.isHidden = true
-                                self.loadingIndicator.stopAnimating()
-                                self.loginbutton.isEnabled = true
-                                if isSuccess{
-                                    self.dismiss(animated: true, completion: nil)
-                                }else{
-                                    print(result as Any)
-                                    let err = result
-                                    let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
-                                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-                                        //self.dismiss(animated: true, completion: nil)
-                                    }))
-                                    self.present(alert, animated: true, completion: nil)
-                                }
-                                
+                
+                getSonarrSystemStatus(){
+                    isSuccess,result in
+                    
+                    let r = result as! Dictionary<String,Any>
+                    if isSuccess{
+                        if let ver = r["version"] {
+                            print(ver)
+                            self.loadingIndicator.isHidden = true
+                            self.loadingIndicator.stopAnimating()
+                            self.loginbutton.isEnabled = true
+                            UserDefaults.standard.set(true, forKey: UD_LOGEDIN)
+                            self.dismiss(animated: true, completion: nil)
+                            return
+                        }
+                    }
+                    print(result as Any)
+                    UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+                    let err = result
+                    let alert = UIAlertController(title: "Error", message: err as! String, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                        //self.dismiss(animated: true, completion: nil)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
                     
                 }
+                
+                
             }
         }else{
             print("Error: Service type unknown.")

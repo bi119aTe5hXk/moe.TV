@@ -330,4 +330,50 @@ func getSonarrSystemStatus(completion: @escaping (Bool, Any?) -> Void) {
     }
 }
 
+func getSonarrSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
+    var urlstr = getServerAddr()
+    if id >= 0{
+        urlstr.append("/series/\(id)")
+    }else{
+        urlstr.append("/series")
+    }
+    
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [String: Any] {
+                //print(JSON)
+                completion(true, JSON)
+            }
+            break
+        case .failure(let error):
+            // error handling
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            completion(false, error.localizedDescription)
+            break
+        }
+    }
+}
 
+func getSonarrEPList(id:Int,completion: @escaping (Bool, Any?) -> Void){
+    var urlstr = getServerAddr()
+    urlstr.append("/episode/\(id)")
+    
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [String: Any] {
+                //print(JSON)
+                completion(true, JSON)
+            }
+            break
+        case .failure(let error):
+            // error handling
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            completion(false, error.localizedDescription)
+            break
+        }
+    }
+}

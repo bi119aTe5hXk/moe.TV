@@ -12,10 +12,10 @@ import AlamofireImage
 private let reuseIdentifier = "Cell"
 
 class MyBangumiListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    var bgmList:Array<Any> = []
-    
+    var bgmList: Array<Any> = []
+
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -37,39 +37,47 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
     override func viewWillDisappear(_ animated: Bool) {
         //cancelRequest()
     }
-    
-    func loadData(){
+
+    func loadData() {
         let loggedin = UserDefaults.standard.bool(forKey: UD_LOGEDIN)
         if loggedin {
             if self.bgmList.count <= 0 {
                 print("getingMyBangumiList")
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
-                
-                
-                getMyBangumiList {
-                    (isSuccess, result) in
-                    //print(result as Any)
-                    self.loadingIndicator.isHidden = true
-                    self.loadingIndicator.stopAnimating()
-                    
-                    if isSuccess {
-                        //print(result)
-                        self.bgmList = result as! Array<Any>
-                        self.collectionView.reloadData()
-                        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(self.bgmList, forKey: UD_TOPSHELF_ARR)
-                        UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
-                        print("saved to topShelfArr")
-                    }else{
-                        print(result as Any)
-                        let err = result as! String
-//                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
-//                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-//                            //self.dismiss(animated: true, completion: nil)
-//                        }))
-//                        self.present(alert, animated: true, completion: nil)
+
+
+                if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "albireo" {
+                    getMyBangumiList {
+                        (isSuccess, result) in
+                        //print(result as Any)
+                        self.loadingIndicator.isHidden = true
+                        self.loadingIndicator.stopAnimating()
+
+                        if isSuccess {
+                            //print(result)
+                            self.bgmList = result as! Array<Any>
+                            self.collectionView.reloadData()
+                            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(self.bgmList, forKey: UD_TOPSHELF_ARR)
+                            UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
+                            print("saved to topShelfArr")
+                        } else {
+                            print(result as Any)
+                            let err = result as! String
+                            //                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+                            //                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                            //                            //self.dismiss(animated: true, completion: nil)
+                            //                        }))
+                            //                        self.present(alert, animated: true, completion: nil)
+                        }
                     }
+                } else if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "sonarr" {
+
+                } else {
+                    print("Error: Service type unknown.")
+                    return
                 }
+
             }
         }
     }
@@ -109,19 +117,19 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         let imgurlstr = rowarr["image"] as! String
         cell.iconView.image = nil
         //cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
-        
+
 
         cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
-                                  placeholderImage: nil,
-                                  filter: .none,
-                                  progress: .none,
-                                  progressQueue: .main,
-                                  imageTransition: .noTransition,
-                                  runImageTransitionIfCached: true) { (data) in
-                                    cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+            placeholderImage: nil,
+            filter: .none,
+            progress: .none,
+            progressQueue: .main,
+            imageTransition: .noTransition,
+            runImageTransitionIfCached: true) { (data) in
+            cell.iconView.roundedImage(corners: .allCorners, radius: 6)
         }
-        
-        
+
+
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
