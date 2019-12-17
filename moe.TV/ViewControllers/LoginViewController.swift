@@ -68,7 +68,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
                 self.loginbutton.isEnabled = false
-                logInServer(url:self.urltextfield.text!,
+                logInAlbireoServer(url:self.urltextfield.text!,
                             username: self.usernametextfield.text!,
                             password: self.passwordtextfield.text!) {
                                 isSuccess,result in

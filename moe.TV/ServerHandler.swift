@@ -11,6 +11,35 @@ import Foundation
 
 var requestManager = Alamofire.Session.default
 
+func saveCookies(response: DataResponse<Any,AFError>) {
+    let headerFields = response.response?.allHeaderFields as! [String: String]
+    let url = response.response?.url
+    let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url!)
+    var cookieArray = [[HTTPCookiePropertyKey: Any]]()
+    for cookie in cookies {
+        cookieArray.append(cookie.properties!)
+    }
+    UserDefaults.standard.set(cookieArray, forKey: UD_SAVED_COOKIES)
+    UserDefaults.standard.synchronize()
+}
+func loadCookies() {
+    guard let cookieArray = UserDefaults.standard.array(forKey: UD_SAVED_COOKIES) as? [[HTTPCookiePropertyKey: Any]] else { return }
+    for cookieProperties in cookieArray {
+        if let cookie = HTTPCookie(properties: cookieProperties) {
+            HTTPCookieStorage.shared.setCookie(cookie)
+        }
+    }
+}
+
+func cancelRequest(){
+    requestManager.cancelAllRequests()
+//    Alamofire.Session.default.session.getTasksWithCompletionHandler({ dataTasks, uploadTasks, downloadTasks in
+//    dataTasks.forEach { $0.cancel() }
+//    uploadTasks.forEach { $0.cancel() }
+//    downloadTasks.forEach { $0.cancel() }
+//    })
+}
+
 func getServerAddr() -> String {
     let proxyAddr = UserDefaults.standard.string(forKey: UD_PROXY_SERVER)
     let proxyPort = UserDefaults.standard.string(forKey: UD_PROXY_PORT)
@@ -34,13 +63,17 @@ func getServerAddr() -> String {
     //cfg.httpAdditionalHeaders = ["User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"]
     requestManager = Alamofire.Session(configuration: cfg)
     
-    var urlStr = "https://"
-    urlStr.append(UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    var urlStr = UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!
+    if !urlStr.lowercased().hasPrefix("http://") || !urlStr.lowercased().hasPrefix("https://"){
+        urlStr = "https://" + urlStr //use https for default
+    }
     return urlStr
 }
 
 
-func logInServer(url: String,
+
+// MARK: - Albireo Server
+func logInAlbireoServer(url: String,
                  username: String,
                  password: String,
                  completion: @escaping (Bool, String) -> Void) {
@@ -79,6 +112,7 @@ func logInServer(url: String,
         }
     }
 }
+
 
 func logOutServer(completion: @escaping (Bool, String) -> Void) {
     var urlstr = getServerAddr()
@@ -273,31 +307,27 @@ func sentEPWatchProgress(ep_id: String,
 }
 
 
-func saveCookies(response: DataResponse<Any,AFError>) {
-    let headerFields = response.response?.allHeaderFields as! [String: String]
-    let url = response.response?.url
-    let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url!)
-    var cookieArray = [[HTTPCookiePropertyKey: Any]]()
-    for cookie in cookies {
-        cookieArray.append(cookie.properties!)
-    }
-    UserDefaults.standard.set(cookieArray, forKey: UD_SAVED_COOKIES)
-    UserDefaults.standard.synchronize()
-}
-func loadCookies() {
-    guard let cookieArray = UserDefaults.standard.array(forKey: UD_SAVED_COOKIES) as? [[HTTPCookiePropertyKey: Any]] else { return }
-    for cookieProperties in cookieArray {
-        if let cookie = HTTPCookie(properties: cookieProperties) {
-            HTTPCookieStorage.shared.setCookie(cookie)
+// MARK: - Sonarr Server
+
+func getSonarrSystemStatus(completion: @escaping (Bool, Any?) -> Void) {
+    var urlstr = getServerAddr()
+    urlstr.append("/system/status")
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [String: Any] {
+                //print(JSON)
+                completion(true, JSON)
+            }
+            break
+        case .failure(let error):
+            // error handling
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            completion(false, error.localizedDescription)
+            break
         }
     }
 }
 
-func cancelRequest(){
-    requestManager.cancelAllRequests()
-//    Alamofire.Session.default.session.getTasksWithCompletionHandler({ dataTasks, uploadTasks, downloadTasks in
-//    dataTasks.forEach { $0.cancel() }
-//    uploadTasks.forEach { $0.cancel() }
-//    downloadTasks.forEach { $0.cancel() }
-//    })
-}
+
