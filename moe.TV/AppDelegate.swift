@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.register(defaults: [UD_SAVED_COOKIES : []])
         UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_TOPSHELF_ARR : []])
         UserDefaults.standard.register(defaults: [UD_LOGEDIN : false])
-        UserDefaults.standard.register(defaults: [UD_SERVICE_TYPE : ""])
+        UserDefaults.standard.register(defaults: [UD_SERVICE_TYPE : "albireo"])
         UserDefaults.standard.register(defaults: [UD_SERVER_ADDR : ""])
         UserDefaults.standard.register(defaults: [UD_PROXY_SERVER : ""])
         UserDefaults.standard.register(defaults: [UD_PROXY_PORT : ""])

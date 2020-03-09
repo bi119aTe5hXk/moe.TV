@@ -63,22 +63,23 @@ func getServerAddr() -> String {
     //cfg.httpAdditionalHeaders = ["User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"]
     requestManager = Alamofire.Session(configuration: cfg)
     
-    var urlStr = UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!
-    if !urlStr.lowercased().hasPrefix("http://") || !urlStr.lowercased().hasPrefix("https://"){
-        urlStr = "https://" + urlStr //use https for default
+    //add pref
+    var urlstr:String = UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!
+    if (!urlstr.uppercased().hasPrefix("http://".uppercased()) &&
+        !urlstr.uppercased().hasPrefix("https://".uppercased())){
+        print("URL \(urlstr) has no prefix fond, add https as default")
+        urlstr = "https://" + urlstr //use https as default
     }
-    return urlStr
+    return urlstr
 }
 
 
 
 // MARK: - Albireo Server
-func AlbireoLogInAlbireoServer(url: String,
-                 username: String,
-                 password: String,
-                 completion: @escaping (Bool, String) -> Void) {
+func AlbireoLogInAlbireoServer(username: String,
+                               password: String,
+                               completion: @escaping (Bool, String) -> Void) {
     
-    UserDefaults.standard.set(url, forKey: UD_SERVER_ADDR)
     var urlstr = getServerAddr()
     urlstr.append("/api/user/login")
 
@@ -323,14 +324,15 @@ func SonarrAddAPIKEY(url:String)->String{
 }
 
 func SonarrGetSystemStatus(apikey:String,completion: @escaping (Bool, Any?) -> Void) {
+    
     var urlstr = getServerAddr()
     urlstr.append("/system/status")
     
     //check the api key is valid at first time "login"
     urlstr.append("?apikey=\(apikey)")//DO NOT REPLACE WITH USER DEFAULT (SonarrAddAPIKEY func)
-    
+    print(urlstr)
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response.result)
+        print(response)
         switch response.result {
         case .success(let value):
             if let JSON = value as? [String: Any] {

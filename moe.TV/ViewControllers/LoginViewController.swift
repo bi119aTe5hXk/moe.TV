@@ -15,6 +15,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var passwordtextfield: UITextField!
     @IBOutlet weak var loginbutton: UIButton!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+    var serviceType = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,10 +64,12 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             break
         }
         UserDefaults.standard.synchronize()
+        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
     }
+    
     @IBAction func loginBTNPressed(_ sender: Any) {
         //Albireo
-        if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "albireo" {
+        if self.serviceType == "albireo" {
             if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
                 (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
                 (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
@@ -75,8 +78,8 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 self.loadingIndicator.startAnimating()
                 self.loginbutton.isEnabled = false
                 
-                AlbireoLogInAlbireoServer(url:self.urltextfield.text!,
-                            username: self.usernametextfield.text!,
+                UserDefaults.standard.set(self.urltextfield.text!, forKey: UD_SERVER_ADDR)
+                AlbireoLogInAlbireoServer(username: self.usernametextfield.text!,
                             password: self.passwordtextfield.text!) {
                                 isSucceeded,result in
                                 
@@ -98,23 +101,27 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             }
             
             //Sonarr
-        }else if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "sonarr"{
+        }else if self.serviceType == "sonarr"{
             if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
                 (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0{
+                
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
                 self.loginbutton.isEnabled = false
                 
+                UserDefaults.standard.set(self.urltextfield.text!, forKey: UD_SERVER_ADDR)
                 SonarrGetSystemStatus(apikey: self.usernametextfield.text!){
                     isSucceeded,result in
                     
-                    let r = result as! Dictionary<String,Any>
+                    self.loadingIndicator.isHidden = true
+                    self.loadingIndicator.stopAnimating()
+                    self.loginbutton.isEnabled = true
+                    
                     if isSucceeded{
+                        let r = result as! Dictionary<String,Any>
                         if let ver = r["version"] {
                             print(ver)
-                            self.loadingIndicator.isHidden = true
-                            self.loadingIndicator.stopAnimating()
-                            self.loginbutton.isEnabled = true
+                            
                             UserDefaults.standard.set(true, forKey: UD_LOGEDIN)
                             //save the api key
                             UserDefaults.standard.set(self.usernametextfield.text!, forKey: UD_SONARR_APIKEY)
@@ -143,13 +150,23 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
-        (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
-        (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
-            self.loginbutton.isEnabled = true
-        }else{
-            self.loginbutton.isEnabled = false
+        if self.serviceType == "albireo"{
+            if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
+            (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
+            (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
+                self.loginbutton.isEnabled = true
+            }else{
+                self.loginbutton.isEnabled = false
+            }
+        }else if self.serviceType == "sonarr" {
+            if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
+            (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 {
+                self.loginbutton.isEnabled = true
+            }else{
+                self.loginbutton.isEnabled = false
+            }
         }
+        
     }
     func  textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == self.passwordtextfield{
