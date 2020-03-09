@@ -78,12 +78,12 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 AlbireoLogInAlbireoServer(url:self.urltextfield.text!,
                             username: self.usernametextfield.text!,
                             password: self.passwordtextfield.text!) {
-                                isSuccess,result in
+                                isSucceeded,result in
                                 
                                 self.loadingIndicator.isHidden = true
                                 self.loadingIndicator.stopAnimating()
                                 self.loginbutton.isEnabled = true
-                                if isSuccess{
+                                if isSucceeded{
                                     self.dismiss(animated: true, completion: nil)
                                 }else{
                                     print(result as Any)
@@ -106,10 +106,10 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 self.loginbutton.isEnabled = false
                 
                 SonarrGetSystemStatus(apikey: self.usernametextfield.text!){
-                    isSuccess,result in
+                    isSucceeded,result in
                     
                     let r = result as! Dictionary<String,Any>
-                    if isSuccess{
+                    if isSucceeded{
                         if let ver = r["version"] {
                             print(ver)
                             self.loadingIndicator.isHidden = true

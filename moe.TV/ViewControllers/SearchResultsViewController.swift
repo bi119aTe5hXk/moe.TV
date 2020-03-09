@@ -14,6 +14,9 @@ private let reuseIdentifier = "Cell"
 class SearchResultsViewController: UICollectionViewController,
     UISearchResultsUpdating,
     UICollectionViewDelegateFlowLayout {
+    
+    var serviceType = ""
+    
         func updateSearchResults(for searchController: UISearchController) {
             filterString = searchController.searchBar.text ?? ""
         }
@@ -49,7 +52,7 @@ class SearchResultsViewController: UICollectionViewController,
 
         override func viewDidLoad() {
             super.viewDidLoad()
-
+            self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
             // Uncomment the following line to preserve selection between presentations
             // self.clearsSelectionOnViewWillAppear = false
 
@@ -58,12 +61,25 @@ class SearchResultsViewController: UICollectionViewController,
             self.collectionView?.delegate = self
             // Do any additional setup after loading the view.
             //first time
+            
+            
+            
             self.getBangumiList(name: "")
         }
         func getBangumiList(name: String) {
+            
+            if self.serviceType == "albireo"{
+                
+            }else if self.serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
+            }
+            
+            
             AlbireoGetAllBangumiList(page: pageNum, name: name) {
-                (isSuccess, result) in
-                if isSuccess {
+                (isSucceeded, result) in
+                if isSucceeded {
                     //let resultDir = result as! Array<Any>//Dictionary<String,Any>
                     let arr = result as! Array<Any>
                     self.resultArr = arr//[arr[0]]
@@ -154,8 +170,8 @@ class SearchResultsViewController: UICollectionViewController,
                 //print("start insert to", indexPath)
                 pageNum += 1
                 AlbireoGetAllBangumiList(page: pageNum, name: filterString) {
-                    (isSuccess, result) in
-                    if isSuccess {
+                    (isSucceeded, result) in
+                    if isSucceeded {
                         //let resultDir = result as! Array<Any>//Dictionary<String,Any>
                         let arr = result as! Array<Any>
                         //print(self.resultArr as Any)

@@ -17,7 +17,7 @@ class BangumiDetailViewController: UIViewController,
     UICollectionViewDelegate,
     UICollectionViewDataSource,
     AVPlayerViewControllerDelegate {
-
+        var serviceType = ""
         let playerController = AVPlayerViewController()
         var bangumiUUID: String = ""
         var bgmDic = ["": ""] as Dictionary<String, Any>
@@ -36,7 +36,8 @@ class BangumiDetailViewController: UIViewController,
         }
         override func viewDidLoad() {
             super.viewDidLoad()
-
+            self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
+            
             self.titleLabel.text = ""
             self.subtitleLabel.text = ""
             self.summaryText.text = ""
@@ -45,40 +46,53 @@ class BangumiDetailViewController: UIViewController,
             print("bangumiUUID:", bangumiUUID)
             // Do any additional setup after loading the view.
             if bangumiUUID.lengthOfBytes(using: .utf8) > 0 {
+                
+                if self.serviceType == "albireo"{
+                    
+                    AlbireoGetBangumiDetail(id: bangumiUUID) { (isSucceeded, result) in
+                        self.summaryDetailButton.isHidden = false
 
-                AlbireoGetBangumiDetail(id: bangumiUUID) { (isSuccess, result) in
-                    self.summaryDetailButton.isHidden = false
+                        if isSucceeded {
+                            self.bgmDic = result as! [String: Any]
+                            //print(result as Any)
+                            self.bgmEPlist = self.bgmDic["episodes"] as! Array
+                            self.titleLabel.text = (self.bgmDic["name"] as! String)
+                            self.subtitleLabel.text = (self.bgmDic["name_cn"] as! String)
+                            self.summaryText.text = (self.bgmDic["summary"] as! String)
 
-                    if isSuccess {
-                        self.bgmDic = result as! [String: Any]
-                        //print(result as Any)
-                        self.bgmEPlist = self.bgmDic["episodes"] as! Array
-                        self.titleLabel.text = (self.bgmDic["name"] as! String)
-                        self.subtitleLabel.text = (self.bgmDic["name_cn"] as! String)
-                        self.summaryText.text = (self.bgmDic["summary"] as! String)
+                            let imgurlstr = self.bgmDic["image"] as! String
+                            self.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
+                                                      placeholderImage: nil,
+                                                      filter: .none,
+                                                      progress: .none,
+                                                      progressQueue: .main,
+                                                      imageTransition: .noTransition,
+                                                      runImageTransitionIfCached: true) { (data) in
+                                                        self.iconView.roundedImage(corners: .allCorners, radius: 6)
+                            }
+                            self.collectionView.reloadData()
 
-                        let imgurlstr = self.bgmDic["image"] as! String
-                        self.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
-                                                  placeholderImage: nil,
-                                                  filter: .none,
-                                                  progress: .none,
-                                                  progressQueue: .main,
-                                                  imageTransition: .noTransition,
-                                                  runImageTransitionIfCached: true) { (data) in
-                                                    self.iconView.roundedImage(corners: .allCorners, radius: 6)
+                        } else {
+                            print(result as Any)
+                            let err = result as! String
+                            let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                                //self.dismiss(animated: true, completion: nil)
+                            }))
+                            self.present(alert, animated: true, completion: nil)
                         }
-                        self.collectionView.reloadData()
-
-                    } else {
-                        print(result as Any)
-                        let err = result as! String
-                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-                            //self.dismiss(animated: true, completion: nil)
-                        }))
-                        self.present(alert, animated: true, completion: nil)
                     }
+                    
+                    
+                    
+                    
+                }else if self.serviceType == "sonarr" {
+                    
+                }else{
+                    print("Error: Service type unknown.")
                 }
+                
+                
             }
         }
 
@@ -107,7 +121,15 @@ class BangumiDetailViewController: UIViewController,
             guard let rowarr = bgmEPlist[indexPath.row] as? Dictionary<String, Any> else {
                 return cell
             }
-
+            
+            if self.serviceType == "albireo"{
+                
+            }else if self.serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
+            }
+            
             if (rowarr["name"] as! String).lengthOfBytes(using: .utf8) > 0 {
                 cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
                 //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
@@ -166,9 +188,15 @@ class BangumiDetailViewController: UIViewController,
             let arr = self.bgmEPlist[row] as! Dictionary<String, Any>
             let epid = arr["id"] as! String
 
-
-            AlbireoGetEpisodeDetail(ep_id: epid) { (isSuccess, result) in
-                if isSuccess {
+            if self.serviceType == "albireo"{
+                
+            }else if self.serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
+            }
+            AlbireoGetEpisodeDetail(ep_id: epid) { (isSucceeded, result) in
+                if isSucceeded {
                     print(result as Any)
                     let dic = result as! Dictionary<String, Any>
                     if let videoList = dic["video_files"] {
@@ -269,7 +297,14 @@ class BangumiDetailViewController: UIViewController,
             let indexPaths = self.collectionView.indexPathsForSelectedItems
             let indexPath = indexPaths![0] as NSIndexPath
             let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String, Any>
-
+            
+            if self.serviceType == "albireo"{
+                
+            }else if self.serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
+            }
             // Build title item
             let titleItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle.rawValue, value: (self.bgmDic["name"] as! String) + " - " + String(dic["episode_no"] as! Int) + "." + (dic["name"] as! String))
             metadata.append(titleItem)
@@ -345,6 +380,13 @@ class BangumiDetailViewController: UIViewController,
                 isFinished = true
             }
 
+            if self.serviceType == "albireo"{
+                
+            }else if self.serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
+            }
             let indexPaths = self.collectionView.indexPathsForSelectedItems
             let indexPath = indexPaths![0] as NSIndexPath
             let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String, Any>
@@ -352,7 +394,7 @@ class BangumiDetailViewController: UIViewController,
                 bangumi_id: (dic["bangumi_id"] as! String),
                 last_watch_position: Float(currentTime),
                 percentage: percent,
-                is_finished: isFinished) { (isSuccess, result) in
+                is_finished: isFinished) { (isSucceeded, result) in
                 print(result as Any)
 
             }

@@ -20,7 +20,7 @@ class SettingsViewController: UIViewController {
     @IBAction func logoutBTNPressed(_ sender: Any) {
         let alert = UIAlertController(title: "Warning", message: "Do you really want to signout your account?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
-            AlbireoLogOutServer { (isSuccess, result) in
+            AlbireoLogOutServer { (isSucceeded, result) in
                 
             }
             

@@ -13,6 +13,7 @@ private let reuseIdentifier = "Cell"
 
 class MyBangumiListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var bgmList: Array<Any> = []
+    var serviceType = ""
 
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
 
@@ -27,11 +28,14 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         self.collectionView?.delegate = self
         // Do any additional setup after loading the view.
         //self.loadData()
+        
     }
     override func viewDidAppear(_ animated: Bool) {
         //self.loadData()
     }
     override func viewWillAppear(_ animated: Bool) {
+        //load service type first
+        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
         self.loadData()
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -46,33 +50,19 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
 
-
-                if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "albireo" {
+                
+                if self.serviceType == "albireo" {
                     AlbireoGetMyBangumiList {
-                        (isSuccess, result) in
-                        //print(result as Any)
-                        self.loadingIndicator.isHidden = true
-                        self.loadingIndicator.stopAnimating()
-
-                        if isSuccess {
-                            //print(result)
-                            self.bgmList = result as! Array<Any>
-                            self.collectionView.reloadData()
-                            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(self.bgmList, forKey: UD_TOPSHELF_ARR)
-                            UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
-                            print("saved to topShelfArr")
-                        } else {
-                            print(result as Any)
-                            let err = result as! String
-                            //                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
-                            //                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-                            //                            //self.dismiss(animated: true, completion: nil)
-                            //                        }))
-                            //                        self.present(alert, animated: true, completion: nil)
+                        (isSucceeded, result) in
+                        
+                        self.loadDataToTable(isSucceeded: isSucceeded, result: result as Any)
+                    }
+                } else if self.serviceType == "sonarr" {
+                    SonarrGetSeries(id: -1) {
+                        (isSucceeded, result) in
+                        self.loadDataToTable(isSucceeded: isSucceeded, result: result as Any)
                         }
                     }
-                } else if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "sonarr" {
-
                 } else {
                     print("Error: Service type unknown.")
                     return
@@ -80,7 +70,29 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
 
             }
         }
-    }
+        func loadDataToTable(isSucceeded:Bool, result:Any){
+            //print(result as Any)
+            self.loadingIndicator.isHidden = true
+            self.loadingIndicator.stopAnimating()
+
+            if isSucceeded {
+                //print(result)
+                self.bgmList = result as! Array<Any>
+                self.collectionView.reloadData()
+                UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(self.bgmList, forKey: UD_TOPSHELF_ARR)
+                UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
+                print("saved to topShelfArr")
+            } else {
+                print(result as Any)
+                //let err = result as! String
+                //                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+                //                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                //                            //self.dismiss(animated: true, completion: nil)
+                //                        }))
+                //                        self.present(alert, animated: true, completion: nil)
+            }
+        }
+    
 
     /*
     // MARK: - Navigation
@@ -112,24 +124,49 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         }
 
         // Configure the cell
-        cell.titleTextField?.text = (rowarr["name"] as! String)
-        //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
-        let imgurlstr = rowarr["image"] as! String
-        cell.iconView.image = nil
-        //cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
+        if self.serviceType == "albireo"{
+            cell.titleTextField?.text = (rowarr["name"] as! String)
+            //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
+            let imgurlstr = rowarr["image"] as! String
+            cell.iconView.image = nil
+            //cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!)
 
 
-        cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
-            placeholderImage: nil,
-            filter: .none,
-            progress: .none,
-            progressQueue: .main,
-            imageTransition: .noTransition,
-            runImageTransitionIfCached: true) { (data) in
-            cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+            cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
+                placeholderImage: nil,
+                filter: .none,
+                progress: .none,
+                progressQueue: .main,
+                imageTransition: .noTransition,
+                runImageTransitionIfCached: true) { (data) in
+                cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+            }
+        }else if self.serviceType == "sonarr" {
+            cell.titleTextField?.text = (rowarr["title"] as! String)
+            //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
+            
+            cell.iconView.image = nil
+            let imgarr = rowarr["images"] as! Array<Any>
+            for item in imgarr {//found poster in images array
+                let dic = item as! Dictionary<String,String>
+                if dic["coverType"] == "poster"{
+                    let imgstr = dic["url"]!
+                    
+                    cell.iconView.af_setImage(withURL: URL(string: imgstr)!,
+                        placeholderImage: nil,
+                        filter: .none,
+                        progress: .none,
+                        progressQueue: .main,
+                        imageTransition: .noTransition,
+                        runImageTransitionIfCached: true) { (data) in
+                        cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+                    }
+                }
+            }
+            
+        }else{
+            print("Error: Service type unknown.")
         }
-
-
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -156,7 +193,15 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         let row = indexPath.row
         let arr = self.bgmList[row] as! Dictionary<String, Any>
         let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
-        detailvc.bangumiUUID = arr["id"] as! String
+        
+        if self.serviceType == "albireo"{
+            detailvc.bangumiUUID = arr["id"] as! String
+        }else if self.serviceType == "sonarr" {
+            detailvc.bangumiUUID = arr["seriesId"] as! String
+        }else{
+            print("Error: Service type unknown.")
+        }
+        
         self.present(detailvc, animated: true)
     }
 

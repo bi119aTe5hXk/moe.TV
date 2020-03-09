@@ -13,6 +13,7 @@ private let reuseIdentifier = "Cell"
 
 class OnAirListViewController: UICollectionViewController,UICollectionViewDelegateFlowLayout {
     var bgmList: Array<Any> = []
+    var serviceType = ""
     
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
@@ -29,6 +30,7 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
         self.loadData()
     }
     override func viewDidAppear(_ animated: Bool) {
+        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
         self.loadData()
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -39,33 +41,49 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
         let loggedin = UserDefaults.standard.bool(forKey: UD_LOGEDIN)
         if loggedin {
             if self.bgmList.count <= 0 {
-                print("getOnAirList")
+                //print("getOnAirList")
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
-                AlbireoGetOnAirList(completion: {
-                    (isSuccess, result) in
-                    //print(result as Any)
-                    self.loadingIndicator.isHidden = true
-                    self.loadingIndicator.stopAnimating()
-                    if isSuccess {
-                        self.bgmList = result as! Array<Any>
-                        self.collectionView.reloadData()
-                        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(self.bgmList, forKey: UD_TOPSHELF_ARR)
-                    }else{
-                        print(result as Any)
-                        let err = result as! String
-                        print(err)
-//                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
-//                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-//                            //self.dismiss(animated: true, completion: nil)
-//                        }))
-//                        self.present(alert, animated: true, completion: nil)
+                
+                if self.serviceType == "albireo"{
+                    
+                    AlbireoGetOnAirList(completion: {
+                                        (isSucceeded, result) in
+                        self.loadDataToTable(isSucceeded: isSucceeded, result: result as Any)
+                                    })
+                    
+                }else if self.serviceType == "sonarr" {
+                    SonarrGetCalendar { (isSucceeded, result) in
+                        self.loadDataToTable(isSucceeded: isSucceeded, result: result as Any)
                     }
-                })
+                }else{
+                    print("Error: Service type unknown.")
+                }
+                
+                
+                
             }
         }
     }
-
+    func loadDataToTable(isSucceeded:Bool, result:Any){
+        //print(result as Any)
+                            self.loadingIndicator.isHidden = true
+                            self.loadingIndicator.stopAnimating()
+                            if isSucceeded {
+                                self.bgmList = result as! Array<Any>
+                                self.collectionView.reloadData()
+                                UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(self.bgmList, forKey: UD_TOPSHELF_ARR)
+                            }else{
+                                print(result as Any)
+                                let err = result as! String
+                                print(err)
+        //                        let alert = UIAlertController(title: "Error", message: err, preferredStyle: .alert)
+        //                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+        //                            //self.dismiss(animated: true, completion: nil)
+        //                        }))
+        //                        self.present(alert, animated: true, completion: nil)
+                            }
+    }
     /*
     // MARK: - Navigation
 
@@ -96,19 +114,45 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
         }
 
         // Configure the cell
-        cell.titleTextField?.text = (rowarr["name"] as! String)
-        //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
-        let imgurlstr = rowarr["image"] as! String
-        cell.iconView.image = nil
-        cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
-                                  placeholderImage: nil,
-                                  filter: .none,
-                                  progress: .none,
-                                  progressQueue: .main,
-                                  imageTransition: .noTransition,
-                                  runImageTransitionIfCached: true) { (data) in
-                                    cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+        
+        if self.serviceType == "albireo"{
+            cell.titleTextField?.text = (rowarr["name"] as! String)
+            //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
+            let imgurlstr = rowarr["image"] as! String
+            cell.iconView.image = nil
+            cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
+                                      placeholderImage: nil,
+                                      filter: .none,
+                                      progress: .none,
+                                      progressQueue: .main,
+                                      imageTransition: .noTransition,
+                                      runImageTransitionIfCached: true) { (data) in
+                                        cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+            }
+        }else if self.serviceType == "sonarr" {
+            cell.titleTextField?.text = (rowarr["title"] as! String)
+            
+            cell.iconView.image = nil
+            let imgarr = rowarr["images"] as! Array<Any>
+            for item in imgarr {//found poster in images array
+                let dic = item as! Dictionary<String,String>
+                if dic["coverType"] == "poster"{
+                    let imgstr = dic["url"]!
+                    cell.iconView.af_setImage(withURL: URL(string: imgstr)!,
+                        placeholderImage: nil,
+                        filter: .none,
+                        progress: .none,
+                        progressQueue: .main,
+                        imageTransition: .noTransition,
+                        runImageTransitionIfCached: true) { (data) in
+                        cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+                    }
+                }
+            }
+        }else{
+            print("Error: Service type unknown.")
         }
+        
         return cell
     }
 
