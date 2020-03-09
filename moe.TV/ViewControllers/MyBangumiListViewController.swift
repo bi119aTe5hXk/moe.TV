@@ -48,7 +48,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
 
 
                 if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "albireo" {
-                    getMyBangumiList {
+                    AlbireoGetMyBangumiList {
                         (isSuccess, result) in
                         //print(result as Any)
                         self.loadingIndicator.isHidden = true

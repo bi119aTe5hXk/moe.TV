@@ -46,7 +46,7 @@ class BangumiDetailViewController: UIViewController,
             // Do any additional setup after loading the view.
             if bangumiUUID.lengthOfBytes(using: .utf8) > 0 {
 
-                getBangumiDetail(id: bangumiUUID) { (isSuccess, result) in
+                AlbireoGetBangumiDetail(id: bangumiUUID) { (isSuccess, result) in
                     self.summaryDetailButton.isHidden = false
 
                     if isSuccess {
@@ -167,7 +167,7 @@ class BangumiDetailViewController: UIViewController,
             let epid = arr["id"] as! String
 
 
-            getEpisodeDetail(ep_id: epid) { (isSuccess, result) in
+            AlbireoGetEpisodeDetail(ep_id: epid) { (isSuccess, result) in
                 if isSuccess {
                     print(result as Any)
                     let dic = result as! Dictionary<String, Any>
@@ -348,7 +348,7 @@ class BangumiDetailViewController: UIViewController,
             let indexPaths = self.collectionView.indexPathsForSelectedItems
             let indexPath = indexPaths![0] as NSIndexPath
             let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String, Any>
-            sentEPWatchProgress(ep_id: (dic["id"] as! String),
+            AlbireoSentEPWatchProgress(ep_id: (dic["id"] as! String),
                 bangumi_id: (dic["bangumi_id"] as! String),
                 last_watch_position: Float(currentTime),
                 percentage: percent,

@@ -42,7 +42,7 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
                 print("getOnAirList")
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
-                getOnAirList(completion: {
+                AlbireoGetOnAirList(completion: {
                     (isSuccess, result) in
                     //print(result as Any)
                     self.loadingIndicator.isHidden = true

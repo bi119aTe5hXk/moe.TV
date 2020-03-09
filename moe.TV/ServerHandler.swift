@@ -73,7 +73,7 @@ func getServerAddr() -> String {
 
 
 // MARK: - Albireo Server
-func logInAlbireoServer(url: String,
+func AlbireoLogInAlbireoServer(url: String,
                  username: String,
                  password: String,
                  completion: @escaping (Bool, String) -> Void) {
@@ -114,7 +114,7 @@ func logInAlbireoServer(url: String,
 }
 
 
-func logOutServer(completion: @escaping (Bool, String) -> Void) {
+func AlbireoLogOutServer(completion: @escaping (Bool, String) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/user/logout")
     loadCookies()
@@ -145,7 +145,7 @@ func logOutServer(completion: @escaping (Bool, String) -> Void) {
 }
 
 
-func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
+func AlbireoGetMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/home/my_bangumi?status=3")
     loadCookies()
@@ -172,7 +172,7 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
     }
 }
 
-func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
+func AlbireoGetOnAirList(completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/home/on_air")
     loadCookies()
@@ -196,7 +196,7 @@ func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
     }
 }
 
-func getAllBangumiList(page: Int,
+func AlbireoGetAllBangumiList(page: Int,
                        name: String,
                        completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
@@ -227,7 +227,7 @@ func getAllBangumiList(page: Int,
         }
     }
 }
-func getBangumiDetail(id: String,
+func AlbireoGetBangumiDetail(id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/home/bangumi/")
@@ -252,7 +252,7 @@ func getBangumiDetail(id: String,
         }
     }
 }
-func getEpisodeDetail(ep_id: String,
+func AlbireoGetEpisodeDetail(ep_id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/api/home/episode/")
@@ -277,7 +277,7 @@ func getEpisodeDetail(ep_id: String,
     }
 }
 
-func sentEPWatchProgress(ep_id: String,
+func AlbireoSentEPWatchProgress(ep_id: String,
                          bangumi_id:String,
                          last_watch_position:Float,
                          percentage:Double,
@@ -359,6 +359,28 @@ func getSonarrSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
 func getSonarrEPList(id:Int,completion: @escaping (Bool, Any?) -> Void){
     var urlstr = getServerAddr()
     urlstr.append("/episode/\(id)")
+    
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [String: Any] {
+                //print(JSON)
+                completion(true, JSON)
+            }
+            break
+        case .failure(let error):
+            // error handling
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            completion(false, error.localizedDescription)
+            break
+        }
+    }
+}
+
+func getSonarrCalendar(completion: @escaping (Bool, Any?) -> Void){
+    var urlstr = getServerAddr()
+    urlstr.append("/calendar")
     
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         //print(response.result)

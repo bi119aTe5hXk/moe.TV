@@ -61,7 +61,7 @@ class SearchResultsViewController: UICollectionViewController,
             self.getBangumiList(name: "")
         }
         func getBangumiList(name: String) {
-            getAllBangumiList(page: pageNum, name: name) {
+            AlbireoGetAllBangumiList(page: pageNum, name: name) {
                 (isSuccess, result) in
                 if isSuccess {
                     //let resultDir = result as! Array<Any>//Dictionary<String,Any>
@@ -153,7 +153,7 @@ class SearchResultsViewController: UICollectionViewController,
             if indexPath.row == (self.resultArr.count - 1) { //will load more page at the end of the row
                 //print("start insert to", indexPath)
                 pageNum += 1
-                getAllBangumiList(page: pageNum, name: filterString) {
+                AlbireoGetAllBangumiList(page: pageNum, name: filterString) {
                     (isSuccess, result) in
                     if isSuccess {
                         //let resultDir = result as! Array<Any>//Dictionary<String,Any>

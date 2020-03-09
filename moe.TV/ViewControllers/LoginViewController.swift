@@ -24,8 +24,12 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         self.loadingIndicator.isHidden = true
         self.loadingIndicator.stopAnimating()
         
+        //set default service
+        UserDefaults.standard.set("albireo", forKey: UD_SERVICE_TYPE)
+        self.usernametextfield.placeholder = "Username"
+        self.passwordtextfield.isEnabled = true
+        self.passwordtextfield.isHidden = false
         
-
         // Do any additional setup after loading the view.
         if let host = UserDefaults.standard.string(forKey: UD_SERVER_ADDR){
             self.urltextfield.text = host
@@ -61,6 +65,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         UserDefaults.standard.synchronize()
     }
     @IBAction func loginBTNPressed(_ sender: Any) {
+        //Albireo
         if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "albireo" {
             if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
                 (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
@@ -68,7 +73,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
                 self.loginbutton.isEnabled = false
-                logInAlbireoServer(url:self.urltextfield.text!,
+                AlbireoLogInAlbireoServer(url:self.urltextfield.text!,
                             username: self.usernametextfield.text!,
                             password: self.passwordtextfield.text!) {
                                 isSuccess,result in
@@ -91,6 +96,8 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                     
                 }
             }
+            
+            //Sonarr
         }else if UserDefaults.standard.string(forKey: UD_SERVICE_TYPE) == "sonarr"{
             if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
                 (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0{
