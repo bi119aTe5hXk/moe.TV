@@ -40,7 +40,7 @@ func cancelRequest(){
 //    })
 }
 
-func getServerAddr() -> String {
+func initNetwork() {
     let proxyAddr = UserDefaults.standard.string(forKey: UD_PROXY_SERVER)
     let proxyPort = UserDefaults.standard.string(forKey: UD_PROXY_PORT)
     var proxyConfiguration = [NSObject: AnyObject]()
@@ -63,13 +63,20 @@ func getServerAddr() -> String {
     //cfg.httpAdditionalHeaders = ["User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"]
     requestManager = Alamofire.Session(configuration: cfg)
     
-    //add pref
-    var urlstr:String = UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!
-    if (!urlstr.uppercased().hasPrefix("http://".uppercased()) &&
-        !urlstr.uppercased().hasPrefix("https://".uppercased())){
-        print("URL \(urlstr) has no prefix fond, add https as default")
-        urlstr = "https://" + urlstr //use https as default
-    }
+}
+func addPrefix(url:String) -> String{
+        //var url:String = UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!
+    //    if (!urlstr.uppercased().hasPrefix("http://".uppercased()) &&
+    //        !urlstr.uppercased().hasPrefix("https://".uppercased())){
+    //        print("URL \(urlstr) has no prefix fond, add https as default")
+    //        urlstr = "https://" + urlstr //use https as default
+    //    }
+    var urlstr = url
+        if UserDefaults.standard.bool(forKey: UD_USING_HTTPS){
+            urlstr = "https://" + urlstr
+        }else{
+            urlstr = "http://" + urlstr
+        }
     return urlstr
 }
 
@@ -79,8 +86,8 @@ func getServerAddr() -> String {
 func AlbireoLogInAlbireoServer(username: String,
                                password: String,
                                completion: @escaping (Bool, String) -> Void) {
-    
-    var urlstr = getServerAddr()
+    initNetwork()
+    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/user/login")
 
     let postdata = ["name": username, "password": password, "remmember": true] as [String: Any]
@@ -116,7 +123,8 @@ func AlbireoLogInAlbireoServer(username: String,
 
 
 func AlbireoLogOutServer(completion: @escaping (Bool, String) -> Void) {
-    var urlstr = getServerAddr()
+    initNetwork()
+    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/user/logout")
     loadCookies()
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
@@ -147,7 +155,8 @@ func AlbireoLogOutServer(completion: @escaping (Bool, String) -> Void) {
 
 
 func AlbireoGetMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = getServerAddr()
+    initNetwork()
+    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/my_bangumi?status=3")
     loadCookies()
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
@@ -174,7 +183,8 @@ func AlbireoGetMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
 }
 
 func AlbireoGetOnAirList(completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = getServerAddr()
+    initNetwork()
+    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/on_air")
     loadCookies()
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
@@ -200,7 +210,8 @@ func AlbireoGetOnAirList(completion: @escaping (Bool, Any?) -> Void) {
 func AlbireoGetAllBangumiList(page: Int,
                        name: String,
                        completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = getServerAddr()
+    initNetwork()
+    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/bangumi?page=")
     urlstr.append(String(page))
     urlstr.append("&count=12&sort_field=air_date&sort_order=desc&name=")
@@ -230,7 +241,8 @@ func AlbireoGetAllBangumiList(page: Int,
 }
 func AlbireoGetBangumiDetail(id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = getServerAddr()
+    initNetwork()
+    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/bangumi/")
     urlstr.append(id)
     loadCookies()
@@ -255,7 +267,8 @@ func AlbireoGetBangumiDetail(id: String,
 }
 func AlbireoGetEpisodeDetail(ep_id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = getServerAddr()
+    initNetwork()
+    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/episode/")
     urlstr.append(ep_id)
     loadCookies()
@@ -284,7 +297,8 @@ func AlbireoSentEPWatchProgress(ep_id: String,
                          percentage:Double,
                          is_finished:Bool,
                          completion: @escaping (Bool, Any?) -> Void){
-    var urlstr = getServerAddr()
+    initNetwork()
+    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/watch/history/")
     urlstr.append(ep_id)
     loadCookies()
@@ -309,6 +323,8 @@ func AlbireoSentEPWatchProgress(ep_id: String,
 
 
 // MARK: - Sonarr Server
+
+
 func SonarrAddAPIKEY(url:String)->String{
     var urlstr = url
     let apikey = UserDefaults.standard.string(forKey: UD_SONARR_APIKEY)
@@ -322,17 +338,44 @@ func SonarrAddAPIKEY(url:String)->String{
         return ""
     }
 }
+func SonarrURL()->String{
+    var urlstr = ""
+    
+    //add http basic auth info if needed
+    if UserDefaults.standard.bool(forKey: UD_SONARR_USINGBASICAUTH) {
+        let username = UserDefaults.standard.string(forKey: UD_SONARR_USERNAME)
+        let password = UserDefaults.standard.string(forKey: UD_SONARR_PASSWORD)
+        urlstr  = "\(username!):\(password!)@"
+    }
+    
+    //append host name and port
+    urlstr.append(UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    
+    //add http/https prefix
+    urlstr = addPrefix(url: urlstr)
+    
+    return urlstr
+}
 
-func SonarrGetSystemStatus(apikey:String,completion: @escaping (Bool, Any?) -> Void) {
+func SonarrGetSystemStatus(username:String,
+                           password:String,
+                           apikey:String,
+                           completion: @escaping (Bool, Any?) -> Void) {
+    initNetwork()
+    var urlstr = ""
+    if username.lengthOfBytes(using: .utf8) > 0 || password.lengthOfBytes(using: .utf8) > 0 {
+        urlstr =  "\(username):\(password)@"
+    }
     
-    var urlstr = getServerAddr()
-    urlstr.append("/system/status")
+    urlstr.append(UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    urlstr = addPrefix(url: urlstr)
     
+    urlstr.append("/api/system/status")
     //check the api key is valid at first time "login"
     urlstr.append("?apikey=\(apikey)")//DO NOT REPLACE WITH USER DEFAULT (SonarrAddAPIKEY func)
-    print(urlstr)
+    //print(urlstr)
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        print(response)
+        //print(response)
         switch response.result {
         case .success(let value):
             if let JSON = value as? [String: Any] {
@@ -350,7 +393,11 @@ func SonarrGetSystemStatus(apikey:String,completion: @escaping (Bool, Any?) -> V
 }
 
 func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
-    var urlstr = getServerAddr()
+    
+    initNetwork()
+    var urlstr = SonarrURL()
+    urlstr.append("/api")
+    
     if id >= 0{
         urlstr.append("/series/\(id)")
     }else{
@@ -358,12 +405,13 @@ func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
     }
     urlstr = SonarrAddAPIKEY(url: urlstr)
     
+    //print(urlstr)
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response.result)
+        //print(response)
         switch response.result {
         case .success(let value):
-            if let JSON = value as? [String: Any] {
-                //print(JSON)
+            if let JSON = value as? [Any] {
+                print(JSON)
                 completion(true, JSON)
             }
             break
@@ -377,7 +425,10 @@ func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
 }
 
 func SonarrGetEPList(id:Int,completion: @escaping (Bool, Any?) -> Void){
-    var urlstr = getServerAddr()
+    initNetwork()
+    var urlstr = SonarrURL()
+    urlstr.append("/api")
+    
     urlstr.append("/episode/\(id)")
     urlstr = SonarrAddAPIKEY(url: urlstr)
     
@@ -400,7 +451,10 @@ func SonarrGetEPList(id:Int,completion: @escaping (Bool, Any?) -> Void){
 }
 
 func SonarrGetCalendar(completion: @escaping (Bool, Any?) -> Void){
-    var urlstr = getServerAddr()
+    initNetwork()
+    var urlstr = SonarrURL()
+    urlstr.append("/api")
+    
     urlstr.append("/calendar")
     urlstr = SonarrAddAPIKEY(url: urlstr)
     

@@ -23,6 +23,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.register(defaults: [UD_PROXY_SERVER : ""])
         UserDefaults.standard.register(defaults: [UD_PROXY_PORT : ""])
         UserDefaults.standard.register(defaults: [UD_SONARR_APIKEY : ""])
+        UserDefaults.standard.register(defaults: [UD_SONARR_USERNAME : ""])
+        UserDefaults.standard.register(defaults: [UD_SONARR_PASSWORD : ""])
+        UserDefaults.standard.register(defaults: [UD_USING_HTTPS : true])
+        UserDefaults.standard.register(defaults: [UD_SONARR_USINGBASICAUTH : false])
+        
+        //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
         
         if let tabController = window?.rootViewController as? UITabBarController {
             tabController.viewControllers?.append(packagedSearchController())

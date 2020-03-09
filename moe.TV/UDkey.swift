@@ -21,11 +21,17 @@ let UD_LOGEDIN = "loggedin"
 //String for Service Type
 let UD_SERVICE_TYPE = "servicetype"
 
+//Bool for Connect Type
+let UD_USING_HTTPS = "usinghttps"
+
 //String for Host Server Address
 let UD_SERVER_ADDR = "serveraddr"
 
-//String for Sonarr API key
+//Sonarr
 let UD_SONARR_APIKEY = "sonarr_api_key"
+let UD_SONARR_USINGBASICAUTH = "sonarr_basic_auth"
+let UD_SONARR_USERNAME = "sonarr_username"
+let UD_SONARR_PASSWORD = "sonarr_password"
 
 //HTTP proxy server host name and port
 let UD_PROXY_SERVER = "proxyserver"

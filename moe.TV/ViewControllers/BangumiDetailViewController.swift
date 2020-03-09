@@ -133,7 +133,8 @@ class BangumiDetailViewController: UIViewController,
             if (rowarr["name"] as! String).lengthOfBytes(using: .utf8) > 0 {
                 cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
                 //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
-                let imgurlstr = getServerAddr() + (rowarr["thumbnail"] as! String)
+                
+                let imgurlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (rowarr["thumbnail"] as! String)
                 cell.iconView.image = nil
                 cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
                                           placeholderImage: nil,
@@ -205,7 +206,7 @@ class BangumiDetailViewController: UIViewController,
                             print("only one video")
 
                             let dic2 = arr[0] as! Dictionary<String, Any>
-                            let videoURLstr = getServerAddr() + (dic2["url"] as! String)
+                            let videoURLstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (dic2["url"] as! String)
 
                             self.askToSeek(videoURLstr: videoURLstr, outSideDic: dic)
 
@@ -215,7 +216,7 @@ class BangumiDetailViewController: UIViewController,
                                 let dic2 = item as! Dictionary<String, Any>
                                 alert.addAction(UIAlertAction.init(title: (dic2["file_name"] as! String), style: .default, handler: { (action) in
 
-                                        let videoURLstr = getServerAddr() + (dic2["url"] as! String)
+                                        let videoURLstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (dic2["url"] as! String)
 
                                         self.askToSeek(videoURLstr: videoURLstr, outSideDic: dic)
                                     }))

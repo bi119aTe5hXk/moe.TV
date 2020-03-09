@@ -10,9 +10,11 @@ import UIKit
 
 class LoginViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var servicetypeselect: UISegmentedControl!
+    @IBOutlet weak var connectiontypeselect: UISegmentedControl!
     @IBOutlet weak var urltextfield: UITextField!
     @IBOutlet weak var usernametextfield: UITextField!
     @IBOutlet weak var passwordtextfield: UITextField!
+    @IBOutlet weak var apikeytextfield: UITextField!
     @IBOutlet weak var loginbutton: UIButton!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     var serviceType = ""
@@ -28,8 +30,8 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         //set default service
         UserDefaults.standard.set("albireo", forKey: UD_SERVICE_TYPE)
         self.usernametextfield.placeholder = "Username"
-        self.passwordtextfield.isEnabled = true
-        self.passwordtextfield.isHidden = false
+        self.passwordtextfield.placeholder = "Password"
+        self.apikeytextfield.isHidden = true
         
         // load host url if it was saved
         if let host = UserDefaults.standard.string(forKey: UD_SERVER_ADDR){
@@ -37,7 +39,18 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         }
         
     }
-
+    @IBAction func connectionTypeChanged(_ sender: Any) {
+        switch (sender as AnyObject).selectedSegmentIndex {
+        case 0:
+            UserDefaults.standard.set(true, forKey: UD_USING_HTTPS)
+        case 1:
+            UserDefaults.standard.set(false, forKey: UD_USING_HTTPS)
+        default:
+            break
+        }
+        UserDefaults.standard.synchronize()
+    }
+    
     @IBAction func serviceTypeChanged(_ sender: Any) {
         switch (sender as AnyObject).selectedSegmentIndex {
         case 0:
@@ -45,18 +58,17 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             UserDefaults.standard.set("albireo", forKey: UD_SERVICE_TYPE)
             //set UI as albireo
             self.usernametextfield.placeholder = "Username"
-            self.passwordtextfield.isEnabled = true
-            self.passwordtextfield.isHidden = false
-            
+            self.passwordtextfield.placeholder = "Password"
+            self.apikeytextfield.isHidden = true
             break
         case 1:
             //Sonarr
             UserDefaults.standard.set("sonarr", forKey: UD_SERVICE_TYPE)
             //set UI as sonarr
-            //only require API key, so disable the password input and rename username as "API key"
-            self.usernametextfield.placeholder = "API key"
-            self.passwordtextfield.isEnabled = false
-            self.passwordtextfield.isHidden = true
+            
+            self.usernametextfield.placeholder = "Username (Optional)"
+            self.passwordtextfield.placeholder = "Password (Optional)"
+            self.apikeytextfield.isHidden = false
             
             break
         default:
@@ -68,6 +80,10 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     }
     
     @IBAction func loginBTNPressed(_ sender: Any) {
+        let urltext = self.urltextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let username = self.usernametextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let password = self.passwordtextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let apikey = self.apikeytextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         //Albireo
         if self.serviceType == "albireo" {
             if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
@@ -78,9 +94,10 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 self.loadingIndicator.startAnimating()
                 self.loginbutton.isEnabled = false
                 
-                UserDefaults.standard.set(self.urltextfield.text!, forKey: UD_SERVER_ADDR)
-                AlbireoLogInAlbireoServer(username: self.usernametextfield.text!,
-                            password: self.passwordtextfield.text!) {
+                
+                UserDefaults.standard.set(urltext, forKey: UD_SERVER_ADDR)
+                AlbireoLogInAlbireoServer(username: username,
+                                          password: password) {
                                 isSucceeded,result in
                                 
                                 self.loadingIndicator.isHidden = true
@@ -103,14 +120,16 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             //Sonarr
         }else if self.serviceType == "sonarr"{
             if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
-                (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0{
+                (self.apikeytextfield.text?.lengthOfBytes(using: .utf8))! > 0{
                 
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
                 self.loginbutton.isEnabled = false
                 
-                UserDefaults.standard.set(self.urltextfield.text!, forKey: UD_SERVER_ADDR)
-                SonarrGetSystemStatus(apikey: self.usernametextfield.text!){
+                UserDefaults.standard.set(urltext, forKey: UD_SERVER_ADDR)
+                SonarrGetSystemStatus(username: username,
+                                      password: password,
+                                      apikey: apikey){
                     isSucceeded,result in
                     
                     self.loadingIndicator.isHidden = true
@@ -123,8 +142,18 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                             print(ver)
                             
                             UserDefaults.standard.set(true, forKey: UD_LOGEDIN)
+                            
                             //save the api key
-                            UserDefaults.standard.set(self.usernametextfield.text!, forKey: UD_SONARR_APIKEY)
+                            UserDefaults.standard.set(apikey, forKey: UD_SONARR_APIKEY)
+                            
+                            //save auth info if not empty
+                            if (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 ||
+                                (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
+                                UserDefaults.standard.set(true, forKey: UD_SONARR_USINGBASICAUTH)
+                                UserDefaults.standard.set(username, forKey: UD_SONARR_USERNAME)
+                                UserDefaults.standard.set(password, forKey: UD_SONARR_PASSWORD)
+                            }
+                            
                             UserDefaults.standard.synchronize()
                             self.dismiss(animated: true, completion: nil)
                             return
@@ -132,8 +161,8 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                     }
                     print(result as Any)
                     UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
-                    let err = result
-                    let alert = UIAlertController(title: "Error", message: err as! String, preferredStyle: .alert)
+                    let err = result as! Dictionary<String,String>
+                    let alert = UIAlertController(title: "Error", message: err["error"] as! String, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
                         //self.dismiss(animated: true, completion: nil)
                     }))

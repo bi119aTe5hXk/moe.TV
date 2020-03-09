@@ -150,7 +150,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
             for item in imgarr {//found poster in images array
                 let dic = item as! Dictionary<String,String>
                 if dic["coverType"] == "poster"{
-                    let imgstr = dic["url"]!
+                    let imgstr = SonarrURL() + dic["url"]!
                     
                     cell.iconView.af_setImage(withURL: URL(string: imgstr)!,
                         placeholderImage: nil,
