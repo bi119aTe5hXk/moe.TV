@@ -29,6 +29,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         
         //set default service
         UserDefaults.standard.set("albireo", forKey: UD_SERVICE_TYPE)
+        self.urltextfield.placeholder = "Server Address"
         self.usernametextfield.placeholder = "Username"
         self.passwordtextfield.placeholder = "Password"
         self.apikeytextfield.isHidden = true
@@ -61,6 +62,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             //Albireo
             UserDefaults.standard.set("albireo", forKey: UD_SERVICE_TYPE)
             //set UI as albireo
+            self.urltextfield.placeholder = "Server Address"
             self.usernametextfield.placeholder = "Username"
             self.passwordtextfield.placeholder = "Password"
             self.apikeytextfield.isHidden = true
@@ -69,7 +71,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             //Sonarr
             UserDefaults.standard.set("sonarr", forKey: UD_SERVICE_TYPE)
             //set UI as sonarr
-            
+            self.urltextfield.placeholder = "Server Address:8989"
             self.usernametextfield.placeholder = "Username (Optional)"
             self.passwordtextfield.placeholder = "Password (Optional)"
             self.apikeytextfield.isHidden = false
