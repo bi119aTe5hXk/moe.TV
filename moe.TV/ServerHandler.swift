@@ -308,10 +308,27 @@ func AlbireoSentEPWatchProgress(ep_id: String,
 
 
 // MARK: - Sonarr Server
+func SonarrAddAPIKEY(url:String)->String{
+    var urlstr = url
+    let apikey = UserDefaults.standard.string(forKey: UD_SONARR_APIKEY)
+    
+    if (apikey?.lengthOfBytes(using: .utf8))! > 0 {
+        urlstr.append("?apikey=\(apikey!)")
+        return urlstr
+    }else{
+        //missing api key, set loggen in to false
+        UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+        return ""
+    }
+}
 
-func getSonarrSystemStatus(completion: @escaping (Bool, Any?) -> Void) {
+func SonarrGetSystemStatus(apikey:String,completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getServerAddr()
     urlstr.append("/system/status")
+    
+    //check the api key is valid at first time "login"
+    urlstr.append("?apikey=\(apikey)")//DO NOT REPLACE WITH USER DEFAULT (SonarrAddAPIKEY func)
+    
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         //print(response.result)
         switch response.result {
@@ -330,13 +347,14 @@ func getSonarrSystemStatus(completion: @escaping (Bool, Any?) -> Void) {
     }
 }
 
-func getSonarrSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
+func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
     var urlstr = getServerAddr()
     if id >= 0{
         urlstr.append("/series/\(id)")
     }else{
         urlstr.append("/series")
     }
+    urlstr = SonarrAddAPIKEY(url: urlstr)
     
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         //print(response.result)
@@ -356,9 +374,10 @@ func getSonarrSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
     }
 }
 
-func getSonarrEPList(id:Int,completion: @escaping (Bool, Any?) -> Void){
+func SonarrGetEPList(id:Int,completion: @escaping (Bool, Any?) -> Void){
     var urlstr = getServerAddr()
     urlstr.append("/episode/\(id)")
+    urlstr = SonarrAddAPIKEY(url: urlstr)
     
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         //print(response.result)
@@ -378,9 +397,10 @@ func getSonarrEPList(id:Int,completion: @escaping (Bool, Any?) -> Void){
     }
 }
 
-func getSonarrCalendar(completion: @escaping (Bool, Any?) -> Void){
+func SonarrGetCalendar(completion: @escaping (Bool, Any?) -> Void){
     var urlstr = getServerAddr()
     urlstr.append("/calendar")
+    urlstr = SonarrAddAPIKEY(url: urlstr)
     
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         //print(response.result)

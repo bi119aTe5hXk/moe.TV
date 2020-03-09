@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.register(defaults: [UD_SERVER_ADDR : ""])
         UserDefaults.standard.register(defaults: [UD_PROXY_SERVER : ""])
         UserDefaults.standard.register(defaults: [UD_PROXY_PORT : ""])
+        UserDefaults.standard.register(defaults: [UD_SONARR_APIKEY : ""])
         
         if let tabController = window?.rootViewController as? UITabBarController {
             tabController.viewControllers?.append(packagedSearchController())

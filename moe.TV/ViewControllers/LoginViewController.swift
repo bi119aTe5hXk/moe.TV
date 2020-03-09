@@ -30,7 +30,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         self.passwordtextfield.isEnabled = true
         self.passwordtextfield.isHidden = false
         
-        // Do any additional setup after loading the view.
+        // load host url if it was saved
         if let host = UserDefaults.standard.string(forKey: UD_SERVER_ADDR){
             self.urltextfield.text = host
         }
@@ -52,10 +52,10 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             //Sonarr
             UserDefaults.standard.set("sonarr", forKey: UD_SERVICE_TYPE)
             //set UI as sonarr
+            //only require API key, so disable the password input and rename username as "API key"
             self.usernametextfield.placeholder = "API key"
             self.passwordtextfield.isEnabled = false
             self.passwordtextfield.isHidden = true
-            
             
             break
         default:
@@ -70,9 +70,11 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
                 (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
                 (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
+                
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
                 self.loginbutton.isEnabled = false
+                
                 AlbireoLogInAlbireoServer(url:self.urltextfield.text!,
                             username: self.usernametextfield.text!,
                             password: self.passwordtextfield.text!) {
@@ -92,8 +94,6 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                                     }))
                                     self.present(alert, animated: true, completion: nil)
                                 }
-                                
-                    
                 }
             }
             
@@ -105,7 +105,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 self.loadingIndicator.startAnimating()
                 self.loginbutton.isEnabled = false
                 
-                getSonarrSystemStatus(){
+                SonarrGetSystemStatus(apikey: self.usernametextfield.text!){
                     isSuccess,result in
                     
                     let r = result as! Dictionary<String,Any>
@@ -116,6 +116,9 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                             self.loadingIndicator.stopAnimating()
                             self.loginbutton.isEnabled = true
                             UserDefaults.standard.set(true, forKey: UD_LOGEDIN)
+                            //save the api key
+                            UserDefaults.standard.set(self.usernametextfield.text!, forKey: UD_SONARR_APIKEY)
+                            UserDefaults.standard.synchronize()
                             self.dismiss(animated: true, completion: nil)
                             return
                         }
