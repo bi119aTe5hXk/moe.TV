@@ -33,10 +33,14 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         self.passwordtextfield.placeholder = "Password"
         self.apikeytextfield.isHidden = true
         
+        
         // load host url if it was saved
         if let host = UserDefaults.standard.string(forKey: UD_SERVER_ADDR){
             self.urltextfield.text = host
         }
+        
+        
+        self.apikeytextfield.text = UserDefaults.standard.string(forKey: UD_SONARR_APIKEY)
         
     }
     @IBAction func connectionTypeChanged(_ sender: Any) {

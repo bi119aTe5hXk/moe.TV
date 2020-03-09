@@ -29,8 +29,9 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
         // Do any additional setup after loading the view.
         self.loadData()
     }
+    override func viewWillAppear(_ animated: Bool) {
+    }
     override func viewDidAppear(_ animated: Bool) {
-        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
         self.loadData()
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -38,6 +39,7 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
     }
     
     func loadData(){
+        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
         let loggedin = UserDefaults.standard.bool(forKey: UD_LOGEDIN)
         if loggedin {
             if self.bgmList.count <= 0 {
@@ -57,7 +59,7 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
                         self.loadDataToTable(isSucceeded: isSucceeded, result: result as Any)
                     }
                 }else{
-                    print("Error: Service type unknown.")
+                    print("OnAir loadData Error: Service type unknown.")
                 }
                 
                 
@@ -150,7 +152,7 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
                 }
             }
         }else{
-            print("Error: Service type unknown.")
+            print("OnAir Cell Error: Service type unknown.")
         }
         
         return cell

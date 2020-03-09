@@ -462,7 +462,7 @@ func SonarrGetCalendar(completion: @escaping (Bool, Any?) -> Void){
         //print(response.result)
         switch response.result {
         case .success(let value):
-            if let JSON = value as? [String: Any] {
+            if let JSON = value as? [Any] {
                 //print(JSON)
                 completion(true, JSON)
             }
