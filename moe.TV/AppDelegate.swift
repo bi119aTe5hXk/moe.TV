@@ -25,7 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.register(defaults: [UD_SONARR_APIKEY : ""])
         UserDefaults.standard.register(defaults: [UD_SONARR_USERNAME : ""])
         UserDefaults.standard.register(defaults: [UD_SONARR_PASSWORD : ""])
+        UserDefaults.standard.register(defaults: [UD_SONARR_ROOTFOLDER : ""])
         UserDefaults.standard.register(defaults: [UD_USING_HTTPS : true])
+        UserDefaults.standard.register(defaults: [UD_SONARR_WEBDAV_PORT : 0])
         UserDefaults.standard.register(defaults: [UD_SONARR_USINGBASICAUTH : false])
         
         //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)

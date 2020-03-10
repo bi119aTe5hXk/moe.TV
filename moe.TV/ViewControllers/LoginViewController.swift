@@ -12,6 +12,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var servicetypeselect: UISegmentedControl!
     @IBOutlet weak var connectiontypeselect: UISegmentedControl!
     @IBOutlet weak var urltextfield: UITextField!
+    @IBOutlet weak var webdavporttextfield: UITextField!
     @IBOutlet weak var usernametextfield: UITextField!
     @IBOutlet weak var passwordtextfield: UITextField!
     @IBOutlet weak var apikeytextfield: UITextField!
@@ -33,6 +34,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         self.usernametextfield.placeholder = "Username"
         self.passwordtextfield.placeholder = "Password"
         self.apikeytextfield.isHidden = true
+        self.webdavporttextfield.isHidden = true
         
         
         // load host url if it was saved
@@ -40,8 +42,9 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             self.urltextfield.text = host
         }
         
-        
+        //api key is too long for input eveytime you logouted
         self.apikeytextfield.text = UserDefaults.standard.string(forKey: UD_SONARR_APIKEY)
+        
         
     }
     @IBAction func connectionTypeChanged(_ sender: Any) {
@@ -66,6 +69,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             self.usernametextfield.placeholder = "Username"
             self.passwordtextfield.placeholder = "Password"
             self.apikeytextfield.isHidden = true
+            self.webdavporttextfield.isHidden = true
             break
         case 1:
             //Sonarr
@@ -75,6 +79,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             self.usernametextfield.placeholder = "Username (Optional)"
             self.passwordtextfield.placeholder = "Password (Optional)"
             self.apikeytextfield.isHidden = false
+            self.webdavporttextfield.isHidden = false
             
             break
         default:
@@ -90,11 +95,12 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         let username = self.usernametextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let password = self.passwordtextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let apikey = self.apikeytextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let webdavport = self.webdavporttextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         //Albireo
         if self.serviceType == "albireo" {
-            if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
-                (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
-                (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
+            if (urltext.lengthOfBytes(using: .utf8)) > 0 &&
+                (username.lengthOfBytes(using: .utf8)) > 0 &&
+                (password.lengthOfBytes(using: .utf8)) > 0{
                 
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
@@ -125,8 +131,10 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             
             //Sonarr
         }else if self.serviceType == "sonarr"{
-            if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
-                (self.apikeytextfield.text?.lengthOfBytes(using: .utf8))! > 0{
+            if (urltext.lengthOfBytes(using: .utf8)) > 0 &&
+                (username.lengthOfBytes(using: .utf8)) > 0 &&
+                (webdavport.lengthOfBytes(using: .utf8)) > 0
+            {
                 
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
@@ -151,6 +159,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                             
                             //save the api key
                             UserDefaults.standard.set(apikey, forKey: UD_SONARR_APIKEY)
+                            UserDefaults.standard.set(webdavport, forKey: UD_SONARR_WEBDAV_PORT)
                             
                             //save auth info if not empty
                             if (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 ||

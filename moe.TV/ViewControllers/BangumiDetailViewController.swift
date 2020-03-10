@@ -225,9 +225,11 @@ class BangumiDetailViewController: UIViewController,
             }else if self.serviceType == "sonarr" {
                 cell.titleText?.text = String(rowdic["episodeNumber"] as! Int) + "." + (rowdic["title"] as! String)
                 
-                let episodeFile = rowdic["episodeFile"] as! Dictionary<String,Any>
+                //no video preview image in Sonarr, using iconimage instand
+                cell.iconView.image = self.iconView.image
                 
-                
+                //no progress record in Sonarr
+                cell.progressBar.isHidden = true
                 
             }else{
                 print("BGMDetail load collectionCell Error: Service type unknown.")
@@ -254,10 +256,11 @@ class BangumiDetailViewController: UIViewController,
 
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
             let row = indexPath.row
-            let arr = self.bgmEPlist[row] as! Dictionary<String, Any>
-            let epid = arr["id"] as! String
+            let rowdic = self.bgmEPlist[row] as! Dictionary<String, Any>
+            
 
             if self.serviceType == "albireo"{
+                let epid = rowdic["id"] as! String
                 AlbireoGetEpisodeDetail(ep_id: epid) { (isSucceeded, result) in
                     if isSucceeded {
                         print(result as Any)
@@ -298,7 +301,38 @@ class BangumiDetailViewController: UIViewController,
                     }
                 }
             }else if self.serviceType == "sonarr" {
+                //get video file
+                let episodeFile = rowdic["episodeFile"] as! Dictionary<String,Any>
+                //print(episodeFile)
                 
+                //create WebDAV prefix+host+port
+                var udurlstr = UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!
+                udurlstr = addPrefix(url: udurlstr)
+                let webdav_port = UserDefaults.standard.integer(forKey: UD_SONARR_WEBDAV_PORT)
+                let udurl = URL(string: udurlstr)
+                var udurldomian:String = udurl!.host!
+                udurldomian.append(":\(webdav_port)")
+                var videourl = "\(udurldomian)"
+                videourl = addPrefix(url: videourl)
+                
+                //add video full path
+                videourl.append("/")
+                videourl.append(episodeFile["path"] as! String)
+                
+                //remove local path
+                SonarrGetRootFolder {
+                    (isSucceeded, result) in
+                    if isSucceeded {
+                        let arr = result as! Array<Any>
+                        let dic = arr[0] as! Dictionary<String,Any>
+                        let path = dic["path"] as! String
+                        
+                        videourl = videourl.replacingOccurrences(of: path, with: "")
+                        //print(videourl)
+                        
+                        self.startPlayVideo(fromURL: videourl, seekTime: 0)
+                    }
+                }
             }else{
                 print("BGMDetail collectionView didSelectItemAt Error: Service type unknown.")
             }
@@ -374,59 +408,64 @@ class BangumiDetailViewController: UIViewController,
             let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String, Any>
             
             if self.serviceType == "albireo"{
+                // Build title item
+                let titleItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle.rawValue, value: (self.bgmDic["name"] as! String) + " - " + String(dic["episode_no"] as! Int) + "." + (dic["name"] as! String))
+                metadata.append(titleItem)
+                
+
+                // Build artwork item
+                let imgurlstr = self.bgmDic["image"] as! String
+                AF.request(imgurlstr).responseImage { (response) in
+                    switch response.result {
+                    case .success(let value):
+                        if let image:UIImage = value {
+                            let artworkItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierArtwork.rawValue, value: image)
+                            metadata.append(artworkItem)
+                        }
+                        break
+
+                    case .failure(let error):
+                        // error handling
+                        print(error)
+                        break
+                    }
+                }
+                
+                // Build description item
+                let descItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierDescription.rawValue, value: (self.bgmDic["summary"] as! String))
+                metadata.append(descItem)
+                
+                // Build genre item
+                var typeStr = ""
+                switch (self.bgmDic["type"] as! Int) {
+                case 2:
+                    typeStr = "Anime"
+                    break
+                case 6:
+                    typeStr = "TV Shows"
+                    break
+                default:
+                    typeStr = "Other"
+                    break
+                }
+                let genreItem = makeMetadataItem(AVMetadataIdentifier.quickTimeMetadataGenre.rawValue, value: typeStr)
+                metadata.append(genreItem)
                 
             }else if self.serviceType == "sonarr" {
                 
             }else{
                 print("BGMDetail makeExternalMetadata Error: Service type unknown.")
             }
-            // Build title item
-            let titleItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle.rawValue, value: (self.bgmDic["name"] as! String) + " - " + String(dic["episode_no"] as! Int) + "." + (dic["name"] as! String))
-            metadata.append(titleItem)
             
 
-            // Build artwork item
-            let imgurlstr = self.bgmDic["image"] as! String
-            AF.request(imgurlstr).responseImage { (response) in
-                switch response.result {
-                case .success(let value):
-                    if let image:UIImage = value {
-                        let artworkItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierArtwork.rawValue, value: image)
-                        metadata.append(artworkItem)
-                    }
-                    break
-
-                case .failure(let error):
-                    // error handling
-                    print(error)
-                    break
-                }
-            }
-
-            // Build description item
-            let descItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierDescription.rawValue, value: (self.bgmDic["summary"] as! String))
-            metadata.append(descItem)
+            
 
             // Build rating item
             let ratingItem = makeMetadataItem(AVMetadataIdentifier.iTunesMetadataContentRating.rawValue, value: "PG")
             metadata.append(ratingItem)
 
-            // Build genre item
-            var typeStr = ""
-            switch (self.bgmDic["type"] as! Int) {
-            case 2:
-                typeStr = "Anime"
-                break
-            case 6:
-                typeStr = "TV Shows"
-                break
-            default:
-                typeStr = "Other"
-                break
-            }
+            
 
-            let genreItem = makeMetadataItem(AVMetadataIdentifier.quickTimeMetadataGenre.rawValue, value: typeStr)
-            metadata.append(genreItem)
             return metadata
         }
 

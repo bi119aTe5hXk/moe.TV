@@ -135,7 +135,8 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
             cell.titleTextField?.text = (rowarr["title"] as! String)
             
             cell.iconView.image = nil
-            let imgarr = rowarr["images"] as! Array<Any>
+            let seriesDic = rowarr["series"] as! Dictionary<String,Any>
+            let imgarr = seriesDic["images"] as! Array<Any>
             for item in imgarr {//found poster in images array
                 let dic = item as! Dictionary<String,String>
                 if dic["coverType"] == "poster"{

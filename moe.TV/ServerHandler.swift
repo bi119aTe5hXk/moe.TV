@@ -478,6 +478,33 @@ func SonarrGetCalendar(completion: @escaping (Bool, Any?) -> Void){
         switch response.result {
         case .success(let value):
             if let JSON = value as? [Any] {
+                print(JSON)
+                completion(true, JSON)
+            }
+            break
+        case .failure(let error):
+            // error handling
+            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            completion(false, error.localizedDescription)
+            break
+        }
+    }
+}
+
+
+func SonarrGetRootFolder(completion: @escaping (Bool, Any?) -> Void){
+    initNetwork()
+    var urlstr = SonarrURL()
+    urlstr.append("/api")
+    
+    urlstr.append("/rootfolder")
+    urlstr = SonarrAddAPIKEY(url: urlstr)
+    print(urlstr)
+    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            if let JSON = value as? [Any] {
                 //print(JSON)
                 completion(true, JSON)
             }

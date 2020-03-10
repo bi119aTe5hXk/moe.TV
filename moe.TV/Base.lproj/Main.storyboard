@@ -224,6 +224,12 @@
                                     <action selector="connectionTypeChanged:" destination="r3k-Iy-FC9" eventType="valueChanged" id="HM1-U5-T8H"/>
                                 </connections>
                             </segmentedControl>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="WebDAV port" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="60Z-j8-RAD">
+                                <rect key="frame" x="1277" y="333" width="250" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aAq-mO-OFk"/>
                     </view>
@@ -236,6 +242,7 @@
                         <outlet property="servicetypeselect" destination="yTw-XK-nCd" id="NuX-HF-uZd"/>
                         <outlet property="urltextfield" destination="TaZ-wU-eM6" id="Z7T-4i-61n"/>
                         <outlet property="usernametextfield" destination="okb-tE-Bpe" id="F3c-3P-cBk"/>
+                        <outlet property="webdavporttextfield" destination="60Z-j8-RAD" id="lwz-x9-Zrf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pvs-un-qa1" userLabel="First Responder" sceneMemberID="firstResponder"/>
