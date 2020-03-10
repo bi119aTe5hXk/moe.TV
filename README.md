@@ -8,12 +8,19 @@ An [Albireo](https://github.com/lordfriend/Albireo) & [Sonarr](https://sonarr.tv
 2. Set the download path within Sonarr as your WebDAV shared folder. Such as /Macintosh HD/Users/your_user_name/Downloads/sonarr/. The sub-folders should be the series name.
 
 3. Login moe.TV client with your Sonarr service info.
+
 For example:
+
 Service Type: Sonarr
+
 Connection Type: HTTP
+
 Host:192.18.1.2:8989
+
 WebDAV port:8990
+
 API key:<On Sonarr server, open [/settings/general](http://127.0.0.1:8989/settings/general)>
+
 
 ## Preview
 
