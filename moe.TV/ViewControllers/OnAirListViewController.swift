@@ -39,8 +39,8 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
     }
     
     func loadData(){
-        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
-        let loggedin = UserDefaults.standard.bool(forKey: UD_LOGEDIN)
+        self.serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)!
+        let loggedin = UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_LOGEDIN)
         if loggedin {
             if self.bgmList.count <= 0 {
                 //print("getOnAirList")

@@ -29,7 +29,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         self.loadingIndicator.stopAnimating()
         
         //set default service
-        UserDefaults.standard.set("albireo", forKey: UD_SERVICE_TYPE)
+        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set("albireo", forKey: UD_SERVICE_TYPE)
         self.urltextfield.placeholder = "Server Address"
         self.usernametextfield.placeholder = "Username"
         self.passwordtextfield.placeholder = "Password"
@@ -38,32 +38,32 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         
         
         // load host url if it was saved
-        if let host = UserDefaults.standard.string(forKey: UD_SERVER_ADDR){
+        if let host = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR){
             self.urltextfield.text = host
         }
         
         //api key is too long for input eveytime you logouted
-        self.apikeytextfield.text = UserDefaults.standard.string(forKey: UD_SONARR_APIKEY)
+        self.apikeytextfield.text = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_APIKEY)
         
         
     }
     @IBAction func connectionTypeChanged(_ sender: Any) {
         switch (sender as AnyObject).selectedSegmentIndex {
         case 0:
-            UserDefaults.standard.set(true, forKey: UD_USING_HTTPS)
+            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(true, forKey: UD_USING_HTTPS)
         case 1:
-            UserDefaults.standard.set(false, forKey: UD_USING_HTTPS)
+            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_USING_HTTPS)
         default:
             break
         }
-        UserDefaults.standard.synchronize()
+        UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
     }
     
     @IBAction func serviceTypeChanged(_ sender: Any) {
         switch (sender as AnyObject).selectedSegmentIndex {
         case 0:
             //Albireo
-            UserDefaults.standard.set("albireo", forKey: UD_SERVICE_TYPE)
+            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set("albireo", forKey: UD_SERVICE_TYPE)
             //set UI as albireo
             self.urltextfield.placeholder = "Server Address"
             self.usernametextfield.placeholder = "Username"
@@ -73,7 +73,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             break
         case 1:
             //Sonarr
-            UserDefaults.standard.set("sonarr", forKey: UD_SERVICE_TYPE)
+            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set("sonarr", forKey: UD_SERVICE_TYPE)
             //set UI as sonarr
             self.urltextfield.placeholder = "Server Address:8989"
             self.usernametextfield.placeholder = "Username (Optional)"
@@ -86,8 +86,8 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             print("null selected")
             break
         }
-        UserDefaults.standard.synchronize()
-        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
+        UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
+        self.serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)!
     }
     
     @IBAction func loginBTNPressed(_ sender: Any) {
@@ -107,7 +107,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 self.loginbutton.isEnabled = false
                 
                 
-                UserDefaults.standard.set(urltext, forKey: UD_SERVER_ADDR)
+                UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(urltext, forKey: UD_SERVER_ADDR)
                 AlbireoLogInAlbireoServer(username: username,
                                           password: password) {
                                 isSucceeded,result in
@@ -140,7 +140,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 self.loadingIndicator.startAnimating()
                 self.loginbutton.isEnabled = false
                 
-                UserDefaults.standard.set(urltext, forKey: UD_SERVER_ADDR)
+                UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(urltext, forKey: UD_SERVER_ADDR)
                 SonarrGetSystemStatus(username: username,
                                       password: password,
                                       apikey: apikey){
@@ -155,27 +155,27 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                         if let ver = r["version"] {
                             print(ver)
                             
-                            UserDefaults.standard.set(true, forKey: UD_LOGEDIN)
+                            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(true, forKey: UD_LOGEDIN)
                             
                             //save the api key
-                            UserDefaults.standard.set(apikey, forKey: UD_SONARR_APIKEY)
-                            UserDefaults.standard.set(webdavport, forKey: UD_SONARR_WEBDAV_PORT)
+                            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(apikey, forKey: UD_SONARR_APIKEY)
+                            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(webdavport, forKey: UD_SONARR_WEBDAV_PORT)
                             
                             //save auth info if not empty
                             if (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 ||
                                 (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
-                                UserDefaults.standard.set(true, forKey: UD_SONARR_USINGBASICAUTH)
-                                UserDefaults.standard.set(username, forKey: UD_SONARR_USERNAME)
-                                UserDefaults.standard.set(password, forKey: UD_SONARR_PASSWORD)
+                                UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(true, forKey: UD_SONARR_USINGBASICAUTH)
+                                UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(username, forKey: UD_SONARR_USERNAME)
+                                UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(password, forKey: UD_SONARR_PASSWORD)
                             }
                             
-                            UserDefaults.standard.synchronize()
+                            UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
                             self.dismiss(animated: true, completion: nil)
                             return
                         }
                     }
                     print(result as Any)
-                    UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+                    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
                     let err = result as! Dictionary<String,String>
                     let alert = UIAlertController(title: "Error", message: err["error"] as! String, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in

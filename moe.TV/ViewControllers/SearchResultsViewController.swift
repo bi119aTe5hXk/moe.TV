@@ -52,7 +52,7 @@ class SearchResultsViewController: UICollectionViewController,
 
         override func viewDidLoad() {
             super.viewDidLoad()
-            self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
+            self.serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)!
             // Uncomment the following line to preserve selection between presentations
             // self.clearsSelectionOnViewWillAppear = false
 

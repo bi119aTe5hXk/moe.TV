@@ -27,17 +27,17 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView?.delegate = self
         // Do any additional setup after loading the view.
-        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
+        self.serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)!
         //self.loadData()
         
     }
     override func viewDidAppear(_ animated: Bool) {
-        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
+        self.serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)!
         //self.loadData()
     }
     override func viewWillAppear(_ animated: Bool) {
         //load service type first
-        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
+        self.serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)!
         self.loadData()
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -45,7 +45,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
     }
 
     func loadData() {
-        let loggedin = UserDefaults.standard.bool(forKey: UD_LOGEDIN)
+        let loggedin = UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_LOGEDIN)
         if loggedin {
             if self.bgmList.count <= 0 {
                 print("getingMyBangumiList")

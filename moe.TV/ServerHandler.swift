@@ -20,11 +20,11 @@ func saveCookies(response: DataResponse<Any,AFError>) {
     for cookie in cookies {
         cookieArray.append(cookie.properties!)
     }
-    UserDefaults.standard.set(cookieArray, forKey: UD_SAVED_COOKIES)
-    UserDefaults.standard.synchronize()
+    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(cookieArray, forKey: UD_SAVED_COOKIES)
+    UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
 }
 func loadCookies() {
-    guard let cookieArray = UserDefaults.standard.array(forKey: UD_SAVED_COOKIES) as? [[HTTPCookiePropertyKey: Any]] else { return }
+    guard let cookieArray = UserDefaults.init(suiteName: UD_SUITE_NAME)?.array(forKey: UD_SAVED_COOKIES) as? [[HTTPCookiePropertyKey: Any]] else { return }
     for cookieProperties in cookieArray {
         if let cookie = HTTPCookie(properties: cookieProperties) {
             HTTPCookieStorage.shared.setCookie(cookie)
@@ -42,8 +42,8 @@ func cancelRequest(){
 }
 
 func initNetwork() {
-    let proxyAddr = UserDefaults.standard.string(forKey: UD_PROXY_SERVER)
-    let proxyPort = UserDefaults.standard.string(forKey: UD_PROXY_PORT)
+    let proxyAddr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_PROXY_SERVER)
+    let proxyPort = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_PROXY_PORT)
     var proxyConfiguration = [NSObject: AnyObject]()
     
     if (proxyAddr?.lengthOfBytes(using: .utf8))! > 0 &&
@@ -66,14 +66,14 @@ func initNetwork() {
     
 }
 func addPrefix(url:String) -> String{
-        //var url:String = UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!
+        //var url:String = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!
     //    if (!urlstr.uppercased().hasPrefix("http://".uppercased()) &&
     //        !urlstr.uppercased().hasPrefix("https://".uppercased())){
     //        print("URL \(urlstr) has no prefix fond, add https as default")
     //        urlstr = "https://" + urlstr //use https as default
     //    }
     var urlstr = url
-        if UserDefaults.standard.bool(forKey: UD_USING_HTTPS){
+        if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_USING_HTTPS){
             urlstr = "https://" + urlstr
         }else{
             urlstr = "http://" + urlstr
@@ -88,7 +88,7 @@ func AlbireoLogInAlbireoServer(username: String,
                                password: String,
                                completion: @escaping (Bool, String) -> Void) {
     initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/user/login")
 
     let postdata = ["name": username, "password": password, "remmember": true] as [String: Any]
@@ -102,12 +102,12 @@ func AlbireoLogInAlbireoServer(username: String,
                 if let status = JSON["msg"] {
                     //save cookies from response
                     saveCookies(response: response)
-                    UserDefaults.standard.set(true, forKey: UD_LOGEDIN)
+                    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(true, forKey: UD_LOGEDIN)
                     //print(status)
                     completion(true, (status as! String))
                 }
                 if let status = JSON["message"] {
-                    UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+                    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
                     //print(status)
                     completion(false, (status as! String))
                 }
@@ -115,7 +115,7 @@ func AlbireoLogInAlbireoServer(username: String,
             break
         case .failure(let error):
             // error handling
-            UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -125,7 +125,7 @@ func AlbireoLogInAlbireoServer(username: String,
 
 func AlbireoLogOutServer(completion: @escaping (Bool, String) -> Void) {
     initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = addPrefix(url: (UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!))
     urlstr.append("/api/user/logout")
     loadCookies()
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
@@ -134,12 +134,12 @@ func AlbireoLogOutServer(completion: @escaping (Bool, String) -> Void) {
         case .success(let value):
             if let JSON = value as? [String: Any] {
                 if let status = JSON["msg"] {
-                    UserDefaults.standard.set(true, forKey: UD_LOGEDIN)
+                    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(true, forKey: UD_LOGEDIN)
                     //print(status)
                     completion(true, (status as! String))
                 }
                 if let status = JSON["message"] {
-                    UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+                    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
                     //print(status)
                     completion(false, (status as! String))
                 }
@@ -147,7 +147,7 @@ func AlbireoLogOutServer(completion: @escaping (Bool, String) -> Void) {
             break
         case .failure(let error):
             // error handling
-            UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -157,7 +157,7 @@ func AlbireoLogOutServer(completion: @escaping (Bool, String) -> Void) {
 
 func AlbireoGetMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
     initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/my_bangumi?status=3")
     loadCookies()
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
@@ -176,7 +176,7 @@ func AlbireoGetMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -185,7 +185,7 @@ func AlbireoGetMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
 
 func AlbireoGetOnAirList(completion: @escaping (Bool, Any?) -> Void) {
     initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/on_air")
     loadCookies()
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
@@ -201,7 +201,7 @@ func AlbireoGetOnAirList(completion: @escaping (Bool, Any?) -> Void) {
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -212,7 +212,7 @@ func AlbireoGetAllBangumiList(page: Int,
                        name: String,
                        completion: @escaping (Bool, Any?) -> Void) {
     initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/bangumi?page=")
     urlstr.append(String(page))
     urlstr.append("&count=12&sort_field=air_date&sort_order=desc&name=")
@@ -234,7 +234,7 @@ func AlbireoGetAllBangumiList(page: Int,
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -243,7 +243,7 @@ func AlbireoGetAllBangumiList(page: Int,
 func AlbireoGetBangumiDetail(id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
     initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/bangumi/")
     urlstr.append(id)
     loadCookies()
@@ -260,7 +260,7 @@ func AlbireoGetBangumiDetail(id: String,
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -269,7 +269,7 @@ func AlbireoGetBangumiDetail(id: String,
 func AlbireoGetEpisodeDetail(ep_id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
     initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/episode/")
     urlstr.append(ep_id)
     loadCookies()
@@ -285,7 +285,7 @@ func AlbireoGetEpisodeDetail(ep_id: String,
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -299,7 +299,7 @@ func AlbireoSentEPWatchProgress(ep_id: String,
                          is_finished:Bool,
                          completion: @escaping (Bool, Any?) -> Void){
     initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/watch/history/")
     urlstr.append(ep_id)
     loadCookies()
@@ -315,7 +315,7 @@ func AlbireoSentEPWatchProgress(ep_id: String,
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -328,14 +328,14 @@ func AlbireoSentEPWatchProgress(ep_id: String,
 
 func SonarrAddAPIKEY(url:String)->String{
     var urlstr = url
-    let apikey = UserDefaults.standard.string(forKey: UD_SONARR_APIKEY)
+    let apikey = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_APIKEY)
     
     if (apikey?.lengthOfBytes(using: .utf8))! > 0 {
         urlstr.append("?apikey=\(apikey!)")
         return urlstr
     }else{
         //missing api key, set loggen in to false
-        UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
         return ""
     }
 }
@@ -343,14 +343,14 @@ func SonarrURL()->String{
     var urlstr = ""
     
     //add http basic auth info if needed
-    if UserDefaults.standard.bool(forKey: UD_SONARR_USINGBASICAUTH) {
-        let username = UserDefaults.standard.string(forKey: UD_SONARR_USERNAME)
-        let password = UserDefaults.standard.string(forKey: UD_SONARR_PASSWORD)
+    if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_SONARR_USINGBASICAUTH) {
+        let username = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_USERNAME)
+        let password = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_PASSWORD)
         urlstr  = "\(username!):\(password!)@"
     }
     
     //append host name and port
-    urlstr.append(UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    urlstr.append(UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     
     //add http/https prefix
     urlstr = addPrefix(url: urlstr)
@@ -368,7 +368,7 @@ func SonarrGetSystemStatus(username:String,
         urlstr =  "\(username):\(password)@"
     }
     
-    urlstr.append(UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!)
+    urlstr.append(UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     urlstr = addPrefix(url: urlstr)
     
     urlstr.append("/api/system/status")
@@ -386,7 +386,7 @@ func SonarrGetSystemStatus(username:String,
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -429,7 +429,7 @@ func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -458,7 +458,7 @@ func SonarrGetEPList(seriesId:Int,completion: @escaping (Bool, Any?) -> Void){
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -484,7 +484,7 @@ func SonarrGetCalendar(completion: @escaping (Bool, Any?) -> Void){
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }
@@ -511,7 +511,7 @@ func SonarrGetRootFolder(completion: @escaping (Bool, Any?) -> Void){
             break
         case .failure(let error):
             // error handling
-            //UserDefaults.standard.set(false, forKey: UD_LOGEDIN)
+            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             completion(false, error.localizedDescription)
             break
         }

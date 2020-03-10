@@ -36,7 +36,7 @@ class BangumiDetailViewController: UIViewController,
         }
         override func viewDidLoad() {
             super.viewDidLoad()
-            self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
+            self.serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)!
             
             self.titleLabel.text = ""
             self.subtitleLabel.text = ""
@@ -189,7 +189,7 @@ class BangumiDetailViewController: UIViewController,
                     cell.titleText?.text = String(rowdic["episode_no"] as! Int) + "." + (rowdic["name"] as! String)
                     //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
                     
-                    let imgurlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (rowdic["thumbnail"] as! String)
+                    let imgurlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!) + (rowdic["thumbnail"] as! String)
                     cell.iconView.image = nil
                     cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
                                               placeholderImage: nil,
@@ -271,7 +271,7 @@ class BangumiDetailViewController: UIViewController,
                                 print("only one video")
 
                                 let dic2 = arr[0] as! Dictionary<String, Any>
-                                let videoURLstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (dic2["url"] as! String)
+                                let videoURLstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!) + (dic2["url"] as! String)
 
                                 self.askToSeek(videoURLstr: videoURLstr, outSideDic: dic)
 
@@ -281,7 +281,7 @@ class BangumiDetailViewController: UIViewController,
                                     let dic2 = item as! Dictionary<String, Any>
                                     alert.addAction(UIAlertAction.init(title: (dic2["file_name"] as! String), style: .default, handler: { (action) in
 
-                                            let videoURLstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (dic2["url"] as! String)
+                                            let videoURLstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!) + (dic2["url"] as! String)
 
                                             self.askToSeek(videoURLstr: videoURLstr, outSideDic: dic)
                                         }))
@@ -306,9 +306,9 @@ class BangumiDetailViewController: UIViewController,
                 //print(episodeFile)
                 
                 //create WebDAV prefix+host+port
-                var udurlstr = UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!
+                var udurlstr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!
                 udurlstr = addPrefix(url: udurlstr)
-                let webdav_port = UserDefaults.standard.integer(forKey: UD_SONARR_WEBDAV_PORT)
+                let webdav_port = UserDefaults.init(suiteName: UD_SUITE_NAME)!.integer(forKey: UD_SONARR_WEBDAV_PORT)
                 let udurl = URL(string: udurlstr)
                 var udurldomian:String = udurl!.host!
                 udurldomian.append(":\(webdav_port)")
