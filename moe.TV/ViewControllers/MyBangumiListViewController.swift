@@ -27,10 +27,12 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView?.delegate = self
         // Do any additional setup after loading the view.
+        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
         //self.loadData()
         
     }
     override func viewDidAppear(_ animated: Bool) {
+        self.serviceType = UserDefaults.standard.string(forKey: UD_SERVICE_TYPE)!
         //self.loadData()
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -62,11 +64,12 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
                         (isSucceeded, result) in
                         self.loadDataToTable(isSucceeded: isSucceeded, result: result as Any)
                         }
-                    }
+                    
                 } else {
-                    print("Error: Service type unknown.")
+                    print("MyBangumiList loadData Error: Service type unknown.")
                     return
                 }
+            }
 
             }
         }
@@ -165,7 +168,7 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
             }
             
         }else{
-            print("Error: Service type unknown.")
+            print("MyBangumiList cell Error: Service type unknown.")
         }
         return cell
     }
@@ -197,9 +200,10 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
         if self.serviceType == "albireo"{
             detailvc.bangumiUUID = arr["id"] as! String
         }else if self.serviceType == "sonarr" {
-            detailvc.bangumiUUID = arr["seriesId"] as! String
+            let uuid = arr["id"] as! Int
+            detailvc.bangumiUUID = String(uuid)
         }else{
-            print("Error: Service type unknown.")
+            print("MyBangumiList didSelectItemAt Error: Service type unknown.")
         }
         
         self.present(detailvc, animated: true)

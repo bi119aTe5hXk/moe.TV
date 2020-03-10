@@ -166,7 +166,14 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
         let row = indexPath.row
         let arr = self.bgmList[row] as! Dictionary<String, Any>
         let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
-        detailvc.bangumiUUID = arr["id"] as! String
+        if self.serviceType == "albireo"{
+            detailvc.bangumiUUID = arr["id"] as! String
+        }else if self.serviceType == "sonarr" {
+            let uuid = arr["seriesId"] as! Int
+            detailvc.bangumiUUID = String(uuid)
+        }else{
+            print("OnAir didSelectItemAt Error: Service type unknown.")
+        }
         self.present(detailvc, animated: true)
     }
 

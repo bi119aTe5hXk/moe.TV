@@ -399,10 +399,13 @@ func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
     var urlstr = SonarrURL()
     urlstr.append("/api")
     
+    var haveID = false
     if id >= 0{
         urlstr.append("/series/\(id)")
+        haveID = true
     }else{
         urlstr.append("/series")
+        haveID = false
     }
     urlstr = SonarrAddAPIKEY(url: urlstr)
     
@@ -411,10 +414,18 @@ func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
         //print(response)
         switch response.result {
         case .success(let value):
-            if let JSON = value as? [Any] {
-                print(JSON)
-                completion(true, JSON)
+            if haveID{
+                if let JSON = value as? [String:Any] {
+                    //print(JSON)
+                    completion(true, JSON)
+                }
+            }else{
+                if let JSON = value as? [Any] {
+                    //print(JSON)
+                    completion(true, JSON)
+                }
             }
+            
             break
         case .failure(let error):
             // error handling

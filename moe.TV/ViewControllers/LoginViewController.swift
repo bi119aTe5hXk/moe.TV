@@ -179,7 +179,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
                 
             }
         }else{
-            print("Error: Service type unknown.")
+            print("LoginVC loginBTNPressed Error: Service type unknown.")
             return
         }
         

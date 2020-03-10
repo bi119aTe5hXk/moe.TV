@@ -87,9 +87,47 @@ class BangumiDetailViewController: UIViewController,
                     
                     
                 }else if self.serviceType == "sonarr" {
-                    
+                    let uuid = Int(bangumiUUID)
+                    SonarrGetSeries(id: uuid!) { (isSucceeded, result) in
+                        self.summaryDetailButton.isHidden = false
+                        if isSucceeded {
+                            self.bgmDic = result as! [String: Any]
+                            //self.bgmEPlist = self.bgmDic["episodes"] as! Array
+                            self.titleLabel.text = (self.bgmDic["title"] as! String)
+                            self.subtitleLabel.text = (self.bgmDic["sortTitle"] as! String)
+                            self.summaryText.text = (self.bgmDic["overview"] as! String)
+                            
+                            self.iconView.image = nil
+                            let imgarr = self.bgmDic["images"] as! Array<Any>
+                            for item in imgarr {//found poster in images array
+                                let dic = item as! Dictionary<String,String>
+                                if dic["coverType"] == "poster"{
+                                    let imgstr = SonarrURL() + dic["url"]!
+                                    self.iconView.af_setImage(withURL: URL(string: imgstr)!,
+                                        placeholderImage: nil,
+                                        filter: .none,
+                                        progress: .none,
+                                        progressQueue: .main,
+                                        imageTransition: .noTransition,
+                                        runImageTransitionIfCached: true) { (data) in
+                                        self.iconView.roundedImage(corners: .allCorners, radius: 6)
+                                    }
+                                }
+                            }
+                            
+                            //self.collectionView.reloadData()
+                        }else {
+                            print(result as Any)
+                            let err = result as! Dictionary<String,String>
+                            let alert = UIAlertController(title: "Error", message: err["error"], preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                                //self.dismiss(animated: true, completion: nil)
+                            }))
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    }
                 }else{
-                    print("Error: Service type unknown.")
+                    print("BGMDetail viewDidLoad Error: Service type unknown.")
                 }
                 
                 
@@ -99,7 +137,14 @@ class BangumiDetailViewController: UIViewController,
 
         @IBAction func showMoreSummary(_ sender: Any) {
             let sumdetailvc = self.storyboard?.instantiateViewController(withIdentifier: "SummaryDetailViewController") as! SummaryDetailViewController
-            sumdetailvc.summaryText = (self.bgmDic["summary"] as! String)
+            if self.serviceType == "albireo"{
+                sumdetailvc.summaryText = (self.bgmDic["summary"] as! String)
+            }else if self.serviceType == "sonarr" {
+                sumdetailvc.summaryText = (self.bgmDic["overview"] as! String)
+            }else{
+                print("BGMDetail showMoreSummary Error: Service type unknown.")
+            }
+            
             self.present(sumdetailvc, animated: true)
         }
 
@@ -123,49 +168,50 @@ class BangumiDetailViewController: UIViewController,
             }
             
             if self.serviceType == "albireo"{
+                if (rowarr["name"] as! String).lengthOfBytes(using: .utf8) > 0 {
+                    cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
+                    //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
+                    
+                    let imgurlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (rowarr["thumbnail"] as! String)
+                    cell.iconView.image = nil
+                    cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
+                                              placeholderImage: nil,
+                                              filter: .none,
+                                              progress: .none,
+                                              progressQueue: .main,
+                                              imageTransition: .noTransition,
+                                              runImageTransitionIfCached: true) { (data) in
+                                                cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+                    }
+
+                    if let watch_progress = rowarr["watch_progress"] {//watching or watched
+                        let wpdic = watch_progress as! Dictionary<String, Any>
+                        let percent = wpdic["percentage"] as! Double
+                        //print("percent:",Float(percent))
+                        cell.progressBar.isHidden = false
+                        DispatchQueue.main.async {
+                            cell.progressBar.setProgress(Float(percent), animated: true)//not work, TODO
+                        }
+                        
+                    } else {
+                        //unwatched
+                        cell.progressBar.setProgress(0, animated: false)
+                        cell.progressBar.isHidden = true
+                    }
+                } else {// name empty or not release yet
+                    cell.iconView.image = nil
+                    cell.titleText.text = String(rowarr["episode_no"] as! Int)
+                    cell.progressBar.setProgress(0, animated: false)
+                    cell.progressBar.isHidden = true
+                }
                 
             }else if self.serviceType == "sonarr" {
                 
             }else{
-                print("Error: Service type unknown.")
+                print("BGMDetail load collectionCell Error: Service type unknown.")
             }
             
-            if (rowarr["name"] as! String).lengthOfBytes(using: .utf8) > 0 {
-                cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
-                //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
-                
-                let imgurlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (rowarr["thumbnail"] as! String)
-                cell.iconView.image = nil
-                cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
-                                          placeholderImage: nil,
-                                          filter: .none,
-                                          progress: .none,
-                                          progressQueue: .main,
-                                          imageTransition: .noTransition,
-                                          runImageTransitionIfCached: true) { (data) in
-                                            cell.iconView.roundedImage(corners: .allCorners, radius: 6)
-                }
-
-                if let watch_progress = rowarr["watch_progress"] {//watching or watched
-                    let wpdic = watch_progress as! Dictionary<String, Any>
-                    let percent = wpdic["percentage"] as! Double
-                    //print("percent:",Float(percent))
-                    cell.progressBar.isHidden = false
-                    DispatchQueue.main.async {
-                        cell.progressBar.setProgress(Float(percent), animated: true)//not work, TODO
-                    }
-                    
-                } else {
-                    //unwatched
-                    cell.progressBar.setProgress(0, animated: false)
-                    cell.progressBar.isHidden = true
-                }
-            } else {// name empty or not release yet
-                cell.iconView.image = nil
-                cell.titleText.text = String(rowarr["episode_no"] as! Int)
-                cell.progressBar.setProgress(0, animated: false)
-                cell.progressBar.isHidden = true
-            }
+            
             
             return cell
         }
@@ -190,82 +236,88 @@ class BangumiDetailViewController: UIViewController,
             let epid = arr["id"] as! String
 
             if self.serviceType == "albireo"{
-                
+                AlbireoGetEpisodeDetail(ep_id: epid) { (isSucceeded, result) in
+                    if isSucceeded {
+                        print(result as Any)
+                        let dic = result as! Dictionary<String, Any>
+                        if let videoList = dic["video_files"] {
+                            let arr = videoList as! Array<Any>
+                            if arr.count == 1 {
+                                print("only one video")
+
+                                let dic2 = arr[0] as! Dictionary<String, Any>
+                                let videoURLstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (dic2["url"] as! String)
+
+                                self.askToSeek(videoURLstr: videoURLstr, outSideDic: dic)
+
+                            } else if arr.count > 1 {
+                                let alert = UIAlertController.init(title: "Multiple video source", message: "There're more than one source of this video, please select", preferredStyle: .alert)
+                                for item in arr {
+                                    let dic2 = item as! Dictionary<String, Any>
+                                    alert.addAction(UIAlertAction.init(title: (dic2["file_name"] as! String), style: .default, handler: { (action) in
+
+                                            let videoURLstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (dic2["url"] as! String)
+
+                                            self.askToSeek(videoURLstr: videoURLstr, outSideDic: dic)
+                                        }))
+
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                            } else {
+                                print("video list empty,ingore")
+                            }
+                        } else {
+                            print("no video")
+                            let alert = UIAlertController(title: "No video source", message: "Not boardcast yet or video deleted.", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
+                        }
+
+                    }
+                }
             }else if self.serviceType == "sonarr" {
                 
             }else{
-                print("Error: Service type unknown.")
+                print("BGMDetail collectionView didSelectItemAt Error: Service type unknown.")
             }
-            AlbireoGetEpisodeDetail(ep_id: epid) { (isSucceeded, result) in
-                if isSucceeded {
-                    print(result as Any)
-                    let dic = result as! Dictionary<String, Any>
-                    if let videoList = dic["video_files"] {
-                        let arr = videoList as! Array<Any>
-                        if arr.count == 1 {
-                            print("only one video")
-
-                            let dic2 = arr[0] as! Dictionary<String, Any>
-                            let videoURLstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (dic2["url"] as! String)
-
-                            self.askToSeek(videoURLstr: videoURLstr, outSideDic: dic)
-
-                        } else if arr.count > 1 {
-                            let alert = UIAlertController.init(title: "Multiple video source", message: "There're more than one source of this video, please select", preferredStyle: .alert)
-                            for item in arr {
-                                let dic2 = item as! Dictionary<String, Any>
-                                alert.addAction(UIAlertAction.init(title: (dic2["file_name"] as! String), style: .default, handler: { (action) in
-
-                                        let videoURLstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (dic2["url"] as! String)
-
-                                        self.askToSeek(videoURLstr: videoURLstr, outSideDic: dic)
-                                    }))
-
-                                self.present(alert, animated: true, completion: nil)
-                            }
-                        } else {
-                            print("video list empty,ingore")
-                        }
-                    } else {
-                        print("no video")
-                        let alert = UIAlertController(title: "No video source", message: "Not boardcast yet or video deleted.", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                    }
-
-                }
-            }
+            
         }
 
         //warning: watching progress record is outside of sub dictionary, should use root dir instand of "video_files"
         func askToSeek(videoURLstr: String, outSideDic: Dictionary<String, Any>) {
             var seektime = 0.0
+            if self.serviceType == "albireo"{
+                if let watchProgressDic = outSideDic["watch_progress"] { //not in dic2!!
+                    let dic = watchProgressDic as! Dictionary<String, Any>
+                    if (dic["watch_status"] as! Int) != 2 { //is marked as unwatch?
+                        //waching in progress, ask to seek
+                        let alert = UIAlertController(title: "Start form last watch position?", message: nil, preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
 
-            if let watchProgressDic = outSideDic["watch_progress"] { //not in dic2!!
-                let dic = watchProgressDic as! Dictionary<String, Any>
-                if (dic["watch_status"] as! Int) != 2 { //is marked as unwatch?
-                    //waching in progress, ask to seek
-                    let alert = UIAlertController(title: "Start form last watch position?", message: nil, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
+                            let last_watch_position = dic["last_watch_position"]
+                            seektime = (last_watch_position as! Double)
+                            print("seekingto:", seektime)
+                            self.startPlayVideo(fromURL: videoURLstr, seekTime: seektime)
 
-                        let last_watch_position = dic["last_watch_position"]
-                        seektime = (last_watch_position as! Double)
-                        print("seekingto:", seektime)
-                        self.startPlayVideo(fromURL: videoURLstr, seekTime: seektime)
-
-                    }))
-                    alert.addAction(UIAlertAction(title: "No, start from begening", style: .default, handler: { (action) in
+                        }))
+                        alert.addAction(UIAlertAction(title: "No, start from begening", style: .default, handler: { (action) in
+                            self.startPlayVideo(fromURL: videoURLstr, seekTime: 0)
+                        }))
+                        self.present(alert, animated: true, completion: nil)
+                    } else {
+                        //was wached, but should start from begening
                         self.startPlayVideo(fromURL: videoURLstr, seekTime: 0)
-                    }))
-                    self.present(alert, animated: true, completion: nil)
+                    }
                 } else {
-                    //was wached, but should start from begening
+                    //no watching record, start play form begening
                     self.startPlayVideo(fromURL: videoURLstr, seekTime: 0)
                 }
-            } else {
-                //no watching record, start play form begening
-                self.startPlayVideo(fromURL: videoURLstr, seekTime: 0)
+            }else if self.serviceType == "sonarr" {
+                
+            }else{
+                print("BGMDetail askToSeek Error: Service type unknown.")
             }
+            
 
         }
 
@@ -304,7 +356,7 @@ class BangumiDetailViewController: UIViewController,
             }else if self.serviceType == "sonarr" {
                 
             }else{
-                print("Error: Service type unknown.")
+                print("BGMDetail makeExternalMetadata Error: Service type unknown.")
             }
             // Build title item
             let titleItem = makeMetadataItem(AVMetadataIdentifier.commonIdentifierTitle.rawValue, value: (self.bgmDic["name"] as! String) + " - " + String(dic["episode_no"] as! Int) + "." + (dic["name"] as! String))
@@ -382,23 +434,23 @@ class BangumiDetailViewController: UIViewController,
             }
 
             if self.serviceType == "albireo"{
-                
+                let indexPaths = self.collectionView.indexPathsForSelectedItems
+                let indexPath = indexPaths![0] as NSIndexPath
+                let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String, Any>
+                AlbireoSentEPWatchProgress(ep_id: (dic["id"] as! String),
+                    bangumi_id: (dic["bangumi_id"] as! String),
+                    last_watch_position: Float(currentTime),
+                    percentage: percent,
+                    is_finished: isFinished) { (isSucceeded, result) in
+                    print(result as Any)
+
+                }
             }else if self.serviceType == "sonarr" {
                 
             }else{
-                print("Error: Service type unknown.")
+                print("BGMDetail playerViewControllerShouldDismiss Error: Service type unknown.")
             }
-            let indexPaths = self.collectionView.indexPathsForSelectedItems
-            let indexPath = indexPaths![0] as NSIndexPath
-            let dic = self.bgmEPlist[indexPath.row] as! Dictionary<String, Any>
-            AlbireoSentEPWatchProgress(ep_id: (dic["id"] as! String),
-                bangumi_id: (dic["bangumi_id"] as! String),
-                last_watch_position: Float(currentTime),
-                percentage: percent,
-                is_finished: isFinished) { (isSucceeded, result) in
-                print(result as Any)
-
-            }
+            
             return true
         }
         func playerViewController(_ playerViewController: AVPlayerViewController,
