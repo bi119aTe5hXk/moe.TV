@@ -18,7 +18,7 @@ class ContentProvider: TVTopShelfContentProvider {
         let topShelfArr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.array(forKey: UD_TOPSHELF_ARR)
         let serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)
         //print(topShelfArr as Any)
-        print(serviceType)
+        //print(serviceType)
         
         if topShelfArr != nil && topShelfArr!.count > 0 {
         var items = [] as Array<TVTopShelfItem>

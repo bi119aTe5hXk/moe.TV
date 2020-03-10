@@ -132,15 +132,15 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
                                         cell.iconView.roundedImage(corners: .allCorners, radius: 6)
             }
         }else if self.serviceType == "sonarr" {
-            cell.titleTextField?.text = (rowarr["title"] as! String)
+            let seriesDic = rowarr["series"] as! Dictionary<String,Any>
+            cell.titleTextField?.text = (seriesDic["title"] as! String)
             
             cell.iconView.image = nil
-            let seriesDic = rowarr["series"] as! Dictionary<String,Any>
             let imgarr = seriesDic["images"] as! Array<Any>
             for item in imgarr {//found poster in images array
                 let dic = item as! Dictionary<String,String>
                 if dic["coverType"] == "poster"{
-                    let imgstr = SonarrURL() + dic["url"]!
+                    let imgstr = dic["url"]!
                     cell.iconView.af_setImage(withURL: URL(string: imgstr)!,
                         placeholderImage: nil,
                         filter: .none,

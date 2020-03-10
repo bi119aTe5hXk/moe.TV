@@ -421,7 +421,7 @@ func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
                 }
             }else{
                 if let JSON = value as? [Any] {
-                    //print(JSON)
+                    print(JSON)
                     completion(true, JSON)
                 }
             }
@@ -478,7 +478,7 @@ func SonarrGetCalendar(completion: @escaping (Bool, Any?) -> Void){
         switch response.result {
         case .success(let value):
             if let JSON = value as? [Any] {
-                print(JSON)
+               // print(JSON)
                 completion(true, JSON)
             }
             break
@@ -499,7 +499,7 @@ func SonarrGetRootFolder(completion: @escaping (Bool, Any?) -> Void){
     
     urlstr.append("/rootfolder")
     urlstr = SonarrAddAPIKEY(url: urlstr)
-    print(urlstr)
+    //print(urlstr)
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         //print(response.result)
         switch response.result {

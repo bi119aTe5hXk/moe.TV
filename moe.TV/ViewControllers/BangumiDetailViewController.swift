@@ -339,8 +339,9 @@ class BangumiDetailViewController: UIViewController,
                         }else
                         {
                             //open url using vlc
-                            let vlcUrl1 = URL(string:"vlc://\(videourl)")
-                            let vlcUrl = URL(string: "vlc-x-callback://x-callback-url/stream?url=\(videourl)")
+                            let urlStr : NSString = videourl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) as! NSString
+                            let vlcUrl1 = URL(string:"vlc://\(urlStr)")
+                            let vlcUrl = URL(string: "vlc-x-callback://x-callback-url/stream?url=\(urlStr)")
                             if UIApplication.shared.canOpenURL(vlcUrl!) {
                                 UIApplication.shared.open(vlcUrl!, options: [:], completionHandler: nil)
                             }else if UIApplication.shared.canOpenURL(vlcUrl1!){
