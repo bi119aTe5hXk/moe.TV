@@ -11,15 +11,17 @@ An [Albireo](https://github.com/lordfriend/Albireo) & [Sonarr](https://sonarr.tv
 
 For example:
 
-Service Type: Sonarr
+- Service Type: Sonarr
 
-Connection Type: HTTP
+- Connection Type: HTTP
 
-Host:192.18.1.2:8989
+- Host:192.18.1.2:8989
 
-WebDAV port:8990
+- WebDAV port:8990
 
-API key:<On Sonarr server, open [/settings/general](http://127.0.0.1:8989/settings/general)>
+- API key:<On Sonarr server, open [/settings/general](http://127.0.0.1:8989/settings/general)>
+
+4. Hit "Save&Login in", and enjoy your anime night.
 
 
 ## Preview
