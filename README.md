@@ -31,3 +31,8 @@ For example:
 ![sc2](https://pbs.twimg.com/media/ESsXkq6U0AAR2I9?format=jpg&name=large)
 
 ![sc3](https://pbs.twimg.com/media/EFTwM65U0AAeLSp?format=jpg&name=large)
+
+## Long term issue
+
+- unsupport video file such as .mkv, .h264 can not be played. And tvOS is not support URL scheme yet, so jump to VLC player also not working. Hope next update will support this 🙏. (temp workaround: download supported format such as .mp4, .m4v)
+
