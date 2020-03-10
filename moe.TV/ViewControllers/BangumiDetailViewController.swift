@@ -330,7 +330,24 @@ class BangumiDetailViewController: UIViewController,
                         videourl = videourl.replacingOccurrences(of: path, with: "")
                         //print(videourl)
                         
-                        self.startPlayVideo(fromURL: videourl, seekTime: 0)
+                        let playableExtensions = ["mp4", "mov", "m4v"]
+                        let url: URL? = NSURL(fileURLWithPath: videourl) as URL
+                        let pathExtention = url?.pathExtension
+                        if playableExtensions.contains(pathExtention!)
+                        {
+                            self.startPlayVideo(fromURL: videourl, seekTime: 0)
+                        }else
+                        {
+                            //open url using vlc
+                            let vlcUrl1 = URL(string:"vlc://\(videourl)")
+                            let vlcUrl = URL(string: "vlc-x-callback://x-callback-url/stream?url=\(videourl)")
+                            if UIApplication.shared.canOpenURL(vlcUrl!) {
+                                UIApplication.shared.open(vlcUrl!, options: [:], completionHandler: nil)
+                            }else if UIApplication.shared.canOpenURL(vlcUrl1!){
+                                UIApplication.shared.open(vlcUrl1!, options: [:], completionHandler: nil)
+                            }
+                        }
+                        
                     }
                 }
             }else{
