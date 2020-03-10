@@ -56,13 +56,12 @@ class MyBangumiListViewController: UICollectionViewController, UICollectionViewD
                 if self.serviceType == "albireo" {
                     AlbireoGetMyBangumiList {
                         (isSucceeded, result) in
-                        
                         self.loadDataToTable(isSucceeded: isSucceeded, result: result as Any)
                     }
                 } else if self.serviceType == "sonarr" {
                     SonarrGetSeries(id: -1) {
                         (isSucceeded, result) in
-                        self.loadDataToTable(isSucceeded: isSucceeded, result: result as Any)
+                            self.loadDataToTable(isSucceeded: isSucceeded, result: result as Any)
                         }
                     
                 } else {

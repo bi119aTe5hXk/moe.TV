@@ -436,19 +436,22 @@ func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
     }
 }
 
-func SonarrGetEPList(id:Int,completion: @escaping (Bool, Any?) -> Void){
+func SonarrGetEPList(seriesId:Int,completion: @escaping (Bool, Any?) -> Void){
     initNetwork()
     var urlstr = SonarrURL()
     urlstr.append("/api")
     
-    urlstr.append("/episode/\(id)")
+    urlstr.append("/episode")
     urlstr = SonarrAddAPIKEY(url: urlstr)
     
+    urlstr.append("&seriesId=\(seriesId)")
+    
+    //print(urlstr)
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response.result)
+        //print(response)
         switch response.result {
         case .success(let value):
-            if let JSON = value as? [String: Any] {
+            if let JSON = value as? [Any] {
                 //print(JSON)
                 completion(true, JSON)
             }

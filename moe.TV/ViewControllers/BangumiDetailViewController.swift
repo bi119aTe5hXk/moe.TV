@@ -115,7 +115,24 @@ class BangumiDetailViewController: UIViewController,
                                 }
                             }
                             
-                            //self.collectionView.reloadData()
+                            SonarrGetEPList(seriesId: uuid!) {
+                                (isSucceeded, result) in
+                                if isSucceeded {
+                                    //check if hasFile is true and add them to a new list
+                                    var epFileList:Array<Any> = []
+                                    let arr:Array<Any> = result as! Array<Any>
+                                    for item in arr {
+                                        let dic = item as! Dictionary<String,Any>
+                                        let hasFile = dic["hasFile"] as! Bool
+                                        if hasFile == true {
+                                            epFileList.append(item)
+                                        }
+                                    }
+                                    //print(epFileList)
+                                    self.bgmEPlist = epFileList
+                                    self.collectionView.reloadData()
+                                }
+                            }
                         }else {
                             print(result as Any)
                             let err = result as! Dictionary<String,String>
@@ -163,16 +180,16 @@ class BangumiDetailViewController: UIViewController,
 
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EPCell", for: indexPath) as! EPCell
-            guard let rowarr = bgmEPlist[indexPath.row] as? Dictionary<String, Any> else {
+            guard let rowdic = bgmEPlist[indexPath.row] as? Dictionary<String, Any> else {
                 return cell
             }
             
             if self.serviceType == "albireo"{
-                if (rowarr["name"] as! String).lengthOfBytes(using: .utf8) > 0 {
-                    cell.titleText?.text = String(rowarr["episode_no"] as! Int) + "." + (rowarr["name"] as! String)
+                if (rowdic["name"] as! String).lengthOfBytes(using: .utf8) > 0 {
+                    cell.titleText?.text = String(rowdic["episode_no"] as! Int) + "." + (rowdic["name"] as! String)
                     //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
                     
-                    let imgurlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (rowarr["thumbnail"] as! String)
+                    let imgurlstr = addPrefix(url: UserDefaults.standard.string(forKey: UD_SERVER_ADDR)!) + (rowdic["thumbnail"] as! String)
                     cell.iconView.image = nil
                     cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
                                               placeholderImage: nil,
@@ -184,7 +201,7 @@ class BangumiDetailViewController: UIViewController,
                                                 cell.iconView.roundedImage(corners: .allCorners, radius: 6)
                     }
 
-                    if let watch_progress = rowarr["watch_progress"] {//watching or watched
+                    if let watch_progress = rowdic["watch_progress"] {//watching or watched
                         let wpdic = watch_progress as! Dictionary<String, Any>
                         let percent = wpdic["percentage"] as! Double
                         //print("percent:",Float(percent))
@@ -200,12 +217,17 @@ class BangumiDetailViewController: UIViewController,
                     }
                 } else {// name empty or not release yet
                     cell.iconView.image = nil
-                    cell.titleText.text = String(rowarr["episode_no"] as! Int)
+                    cell.titleText.text = String(rowdic["episode_no"] as! Int)
                     cell.progressBar.setProgress(0, animated: false)
                     cell.progressBar.isHidden = true
                 }
                 
             }else if self.serviceType == "sonarr" {
+                cell.titleText?.text = String(rowdic["episodeNumber"] as! Int) + "." + (rowdic["title"] as! String)
+                
+                let episodeFile = rowdic["episodeFile"] as! Dictionary<String,Any>
+                
+                
                 
             }else{
                 print("BGMDetail load collectionCell Error: Service type unknown.")
