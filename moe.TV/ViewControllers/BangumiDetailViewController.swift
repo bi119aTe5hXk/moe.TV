@@ -349,9 +349,11 @@ class BangumiDetailViewController: UIViewController,
 //                                UIApplication.shared.open(vlcUrl1!, options: [:], completionHandler: nil)
 //                            }
                             
-                            let vlcPlayerVC = self.storyboard?.instantiateViewController(withIdentifier: "TVVLCPlayerViewController") as! TVVLCPlayerViewController
-                            vlcPlayerVC.videoURLString = urlStr
-                            self.present(vlcPlayerVC, animated: true)
+                            let media: VLCMedia = VLCMedia(url: URL(string: urlStr)!)
+                            let player = VLCMediaPlayer()
+                            player.media = media
+                            let playerViewController = VLCPlayerViewController.instantiate(player: player)
+                            self.present(playerViewController, animated: true)
                         }
                         
                     }
