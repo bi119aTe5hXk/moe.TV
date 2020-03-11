@@ -31,7 +31,7 @@ For example:
 
 1. Clone this project or download sorcecode and upzip it. And open moe.TV folder.
 
-2. Open Terminal, cd to moe.TV folder's path, and run 'pod install'. Notice that TVVLCKit framwork will take about 970MB space and the package download speed is relatively slow.
+2. Open Terminal, cd to moe.TV folder's path, and run 'pod install'. Notice that TVVLCKit framwork will take about 2GB space and the package download speed is relatively slow.
 
 3. Open moe.TV.xcworkspace, Choose your Team for code-signing.
 
