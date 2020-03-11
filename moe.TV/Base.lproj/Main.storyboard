@@ -548,6 +548,24 @@
             </objects>
             <point key="canvasLocation" x="7528" y="681"/>
         </scene>
+        <!--Player View Controller-->
+        <scene sceneID="sL3-vS-qx9">
+            <objects>
+                <viewController storyboardIdentifier="TVVLCPlayerViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="deU-FJ-5sK" customClass="TVVLCPlayerViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Vta-Sv-ba6"/>
+                        <viewControllerLayoutGuide type="bottom" id="bXa-Cz-7tR"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="AJV-17-Q79">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="XYv-gN-Zie"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q25-RL-ve4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="10004" y="681"/>
+        </scene>
         <!--Search View Controller-->
         <scene sceneID="2T3-Br-F2k">
             <objects>

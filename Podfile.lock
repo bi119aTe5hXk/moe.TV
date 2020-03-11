@@ -1,0 +1,16 @@
+PODS:
+  - TVVLCKit (3.3.9)
+
+DEPENDENCIES:
+  - TVVLCKit (~> 3.3.9)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - TVVLCKit
+
+SPEC CHECKSUMS:
+  TVVLCKit: 14fd438326828e1681e11d809c9592f190e82552
+
+PODFILE CHECKSUM: 1edcc6c8af40f6fcb745e7b99aecfcb34d47f184
+
+COCOAPODS: 1.9.1

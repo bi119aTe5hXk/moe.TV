@@ -421,7 +421,7 @@ func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
                 }
             }else{
                 if let JSON = value as? [Any] {
-                    print(JSON)
+                    //print(JSON)
                     completion(true, JSON)
                 }
             }

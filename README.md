@@ -1,7 +1,11 @@
 # moe.TV
 An [Albireo](https://github.com/lordfriend/Albireo) & [Sonarr](https://sonarr.tv/) client which can watch bangumis / videos on your tvOS devices.
 
-## How-to (Sonarr)
+## How to use (for Albireo)
+
+Just input your server domain and login in using your authentication info.
+
+## How to use (for Sonarr)
 
 1. Setup your Sonarr and WebDAV service on your server, you can install [WebDAVNav Server](https://apps.apple.com/us/app/webdavnav-server/id747482894?mt=12) if you are using macOS as your service Server.
 
@@ -23,6 +27,15 @@ For example:
 
 4. Hit "Save&Login in", and enjoy your anime night.
 
+## How to Build
+
+1. Clone this project or download sorcecode and upzip it. And open moe.TV folder.
+
+2. Open Terminal, cd to moe.TV folder's path, and run 'pod install'. Notice that TVVLCKit framwork will take about 970MB space and the package download speed is relatively slow.
+
+3. Open moe.TV.xcworkspace, Choose your Team for code-signing.
+
+4. Build and run.
 
 ## Preview
 
@@ -34,5 +47,5 @@ For example:
 
 ## Long term issue
 
-- unsupport video file such as .mkv, .h264 can not be played. And tvOS is not support URL scheme yet, so jump to VLC player also not working. Hope next update will support this 🙏. (temp workaround: download supported format such as .mp4, .m4v)
+- WebDAV is require for video files transfer in Sonarr mode. Sonarr service does not include WebDAV or script for run services. 3rd part program is required.
 
