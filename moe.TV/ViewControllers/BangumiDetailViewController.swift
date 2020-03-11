@@ -328,25 +328,30 @@ class BangumiDetailViewController: UIViewController,
                         let path = dic["path"] as! String
                         
                         videourl = videourl.replacingOccurrences(of: path, with: "")
-                        //print(videourl)
+                        let urlStr = videourl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                        print(urlStr)
                         
                         let playableExtensions = ["mp4", "mov", "m4v"]
-                        let url: URL? = NSURL(fileURLWithPath: videourl) as URL
+                        let url: URL? = NSURL(fileURLWithPath: urlStr) as URL
                         let pathExtention = url?.pathExtension
                         if playableExtensions.contains(pathExtention!)
                         {
-                            self.startPlayVideo(fromURL: videourl, seekTime: 0)
+                            self.startPlayVideo(fromURL: urlStr, seekTime: 0)
                         }else
                         {
                             //open url using vlc
-                            let urlStr : NSString = videourl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) as! NSString
-                            let vlcUrl1 = URL(string:"vlc://\(urlStr)")
-                            let vlcUrl = URL(string: "vlc-x-callback://x-callback-url/stream?url=\(urlStr)")
-                            if UIApplication.shared.canOpenURL(vlcUrl!) {
-                                UIApplication.shared.open(vlcUrl!, options: [:], completionHandler: nil)
-                            }else if UIApplication.shared.canOpenURL(vlcUrl1!){
-                                UIApplication.shared.open(vlcUrl1!, options: [:], completionHandler: nil)
-                            }
+                            
+//                            let vlcUrl1 = URL(string:"vlc://\(urlStr)")
+//                            let vlcUrl = URL(string: "vlc-x-callback://x-callback-url/stream?url=\(urlStr)")
+//                            if UIApplication.shared.canOpenURL(vlcUrl!) {
+//                                UIApplication.shared.open(vlcUrl!, options: [:], completionHandler: nil)
+//                            }else if UIApplication.shared.canOpenURL(vlcUrl1!){
+//                                UIApplication.shared.open(vlcUrl1!, options: [:], completionHandler: nil)
+//                            }
+                            
+                            let vlcPlayerVC = self.storyboard?.instantiateViewController(withIdentifier: "TVVLCPlayerViewController") as! TVVLCPlayerViewController
+                            vlcPlayerVC.videoURLString = urlStr
+                            self.present(vlcPlayerVC, animated: true)
                         }
                         
                     }

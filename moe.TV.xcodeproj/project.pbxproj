@@ -39,6 +39,23 @@
 		86D97C9A2301CF6E00CF5F03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86D97C992301CF6E00CF5F03 /* Assets.xcassets */; };
 		86D97CBE2301CFF800CF5F03 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */; };
 		86D97CC02301D5F900CF5F03 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97CBF2301D5F900CF5F03 /* LoginViewController.swift */; };
+		86FC703B241943E100CC4F2A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC703A241943E100CC4F2A /* AudioToolbox.framework */; };
+		86FC703C241943E800CC4F2A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4766B1F7230C750700E5828B /* AVFoundation.framework */; };
+		86FC703E241943F000CC4F2A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC703D241943F000CC4F2A /* CFNetwork.framework */; };
+		86FC7040241943F800CC4F2A /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC703F241943F800CC4F2A /* CoreFoundation.framework */; };
+		86FC70422419440000CC4F2A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70412419440000CC4F2A /* CoreGraphics.framework */; };
+		86FC70442419440A00CC4F2A /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70432419440A00CC4F2A /* CoreMedia.framework */; };
+		86FC70462419441200CC4F2A /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70452419441200CC4F2A /* CoreText.framework */; };
+		86FC70482419441900CC4F2A /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70472419441900CC4F2A /* CoreVideo.framework */; };
+		86FC704A2419442500CC4F2A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70492419442500CC4F2A /* Foundation.framework */; };
+		86FC704C2419442C00CC4F2A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC704B2419442C00CC4F2A /* UIKit.framework */; };
+		86FC704E2419443300CC4F2A /* TVUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC704D2419443300CC4F2A /* TVUIKit.framework */; };
+		86FC70522419445300CC4F2A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70512419445300CC4F2A /* OpenGLES.framework */; };
+		86FC70542419445A00CC4F2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70532419445A00CC4F2A /* QuartzCore.framework */; };
+		86FC70562419446200CC4F2A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70552419446200CC4F2A /* Security.framework */; };
+		86FC70582419446900CC4F2A /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70572419446900CC4F2A /* VideoToolbox.framework */; };
+		86FC706124194D1900CC4F2A /* TVVLCPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC706024194D1900CC4F2A /* TVVLCPlayerViewController.swift */; };
+		95376A09ABC191E90E5F6598 /* Pods_moe_TV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D9F2B0F40A0066C8BD6CD7 /* Pods_moe_TV.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +88,16 @@
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		86FC705D241945B800CC4F2A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -97,6 +124,7 @@
 		47C75373230E5C5A0010C0EE /* topshelfold.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = topshelfold.entitlements; sourceTree = "<group>"; };
 		47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryDetailViewController.swift; sourceTree = "<group>"; };
 		47D4490C230C69F4000F8C6C /* EPCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCell.swift; sourceTree = "<group>"; };
+		67D9F2B0F40A0066C8BD6CD7 /* Pods_moe_TV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_moe_TV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		863CF9F7230594F800CA958F /* ServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHandler.swift; sourceTree = "<group>"; };
 		86924767234F4F3D00B1C667 /* UDkey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDkey.swift; sourceTree = "<group>"; };
 		86D97C8D2301CF6B00CF5F03 /* moeTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = moeTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,6 +134,27 @@
 		86D97C9B2301CF6E00CF5F03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		86D97CBF2301D5F900CF5F03 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		86FC7025241933D900CC4F2A /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
+		86FC70362419438200CC4F2A /* TVVLCKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVVLCKit.framework; path = Carthage/Build/tvOS/TVVLCKit.framework; sourceTree = "<group>"; };
+		86FC703A241943E100CC4F2A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		86FC703D241943F000CC4F2A /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		86FC703F241943F800CC4F2A /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		86FC70412419440000CC4F2A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		86FC70432419440A00CC4F2A /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		86FC70452419441200CC4F2A /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		86FC70472419441900CC4F2A /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		86FC70492419442500CC4F2A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		86FC704B2419442C00CC4F2A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		86FC704D2419443300CC4F2A /* TVUIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVUIKit.framework; path = System/Library/Frameworks/TVUIKit.framework; sourceTree = SDKROOT; };
+		86FC704F2419444000CC4F2A /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		86FC70502419444A00CC4F2A /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		86FC70512419445300CC4F2A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		86FC70532419445A00CC4F2A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		86FC70552419446200CC4F2A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		86FC70572419446900CC4F2A /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		86FC706024194D1900CC4F2A /* TVVLCPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVVLCPlayerViewController.swift; sourceTree = "<group>"; };
+		9540BDDE439A0448A9EC39E5 /* Pods-moe.TV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moe.TV.debug.xcconfig"; path = "Target Support Files/Pods-moe.TV/Pods-moe.TV.debug.xcconfig"; sourceTree = "<group>"; };
+		FFA57A089ABF24539A4A3C62 /* Pods-moe.TV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moe.TV.release.xcconfig"; path = "Target Support Files/Pods-moe.TV/Pods-moe.TV.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,22 +178,65 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86FC70442419440A00CC4F2A /* CoreMedia.framework in Frameworks */,
 				4766B1F8230C750700E5828B /* AVFoundation.framework in Frameworks */,
+				86FC7040241943F800CC4F2A /* CoreFoundation.framework in Frameworks */,
+				86FC704C2419442C00CC4F2A /* UIKit.framework in Frameworks */,
+				86FC70482419441900CC4F2A /* CoreVideo.framework in Frameworks */,
+				86FC704A2419442500CC4F2A /* Foundation.framework in Frameworks */,
+				86FC703E241943F000CC4F2A /* CFNetwork.framework in Frameworks */,
+				86FC70542419445A00CC4F2A /* QuartzCore.framework in Frameworks */,
 				4766B1FD230C819100E5828B /* AlamofireImage in Frameworks */,
 				477749102305AAC6002E2D25 /* Alamofire in Frameworks */,
 				4766B1FA230C755600E5828B /* AVKit.framework in Frameworks */,
+				86FC70582419446900CC4F2A /* VideoToolbox.framework in Frameworks */,
+				86FC70462419441200CC4F2A /* CoreText.framework in Frameworks */,
+				86FC70562419446200CC4F2A /* Security.framework in Frameworks */,
+				86FC703C241943E800CC4F2A /* AVFoundation.framework in Frameworks */,
+				86FC704E2419443300CC4F2A /* TVUIKit.framework in Frameworks */,
+				86FC70422419440000CC4F2A /* CoreGraphics.framework in Frameworks */,
+				86FC70522419445300CC4F2A /* OpenGLES.framework in Frameworks */,
+				86FC703B241943E100CC4F2A /* AudioToolbox.framework in Frameworks */,
+				95376A09ABC191E90E5F6598 /* Pods_moe_TV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		10CE0D18EFA6F8E156150DF2 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9540BDDE439A0448A9EC39E5 /* Pods-moe.TV.debug.xcconfig */,
+				FFA57A089ABF24539A4A3C62 /* Pods-moe.TV.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		4706FD7D230A871F00094B78 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				86FC70572419446900CC4F2A /* VideoToolbox.framework */,
+				86FC70552419446200CC4F2A /* Security.framework */,
+				86FC70532419445A00CC4F2A /* QuartzCore.framework */,
+				86FC70512419445300CC4F2A /* OpenGLES.framework */,
+				86FC70502419444A00CC4F2A /* libiconv.tbd */,
+				86FC704F2419444000CC4F2A /* libbz2.tbd */,
+				86FC704D2419443300CC4F2A /* TVUIKit.framework */,
+				86FC704B2419442C00CC4F2A /* UIKit.framework */,
+				86FC70492419442500CC4F2A /* Foundation.framework */,
+				86FC70472419441900CC4F2A /* CoreVideo.framework */,
+				86FC70452419441200CC4F2A /* CoreText.framework */,
+				86FC70432419440A00CC4F2A /* CoreMedia.framework */,
+				86FC70412419440000CC4F2A /* CoreGraphics.framework */,
+				86FC703F241943F800CC4F2A /* CoreFoundation.framework */,
+				86FC703D241943F000CC4F2A /* CFNetwork.framework */,
+				86FC703A241943E100CC4F2A /* AudioToolbox.framework */,
+				86FC70362419438200CC4F2A /* TVVLCKit.framework */,
 				4766B1F9230C755600E5828B /* AVKit.framework */,
 				4766B1F7230C750700E5828B /* AVFoundation.framework */,
 				4706FD7E230A871F00094B78 /* TVServices.framework */,
+				67D9F2B0F40A0066C8BD6CD7 /* Pods_moe_TV.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -169,6 +261,7 @@
 				4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */,
 				47433AE02306C1AC007794E1 /* OnAirListViewController.swift */,
 				4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */,
+				86FC706024194D1900CC4F2A /* TVVLCPlayerViewController.swift */,
 				47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */,
 				471BBB15230DBE5D00CD5D73 /* SettingsViewController.swift */,
 				86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */,
@@ -203,6 +296,7 @@
 				47C75369230E54EC0010C0EE /* topshelfold */,
 				4706FD7D230A871F00094B78 /* Frameworks */,
 				86D97C8E2301CF6B00CF5F03 /* Products */,
+				10CE0D18EFA6F8E156150DF2 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -229,6 +323,7 @@
 				86D97C962301CF6B00CF5F03 /* Main.storyboard */,
 				86D97C992301CF6E00CF5F03 /* Assets.xcassets */,
 				86D97C9B2301CF6E00CF5F03 /* Info.plist */,
+				86FC7025241933D900CC4F2A /* Bridging-Header.h */,
 			);
 			path = moe.TV;
 			sourceTree = "<group>";
@@ -274,10 +369,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 86D97CB42301CF6E00CF5F03 /* Build configuration list for PBXNativeTarget "moe.TV" */;
 			buildPhases = (
+				4E45E24167B815B74FE7CBDC /* [CP] Check Pods Manifest.lock */,
 				86D97C892301CF6B00CF5F03 /* Sources */,
 				86D97C8A2301CF6B00CF5F03 /* Frameworks */,
 				86D97C8B2301CF6B00CF5F03 /* Resources */,
 				4706FD87230A871F00094B78 /* Embed App Extensions */,
+				86FC705D241945B800CC4F2A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -367,6 +464,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4E45E24167B815B74FE7CBDC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-moe.TV-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4706FD78230A871F00094B78 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -390,6 +512,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86FC706124194D1900CC4F2A /* TVVLCPlayerViewController.swift in Sources */,
 				4775A9FA2306BA1700B84382 /* BangumiCell.swift in Sources */,
 				4775A9F22305C60300B84382 /* TabbarViewController.swift in Sources */,
 				47433AE12306C1AC007794E1 /* OnAirListViewController.swift in Sources */,
@@ -656,6 +779,7 @@
 		};
 		86D97CB52301CF6E00CF5F03 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9540BDDE439A0448A9EC39E5 /* Pods-moe.TV.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = IMGAssets;
@@ -663,7 +787,9 @@
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 202003110424;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = moe.TV/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -673,6 +799,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV";
 				PRODUCT_NAME = moeTV;
+				SWIFT_OBJC_BRIDGING_HEADER = "moe.TV/Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 10.0;
@@ -682,6 +809,7 @@
 		};
 		86D97CB62301CF6E00CF5F03 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FFA57A089ABF24539A4A3C62 /* Pods-moe.TV.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = IMGAssets;
@@ -689,7 +817,9 @@
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 202003110424;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = moe.TV/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -699,6 +829,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV";
 				PRODUCT_NAME = moeTV;
+				SWIFT_OBJC_BRIDGING_HEADER = "moe.TV/Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 10.0;
