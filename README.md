@@ -34,5 +34,5 @@ For example:
 
 ## Long term issue
 
-- unsupport video file such as .mkv, .h264 can not be played. And tvOS is not support URL scheme yet, so jump to VLC player also not working. Hope next update will support this 🙏. (temp workaround: download supported format such as .mp4, .m4v)
+- WebDAV is require for video files transfer in Sonarr mode. Sonarr service does not include WebDAV or script for run services. 3rd part program is required.
 
