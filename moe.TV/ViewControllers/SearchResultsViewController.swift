@@ -25,22 +25,30 @@ class SearchResultsViewController: UICollectionViewController,
 
         var filterString = "" {
             didSet {
-                // Return if the filter string hasn't changed.
-                guard filterString != oldValue else { return }
+                if self.serviceType == "albireo"{
+                    // Return if the filter string hasn't changed.
+                    guard filterString != oldValue else { return }
+                    
+                    // Apply the filter or show all items if the filter string is empty.
+                    if filterString.isEmpty {
+                        //clear all, reset
+                        self.resultArr.removeAll(keepingCapacity: false)
+                        self.collectionView?.reloadData()
+                        self.pageNum = 1
 
-                // Apply the filter or show all items if the filter string is empty.
-                if filterString.isEmpty {
-                    //clear all, reset
-                    self.resultArr.removeAll(keepingCapacity: false)
-                    self.collectionView?.reloadData()
-                    self.pageNum = 1
-
-                    //show all
-                    self.getBangumiList(name: "")
-                } else {
-                    //show search result
-                    self.getBangumiList(name: filterString)
+                        //show all
+                        self.getBangumiList(name: "")
+                    } else {
+                        //show search result
+                        self.getBangumiList(name: filterString)
+                    }
+                }else if self.serviceType == "sonarr" {
+                    
+                }else{
+                    print("Error: Service type unknown.")
                 }
+                
+                
             }
         }
 
@@ -63,13 +71,28 @@ class SearchResultsViewController: UICollectionViewController,
             //first time
             
             
+            if self.serviceType == "albireo"{
+                self.getBangumiList(name: "")
+            }else if self.serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
+            }
             
-            self.getBangumiList(name: "")
         }
         func getBangumiList(name: String) {
             
             if self.serviceType == "albireo"{
-                
+                AlbireoGetAllBangumiList(page: pageNum, name: name) {
+                    (isSucceeded, result) in
+                    if isSucceeded {
+                        //let resultDir = result as! Array<Any>//Dictionary<String,Any>
+                        let arr = result as! Array<Any>
+                        self.resultArr = arr//[arr[0]]
+                        //print(self.resultArr as Any)
+                        self.collectionView?.reloadData()
+                    }
+                }
             }else if self.serviceType == "sonarr" {
                 
             }else{
@@ -77,16 +100,7 @@ class SearchResultsViewController: UICollectionViewController,
             }
             
             
-            AlbireoGetAllBangumiList(page: pageNum, name: name) {
-                (isSucceeded, result) in
-                if isSucceeded {
-                    //let resultDir = result as! Array<Any>//Dictionary<String,Any>
-                    let arr = result as! Array<Any>
-                    self.resultArr = arr//[arr[0]]
-                    //print(self.resultArr as Any)
-                    self.collectionView?.reloadData()
-                }
-            }
+            
         }
 
         /*
@@ -126,24 +140,34 @@ class SearchResultsViewController: UICollectionViewController,
 
         override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BangumiCell", for: indexPath) as! BangumiCell
-            if let rowarr = resultArr[indexPath.row] as? Dictionary<String, Any> {
-                //print(rowarr["id"] as Any)
-                // Configure the cell
-                cell.titleTextField?.text = (rowarr["name"] as! String)
-                //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
-                let imgurlstr = rowarr["image"] as! String
-                cell.iconView.image = nil
-                cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
-                                          placeholderImage: nil,
-                                          filter: .none,
-                                          progress: .none,
-                                          progressQueue: .main,
-                                          imageTransition: .noTransition,
-                                          runImageTransitionIfCached: true) { (data) in
-                                            cell.iconView.roundedImage(corners: .allCorners, radius: 6)
-                }
+            
+            if self.serviceType == "albireo"{
+                if let rowarr = resultArr[indexPath.row] as? Dictionary<String, Any> {
+                    //print(rowarr["id"] as Any)
+                    // Configure the cell
+                    cell.titleTextField?.text = (rowarr["name"] as! String)
+                    //cell.subTitleTextField?.text = (rowarr["name_cn"] as! String)
+                    let imgurlstr = rowarr["image"] as! String
+                    cell.iconView.image = nil
+                    cell.iconView.af_setImage(withURL: URL(string: imgurlstr)!,
+                                              placeholderImage: nil,
+                                              filter: .none,
+                                              progress: .none,
+                                              progressQueue: .main,
+                                              imageTransition: .noTransition,
+                                              runImageTransitionIfCached: true) { (data) in
+                                                cell.iconView.roundedImage(corners: .allCorners, radius: 6)
+                    }
 
+                }
+            }else if self.serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
             }
+            
+            
+            
             return cell
         }
 
@@ -153,7 +177,14 @@ class SearchResultsViewController: UICollectionViewController,
             let row = indexPath.row
             let arr = self.resultArr[row] as! Dictionary<String, Any>
             let detailvc = self.storyboard?.instantiateViewController(withIdentifier: "BangumiDetailViewController") as! BangumiDetailViewController
-            detailvc.bangumiUUID = arr["id"] as! String
+            if self.serviceType == "albireo"{
+                detailvc.bangumiUUID = arr["id"] as! String
+            }else if self.serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
+            }
+            
             self.present(detailvc, animated: true)
         }
 
@@ -166,36 +197,45 @@ class SearchResultsViewController: UICollectionViewController,
     */
         override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
             //print(indexPath.row)
-            if indexPath.row == (self.resultArr.count - 1) { //will load more page at the end of the row
-                //print("start insert to", indexPath)
-                pageNum += 1
-                AlbireoGetAllBangumiList(page: pageNum, name: filterString) {
-                    (isSucceeded, result) in
-                    if isSucceeded {
-                        //let resultDir = result as! Array<Any>//Dictionary<String,Any>
-                        let arr = result as! Array<Any>
-                        //print(self.resultArr as Any)
-                        //self.collectionView?.reloadData()
-                        if arr.count > 0 {
-                            var paths = [IndexPath]()
-                            for item in 0..<arr.count {
-                                let count = self.resultArr.count + item
-                                let index = IndexPath(row: count, section: indexPath.section)
-                                //print(index)
-                                paths.append(index)
+            
+            if self.serviceType == "albireo"{
+                if indexPath.row == (self.resultArr.count - 1) { //will load more page at the end of the row
+                    //print("start insert to", indexPath)
+                    pageNum += 1
+                    AlbireoGetAllBangumiList(page: pageNum, name: filterString) {
+                        (isSucceeded, result) in
+                        if isSucceeded {
+                            //let resultDir = result as! Array<Any>//Dictionary<String,Any>
+                            let arr = result as! Array<Any>
+                            //print(self.resultArr as Any)
+                            //self.collectionView?.reloadData()
+                            if arr.count > 0 {
+                                var paths = [IndexPath]()
+                                for item in 0..<arr.count {
+                                    let count = self.resultArr.count + item
+                                    let index = IndexPath(row: count, section: indexPath.section)
+                                    //print(index)
+                                    paths.append(index)
+                                }
+                                self.collectionView.performBatchUpdates({
+                                    self.resultArr += arr
+                                    //print("cell count2:", self.resultArr.count)
+                                    self.collectionView.insertItems(at: paths)
+                                }, completion: nil)
+                                
                             }
-                            self.collectionView.performBatchUpdates({
-                                self.resultArr += arr
-                                //print("cell count2:", self.resultArr.count)
-                                self.collectionView.insertItems(at: paths)
-                            }, completion: nil)
-                            
+
+
                         }
-
-
                     }
                 }
+            }else if self.serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
             }
+            
+            
         }
         /*
     // Uncomment this method to specify if the specified item should be selected

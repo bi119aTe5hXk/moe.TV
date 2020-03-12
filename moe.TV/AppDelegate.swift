@@ -35,7 +35,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
         
         if let tabController = window?.rootViewController as? UITabBarController {
-            tabController.viewControllers?.append(packagedSearchController())
+            let serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)!
+            if serviceType == "albireo"{
+                tabController.viewControllers?.append(packagedSearchController())
+            }else if serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
+            }
+            
         }
         
         let audioSession = AVAudioSession.sharedInstance()
@@ -85,6 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      A method demonstrating how to encapsulate a `UISearchController` for presentation in, for example, a `UITabBarController`
      */
     func packagedSearchController() -> UIViewController {
+        
         // Load a `SearchResultsViewController` from its storyboard.
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let searchResultsController = storyboard.instantiateViewController(withIdentifier: SearchResultsViewController.storyboardIdentifier) as? SearchResultsViewController else {
@@ -106,6 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Finally contain the `UISearchContainerViewController` in a `UINavigationController`.
         let searchNavigationController = UINavigationController(rootViewController: searchContainer)
         return searchNavigationController
+        
     }
 }
 
