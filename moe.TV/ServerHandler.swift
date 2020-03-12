@@ -42,21 +42,23 @@ func cancelRequest(){
 }
 
 func initNetwork() {
-    let proxyAddr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_PROXY_SERVER)
-    let proxyPort = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_PROXY_PORT)
     var proxyConfiguration = [NSObject: AnyObject]()
     
-    if (proxyAddr?.lengthOfBytes(using: .utf8))! > 0 &&
-        (proxyPort?.lengthOfBytes(using: .utf8))! > 0{
-        print("GoWithProxy:",proxyAddr as Any,":",proxyPort as Any)
-        proxyConfiguration[kCFNetworkProxiesHTTPProxy] = proxyAddr as AnyObject?
-        proxyConfiguration[kCFNetworkProxiesHTTPPort] = proxyPort as AnyObject?
-        proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 1 as AnyObject?
-    }else{
-        //print("GoWithoutProxy")
-        proxyConfiguration[kCFNetworkProxiesHTTPProxy] = "" as AnyObject?
-        proxyConfiguration[kCFNetworkProxiesHTTPPort] = "" as AnyObject?
-        proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 0 as AnyObject?
+    if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_PROXY_ENABLED) {
+        let proxyAddr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_PROXY_SERVER)
+        let proxyPort = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_PROXY_PORT)
+        if (proxyAddr?.lengthOfBytes(using: .utf8))! > 0 &&
+            (proxyPort?.lengthOfBytes(using: .utf8))! > 0{
+            print("GoWithProxy:",proxyAddr as Any,":",proxyPort as Any)
+            proxyConfiguration[kCFNetworkProxiesHTTPProxy] = proxyAddr as AnyObject?
+            proxyConfiguration[kCFNetworkProxiesHTTPPort] = proxyPort as AnyObject?
+            proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 1 as AnyObject?
+        }else{
+            //print("GoWithoutProxy")
+            proxyConfiguration[kCFNetworkProxiesHTTPProxy] = "" as AnyObject?
+            proxyConfiguration[kCFNetworkProxiesHTTPPort] = "" as AnyObject?
+            proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 0 as AnyObject?
+        }
     }
     
     let cfg = Alamofire.Session.default.session.configuration
@@ -67,11 +69,11 @@ func initNetwork() {
 }
 func addPrefix(url:String) -> String{
         //var url:String = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!
-    //    if (!urlstr.uppercased().hasPrefix("http://".uppercased()) &&
-    //        !urlstr.uppercased().hasPrefix("https://".uppercased())){
-    //        print("URL \(urlstr) has no prefix fond, add https as default")
-    //        urlstr = "https://" + urlstr //use https as default
-    //    }
+//        if (!urlstr.uppercased().hasPrefix("http://".uppercased()) &&
+//            !urlstr.uppercased().hasPrefix("https://".uppercased())){
+//            print("URL \(urlstr) has no prefix fond, add https as default")
+//            urlstr = "https://" + urlstr //use https as default
+//        }
     var urlstr = url
         if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_USING_HTTPS){
             urlstr = "https://" + urlstr

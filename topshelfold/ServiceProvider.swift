@@ -10,7 +10,7 @@ import TVServices
 
 class ServiceProvider: NSObject, TVTopShelfProvider {
     let serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)
-    let topShelfArr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.array(forKey: UD_TOPSHELF_ARR)
+    //let topShelfArr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.array(forKey: UD_TOPSHELF_ARR)
     var topShelfStyle: TVTopShelfContentStyle = .sectioned
     
     var topShelfItems: [TVContentItem]{
@@ -28,32 +28,108 @@ class ServiceProvider: NSObject, TVTopShelfProvider {
     fileprivate var insetTopShelfItems: [TVContentItem] {
         var contentItems: [TVContentItem] = []
         // Get an array of `DataItem`s to show on the Top Shelf.
-        if topShelfArr != nil && topShelfArr!.count > 0 {
-            for item in topShelfArr! {
-                let dic = item as! Dictionary<String,Any>
-                //print(dic["id"] as Any)
-                contentItems.append(contentItemWithDataItem(dic, imageShape: .poster))
+        
+        let loggedin = UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_LOGEDIN)
+        if loggedin {
+            print("updating topShelf array")
+
+            if self.serviceType == "albireo" {
+                AlbireoGetMyBangumiList {
+                    (isSucceeded, result) in
+                    if isSucceeded {
+                    let topShelfArr = result as! Array<Any>
+                        if topShelfArr.count > 0 {
+                            for item in topShelfArr {
+                                let dic = item as! Dictionary<String,Any>
+                                //print(dic["id"] as Any)
+                                contentItems.append(self.contentItemWithDataItem(dic, imageShape: .poster))
+                            }
+                            
+                        }
+                    }
+                }
+            } else if self.serviceType == "sonarr" {
+                SonarrGetSeries(id: -1) {
+                    (isSucceeded, result) in
+                    if isSucceeded {
+                    let topShelfArr = result as! Array<Any>
+                        if topShelfArr.count > 0 {
+                            for item in topShelfArr {
+                                let dic = item as! Dictionary<String,Any>
+                                //print(dic["id"] as Any)
+                                contentItems.append(self.contentItemWithDataItem(dic, imageShape: .poster))
+                            }
+                        }else{
+                        }
+                    }
+                }
+
+            } else {
+                print("MyBangumiList loadData Error: Service type unknown.")
             }
+
         }
+        
         return contentItems
     }
+    
+    
+    
 
     fileprivate var sectionedTopShelfItems: [TVContentItem]{
         var sectionContentItems: [TVContentItem] = []
         let sectionTitle = "My Bangumi List"
         guard let sectionIdentifier:TVContentIdentifier = TVContentIdentifier(identifier: sectionTitle, container: nil) else { fatalError("Error creating content identifier for section item.") }
         guard let sectionItem:TVContentItem = TVContentItem(contentIdentifier: sectionIdentifier) else { fatalError("Error creating section content item.") }
+        
+        
+        
+        let loggedin = UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_LOGEDIN)
+        if loggedin {
+            print("updating topShelf array")
 
-        print(topShelfArr as Any)
-        if topShelfArr != nil && topShelfArr!.count > 0 {
-            for item in topShelfArr! {
-                let dic = item as! Dictionary<String,Any>
-                //print(dic["id"] as Any)
-                sectionItem.topShelfItems?.append(contentItemWithDataItem(dic, imageShape: .poster))
+            if self.serviceType == "albireo" {
+                AlbireoGetMyBangumiList {
+                    (isSucceeded, result) in
+                    if isSucceeded {
+                    let topShelfArr = result as! Array<Any>
+                        print(topShelfArr as Any)
+                        if topShelfArr.count > 0 {
+                            for item in topShelfArr {
+                                let dic = item as! Dictionary<String,Any>
+                                //print(dic["id"] as Any)
+                                sectionItem.topShelfItems?.append(self.contentItemWithDataItem(dic, imageShape: .poster))
+                                sectionContentItems = [sectionItem]
+                            }
+                        }
+                    }
+                }
+            } else if self.serviceType == "sonarr" {
+                SonarrGetSeries(id: -1) {
+                    (isSucceeded, result) in
+                    if isSucceeded {
+                    let topShelfArr = result as! Array<Any>
+                        print(topShelfArr as Any)
+                        if topShelfArr.count > 0 {
+                            for item in topShelfArr {
+                                let dic = item as! Dictionary<String,Any>
+                                //print(dic["id"] as Any)
+                                sectionItem.topShelfItems?.append(self.contentItemWithDataItem(dic, imageShape: .poster))
+                                sectionContentItems = [sectionItem]
+                                
+                            }
+                        }
+                    }
+                }
+
+            } else {
+                print("MyBangumiList loadData Error: Service type unknown.")
             }
+
         }
-        sectionContentItems = [sectionItem]
+
         return sectionContentItems
+        
     }
 
     fileprivate func contentItemWithDataItem(_ dataItem: Dictionary<String,Any>, imageShape: TVContentItemImageShape) -> TVContentItem {

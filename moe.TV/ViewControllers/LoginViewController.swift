@@ -22,14 +22,21 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.urltextfield.delegate = self
         self.usernametextfield.delegate = self
         self.passwordtextfield.delegate = self
+        self.apikeytextfield.delegate = self
+        self.webdavporttextfield.delegate = self
+        
         self.loadingIndicator.isHidden = true
         self.loadingIndicator.stopAnimating()
         
         //set default service
         UserDefaults.init(suiteName: UD_SUITE_NAME)?.set("albireo", forKey: UD_SERVICE_TYPE)
+        self.servicetypeselect.selectedSegmentIndex = 0
+        self.connectiontypeselect.selectedSegmentIndex = 0
+        
         self.urltextfield.placeholder = "Server Address"
         self.usernametextfield.placeholder = "Username"
         self.passwordtextfield.placeholder = "Password"
@@ -194,7 +201,9 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
+        self.serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)!
         if self.serviceType == "albireo"{
+            
             if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
             (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
             (self.passwordtextfield.text?.lengthOfBytes(using: .utf8))! > 0{
@@ -202,6 +211,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             }else{
                 self.loginbutton.isEnabled = false
             }
+            
         }else if self.serviceType == "sonarr" {
             if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
             (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 {

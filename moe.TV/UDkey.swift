@@ -37,5 +37,6 @@ let UD_SONARR_WEBDAV_PORT = "sonarr_webdav_port"
 let UD_SONARR_ROOTFOLDER = "sonarr_rootfolder"
 
 //HTTP proxy server host name and port
-let UD_PROXY_SERVER = "proxyserver"
-let UD_PROXY_PORT = "proxyport"
+let UD_PROXY_ENABLED = "proxy_enabled"
+let UD_PROXY_SERVER = "proxy_server"
+let UD_PROXY_PORT = "proxy_port"

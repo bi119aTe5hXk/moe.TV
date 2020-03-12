@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ud.register(defaults: [UD_SERVER_ADDR : ""])
         ud.register(defaults: [UD_PROXY_SERVER : ""])
         ud.register(defaults: [UD_PROXY_PORT : ""])
+        ud.register(defaults: [UD_PROXY_ENABLED : false])
         ud.register(defaults: [UD_SONARR_APIKEY : ""])
         ud.register(defaults: [UD_SONARR_USERNAME : ""])
         ud.register(defaults: [UD_SONARR_PASSWORD : ""])

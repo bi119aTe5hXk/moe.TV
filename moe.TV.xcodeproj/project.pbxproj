@@ -78,6 +78,10 @@
 		86FC71072419674F00CC4F2A /* VLC+time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70F12419674E00CC4F2A /* VLC+time.swift */; };
 		86FC710B2419676400CC4F2A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86FC71092419676400CC4F2A /* Images.xcassets */; };
 		86FC710C2419676400CC4F2A /* TVVLCPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86FC710A2419676400CC4F2A /* TVVLCPlayer.storyboard */; };
+		86FC7110241A760A00CC4F2A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 86FC710F241A760A00CC4F2A /* Alamofire */; };
+		86FC7112241A760F00CC4F2A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 86FC7111241A760F00CC4F2A /* Alamofire */; };
+		86FC7113241A761500CC4F2A /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
+		86FC7114241A761500CC4F2A /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
 		95376A09ABC191E90E5F6598 /* Pods_moe_TV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D9F2B0F40A0066C8BD6CD7 /* Pods_moe_TV.framework */; };
 /* End PBXBuildFile section */
 
@@ -209,6 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4706FD7F230A871F00094B78 /* TVServices.framework in Frameworks */,
+				86FC7112241A760F00CC4F2A /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				47C75368230E54EC0010C0EE /* TVServices.framework in Frameworks */,
+				86FC7110241A760A00CC4F2A /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +475,9 @@
 			dependencies = (
 			);
 			name = topshelf;
+			packageProductDependencies = (
+				86FC7111241A760F00CC4F2A /* Alamofire */,
+			);
 			productName = topshelf;
 			productReference = 4706FD7C230A871F00094B78 /* topshelf.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -486,6 +495,9 @@
 			dependencies = (
 			);
 			name = topshelfold;
+			packageProductDependencies = (
+				86FC710F241A760A00CC4F2A /* Alamofire */,
+			);
 			productName = topshelfold;
 			productReference = 47C75367230E54EC0010C0EE /* topshelfold.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -621,6 +633,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86FC7114241A761500CC4F2A /* ServerHandler.swift in Sources */,
 				4706FD82230A871F00094B78 /* ContentProvider.swift in Sources */,
 				8692476A234F4F3D00B1C667 /* UDkey.swift in Sources */,
 			);
@@ -630,6 +643,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86FC7113241A761500CC4F2A /* ServerHandler.swift in Sources */,
 				47C7536B230E54EC0010C0EE /* ServiceProvider.swift in Sources */,
 				86924769234F4F3D00B1C667 /* UDkey.swift in Sources */,
 			);
@@ -1052,6 +1066,16 @@
 			productName = AlamofireImage;
 		};
 		4777490F2305AAC6002E2D25 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		86FC710F241A760A00CC4F2A /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		86FC7111241A760F00CC4F2A /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
