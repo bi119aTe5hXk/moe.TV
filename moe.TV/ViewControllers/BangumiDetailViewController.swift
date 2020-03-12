@@ -305,14 +305,23 @@ class BangumiDetailViewController: UIViewController,
                 let episodeFile = rowdic["episodeFile"] as! Dictionary<String,Any>
                 //print(episodeFile)
                 
-                //create WebDAV prefix+host+port
-                var udurlstr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!
+                //create API url for getting host
+                var udurlstr = ""
+                //add prefix to http
                 udurlstr = addPrefix(url: udurlstr)
+                //add basic auth info
+                udurlstr = addBasicAuth(url: udurlstr)
+                //then append host name and port
+                udurlstr.append(UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
+                
+                //replace api host port to WebDAV port
                 let webdav_port = UserDefaults.init(suiteName: UD_SUITE_NAME)!.integer(forKey: UD_SONARR_WEBDAV_PORT)
                 let udurl = URL(string: udurlstr)
                 var udurldomian:String = udurl!.host!
                 udurldomian.append(":\(webdav_port)")
                 var videourl = "\(udurldomian)"
+                
+                //add prefix back
                 videourl = addPrefix(url: videourl)
                 
                 //add video full path
@@ -405,7 +414,7 @@ class BangumiDetailViewController: UIViewController,
 
 
 
-        // MARK: - Video
+        // MARK: - Video Player
         func startPlayVideo(fromURL: String, seekTime: Double) {
             let player = AVPlayer(url: URL(string: urlEncode(string: fromURL))!)
             player.currentItem?.externalMetadata = makeExternalMetadata()
