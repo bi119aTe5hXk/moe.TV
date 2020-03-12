@@ -309,26 +309,29 @@ class BangumiDetailViewController: UIViewController,
                 var udurlstr = ""
                 //add prefix to http
                 udurlstr = addPrefix(url: udurlstr)
-                //add basic auth info
-                udurlstr = addBasicAuth(url: udurlstr)
                 //then append host name and port
                 udurlstr.append(UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
                 
                 //replace api host port to WebDAV port
                 let webdav_port = UserDefaults.init(suiteName: UD_SUITE_NAME)!.integer(forKey: UD_SONARR_WEBDAV_PORT)
                 let udurl = URL(string: udurlstr)
-                var udurldomian:String = udurl!.host!
+                var udurldomian:String = ""
+                //add basic auth info
+                udurldomian = addBasicAuth(url: udurldomian)
+                //add host name
+                udurldomian.append(udurl!.host!)
+                //add webdav port
                 udurldomian.append(":\(webdav_port)")
-                var videourl = "\(udurldomian)"
-                
                 //add prefix back
-                videourl = addPrefix(url: videourl)
+                udurldomian = addPrefix(url: udurldomian)
+                
+                var videourl = "\(udurldomian)"
                 
                 //add video full path
                 videourl.append("/")
                 videourl.append(episodeFile["path"] as! String)
                 
-                //remove local path
+                //replace local path with WebDAV path
                 SonarrGetRootFolder {
                     (isSucceeded, result) in
                     if isSucceeded {
@@ -336,10 +339,12 @@ class BangumiDetailViewController: UIViewController,
                         let dic = arr[0] as! Dictionary<String,Any>
                         let path = dic["path"] as! String
                         
+                        //replace HTML encoding
                         videourl = videourl.replacingOccurrences(of: path, with: "")
                         let urlStr = videourl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
                         print(urlStr)
                         
+                        //check playable
                         let playableExtensions = ["mp4", "mov", "m4v"]
                         let url: URL? = NSURL(fileURLWithPath: urlStr) as URL
                         let pathExtention = url?.pathExtension
@@ -358,6 +363,7 @@ class BangumiDetailViewController: UIViewController,
 //                                UIApplication.shared.open(vlcUrl1!, options: [:], completionHandler: nil)
 //                            }
                             
+                            //using VLC player
                             let media: VLCMedia = VLCMedia(url: URL(string: urlStr)!)
                             let player = VLCMediaPlayer()
                             player.media = media
