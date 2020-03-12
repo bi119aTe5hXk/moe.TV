@@ -80,7 +80,16 @@ func addPrefix(url:String) -> String{
         }
     return urlstr
 }
-
+func addBasicAuth(url:String) -> String{
+    var urlstr = url
+    if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_SONARR_USINGBASICAUTH) {
+        let username = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_USERNAME)
+        let password = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_PASSWORD)
+        //urlstr  = "\(username!):\(password!)@"
+        urlstr.append("\(username!):\(password!)@")
+    }
+    return urlstr
+}
 
 
 // MARK: - Albireo Server
@@ -341,19 +350,14 @@ func SonarrAddAPIKEY(url:String)->String{
 }
 func SonarrURL()->String{
     var urlstr = ""
-    
-    //add http basic auth info if needed
-    if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_SONARR_USINGBASICAUTH) {
-        let username = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_USERNAME)
-        let password = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_PASSWORD)
-        urlstr  = "\(username!):\(password!)@"
-    }
-    
-    //append host name and port
-    urlstr.append(UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
-    
     //add http/https prefix
     urlstr = addPrefix(url: urlstr)
+    
+    //add basic auth info
+    urlstr = addBasicAuth(url: urlstr)
+    
+    //then append host name and port
+    urlstr.append(UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     
     return urlstr
 }

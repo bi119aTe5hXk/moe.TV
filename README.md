@@ -9,7 +9,9 @@ Just input your server domain and login in using your authentication info.
 
 1. Setup your Sonarr and WebDAV service on your server, you can install [WebDAVNav Server](https://apps.apple.com/us/app/webdavnav-server/id747482894?mt=12) if you are using macOS as your service Server.
 
-2. Set the download path within Sonarr as your WebDAV shared folder. Such as /Macintosh HD/Users/your_user_name/Downloads/sonarr/. The sub-folders should be the series name.
+2. Set the download path within Sonarr as your WebDAV shared folder. Such as /Macintosh HD/Users/your_user_name/Downloads/sonarr/. The sub-folders should be the series name. 
+
+- Note: Authentication on both Sonarr and WebDAV only support HTTP basic authentication which is browser popup. And both Sonarr and WebDAV basic authentication enable or disable at the same time, i,e you can't enable Sonarr basic authentication and disable WebDAV authentication. And Digest authentication in WebDAV is not support, don't check that box in WebDAVNav Server's Authentication page.
 
 3. Login moe.TV client with your Sonarr service info.
 

@@ -15,25 +15,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_SAVED_COOKIES : []])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_TOPSHELF_ARR : []])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_LOGEDIN : false])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_SERVICE_TYPE : "albireo"])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_SERVER_ADDR : ""])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_PROXY_SERVER : ""])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_PROXY_PORT : ""])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_SONARR_APIKEY : ""])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_SONARR_USERNAME : ""])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_SONARR_PASSWORD : ""])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_SONARR_ROOTFOLDER : ""])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_USING_HTTPS : true])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_SONARR_WEBDAV_PORT : 0])
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.register(defaults: [UD_SONARR_USINGBASICAUTH : false])
+        
+        let ud = UserDefaults.init(suiteName: UD_SUITE_NAME)!
+        ud.register(defaults: [UD_SAVED_COOKIES : []])
+        ud.register(defaults: [UD_TOPSHELF_ARR : []])
+        ud.register(defaults: [UD_LOGEDIN : false])
+        ud.register(defaults: [UD_SERVICE_TYPE : "albireo"])
+        ud.register(defaults: [UD_SERVER_ADDR : ""])
+        ud.register(defaults: [UD_PROXY_SERVER : ""])
+        ud.register(defaults: [UD_PROXY_PORT : ""])
+        ud.register(defaults: [UD_SONARR_APIKEY : ""])
+        ud.register(defaults: [UD_SONARR_USERNAME : ""])
+        ud.register(defaults: [UD_SONARR_PASSWORD : ""])
+        ud.register(defaults: [UD_SONARR_ROOTFOLDER : ""])
+        ud.register(defaults: [UD_USING_HTTPS : true])
+        ud.register(defaults: [UD_SONARR_WEBDAV_PORT : 0])
+        ud.register(defaults: [UD_SONARR_USINGBASICAUTH : false])
         
         //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
         
         if let tabController = window?.rootViewController as? UITabBarController {
-            tabController.viewControllers?.append(packagedSearchController())
+            let serviceType = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVICE_TYPE)!
+            if serviceType == "albireo"{
+                tabController.viewControllers?.append(packagedSearchController())
+            }else if serviceType == "sonarr" {
+                
+            }else{
+                print("Error: Service type unknown.")
+            }
+            
         }
         
         let audioSession = AVAudioSession.sharedInstance()
@@ -83,6 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      A method demonstrating how to encapsulate a `UISearchController` for presentation in, for example, a `UITabBarController`
      */
     func packagedSearchController() -> UIViewController {
+        
         // Load a `SearchResultsViewController` from its storyboard.
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let searchResultsController = storyboard.instantiateViewController(withIdentifier: SearchResultsViewController.storyboardIdentifier) as? SearchResultsViewController else {
@@ -104,6 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Finally contain the `UISearchContainerViewController` in a `UINavigationController`.
         let searchNavigationController = UINavigationController(rootViewController: searchContainer)
         return searchNavigationController
+        
     }
 }
 

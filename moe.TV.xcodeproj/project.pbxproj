@@ -54,7 +54,30 @@
 		86FC70542419445A00CC4F2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70532419445A00CC4F2A /* QuartzCore.framework */; };
 		86FC70562419446200CC4F2A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70552419446200CC4F2A /* Security.framework */; };
 		86FC70582419446900CC4F2A /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70572419446900CC4F2A /* VideoToolbox.framework */; };
-		86FC706124194D1900CC4F2A /* TVVLCPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC706024194D1900CC4F2A /* TVVLCPlayerViewController.swift */; };
+		86FC70F22419674F00CC4F2A /* SubtitlesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70D82419674E00CC4F2A /* SubtitlesViewController.swift */; };
+		86FC70F32419674F00CC4F2A /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70D92419674E00CC4F2A /* AudioViewController.swift */; };
+		86FC70F42419674F00CC4F2A /* PanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70DA2419674E00CC4F2A /* PanelViewController.swift */; };
+		86FC70F52419674F00CC4F2A /* SlideAnimatedTransitioner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70DB2419674E00CC4F2A /* SlideAnimatedTransitioner.swift */; };
+		86FC70F62419674F00CC4F2A /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70DC2419674E00CC4F2A /* InfoViewController.swift */; };
+		86FC70F72419674F00CC4F2A /* GlowingFocusTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70DD2419674E00CC4F2A /* GlowingFocusTabBar.swift */; };
+		86FC70F82419674F00CC4F2A /* VLCMediaPlayer+indexed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70DF2419674E00CC4F2A /* VLCMediaPlayer+indexed.swift */; };
+		86FC70F92419674F00CC4F2A /* SelectableCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70E02419674E00CC4F2A /* SelectableCollection.swift */; };
+		86FC70FA2419674F00CC4F2A /* SelectableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70E12419674E00CC4F2A /* SelectableTableViewCell.swift */; };
+		86FC70FB2419674F00CC4F2A /* VLCMediaPlayer+Equalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70E22419674E00CC4F2A /* VLCMediaPlayer+Equalizer.swift */; };
+		86FC70FC2419674F00CC4F2A /* VLCMediaPlayer+Delay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70E32419674E00CC4F2A /* VLCMediaPlayer+Delay.swift */; };
+		86FC70FD2419674F00CC4F2A /* SelectorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70E42419674E00CC4F2A /* SelectorTableViewController.swift */; };
+		86FC70FE2419674F00CC4F2A /* VLCPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70E52419674E00CC4F2A /* VLCPlayerViewController.swift */; };
+		86FC70FF2419674F00CC4F2A /* RemoteActionPositionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70E72419674E00CC4F2A /* RemoteActionPositionController.swift */; };
+		86FC71002419674F00CC4F2A /* ScrubbingPositionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70E82419674E00CC4F2A /* ScrubbingPositionController.swift */; };
+		86FC71012419674F00CC4F2A /* PositionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70E92419674E00CC4F2A /* PositionController.swift */; };
+		86FC71022419674F00CC4F2A /* TouchGestureRecogniser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70EB2419674E00CC4F2A /* TouchGestureRecogniser.swift */; };
+		86FC71032419674F00CC4F2A /* LongPressGestureRecogniser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70EC2419674E00CC4F2A /* LongPressGestureRecogniser.swift */; };
+		86FC71042419674F00CC4F2A /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70EE2419674E00CC4F2A /* ProgressBar.swift */; };
+		86FC71052419674F00CC4F2A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70EF2419674E00CC4F2A /* Theme.swift */; };
+		86FC71062419674F00CC4F2A /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70F02419674E00CC4F2A /* GradientView.swift */; };
+		86FC71072419674F00CC4F2A /* VLC+time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70F12419674E00CC4F2A /* VLC+time.swift */; };
+		86FC710B2419676400CC4F2A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86FC71092419676400CC4F2A /* Images.xcassets */; };
+		86FC710C2419676400CC4F2A /* TVVLCPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86FC710A2419676400CC4F2A /* TVVLCPlayer.storyboard */; };
 		95376A09ABC191E90E5F6598 /* Pods_moe_TV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D9F2B0F40A0066C8BD6CD7 /* Pods_moe_TV.framework */; };
 /* End PBXBuildFile section */
 
@@ -152,7 +175,30 @@
 		86FC70532419445A00CC4F2A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		86FC70552419446200CC4F2A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		86FC70572419446900CC4F2A /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
-		86FC706024194D1900CC4F2A /* TVVLCPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVVLCPlayerViewController.swift; sourceTree = "<group>"; };
+		86FC70D82419674E00CC4F2A /* SubtitlesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubtitlesViewController.swift; sourceTree = "<group>"; };
+		86FC70D92419674E00CC4F2A /* AudioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioViewController.swift; sourceTree = "<group>"; };
+		86FC70DA2419674E00CC4F2A /* PanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanelViewController.swift; sourceTree = "<group>"; };
+		86FC70DB2419674E00CC4F2A /* SlideAnimatedTransitioner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimatedTransitioner.swift; sourceTree = "<group>"; };
+		86FC70DC2419674E00CC4F2A /* InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		86FC70DD2419674E00CC4F2A /* GlowingFocusTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlowingFocusTabBar.swift; sourceTree = "<group>"; };
+		86FC70DF2419674E00CC4F2A /* VLCMediaPlayer+indexed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VLCMediaPlayer+indexed.swift"; sourceTree = "<group>"; };
+		86FC70E02419674E00CC4F2A /* SelectableCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectableCollection.swift; sourceTree = "<group>"; };
+		86FC70E12419674E00CC4F2A /* SelectableTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectableTableViewCell.swift; sourceTree = "<group>"; };
+		86FC70E22419674E00CC4F2A /* VLCMediaPlayer+Equalizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VLCMediaPlayer+Equalizer.swift"; sourceTree = "<group>"; };
+		86FC70E32419674E00CC4F2A /* VLCMediaPlayer+Delay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VLCMediaPlayer+Delay.swift"; sourceTree = "<group>"; };
+		86FC70E42419674E00CC4F2A /* SelectorTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectorTableViewController.swift; sourceTree = "<group>"; };
+		86FC70E52419674E00CC4F2A /* VLCPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VLCPlayerViewController.swift; sourceTree = "<group>"; };
+		86FC70E72419674E00CC4F2A /* RemoteActionPositionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteActionPositionController.swift; sourceTree = "<group>"; };
+		86FC70E82419674E00CC4F2A /* ScrubbingPositionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrubbingPositionController.swift; sourceTree = "<group>"; };
+		86FC70E92419674E00CC4F2A /* PositionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionController.swift; sourceTree = "<group>"; };
+		86FC70EB2419674E00CC4F2A /* TouchGestureRecogniser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchGestureRecogniser.swift; sourceTree = "<group>"; };
+		86FC70EC2419674E00CC4F2A /* LongPressGestureRecogniser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LongPressGestureRecogniser.swift; sourceTree = "<group>"; };
+		86FC70EE2419674E00CC4F2A /* ProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
+		86FC70EF2419674E00CC4F2A /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		86FC70F02419674E00CC4F2A /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		86FC70F12419674E00CC4F2A /* VLC+time.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VLC+time.swift"; sourceTree = "<group>"; };
+		86FC71092419676400CC4F2A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		86FC710A2419676400CC4F2A /* TVVLCPlayer.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TVVLCPlayer.storyboard; sourceTree = "<group>"; };
 		9540BDDE439A0448A9EC39E5 /* Pods-moe.TV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moe.TV.debug.xcconfig"; path = "Target Support Files/Pods-moe.TV/Pods-moe.TV.debug.xcconfig"; sourceTree = "<group>"; };
 		FFA57A089ABF24539A4A3C62 /* Pods-moe.TV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moe.TV.release.xcconfig"; path = "Target Support Files/Pods-moe.TV/Pods-moe.TV.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -261,7 +307,6 @@
 				4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */,
 				47433AE02306C1AC007794E1 /* OnAirListViewController.swift */,
 				4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */,
-				86FC706024194D1900CC4F2A /* TVVLCPlayerViewController.swift */,
 				47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */,
 				471BBB15230DBE5D00CD5D73 /* SettingsViewController.swift */,
 				86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */,
@@ -324,8 +369,88 @@
 				86D97C992301CF6E00CF5F03 /* Assets.xcassets */,
 				86D97C9B2301CF6E00CF5F03 /* Info.plist */,
 				86FC7025241933D900CC4F2A /* Bridging-Header.h */,
+				86FC70D62419674E00CC4F2A /* TVVLCPlayer */,
 			);
 			path = moe.TV;
+			sourceTree = "<group>";
+		};
+		86FC70D62419674E00CC4F2A /* TVVLCPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				86FC71082419676400CC4F2A /* Resources */,
+				86FC70D72419674E00CC4F2A /* Panel */,
+				86FC70E52419674E00CC4F2A /* VLCPlayerViewController.swift */,
+				86FC70E62419674E00CC4F2A /* Position */,
+				86FC70EA2419674E00CC4F2A /* Gesture */,
+				86FC70ED2419674E00CC4F2A /* Views */,
+				86FC70F12419674E00CC4F2A /* VLC+time.swift */,
+			);
+			path = TVVLCPlayer;
+			sourceTree = "<group>";
+		};
+		86FC70D72419674E00CC4F2A /* Panel */ = {
+			isa = PBXGroup;
+			children = (
+				86FC70D82419674E00CC4F2A /* SubtitlesViewController.swift */,
+				86FC70D92419674E00CC4F2A /* AudioViewController.swift */,
+				86FC70DA2419674E00CC4F2A /* PanelViewController.swift */,
+				86FC70DB2419674E00CC4F2A /* SlideAnimatedTransitioner.swift */,
+				86FC70DC2419674E00CC4F2A /* InfoViewController.swift */,
+				86FC70DD2419674E00CC4F2A /* GlowingFocusTabBar.swift */,
+				86FC70DE2419674E00CC4F2A /* Selection */,
+			);
+			path = Panel;
+			sourceTree = "<group>";
+		};
+		86FC70DE2419674E00CC4F2A /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+				86FC70DF2419674E00CC4F2A /* VLCMediaPlayer+indexed.swift */,
+				86FC70E02419674E00CC4F2A /* SelectableCollection.swift */,
+				86FC70E12419674E00CC4F2A /* SelectableTableViewCell.swift */,
+				86FC70E22419674E00CC4F2A /* VLCMediaPlayer+Equalizer.swift */,
+				86FC70E32419674E00CC4F2A /* VLCMediaPlayer+Delay.swift */,
+				86FC70E42419674E00CC4F2A /* SelectorTableViewController.swift */,
+			);
+			path = Selection;
+			sourceTree = "<group>";
+		};
+		86FC70E62419674E00CC4F2A /* Position */ = {
+			isa = PBXGroup;
+			children = (
+				86FC70E72419674E00CC4F2A /* RemoteActionPositionController.swift */,
+				86FC70E82419674E00CC4F2A /* ScrubbingPositionController.swift */,
+				86FC70E92419674E00CC4F2A /* PositionController.swift */,
+			);
+			path = Position;
+			sourceTree = "<group>";
+		};
+		86FC70EA2419674E00CC4F2A /* Gesture */ = {
+			isa = PBXGroup;
+			children = (
+				86FC70EB2419674E00CC4F2A /* TouchGestureRecogniser.swift */,
+				86FC70EC2419674E00CC4F2A /* LongPressGestureRecogniser.swift */,
+			);
+			path = Gesture;
+			sourceTree = "<group>";
+		};
+		86FC70ED2419674E00CC4F2A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				86FC70EE2419674E00CC4F2A /* ProgressBar.swift */,
+				86FC70EF2419674E00CC4F2A /* Theme.swift */,
+				86FC70F02419674E00CC4F2A /* GradientView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		86FC71082419676400CC4F2A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				86FC71092419676400CC4F2A /* Images.xcassets */,
+				86FC710A2419676400CC4F2A /* TVVLCPlayer.storyboard */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -457,6 +582,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86FC710B2419676400CC4F2A /* Images.xcassets in Resources */,
+				86FC710C2419676400CC4F2A /* TVVLCPlayer.storyboard in Resources */,
 				86D97C9A2301CF6E00CF5F03 /* Assets.xcassets in Resources */,
 				86D97C982301CF6B00CF5F03 /* Main.storyboard in Resources */,
 			);
@@ -512,23 +639,44 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86FC706124194D1900CC4F2A /* TVVLCPlayerViewController.swift in Sources */,
+				86FC71062419674F00CC4F2A /* GradientView.swift in Sources */,
+				86FC70F72419674F00CC4F2A /* GlowingFocusTabBar.swift in Sources */,
 				4775A9FA2306BA1700B84382 /* BangumiCell.swift in Sources */,
+				86FC70FE2419674F00CC4F2A /* VLCPlayerViewController.swift in Sources */,
 				4775A9F22305C60300B84382 /* TabbarViewController.swift in Sources */,
 				47433AE12306C1AC007794E1 /* OnAirListViewController.swift in Sources */,
+				86FC71012419674F00CC4F2A /* PositionController.swift in Sources */,
+				86FC70FD2419674F00CC4F2A /* SelectorTableViewController.swift in Sources */,
 				4775A9F02305C5C400B84382 /* SplitViewController.swift in Sources */,
 				47CB0CB1230E6604008D3034 /* SummaryDetailViewController.swift in Sources */,
+				86FC71022419674F00CC4F2A /* TouchGestureRecogniser.swift in Sources */,
 				86924768234F4F3D00B1C667 /* UDkey.swift in Sources */,
 				86D97CC02301D5F900CF5F03 /* LoginViewController.swift in Sources */,
+				86FC70FC2419674F00CC4F2A /* VLCMediaPlayer+Delay.swift in Sources */,
 				86D97CBE2301CFF800CF5F03 /* SearchResultsViewController.swift in Sources */,
+				86FC71072419674F00CC4F2A /* VLC+time.swift in Sources */,
 				86D97C912301CF6B00CF5F03 /* AppDelegate.swift in Sources */,
+				86FC70F22419674F00CC4F2A /* SubtitlesViewController.swift in Sources */,
+				86FC70FB2419674F00CC4F2A /* VLCMediaPlayer+Equalizer.swift in Sources */,
 				4775A9F62306B3A500B84382 /* MyBangumiListViewController.swift in Sources */,
+				86FC70FA2419674F00CC4F2A /* SelectableTableViewCell.swift in Sources */,
+				86FC70F62419674F00CC4F2A /* InfoViewController.swift in Sources */,
 				471BBB18230DC95E00CD5D73 /* ProxySettingViewController.swift in Sources */,
+				86FC71042419674F00CC4F2A /* ProgressBar.swift in Sources */,
+				86FC70F52419674F00CC4F2A /* SlideAnimatedTransitioner.swift in Sources */,
 				471A1E3D231BF4010082F1E0 /* Extensions.swift in Sources */,
+				86FC71052419674F00CC4F2A /* Theme.swift in Sources */,
+				86FC70FF2419674F00CC4F2A /* RemoteActionPositionController.swift in Sources */,
+				86FC71032419674F00CC4F2A /* LongPressGestureRecogniser.swift in Sources */,
+				86FC70F32419674F00CC4F2A /* AudioViewController.swift in Sources */,
+				86FC70F92419674F00CC4F2A /* SelectableCollection.swift in Sources */,
 				863CF9F8230594F800CA958F /* ServerHandler.swift in Sources */,
 				47D4490D230C69F4000F8C6C /* EPCell.swift in Sources */,
 				4775A9EE2305C30400B84382 /* BangumiDetailViewController.swift in Sources */,
+				86FC71002419674F00CC4F2A /* ScrubbingPositionController.swift in Sources */,
+				86FC70F82419674F00CC4F2A /* VLCMediaPlayer+indexed.swift in Sources */,
 				471BBB16230DBE5D00CD5D73 /* SettingsViewController.swift in Sources */,
+				86FC70F42419674F00CC4F2A /* PanelViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,7 +713,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_ENTITLEMENTS = topshelf/topshelf.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202003110424;
+				CURRENT_PROJECT_VERSION = 202003121505;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = topshelf/Info.plist;
@@ -592,7 +740,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_ENTITLEMENTS = topshelf/topshelf.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202003110424;
+				CURRENT_PROJECT_VERSION = 202003121505;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = topshelf/Info.plist;
@@ -618,7 +766,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = topshelfold/topshelfold.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202003110424;
+				CURRENT_PROJECT_VERSION = 202003121505;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				INFOPLIST_FILE = topshelfold/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -643,7 +791,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = topshelfold/topshelfold.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202003110424;
+				CURRENT_PROJECT_VERSION = 202003121505;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				INFOPLIST_FILE = topshelfold/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -786,7 +934,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202003110424;
+				CURRENT_PROJECT_VERSION = 202003121505;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -816,7 +964,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202003110424;
+				CURRENT_PROJECT_VERSION = 202003121505;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
