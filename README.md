@@ -1,6 +1,8 @@
 # moe.TV
 An [Albireo](https://github.com/lordfriend/Albireo) & [Sonarr](https://sonarr.tv/) client which can watch bangumis / videos on your tvOS devices.
 
+Try it out on your AppleTV via [TestFlight](https://testflight.apple.com/join/86IoKxV6)!
+
 ## How to use (for Albireo)
 
 Just input your server domain and login in using your authentication info.
