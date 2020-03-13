@@ -27,7 +27,7 @@ class SettingsViewController: UIViewController {
             UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
             
             //cleanup bgmlist
-            let mybgmvc = self.storyboard?.instantiateViewController(withIdentifier: "MyBangumiListViewController") as! MyBangumiListViewController
+            let mybgmvc = self.storyboard?.instantiateViewController(withIdentifier: "SubscriptionListViewController") as! SubscriptionListViewController
             mybgmvc.bgmList = []
             let onairvc = self.storyboard?.instantiateViewController(withIdentifier: "OnAirListViewController") as! OnAirListViewController
             onairvc.bgmList = []

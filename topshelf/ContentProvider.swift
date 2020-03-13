@@ -113,33 +113,33 @@ class ContentProvider: TVTopShelfContentProvider {
         }
     }
     
-    func SonarrURL()->String{
-        var urlstr = ""
-        
-        //add http basic auth info if needed
-        if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_SONARR_USINGBASICAUTH) {
-            let username = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_USERNAME)
-            let password = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_PASSWORD)
-            urlstr  = "\(username!):\(password!)@"
-        }
-        
-        //append host name and port
-        urlstr.append((UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!))
-        
-        //add http/https prefix
-        urlstr = addPrefix(url: urlstr)
-        
-        return urlstr
-    }
-    func addPrefix(url:String) -> String{
-        var urlstr = url
-        if (UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_USING_HTTPS)){
-                urlstr = "https://" + urlstr
-            }else{
-                urlstr = "http://" + urlstr
-            }
-        return urlstr
-    }
+//    func SonarrURL()->String{
+//        var urlstr = ""
+//        
+//        //add http basic auth info if needed
+//        if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_SONARR_USINGBASICAUTH) {
+//            let username = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_USERNAME)
+//            let password = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_PASSWORD)
+//            urlstr  = "\(username!):\(password!)@"
+//        }
+//        
+//        //append host name and port
+//        urlstr.append((UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!))
+//        
+//        //add http/https prefix
+//        urlstr = addPrefix(url: urlstr)
+//        
+//        return urlstr
+//    }
+//    func addPrefix(url:String) -> String{
+//        var urlstr = url
+//        if (UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_USING_HTTPS)){
+//                urlstr = "https://" + urlstr
+//            }else{
+//                urlstr = "http://" + urlstr
+//            }
+//        return urlstr
+//    }
 }
 
 

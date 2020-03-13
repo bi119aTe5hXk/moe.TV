@@ -11,7 +11,7 @@ import Alamofire
 import AlamofireImage
 private let reuseIdentifier = "Cell"
 
-class MyBangumiListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class SubscriptionListViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var bgmList: Array<Any> = []
     var serviceType = ""
 
