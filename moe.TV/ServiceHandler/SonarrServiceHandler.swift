@@ -5,9 +5,29 @@
 //  Created by billgateshxk on 2020/03/13.
 //  Copyright © 2020 bi119aTe5hXk. All rights reserved.
 //
+//  Doc for Sonarr: https://github.com/Sonarr/Sonarr/wiki/API
 
 import Foundation
+
 // MARK: - Sonarr Service
+
+//Sonarr
+let UD_SONARR_APIKEY = "sonarr_api_key"
+let UD_SONARR_USINGBASICAUTH = "sonarr_basic_auth"
+let UD_SONARR_USERNAME = "sonarr_username"
+let UD_SONARR_PASSWORD = "sonarr_password"
+let UD_SONARR_WEBDAV_PORT = "sonarr_webdav_port"
+let UD_SONARR_ROOTFOLDER = "sonarr_rootfolder"
+
+func SonarrRegisterUserDefault(){
+    let ud = UserDefaults.init(suiteName: UD_SUITE_NAME)!
+    ud.register(defaults: [UD_SONARR_APIKEY : ""])
+    ud.register(defaults: [UD_SONARR_USERNAME : ""])
+    ud.register(defaults: [UD_SONARR_PASSWORD : ""])
+    ud.register(defaults: [UD_SONARR_ROOTFOLDER : ""])
+    ud.register(defaults: [UD_SONARR_WEBDAV_PORT : 0])
+    ud.register(defaults: [UD_SONARR_USINGBASICAUTH : false])
+}
 
 
 func SonarrAddAPIKEY(url:String)->String{

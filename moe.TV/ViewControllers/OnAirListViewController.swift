@@ -74,7 +74,6 @@ class OnAirListViewController: UICollectionViewController,UICollectionViewDelega
                             if isSucceeded {
                                 self.bgmList = result as! Array<Any>
                                 self.collectionView.reloadData()
-                                UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(self.bgmList, forKey: UD_TOPSHELF_ARR)
                             }else{
                                 print(result as Any)
                                 let err = result as! String

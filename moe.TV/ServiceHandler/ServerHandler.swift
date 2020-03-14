@@ -4,8 +4,6 @@
 //
 //  Created by billgateshxk on 2019/08/15.
 //  Copyright © 2019 bi119aTe5hXk. All rights reserved.
-//  Doc for Albireo: https://albireo.docs.apiary.io/
-//  Doc for Sonarr: https://github.com/Sonarr/Sonarr/wiki/API
 //
 import Alamofire
 import Foundation
@@ -23,6 +21,7 @@ func saveCookies(response: DataResponse<Any,AFError>) {
     UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(cookieArray, forKey: UD_SAVED_COOKIES)
     UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
 }
+
 func loadCookies() {
     guard let cookieArray = UserDefaults.init(suiteName: UD_SUITE_NAME)?.array(forKey: UD_SAVED_COOKIES) as? [[HTTPCookiePropertyKey: Any]] else { return }
     for cookieProperties in cookieArray {
@@ -34,11 +33,6 @@ func loadCookies() {
 
 func cancelRequest(){
     requestManager.cancelAllRequests()
-//    Alamofire.Session.default.session.getTasksWithCompletionHandler({ dataTasks, uploadTasks, downloadTasks in
-//    dataTasks.forEach { $0.cancel() }
-//    uploadTasks.forEach { $0.cancel() }
-//    downloadTasks.forEach { $0.cancel() }
-//    })
 }
 
 func initNetwork() {
@@ -54,7 +48,6 @@ func initNetwork() {
             proxyConfiguration[kCFNetworkProxiesHTTPPort] = proxyPort as AnyObject?
             proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 1 as AnyObject?
         }else{
-            //print("GoWithoutProxy")
             proxyConfiguration[kCFNetworkProxiesHTTPProxy] = "" as AnyObject?
             proxyConfiguration[kCFNetworkProxiesHTTPPort] = "" as AnyObject?
             proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 0 as AnyObject?
@@ -69,12 +62,6 @@ func initNetwork() {
 }
 
 func addPrefix(url:String) -> String{
-        //var url:String = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!
-//        if (!urlstr.uppercased().hasPrefix("http://".uppercased()) &&
-//            !urlstr.uppercased().hasPrefix("https://".uppercased())){
-//            print("URL \(urlstr) has no prefix fond, add https as default")
-//            urlstr = "https://" + urlstr //use https as default
-//        }
     var urlstr = url
         if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_USING_HTTPS){
             urlstr = "https://" + urlstr
@@ -83,18 +70,16 @@ func addPrefix(url:String) -> String{
         }
     return urlstr
 }
+
 func addBasicAuth(url:String) -> String{
     var urlstr = url
     if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_SONARR_USINGBASICAUTH) {
         let username = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_USERNAME)
         let password = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_PASSWORD)
-        //urlstr  = "\(username!):\(password!)@"
         urlstr.append("\(username!):\(password!)@")
     }
     return urlstr
 }
-
-
 
 func connectToService(urlString:String, method:HTTPMethod, postdata:Dictionary<String,Any>?, responseType:String, completion: @escaping (Bool, Any?) -> Void){
     requestManager.request(urlString, method: method, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
@@ -124,5 +109,11 @@ func connectToService(urlString:String, method:HTTPMethod, postdata:Dictionary<S
             break
         }
     }
-    
+}
+
+
+// MARK: - Custom Service
+
+func initService(){
+    SonarrRegisterUserDefault()
 }

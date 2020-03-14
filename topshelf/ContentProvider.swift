@@ -43,7 +43,7 @@ class ContentProvider: TVTopShelfContentProvider {
                 }
 
             } else {
-                print("MyBangumiList loadData Error: Service type unknown.")
+                print("Subscription topshelf loadData Error: Service type unknown.")
                 return
             }
 
@@ -99,7 +99,7 @@ class ContentProvider: TVTopShelfContentProvider {
             }
             
             let collection = TVTopShelfItemCollection(items: items)
-            collection.title = "My Bangumi List"
+            collection.title = "Subscription"
             let itemConllections = [collection]
             
             let content = TVTopShelfSectionedContent(sections: itemConllections as! [TVTopShelfItemCollection<TVTopShelfSectionedItem>])

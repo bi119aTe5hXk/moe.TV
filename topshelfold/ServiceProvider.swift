@@ -78,7 +78,7 @@ class ServiceProvider: NSObject, TVTopShelfProvider {
 
     fileprivate var sectionedTopShelfItems: [TVContentItem]{
         var sectionContentItems: [TVContentItem] = []
-        let sectionTitle = "My Bangumi List"
+        let sectionTitle = "Subscription"
         guard let sectionIdentifier:TVContentIdentifier = TVContentIdentifier(identifier: sectionTitle, container: nil) else { fatalError("Error creating content identifier for section item.") }
         guard let sectionItem:TVContentItem = TVContentItem(contentIdentifier: sectionIdentifier) else { fatalError("Error creating section content item.") }
         
@@ -123,7 +123,7 @@ class ServiceProvider: NSObject, TVTopShelfProvider {
                 }
 
             } else {
-                print("MyBangumiList loadData Error: Service type unknown.")
+                print("Subscription topshelf loadData Error: Service type unknown.")
             }
 
         }

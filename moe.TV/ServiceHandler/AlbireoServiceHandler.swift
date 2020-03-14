@@ -5,6 +5,7 @@
 //  Created by billgateshxk on 2020/03/13.
 //  Copyright © 2020 bi119aTe5hXk. All rights reserved.
 //
+//  Doc for Albireo: https://albireo.docs.apiary.io/
 
 import Foundation
 import Alamofire
