@@ -4,12 +4,13 @@ Watch subscribed videos on your AppleTV.
 Support platform:
 - [Albireo](https://github.com/lordfriend/Albireo)
 - [Sonarr](https://sonarr.tv/)
+- [Add custom services](https://github.com/bi119aTe5hXk/moe.TV#add-custom-service)
 
 Try it out on your AppleTV via [TestFlight](https://testflight.apple.com/join/86IoKxV6)!
 
 ## How to use (for Albireo)
 
-Just login to your server using your authentication info.
+Login in to your server using your authentication info.
 
 ## How to use (for Sonarr)
 
@@ -17,7 +18,7 @@ Just login to your server using your authentication info.
 
 2. Set the download path within Sonarr as your WebDAV shared folder. Such as /Macintosh HD/Users/your_user_name/Downloads/sonarr/. The sub-folders should be the series name. 
 
-- Note: Authentication on both Sonarr and WebDAV only support HTTP basic authentication which is browser popup. And both Sonarr and WebDAV basic authentication enable or disable at the same time, i.e. you can't enable Sonarr basic authentication and disable WebDAV authentication. And Digest authentication in WebDAV is not supported, don't check that box in WebDAVNav Server's Authentication page.
+- Note: Authentication on both Sonarr and WebDAV only support HTTP basic which is browser popup. And both Sonarr and WebDAV authentication have enabled or disabled at the same time, i.e. you can't enable Sonarr authentication and disable the WebDAV's. And Digest authentication in WebDAV is not supported, DO NOT check that box in WebDAVNav Server's Authentication page.
 
 3. Login moe.TV client with your Sonarr service info.
 
@@ -58,5 +59,4 @@ Coming soon...
 
 ## Long term issue
 
-- WebDAV is required for video files transfer in Sonarr mode. Sonarr service does not include WebDAV or script for run services. 3rd part program is required.
-
+- WebDAV is required for video files transfer in Sonarr mode. Sonarr service does not provide WebDAV or script for run services. 3rd part program is required.
