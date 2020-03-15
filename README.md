@@ -1,5 +1,6 @@
 # moe.TV
 Watch subscribed videos on your AppleTV.
+
 Support platform:
 - [Albireo](https://github.com/lordfriend/Albireo)
 - [Sonarr](https://sonarr.tv/)
@@ -8,7 +9,7 @@ Try it out on your AppleTV via [TestFlight](https://testflight.apple.com/join/86
 
 ## How to use (for Albireo)
 
-Just input your server domain and login in using your authentication info.
+Just login to your server using your authentication info.
 
 ## How to use (for Sonarr)
 
@@ -30,17 +31,17 @@ For example:
 
 - WebDAV port:8990
 
-- API key:<On Sonarr server, open [/settings/general](http://127.0.0.1:8989/settings/general)>
+- API key:<In Sonarr server web management page, open [/settings/general](http://127.0.0.1:8989/settings/general)>
 
-4. Hit "Save&Login in", and enjoy your anime night.
+4. Hit the "Save&Login in" button, enjoy your video night.
 
 ## How to Build
 
 1. Clone this project or download the source code and unzip it. And open moe.TV folder.
 
-2. Open Terminal, cd to moe.TV folder's path, and run 'pod install'. Notice that TVVLCKit framework will take about 2GB space and the package download speed is relatively slow.
+2. Open Terminal, cd to moe.TV folder's path, and run 'pod install'. Notice that the TVVLCKit framework will take about 2GB space and the package download speed is relatively slow.
 
-3. Open moe.TV.xcworkspace, Choose your Team for code-signing.
+3. Open "moe.TV.xcworkspace" file, Choose your Team for code-signing.
 
 4. Build and run.
 
