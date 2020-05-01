@@ -45,6 +45,12 @@ class SettingsViewController: UIViewController {
         
         
     }
+    
+    @IBAction func showAccountManagment(_ sender: Any) {
+        
+        
+    }
+    
     /*
     // MARK: - Navigation
 

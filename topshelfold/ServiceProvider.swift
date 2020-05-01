@@ -34,7 +34,7 @@ class ServiceProvider: NSObject, TVTopShelfProvider {
             print("updating topShelf array")
 
             if self.serviceType == "albireo" {
-                AlbireoGetMyBangumiList {
+                AlbireoGetSubscriptionList {
                     (isSucceeded, result) in
                     if isSucceeded {
                     let topShelfArr = result as! Array<Any>
@@ -89,7 +89,7 @@ class ServiceProvider: NSObject, TVTopShelfProvider {
             print("updating topShelf array")
 
             if self.serviceType == "albireo" {
-                AlbireoGetMyBangumiList {
+                AlbireoGetSubscriptionList {
                     (isSucceeded, result) in
                     if isSucceeded {
                     let topShelfArr = result as! Array<Any>

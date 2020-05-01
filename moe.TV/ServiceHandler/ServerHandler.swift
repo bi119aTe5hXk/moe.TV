@@ -112,8 +112,23 @@ func connectToService(urlString:String, method:HTTPMethod, postdata:Dictionary<S
 }
 
 
-// MARK: - Custom Service
+// MARK: - 3rd part Services
+//String for Host Server Address
+let UD_SERVER_ADDR = "serveraddr"
 
-func initService(){
+func initAllService(){
+    let ud = UserDefaults.init(suiteName: UD_SUITE_NAME)!
+    ud.register(defaults: [UD_SAVED_COOKIES : []])
+    
+    ud.register(defaults: [UD_LOGEDIN : false])
+    ud.register(defaults: [UD_SERVICE_TYPE : "albireo"])
+    ud.register(defaults: [UD_SERVER_ADDR : ""])
+    ud.register(defaults: [UD_PROXY_SERVER : ""])
+    ud.register(defaults: [UD_PROXY_PORT : ""])
+    ud.register(defaults: [UD_PROXY_ENABLED : false])
+    
+    ud.register(defaults: [UD_USING_HTTPS : true])
     SonarrRegisterUserDefault()
 }
+
+

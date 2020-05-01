@@ -22,8 +22,7 @@ let UD_SERVICE_TYPE = "servicetype"
 //Bool for Connect Type
 let UD_USING_HTTPS = "usinghttps"
 
-//String for Host Server Address
-let UD_SERVER_ADDR = "serveraddr"
+
 
 
 

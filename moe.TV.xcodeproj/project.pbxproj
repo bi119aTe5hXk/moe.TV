@@ -16,19 +16,25 @@
 		47433AE12306C1AC007794E1 /* OnAirListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47433AE02306C1AC007794E1 /* OnAirListViewController.swift */; };
 		4766B1F8230C750700E5828B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4766B1F7230C750700E5828B /* AVFoundation.framework */; };
 		4766B1FA230C755600E5828B /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4766B1F9230C755600E5828B /* AVKit.framework */; };
-		4766B1FD230C819100E5828B /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 4766B1FC230C819100E5828B /* AlamofireImage */; };
+		4766B1FD230C819100E5828B /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 4766B1FC230C819100E5828B /* AlamofireImage */; settings = {ATTRIBUTES = (Required, ); }; };
 		4775A9EE2305C30400B84382 /* BangumiDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */; };
 		4775A9F02305C5C400B84382 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9EF2305C5C400B84382 /* SplitViewController.swift */; };
 		4775A9F22305C60300B84382 /* TabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F12305C60300B84382 /* TabbarViewController.swift */; };
 		4775A9F62306B3A500B84382 /* SubscriptionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F52306B3A500B84382 /* SubscriptionListViewController.swift */; };
 		4775A9FA2306BA1700B84382 /* BangumiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F92306BA1700B84382 /* BangumiCell.swift */; };
-		477749102305AAC6002E2D25 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4777490F2305AAC6002E2D25 /* Alamofire */; };
+		477749102305AAC6002E2D25 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4777490F2305AAC6002E2D25 /* Alamofire */; settings = {ATTRIBUTES = (Required, ); }; };
 		47C75368230E54EC0010C0EE /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4706FD7E230A871F00094B78 /* TVServices.framework */; };
 		47C7536B230E54EC0010C0EE /* ServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C7536A230E54EC0010C0EE /* ServiceProvider.swift */; };
 		47C7536F230E54EC0010C0EE /* topshelfold.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 47C75367230E54EC0010C0EE /* topshelfold.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		47CB0CB1230E6604008D3034 /* SummaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */; };
 		47D4490D230C69F4000F8C6C /* EPCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D4490C230C69F4000F8C6C /* EPCell.swift */; };
+		862EE6F4241E28FF004CE585 /* AccountManageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862EE6F3241E28FF004CE585 /* AccountManageViewController.swift */; };
+		862EE6F6241E4E03004CE585 /* SonarrLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862EE6F5241E4E03004CE585 /* SonarrLoginViewController.swift */; };
+		862EE6F8241E4E43004CE585 /* AlbireoLogin.xib in Resources */ = {isa = PBXBuildFile; fileRef = 862EE6F7241E4E43004CE585 /* AlbireoLogin.xib */; };
+		862EE6FA241E4E55004CE585 /* SonarrLogin.xib in Resources */ = {isa = PBXBuildFile; fileRef = 862EE6F9241E4E55004CE585 /* SonarrLogin.xib */; };
 		863CF9F8230594F800CA958F /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
+		866553E724345E07006C4F2E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 866553E624345E07006C4F2E /* Alamofire */; };
+		866553E924345E0D006C4F2E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 866553E824345E0D006C4F2E /* Alamofire */; };
 		86924768234F4F3D00B1C667 /* UDkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86924767234F4F3D00B1C667 /* UDkey.swift */; };
 		86924769234F4F3D00B1C667 /* UDkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86924767234F4F3D00B1C667 /* UDkey.swift */; };
 		8692476A234F4F3D00B1C667 /* UDkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86924767234F4F3D00B1C667 /* UDkey.swift */; };
@@ -38,9 +44,8 @@
 		86D97C982301CF6B00CF5F03 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86D97C962301CF6B00CF5F03 /* Main.storyboard */; };
 		86D97C9A2301CF6E00CF5F03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86D97C992301CF6E00CF5F03 /* Assets.xcassets */; };
 		86D97CBE2301CFF800CF5F03 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */; };
-		86D97CC02301D5F900CF5F03 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97CBF2301D5F900CF5F03 /* LoginViewController.swift */; };
+		86D97CC02301D5F900CF5F03 /* AlbireoLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97CBF2301D5F900CF5F03 /* AlbireoLoginViewController.swift */; };
 		86FC703B241943E100CC4F2A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC703A241943E100CC4F2A /* AudioToolbox.framework */; };
-		86FC703C241943E800CC4F2A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4766B1F7230C750700E5828B /* AVFoundation.framework */; };
 		86FC703E241943F000CC4F2A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC703D241943F000CC4F2A /* CFNetwork.framework */; };
 		86FC7040241943F800CC4F2A /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC703F241943F800CC4F2A /* CoreFoundation.framework */; };
 		86FC70422419440000CC4F2A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FC70412419440000CC4F2A /* CoreGraphics.framework */; };
@@ -78,8 +83,6 @@
 		86FC71072419674F00CC4F2A /* VLC+time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70F12419674E00CC4F2A /* VLC+time.swift */; };
 		86FC710B2419676400CC4F2A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86FC71092419676400CC4F2A /* Images.xcassets */; };
 		86FC710C2419676400CC4F2A /* TVVLCPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86FC710A2419676400CC4F2A /* TVVLCPlayer.storyboard */; };
-		86FC7110241A760A00CC4F2A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 86FC710F241A760A00CC4F2A /* Alamofire */; };
-		86FC7112241A760F00CC4F2A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 86FC7111241A760F00CC4F2A /* Alamofire */; };
 		86FC7113241A761500CC4F2A /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
 		86FC7114241A761500CC4F2A /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
 		86FC7116241BB15700CC4F2A /* SonarrServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7115241BB15700CC4F2A /* SonarrServiceHandler.swift */; };
@@ -88,7 +91,7 @@
 		86FC711B241BB4CE00CC4F2A /* AlbireoServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7117241BB17200CC4F2A /* AlbireoServiceHandler.swift */; };
 		86FC711C241BB4CE00CC4F2A /* SonarrServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7115241BB15700CC4F2A /* SonarrServiceHandler.swift */; };
 		86FC711D241BB4CE00CC4F2A /* AlbireoServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7117241BB17200CC4F2A /* AlbireoServiceHandler.swift */; };
-		95376A09ABC191E90E5F6598 /* Pods_moe_TV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D9F2B0F40A0066C8BD6CD7 /* Pods_moe_TV.framework */; };
+		BAAA708F80F25A777B36A483 /* Pods_moe_TV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A582C58B45952594B621D44 /* Pods_moe_TV.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,19 +124,10 @@
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		86FC705D241945B800CC4F2A /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1A582C58B45952594B621D44 /* Pods_moe_TV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_moe_TV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4706FD7C230A871F00094B78 /* topshelf.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = topshelf.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4706FD7E230A871F00094B78 /* TVServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVServices.framework; path = System/Library/Frameworks/TVServices.framework; sourceTree = SDKROOT; };
 		4706FD81230A871F00094B78 /* ContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentProvider.swift; sourceTree = "<group>"; };
@@ -157,16 +151,20 @@
 		47C75373230E5C5A0010C0EE /* topshelfold.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = topshelfold.entitlements; sourceTree = "<group>"; };
 		47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryDetailViewController.swift; sourceTree = "<group>"; };
 		47D4490C230C69F4000F8C6C /* EPCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCell.swift; sourceTree = "<group>"; };
-		67D9F2B0F40A0066C8BD6CD7 /* Pods_moe_TV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_moe_TV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		862EE6F3241E28FF004CE585 /* AccountManageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManageViewController.swift; sourceTree = "<group>"; };
+		862EE6F5241E4E03004CE585 /* SonarrLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonarrLoginViewController.swift; sourceTree = "<group>"; };
+		862EE6F7241E4E43004CE585 /* AlbireoLogin.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbireoLogin.xib; sourceTree = "<group>"; };
+		862EE6F9241E4E55004CE585 /* SonarrLogin.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SonarrLogin.xib; sourceTree = "<group>"; };
 		863CF9F7230594F800CA958F /* ServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHandler.swift; sourceTree = "<group>"; };
 		86924767234F4F3D00B1C667 /* UDkey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDkey.swift; sourceTree = "<group>"; };
+		86C3187C245C39370095BC04 /* TVVLCKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVVLCKit.framework; path = Pods/TVVLCKit/TVVLCKit.framework; sourceTree = "<group>"; };
 		86D97C8D2301CF6B00CF5F03 /* moeTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = moeTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		86D97C902301CF6B00CF5F03 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		86D97C972301CF6B00CF5F03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		86D97C992301CF6E00CF5F03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		86D97C9B2301CF6E00CF5F03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		86D97CBD2301CFF800CF5F03 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
-		86D97CBF2301D5F900CF5F03 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		86D97CBF2301D5F900CF5F03 /* AlbireoLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbireoLoginViewController.swift; sourceTree = "<group>"; };
 		86FC7025241933D900CC4F2A /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		86FC70362419438200CC4F2A /* TVVLCKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVVLCKit.framework; path = Carthage/Build/tvOS/TVVLCKit.framework; sourceTree = "<group>"; };
 		86FC703A241943E100CC4F2A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -211,8 +209,8 @@
 		86FC710A2419676400CC4F2A /* TVVLCPlayer.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TVVLCPlayer.storyboard; sourceTree = "<group>"; };
 		86FC7115241BB15700CC4F2A /* SonarrServiceHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonarrServiceHandler.swift; sourceTree = "<group>"; };
 		86FC7117241BB17200CC4F2A /* AlbireoServiceHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbireoServiceHandler.swift; sourceTree = "<group>"; };
-		9540BDDE439A0448A9EC39E5 /* Pods-moe.TV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moe.TV.debug.xcconfig"; path = "Target Support Files/Pods-moe.TV/Pods-moe.TV.debug.xcconfig"; sourceTree = "<group>"; };
-		FFA57A089ABF24539A4A3C62 /* Pods-moe.TV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moe.TV.release.xcconfig"; path = "Target Support Files/Pods-moe.TV/Pods-moe.TV.release.xcconfig"; sourceTree = "<group>"; };
+		D1D7E093FF9F371FF099C4E0 /* Pods-moe.TV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moe.TV.debug.xcconfig"; path = "Target Support Files/Pods-moe.TV/Pods-moe.TV.debug.xcconfig"; sourceTree = "<group>"; };
+		D42A4E8AF5C9A2A7AA3DAE8C /* Pods-moe.TV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moe.TV.release.xcconfig"; path = "Target Support Files/Pods-moe.TV/Pods-moe.TV.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,7 +219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4706FD7F230A871F00094B78 /* TVServices.framework in Frameworks */,
-				86FC7112241A760F00CC4F2A /* Alamofire in Frameworks */,
+				866553E724345E07006C4F2E /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,7 +228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				47C75368230E54EC0010C0EE /* TVServices.framework in Frameworks */,
-				86FC7110241A760A00CC4F2A /* Alamofire in Frameworks */,
+				866553E924345E0D006C4F2E /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,12 +250,11 @@
 				86FC70582419446900CC4F2A /* VideoToolbox.framework in Frameworks */,
 				86FC70462419441200CC4F2A /* CoreText.framework in Frameworks */,
 				86FC70562419446200CC4F2A /* Security.framework in Frameworks */,
-				86FC703C241943E800CC4F2A /* AVFoundation.framework in Frameworks */,
 				86FC704E2419443300CC4F2A /* TVUIKit.framework in Frameworks */,
 				86FC70422419440000CC4F2A /* CoreGraphics.framework in Frameworks */,
 				86FC70522419445300CC4F2A /* OpenGLES.framework in Frameworks */,
 				86FC703B241943E100CC4F2A /* AudioToolbox.framework in Frameworks */,
-				95376A09ABC191E90E5F6598 /* Pods_moe_TV.framework in Frameworks */,
+				BAAA708F80F25A777B36A483 /* Pods_moe_TV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,8 +264,8 @@
 		10CE0D18EFA6F8E156150DF2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9540BDDE439A0448A9EC39E5 /* Pods-moe.TV.debug.xcconfig */,
-				FFA57A089ABF24539A4A3C62 /* Pods-moe.TV.release.xcconfig */,
+				D1D7E093FF9F371FF099C4E0 /* Pods-moe.TV.debug.xcconfig */,
+				D42A4E8AF5C9A2A7AA3DAE8C /* Pods-moe.TV.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -276,6 +273,7 @@
 		4706FD7D230A871F00094B78 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				86C3187C245C39370095BC04 /* TVVLCKit.framework */,
 				86FC70572419446900CC4F2A /* VideoToolbox.framework */,
 				86FC70552419446200CC4F2A /* Security.framework */,
 				86FC70532419445A00CC4F2A /* QuartzCore.framework */,
@@ -296,7 +294,7 @@
 				4766B1F9230C755600E5828B /* AVKit.framework */,
 				4766B1F7230C750700E5828B /* AVFoundation.framework */,
 				4706FD7E230A871F00094B78 /* TVServices.framework */,
-				67D9F2B0F40A0066C8BD6CD7 /* Pods_moe_TV.framework */,
+				1A582C58B45952594B621D44 /* Pods_moe_TV.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -315,7 +313,7 @@
 			isa = PBXGroup;
 			children = (
 				471BBB17230DC95E00CD5D73 /* ProxySettingViewController.swift */,
-				86D97CBF2301D5F900CF5F03 /* LoginViewController.swift */,
+				862EE6F3241E28FF004CE585 /* AccountManageViewController.swift */,
 				4775A9EF2305C5C400B84382 /* SplitViewController.swift */,
 				4775A9F12305C60300B84382 /* TabbarViewController.swift */,
 				4775A9F52306B3A500B84382 /* SubscriptionListViewController.swift */,
@@ -473,6 +471,10 @@
 				863CF9F7230594F800CA958F /* ServerHandler.swift */,
 				86FC7117241BB17200CC4F2A /* AlbireoServiceHandler.swift */,
 				86FC7115241BB15700CC4F2A /* SonarrServiceHandler.swift */,
+				86D97CBF2301D5F900CF5F03 /* AlbireoLoginViewController.swift */,
+				862EE6F7241E4E43004CE585 /* AlbireoLogin.xib */,
+				862EE6F5241E4E03004CE585 /* SonarrLoginViewController.swift */,
+				862EE6F9241E4E55004CE585 /* SonarrLogin.xib */,
 			);
 			path = ServiceHandler;
 			sourceTree = "<group>";
@@ -494,7 +496,7 @@
 			);
 			name = topshelf;
 			packageProductDependencies = (
-				86FC7111241A760F00CC4F2A /* Alamofire */,
+				866553E624345E07006C4F2E /* Alamofire */,
 			);
 			productName = topshelf;
 			productReference = 4706FD7C230A871F00094B78 /* topshelf.appex */;
@@ -514,7 +516,7 @@
 			);
 			name = topshelfold;
 			packageProductDependencies = (
-				86FC710F241A760A00CC4F2A /* Alamofire */,
+				866553E824345E0D006C4F2E /* Alamofire */,
 			);
 			productName = topshelfold;
 			productReference = 47C75367230E54EC0010C0EE /* topshelfold.appex */;
@@ -524,12 +526,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 86D97CB42301CF6E00CF5F03 /* Build configuration list for PBXNativeTarget "moe.TV" */;
 			buildPhases = (
-				4E45E24167B815B74FE7CBDC /* [CP] Check Pods Manifest.lock */,
+				D1D2ADF2143276B4994E5CB3 /* [CP] Check Pods Manifest.lock */,
 				86D97C892301CF6B00CF5F03 /* Sources */,
 				86D97C8A2301CF6B00CF5F03 /* Frameworks */,
 				86D97C8B2301CF6B00CF5F03 /* Resources */,
 				4706FD87230A871F00094B78 /* Embed App Extensions */,
-				86FC705D241945B800CC4F2A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -553,7 +554,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1030;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = bi119aTe5hXk;
 				TargetAttributes = {
 					4706FD7B230A871F00094B78 = {
@@ -613,8 +614,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				86FC710B2419676400CC4F2A /* Images.xcassets in Resources */,
+				862EE6F8241E4E43004CE585 /* AlbireoLogin.xib in Resources */,
 				86FC710C2419676400CC4F2A /* TVVLCPlayer.storyboard in Resources */,
 				86D97C9A2301CF6E00CF5F03 /* Assets.xcassets in Resources */,
+				862EE6FA241E4E55004CE585 /* SonarrLogin.xib in Resources */,
 				86D97C982301CF6B00CF5F03 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -622,7 +625,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4E45E24167B815B74FE7CBDC /* [CP] Check Pods Manifest.lock */ = {
+		D1D2ADF2143276B4994E5CB3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -687,7 +690,7 @@
 				47CB0CB1230E6604008D3034 /* SummaryDetailViewController.swift in Sources */,
 				86FC71022419674F00CC4F2A /* TouchGestureRecogniser.swift in Sources */,
 				86924768234F4F3D00B1C667 /* UDkey.swift in Sources */,
-				86D97CC02301D5F900CF5F03 /* LoginViewController.swift in Sources */,
+				86D97CC02301D5F900CF5F03 /* AlbireoLoginViewController.swift in Sources */,
 				86FC70FC2419674F00CC4F2A /* VLCMediaPlayer+Delay.swift in Sources */,
 				86D97CBE2301CFF800CF5F03 /* SearchResultsViewController.swift in Sources */,
 				86FC71072419674F00CC4F2A /* VLC+time.swift in Sources */,
@@ -704,6 +707,7 @@
 				86FC71052419674F00CC4F2A /* Theme.swift in Sources */,
 				86FC7118241BB17200CC4F2A /* AlbireoServiceHandler.swift in Sources */,
 				86FC70FF2419674F00CC4F2A /* RemoteActionPositionController.swift in Sources */,
+				862EE6F4241E28FF004CE585 /* AccountManageViewController.swift in Sources */,
 				86FC71032419674F00CC4F2A /* LongPressGestureRecogniser.swift in Sources */,
 				86FC70F32419674F00CC4F2A /* AudioViewController.swift in Sources */,
 				86FC7116241BB15700CC4F2A /* SonarrServiceHandler.swift in Sources */,
@@ -715,6 +719,7 @@
 				86FC70F82419674F00CC4F2A /* VLCMediaPlayer+indexed.swift in Sources */,
 				471BBB16230DBE5D00CD5D73 /* SettingsViewController.swift in Sources */,
 				86FC70F42419674F00CC4F2A /* PanelViewController.swift in Sources */,
+				862EE6F6241E4E03004CE585 /* SonarrLoginViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -965,7 +970,7 @@
 		};
 		86D97CB52301CF6E00CF5F03 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9540BDDE439A0448A9EC39E5 /* Pods-moe.TV.debug.xcconfig */;
+			baseConfigurationReference = D1D7E093FF9F371FF099C4E0 /* Pods-moe.TV.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = IMGAssets;
@@ -975,7 +980,10 @@
 				CURRENT_PROJECT_VERSION = 202003121534;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/TVVLCKit",
+				);
 				INFOPLIST_FILE = moe.TV/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -995,7 +1003,7 @@
 		};
 		86D97CB62301CF6E00CF5F03 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FFA57A089ABF24539A4A3C62 /* Pods-moe.TV.release.xcconfig */;
+			baseConfigurationReference = D42A4E8AF5C9A2A7AA3DAE8C /* Pods-moe.TV.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = IMGAssets;
@@ -1005,7 +1013,10 @@
 				CURRENT_PROJECT_VERSION = 202003121534;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/TVVLCKit",
+				);
 				INFOPLIST_FILE = moe.TV/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1094,12 +1105,12 @@
 			package = 4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
 		};
-		86FC710F241A760A00CC4F2A /* Alamofire */ = {
+		866553E624345E07006C4F2E /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
 		};
-		86FC7111241A760F00CC4F2A /* Alamofire */ = {
+		866553E824345E0D006C4F2E /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;

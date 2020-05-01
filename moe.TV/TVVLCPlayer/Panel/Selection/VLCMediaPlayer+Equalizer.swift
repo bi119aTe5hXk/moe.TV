@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import TVVLCKit
+//import TVVLCKit
 
 struct Equalizer: SelectableCollection {
     enum Profile: UInt32, CaseIterable {

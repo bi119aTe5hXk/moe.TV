@@ -26,7 +26,7 @@ class ContentProvider: TVTopShelfContentProvider {
 
 
             if self.serviceType == "albireo" {
-                AlbireoGetMyBangumiList {
+                AlbireoGetSubscriptionList {
                     (isSucceeded, result) in
                     self.loadDataToTopShelf(isSucceeded: isSucceeded, result: result as Any, completionHandler:{
                         content in

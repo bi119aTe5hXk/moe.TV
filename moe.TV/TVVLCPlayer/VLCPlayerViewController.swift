@@ -8,7 +8,7 @@
 
 import UIKit
 import GameController
-import TVVLCKit
+//import TVVLCKit
 
 /// `VLCPlayerViewController` is a subclass of `UIViewController` that can be used to display the visual content of an `VLCPlayer` object and the standard playback controls.
 public class VLCPlayerViewController: UIViewController {

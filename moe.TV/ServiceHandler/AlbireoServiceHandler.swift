@@ -115,7 +115,7 @@ func AlbireoLogOutServer(completion: @escaping (Bool, String) -> Void) {
 }
 
 
-func AlbireoGetMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
+func AlbireoGetSubscriptionList(completion: @escaping (Bool, Any?) -> Void) {
     initNetwork()
     var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
     urlstr.append("/api/home/my_bangumi?status=3")

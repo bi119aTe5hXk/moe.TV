@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="15705" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PIa-hG-JBS">
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="16096" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PIa-hG-JBS">
     <device id="appleTV" appearance="dark"/>
     <dependencies>
         <deployment identifier="tvOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -87,7 +87,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Logout your account." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1n2-87-qlf">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Manage your accounts." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1n2-87-qlf">
                                 <rect key="frame" x="705" y="185" width="1023" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
@@ -98,9 +98,9 @@
                                 <rect key="frame" x="144" y="165" width="489" height="89"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="Logout"/>
+                                <state key="normal" title="Account Managment"/>
                                 <connections>
-                                    <action selector="logoutBTNPressed:" destination="rZc-EN-tog" eventType="primaryActionTriggered" id="0EN-XU-f7Y"/>
+                                    <action selector="showAccountManagment:" destination="rZc-EN-tog" eventType="primaryActionTriggered" id="XIf-XL-wUD"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bR9-5Y-MvV">
@@ -128,126 +128,21 @@
             </objects>
             <point key="canvasLocation" x="3267" y="3430"/>
         </scene>
-        <!--Login View Controller-->
-        <scene sceneID="2hS-un-Gzs">
+        <!--Navigation Controller-->
+        <scene sceneID="7Z8-bV-Dmr">
             <objects>
-                <viewController storyboardIdentifier="LoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r3k-Iy-FC9" customClass="LoginViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Cdf-yg-X0C"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfO-wM-n2l"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="L8Q-3u-W9Y">
-                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Host:port" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TaZ-wU-eM6">
-                                <rect key="frame" x="673" y="333" width="575" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="URL" textContentType="url"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="okb-tE-Bpe">
-                                <rect key="frame" x="673" y="429" width="575" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <textInputTraits key="textInputTraits" textContentType="username"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Passowrd" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KoI-C9-nZk">
-                                <rect key="frame" x="673" y="517" width="575" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="API Key" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gaB-73-3sb">
-                                <rect key="frame" x="673" y="618" width="575" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wEe-Oa-fAg">
-                                <rect key="frame" x="790" y="731" width="340" height="86"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="Save &amp; Login in"/>
-                                <connections>
-                                    <action selector="loginBTNPressed:" destination="r3k-Iy-FC9" eventType="primaryActionTriggered" id="TK8-Un-F2q"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="juT-TT-lqs">
-                                <rect key="frame" x="790" y="883" width="340" height="83"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="Proxy Settings"/>
-                                <connections>
-                                    <segue destination="9iP-1W-6RR" kind="presentation" id="LQT-Z4-YKe"/>
-                                </connections>
-                            </button>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="6qu-lC-Suq">
-                                <rect key="frame" x="940" y="754" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </activityIndicatorView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yTw-XK-nCd">
-                                <rect key="frame" x="915" y="110" width="328" height="70"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.10000000000000001" colorSpace="calibratedWhite"/>
-                                <segments>
-                                    <segment title="Albireo"/>
-                                    <segment title="Sonarr"/>
-                                </segments>
-                                <connections>
-                                    <action selector="serviceTypeChanged:" destination="r3k-Iy-FC9" eventType="valueChanged" id="IMb-0E-ffk"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Service type:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i5h-xv-IOF">
-                                <rect key="frame" x="673" y="121" width="218" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Connection type:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="soX-R1-xkX">
-                                <rect key="frame" x="604" y="228" width="287" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="5RM-oC-vyn">
-                                <rect key="frame" x="913" y="216" width="332" height="70"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.10000000000000001" colorSpace="calibratedWhite"/>
-                                <segments>
-                                    <segment title="HTTPS"/>
-                                    <segment title="HTTP"/>
-                                </segments>
-                                <connections>
-                                    <action selector="connectionTypeChanged:" destination="r3k-Iy-FC9" eventType="valueChanged" id="HM1-U5-T8H"/>
-                                </connections>
-                            </segmentedControl>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="WebDAV port" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="60Z-j8-RAD">
-                                <rect key="frame" x="1277" y="333" width="250" height="46"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
-                            </textField>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="aAq-mO-OFk"/>
-                    </view>
+                <navigationController id="e9a-wl-fAw" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="W9r-eF-rT9">
+                        <rect key="frame" x="0.0" y="60" width="1920" height="145"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
                     <connections>
-                        <outlet property="apikeytextfield" destination="gaB-73-3sb" id="hT7-kt-R5u"/>
-                        <outlet property="connectiontypeselect" destination="5RM-oC-vyn" id="Eug-2X-lAC"/>
-                        <outlet property="loadingIndicator" destination="6qu-lC-Suq" id="Zee-pr-J8V"/>
-                        <outlet property="loginbutton" destination="wEe-Oa-fAg" id="PPv-uX-t3i"/>
-                        <outlet property="passwordtextfield" destination="KoI-C9-nZk" id="hoe-qL-eJa"/>
-                        <outlet property="servicetypeselect" destination="yTw-XK-nCd" id="NuX-HF-uZd"/>
-                        <outlet property="urltextfield" destination="TaZ-wU-eM6" id="Z7T-4i-61n"/>
-                        <outlet property="usernametextfield" destination="okb-tE-Bpe" id="F3c-3P-cBk"/>
-                        <outlet property="webdavporttextfield" destination="60Z-j8-RAD" id="lwz-x9-Zrf"/>
+                        <segue destination="mlA-uJ-YNh" kind="relationship" relationship="rootViewController" id="Fu2-X3-qfi"/>
                     </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pvs-un-qa1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ofa-pG-OEZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1947" y="2417"/>
+            <point key="canvasLocation" x="-511" y="7706"/>
         </scene>
         <!--Proxy Setting View Controller-->
         <scene sceneID="1Yq-7K-FUU">
@@ -335,7 +230,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QDc-ta-4XD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="942" y="4373"/>
+            <point key="canvasLocation" x="987" y="4693"/>
         </scene>
         <!--TabbarViewController-->
         <scene sceneID="8Ty-D3-oRW">
@@ -594,6 +489,58 @@
             </objects>
             <point key="canvasLocation" x="-511" y="6055"/>
         </scene>
+        <!--Account Manage-->
+        <scene sceneID="SJn-E9-ZqP">
+            <objects>
+                <tableViewController storyboardIdentifier="AccountManageViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mlA-uJ-YNh" customClass="AccountManageViewController" customModule="moeTV" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" sectionHeaderHeight="66" sectionFooterHeight="66" id="U4H-Cv-9QB">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="N5U-90-JOe" detailTextLabel="bNs-cr-cAW" rowHeight="193" style="IBUITableViewCellStyleSubtitle" id="ejp-Qa-4o0">
+                                <rect key="frame" x="106" y="66" width="1708" height="193"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ejp-Qa-4o0" id="rxe-6Y-PbR">
+                                    <rect key="frame" x="0.0" y="0.0" width="1668" height="193"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="N5U-90-JOe">
+                                            <rect key="frame" x="20" y="44.5" width="71" height="46"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="38"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bNs-cr-cAW">
+                                            <rect key="frame" x="20" y="97" width="125" height="46"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="38"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="mlA-uJ-YNh" id="bfX-HG-WOo"/>
+                            <outlet property="delegate" destination="mlA-uJ-YNh" id="wGX-14-LgP"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Account Manage" id="kNB-5N-NGT">
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="Ufj-WU-BAu"/>
+                            <barButtonItem systemItem="edit" id="1ia-yi-jN4"/>
+                        </rightBarButtonItems>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="tabBarObservedScrollView" destination="U4H-Cv-9QB" id="enr-PR-Utf"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rZ7-0z-WpX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1666" y="7706"/>
+        </scene>
         <!--Search Results View Controller-->
         <scene sceneID="Lym-0U-RwF">
             <objects>
@@ -650,7 +597,4 @@
             <point key="canvasLocation" x="1666" y="6055"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="LQT-Z4-YKe"/>
-    </inferredMetricsTieBreakers>
 </document>

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import TVVLCKit
+//import TVVLCKit
 
 protocol PanelViewControllerDelegate: class {
     func panelViewController(_ panelViewController: PanelViewController, didSelectTabAtIndex: Int)

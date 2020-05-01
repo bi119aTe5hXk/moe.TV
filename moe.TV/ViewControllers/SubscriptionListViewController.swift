@@ -48,13 +48,13 @@ class SubscriptionListViewController: UICollectionViewController, UICollectionVi
         let loggedin = UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_LOGEDIN)
         if loggedin {
             if self.bgmList.count <= 0 {
-                print("getingMyBangumiList")
+//                print("getingSubscriptionList")
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
 
 
                 if self.serviceType == "albireo" {
-                    AlbireoGetMyBangumiList {
+                    AlbireoGetSubscriptionList {
                         (isSucceeded, result) in
                         self.loadDataToTable(isSucceeded: isSucceeded, result: result as Any)
                     }
@@ -65,9 +65,10 @@ class SubscriptionListViewController: UICollectionViewController, UICollectionVi
                     }
 
                 } else {
-                    print("MyBangumiList loadData Error: Service type unknown.")
+                    print("SubscriptionList loadData Error: Service type unknown.")
                     return
                 }
+                
             }
 
         }

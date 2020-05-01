@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoginViewController: UIViewController,UITextFieldDelegate {
+class AlbireoLoginViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var servicetypeselect: UISegmentedControl!
     @IBOutlet weak var connectiontypeselect: UISegmentedControl!
     @IBOutlet weak var urltextfield: UITextField!

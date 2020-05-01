@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import TVVLCKit
+//import TVVLCKit
 
 // MARK: Delegate
 @objc

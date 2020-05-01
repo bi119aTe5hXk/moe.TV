@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
         "state": {
           "branch": "master",
-          "revision": "797b5fb3906ee9f7d90bf659c42add7331e98738",
+          "revision": "fca036f7aeca07124067cb6e0c12b0ad6359e3d4",
           "version": null
         }
       },
@@ -15,7 +15,7 @@
         "repositoryURL": "https://github.com/Alamofire/AlamofireImage",
         "state": {
           "branch": "master",
-          "revision": "5384f5509cb37075c468002fb49ffe0faa82e2ad",
+          "revision": "3e8edbeb75227f8542aa87f90240cf0424d6362f",
           "version": null
         }
       }
