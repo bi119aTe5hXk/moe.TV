@@ -1,15 +1,24 @@
 # moe.TV
-An [Albireo](https://github.com/lordfriend/Albireo) & [Sonarr](https://sonarr.tv/) client which can watch bangumis / videos on your tvOS devices.
+Watch subscribed videos on your AppleTV.
+
+Support platform:
+- [Albireo](https://github.com/lordfriend/Albireo)
+- [Sonarr](https://sonarr.tv/)
+- [Add custom services](https://github.com/bi119aTe5hXk/moe.TV#add-custom-service)
+
+Try it out on your AppleTV via [TestFlight](https://testflight.apple.com/join/86IoKxV6)!
 
 ## How to use (for Albireo)
 
-Just input your server domain and login in using your authentication info.
+Login in to your server using your authentication info.
 
 ## How to use (for Sonarr)
 
 1. Setup your Sonarr and WebDAV service on your server, you can install [WebDAVNav Server](https://apps.apple.com/us/app/webdavnav-server/id747482894?mt=12) if you are using macOS as your service Server.
 
-2. Set the download path within Sonarr as your WebDAV shared folder. Such as /Macintosh HD/Users/your_user_name/Downloads/sonarr/. The sub-folders should be the series name.
+2. Set the download path within Sonarr as your WebDAV shared folder. Such as /Macintosh HD/Users/your_user_name/Downloads/sonarr/. The sub-folders should be the series name. 
+
+- Note: Authentication on both Sonarr and WebDAV only support HTTP basic which is browser popup. And both Sonarr and WebDAV authentication have enabled or disabled at the same time, i.e. you can't enable Sonarr authentication and disable the WebDAV's. And Digest authentication in WebDAV is not supported, DO NOT check that box in WebDAVNav Server's Authentication page.
 
 3. Login moe.TV client with your Sonarr service info.
 
@@ -23,19 +32,22 @@ For example:
 
 - WebDAV port:8990
 
-- API key:<On Sonarr server, open [/settings/general](http://127.0.0.1:8989/settings/general)>
+- API key:<In Sonarr server web management page, open [/settings/general](http://127.0.0.1:8989/settings/general)>
 
-4. Hit "Save&Login in", and enjoy your anime night.
+4. Hit the "Save&Login in" button, enjoy your video night.
 
 ## How to Build
 
-1. Clone this project or download sorcecode and upzip it. And open moe.TV folder.
+1. Clone this project or download the source code and unzip it. And open moe.TV folder.
 
-2. Open Terminal, cd to moe.TV folder's path, and run 'pod install'. Notice that TVVLCKit framwork will take about 2GB space and the package download speed is relatively slow.
+2. Open Terminal, cd to moe.TV folder's path, and run 'pod install'. Notice that the TVVLCKit framework will take about 2GB space and the package download speed is relatively slow.
 
-3. Open moe.TV.xcworkspace, Choose your Team for code-signing.
+3. Open "moe.TV.xcworkspace" file, Choose your Team for code-signing.
 
 4. Build and run.
+
+## Add custom service
+Coming soon...
 
 ## Preview
 
@@ -47,5 +59,4 @@ For example:
 
 ## Long term issue
 
-- WebDAV is require for video files transfer in Sonarr mode. Sonarr service does not include WebDAV or script for run services. 3rd part program is required.
-
+- WebDAV is required for video files transfer in Sonarr mode. Sonarr service does not provide WebDAV or script for run services. 3rd part program is required.
