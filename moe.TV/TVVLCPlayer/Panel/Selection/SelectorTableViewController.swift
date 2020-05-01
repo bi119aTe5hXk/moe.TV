@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import TVVLCKit
+//import TVVLCKit
 
 class SelectorTableViewController: UIViewController {
     var collection: SelectableCollection!

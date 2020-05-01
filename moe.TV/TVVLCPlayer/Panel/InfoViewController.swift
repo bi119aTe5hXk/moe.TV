@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import TVVLCKit
+//import TVVLCKit
 
 class InfoViewController: UIViewController {
     var player: VLCMediaPlayer!
