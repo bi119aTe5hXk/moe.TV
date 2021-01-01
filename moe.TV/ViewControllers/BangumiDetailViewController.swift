@@ -458,10 +458,8 @@ class BangumiDetailViewController: UIViewController,
                 AF.request(imgurlstr).responseImage { (response) in
                     switch response.result {
                     case .success(let value):
-                        if let image:UIImage = value {
-                            let artworkItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierArtwork.rawValue, value: image)
-                            metadata.append(artworkItem)
-                        }
+                        let artworkItem = self.makeMetadataItem(AVMetadataIdentifier.commonIdentifierArtwork.rawValue, value: value)
+                        metadata.append(artworkItem)
                         break
 
                     case .failure(let error):

@@ -358,7 +358,7 @@ func SonarrURL()->String{
     
     //then append host name and port
     urlstr.append(UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
-    
+    print(urlstr)
     return urlstr
 }
 
@@ -378,7 +378,7 @@ func SonarrGetSystemStatus(username:String,
     urlstr.append("/api/system/status")
     //check the api key is valid at first time "login"
     urlstr.append("?apikey=\(apikey)")//DO NOT REPLACE WITH USER DEFAULT (SonarrAddAPIKEY func)
-    //print(urlstr)
+    print(urlstr)
     requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         //print(response)
         switch response.result {

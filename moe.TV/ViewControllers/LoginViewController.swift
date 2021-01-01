@@ -27,6 +27,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         self.passwordtextfield.delegate = self
         self.loadingIndicator.isHidden = true
         self.loadingIndicator.stopAnimating()
+//        self.loginbutton.isEnabled = true
         
         //set default service
         UserDefaults.init(suiteName: UD_SUITE_NAME)?.set("albireo", forKey: UD_SERVICE_TYPE)
@@ -63,6 +64,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         switch (sender as AnyObject).selectedSegmentIndex {
         case 0:
             //Albireo
+            print("Set service type to Albireo")
             UserDefaults.init(suiteName: UD_SUITE_NAME)?.set("albireo", forKey: UD_SERVICE_TYPE)
             //set UI as albireo
             self.urltextfield.placeholder = "Server Address"
@@ -73,6 +75,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             break
         case 1:
             //Sonarr
+            print("Set service type to Sonarr")
             UserDefaults.init(suiteName: UD_SUITE_NAME)?.set("sonarr", forKey: UD_SERVICE_TYPE)
             //set UI as sonarr
             self.urltextfield.placeholder = "Server Address:8989"
@@ -96,6 +99,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
         let password = self.passwordtextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let apikey = self.apikeytextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let webdavport = self.webdavporttextfield.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        print("ServiceType:\(self.serviceType)")
         //Albireo
         if self.serviceType == "albireo" {
             if (urltext.lengthOfBytes(using: .utf8)) > 0 &&
@@ -132,7 +136,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             //Sonarr
         }else if self.serviceType == "sonarr"{
             if (urltext.lengthOfBytes(using: .utf8)) > 0 &&
-                (username.lengthOfBytes(using: .utf8)) > 0 &&
+                (apikey.lengthOfBytes(using: .utf8)) > 0 &&
                 (webdavport.lengthOfBytes(using: .utf8)) > 0
             {
                 
@@ -204,7 +208,8 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
             }
         }else if self.serviceType == "sonarr" {
             if (self.urltextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
-            (self.usernametextfield.text?.lengthOfBytes(using: .utf8))! > 0 {
+            (self.apikeytextfield.text?.lengthOfBytes(using: .utf8))! > 0 &&
+                (self.webdavporttextfield.text?.lengthOfBytes(using: .utf8))! > 0{
                 self.loginbutton.isEnabled = true
             }else{
                 self.loginbutton.isEnabled = false
