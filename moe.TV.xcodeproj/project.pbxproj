@@ -23,9 +23,6 @@
 		4775A9F62306B3A500B84382 /* SubscriptionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F52306B3A500B84382 /* SubscriptionListViewController.swift */; };
 		4775A9FA2306BA1700B84382 /* BangumiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F92306BA1700B84382 /* BangumiCell.swift */; };
 		477749102305AAC6002E2D25 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4777490F2305AAC6002E2D25 /* Alamofire */; settings = {ATTRIBUTES = (Required, ); }; };
-		47C75368230E54EC0010C0EE /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4706FD7E230A871F00094B78 /* TVServices.framework */; };
-		47C7536B230E54EC0010C0EE /* ServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C7536A230E54EC0010C0EE /* ServiceProvider.swift */; };
-		47C7536F230E54EC0010C0EE /* topshelfold.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 47C75367230E54EC0010C0EE /* topshelfold.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		47CB0CB1230E6604008D3034 /* SummaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */; };
 		47D4490D230C69F4000F8C6C /* EPCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D4490C230C69F4000F8C6C /* EPCell.swift */; };
 		862EE6F4241E28FF004CE585 /* AccountManageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862EE6F3241E28FF004CE585 /* AccountManageViewController.swift */; };
@@ -34,11 +31,8 @@
 		862EE6FA241E4E55004CE585 /* SonarrLogin.xib in Resources */ = {isa = PBXBuildFile; fileRef = 862EE6F9241E4E55004CE585 /* SonarrLogin.xib */; };
 		863CF9F8230594F800CA958F /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
 		866553E724345E07006C4F2E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 866553E624345E07006C4F2E /* Alamofire */; };
-		866553E924345E0D006C4F2E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 866553E824345E0D006C4F2E /* Alamofire */; };
 		86924768234F4F3D00B1C667 /* UDkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86924767234F4F3D00B1C667 /* UDkey.swift */; };
-		86924769234F4F3D00B1C667 /* UDkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86924767234F4F3D00B1C667 /* UDkey.swift */; };
 		8692476A234F4F3D00B1C667 /* UDkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86924767234F4F3D00B1C667 /* UDkey.swift */; };
-		86C42CBB2348F72B00D482AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86D97C992301CF6E00CF5F03 /* Assets.xcassets */; };
 		86C42CBC2348F72B00D482AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86D97C992301CF6E00CF5F03 /* Assets.xcassets */; };
 		86D97C912301CF6B00CF5F03 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D97C902301CF6B00CF5F03 /* AppDelegate.swift */; };
 		86D97C982301CF6B00CF5F03 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86D97C962301CF6B00CF5F03 /* Main.storyboard */; };
@@ -83,14 +77,9 @@
 		86FC71072419674F00CC4F2A /* VLC+time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC70F12419674E00CC4F2A /* VLC+time.swift */; };
 		86FC710B2419676400CC4F2A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86FC71092419676400CC4F2A /* Images.xcassets */; };
 		86FC710C2419676400CC4F2A /* TVVLCPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86FC710A2419676400CC4F2A /* TVVLCPlayer.storyboard */; };
-		86FC7113241A761500CC4F2A /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
 		86FC7114241A761500CC4F2A /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
 		86FC7116241BB15700CC4F2A /* SonarrServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7115241BB15700CC4F2A /* SonarrServiceHandler.swift */; };
 		86FC7118241BB17200CC4F2A /* AlbireoServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7117241BB17200CC4F2A /* AlbireoServiceHandler.swift */; };
-		86FC711A241BB4CE00CC4F2A /* SonarrServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7115241BB15700CC4F2A /* SonarrServiceHandler.swift */; };
-		86FC711B241BB4CE00CC4F2A /* AlbireoServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7117241BB17200CC4F2A /* AlbireoServiceHandler.swift */; };
-		86FC711C241BB4CE00CC4F2A /* SonarrServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7115241BB15700CC4F2A /* SonarrServiceHandler.swift */; };
-		86FC711D241BB4CE00CC4F2A /* AlbireoServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FC7117241BB17200CC4F2A /* AlbireoServiceHandler.swift */; };
 		BAAA708F80F25A777B36A483 /* Pods_moe_TV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A582C58B45952594B621D44 /* Pods_moe_TV.framework */; };
 /* End PBXBuildFile section */
 
@@ -102,13 +91,6 @@
 			remoteGlobalIDString = 4706FD7B230A871F00094B78;
 			remoteInfo = topshelf;
 		};
-		47C7536D230E54EC0010C0EE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 86D97C852301CF6B00CF5F03 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 47C75366230E54EC0010C0EE;
-			remoteInfo = topshelfold;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -119,7 +101,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				4706FD86230A871F00094B78 /* topshelf.appex in Embed App Extensions */,
-				47C7536F230E54EC0010C0EE /* topshelfold.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -145,10 +126,6 @@
 		4775A9F12305C60300B84382 /* TabbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarViewController.swift; sourceTree = "<group>"; };
 		4775A9F52306B3A500B84382 /* SubscriptionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionListViewController.swift; sourceTree = "<group>"; };
 		4775A9F92306BA1700B84382 /* BangumiCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BangumiCell.swift; sourceTree = "<group>"; };
-		47C75367230E54EC0010C0EE /* topshelfold.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = topshelfold.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		47C7536A230E54EC0010C0EE /* ServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProvider.swift; sourceTree = "<group>"; };
-		47C7536C230E54EC0010C0EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		47C75373230E5C5A0010C0EE /* topshelfold.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = topshelfold.entitlements; sourceTree = "<group>"; };
 		47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryDetailViewController.swift; sourceTree = "<group>"; };
 		47D4490C230C69F4000F8C6C /* EPCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCell.swift; sourceTree = "<group>"; };
 		862EE6F3241E28FF004CE585 /* AccountManageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManageViewController.swift; sourceTree = "<group>"; };
@@ -220,15 +197,6 @@
 			files = (
 				4706FD7F230A871F00094B78 /* TVServices.framework in Frameworks */,
 				866553E724345E07006C4F2E /* Alamofire in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		47C75364230E54EC0010C0EE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				47C75368230E54EC0010C0EE /* TVServices.framework in Frameworks */,
-				866553E924345E0D006C4F2E /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,14 +303,34 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		47C75369230E54EC0010C0EE /* topshelfold */ = {
+		862196F325D6655D009C8963 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				47C75373230E5C5A0010C0EE /* topshelfold.entitlements */,
-				47C7536A230E54EC0010C0EE /* ServiceProvider.swift */,
-				47C7536C230E54EC0010C0EE /* Info.plist */,
+				863CF9F7230594F800CA958F /* ServerHandler.swift */,
+				862196F425D6658A009C8963 /* Albireo */,
+				862196F525D6659B009C8963 /* Sonarr */,
 			);
-			path = topshelfold;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		862196F425D6658A009C8963 /* Albireo */ = {
+			isa = PBXGroup;
+			children = (
+				86FC7117241BB17200CC4F2A /* AlbireoServiceHandler.swift */,
+				86D97CBF2301D5F900CF5F03 /* AlbireoLoginViewController.swift */,
+				862EE6F7241E4E43004CE585 /* AlbireoLogin.xib */,
+			);
+			path = Albireo;
+			sourceTree = "<group>";
+		};
+		862196F525D6659B009C8963 /* Sonarr */ = {
+			isa = PBXGroup;
+			children = (
+				862EE6F5241E4E03004CE585 /* SonarrLoginViewController.swift */,
+				86FC7115241BB15700CC4F2A /* SonarrServiceHandler.swift */,
+				862EE6F9241E4E55004CE585 /* SonarrLogin.xib */,
+			);
+			path = Sonarr;
 			sourceTree = "<group>";
 		};
 		86D97C842301CF6B00CF5F03 = {
@@ -350,7 +338,6 @@
 			children = (
 				86D97C8F2301CF6B00CF5F03 /* moe.TV */,
 				4706FD80230A871F00094B78 /* topshelf */,
-				47C75369230E54EC0010C0EE /* topshelfold */,
 				4706FD7D230A871F00094B78 /* Frameworks */,
 				86D97C8E2301CF6B00CF5F03 /* Products */,
 				10CE0D18EFA6F8E156150DF2 /* Pods */,
@@ -362,7 +349,6 @@
 			children = (
 				86D97C8D2301CF6B00CF5F03 /* moeTV.app */,
 				4706FD7C230A871F00094B78 /* topshelf.appex */,
-				47C75367230E54EC0010C0EE /* topshelfold.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -374,7 +360,7 @@
 				86924767234F4F3D00B1C667 /* UDkey.swift */,
 				86D97C902301CF6B00CF5F03 /* AppDelegate.swift */,
 				471A1E3C231BF4010082F1E0 /* Extensions.swift */,
-				86FC7119241BB17800CC4F2A /* ServiceHandler */,
+				862196F325D6655D009C8963 /* Services */,
 				471BBB1B230DD48E00CD5D73 /* Cells */,
 				471BBB1A230DD47000CD5D73 /* ViewControllers */,
 				86D97C962301CF6B00CF5F03 /* Main.storyboard */,
@@ -465,20 +451,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		86FC7119241BB17800CC4F2A /* ServiceHandler */ = {
-			isa = PBXGroup;
-			children = (
-				863CF9F7230594F800CA958F /* ServerHandler.swift */,
-				86FC7117241BB17200CC4F2A /* AlbireoServiceHandler.swift */,
-				86FC7115241BB15700CC4F2A /* SonarrServiceHandler.swift */,
-				86D97CBF2301D5F900CF5F03 /* AlbireoLoginViewController.swift */,
-				862EE6F7241E4E43004CE585 /* AlbireoLogin.xib */,
-				862EE6F5241E4E03004CE585 /* SonarrLoginViewController.swift */,
-				862EE6F9241E4E55004CE585 /* SonarrLogin.xib */,
-			);
-			path = ServiceHandler;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -502,26 +474,6 @@
 			productReference = 4706FD7C230A871F00094B78 /* topshelf.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		47C75366230E54EC0010C0EE /* topshelfold */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 47C75372230E54EC0010C0EE /* Build configuration list for PBXNativeTarget "topshelfold" */;
-			buildPhases = (
-				47C75363230E54EC0010C0EE /* Sources */,
-				47C75364230E54EC0010C0EE /* Frameworks */,
-				47C75365230E54EC0010C0EE /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = topshelfold;
-			packageProductDependencies = (
-				866553E824345E0D006C4F2E /* Alamofire */,
-			);
-			productName = topshelfold;
-			productReference = 47C75367230E54EC0010C0EE /* topshelfold.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		86D97C8C2301CF6B00CF5F03 /* moe.TV */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 86D97CB42301CF6E00CF5F03 /* Build configuration list for PBXNativeTarget "moe.TV" */;
@@ -536,7 +488,6 @@
 			);
 			dependencies = (
 				4706FD85230A871F00094B78 /* PBXTargetDependency */,
-				47C7536E230E54EC0010C0EE /* PBXTargetDependency */,
 			);
 			name = moe.TV;
 			packageProductDependencies = (
@@ -558,9 +509,6 @@
 				ORGANIZATIONNAME = bi119aTe5hXk;
 				TargetAttributes = {
 					4706FD7B230A871F00094B78 = {
-						CreatedOnToolsVersion = 11.0;
-					};
-					47C75366230E54EC0010C0EE = {
 						CreatedOnToolsVersion = 11.0;
 					};
 					86D97C8C2301CF6B00CF5F03 = {
@@ -587,7 +535,6 @@
 			targets = (
 				86D97C8C2301CF6B00CF5F03 /* moe.TV */,
 				4706FD7B230A871F00094B78 /* topshelf */,
-				47C75366230E54EC0010C0EE /* topshelfold */,
 			);
 		};
 /* End PBXProject section */
@@ -598,14 +545,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				86C42CBC2348F72B00D482AE /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		47C75365230E54EC0010C0EE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				86C42CBB2348F72B00D482AE /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -655,22 +594,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				86FC7114241A761500CC4F2A /* ServerHandler.swift in Sources */,
-				86FC711A241BB4CE00CC4F2A /* SonarrServiceHandler.swift in Sources */,
-				86FC711B241BB4CE00CC4F2A /* AlbireoServiceHandler.swift in Sources */,
 				4706FD82230A871F00094B78 /* ContentProvider.swift in Sources */,
 				8692476A234F4F3D00B1C667 /* UDkey.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		47C75363230E54EC0010C0EE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				86FC7113241A761500CC4F2A /* ServerHandler.swift in Sources */,
-				86FC711C241BB4CE00CC4F2A /* SonarrServiceHandler.swift in Sources */,
-				86FC711D241BB4CE00CC4F2A /* AlbireoServiceHandler.swift in Sources */,
-				47C7536B230E54EC0010C0EE /* ServiceProvider.swift in Sources */,
-				86924769234F4F3D00B1C667 /* UDkey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -730,11 +655,6 @@
 			isa = PBXTargetDependency;
 			target = 4706FD7B230A871F00094B78 /* topshelf */;
 			targetProxy = 4706FD84230A871F00094B78 /* PBXContainerItemProxy */;
-		};
-		47C7536E230E54EC0010C0EE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 47C75366230E54EC0010C0EE /* topshelfold */;
-			targetProxy = 47C7536D230E54EC0010C0EE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -801,56 +721,6 @@
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 13.0;
 				WATCHOS_DEPLOYMENT_TARGET = 6.0;
-			};
-			name = Release;
-		};
-		47C75370230E54EC0010C0EE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = topshelfold/topshelfold.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202003121534;
-				DEVELOPMENT_TEAM = HR66SGQEZ4;
-				INFOPLIST_FILE = topshelfold/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV.topshelfold";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
-				WATCHOS_DEPLOYMENT_TARGET = 5.0;
-			};
-			name = Debug;
-		};
-		47C75371230E54EC0010C0EE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = topshelfold/topshelfold.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202003121534;
-				DEVELOPMENT_TEAM = HR66SGQEZ4;
-				INFOPLIST_FILE = topshelfold/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV.topshelfold";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
-				WATCHOS_DEPLOYMENT_TARGET = 5.0;
 			};
 			name = Release;
 		};
@@ -1046,15 +916,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		47C75372230E54EC0010C0EE /* Build configuration list for PBXNativeTarget "topshelfold" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				47C75370230E54EC0010C0EE /* Debug */,
-				47C75371230E54EC0010C0EE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		86D97C882301CF6B00CF5F03 /* Build configuration list for PBXProject "moe.TV" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1106,11 +967,6 @@
 			productName = Alamofire;
 		};
 		866553E624345E07006C4F2E /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-		866553E824345E0D006C4F2E /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
