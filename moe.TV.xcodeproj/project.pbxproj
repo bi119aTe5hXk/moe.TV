@@ -447,6 +447,7 @@
 				4706FD87230A871F00094B78 /* Embed App Extensions */,
 				86FC705D241945B800CC4F2A /* Embed Frameworks */,
 				5FED52C72D41CB4033BB1D70 /* [CP] Embed Pods Frameworks */,
+
 			);
 			buildRules = (
 			);
@@ -548,7 +549,9 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+
 		5FED52C72D41CB4033BB1D70 /* [CP] Embed Pods Frameworks */ = {
+
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -651,7 +654,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_ENTITLEMENTS = topshelf/topshelf.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202012241140;
+				CURRENT_PROJECT_VERSION = 202103292215;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = topshelf/Info.plist;
@@ -678,7 +681,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_ENTITLEMENTS = topshelf/topshelf.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202012241140;
+				CURRENT_PROJECT_VERSION = 202103292215;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = topshelf/Info.plist;
@@ -822,7 +825,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202012241140;
+				CURRENT_PROJECT_VERSION = 202103292215;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -852,7 +855,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202012241140;
+				CURRENT_PROJECT_VERSION = 202103292215;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
