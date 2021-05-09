@@ -16,13 +16,13 @@
 		47433AE12306C1AC007794E1 /* OnAirListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47433AE02306C1AC007794E1 /* OnAirListViewController.swift */; };
 		4766B1F8230C750700E5828B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4766B1F7230C750700E5828B /* AVFoundation.framework */; };
 		4766B1FA230C755600E5828B /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4766B1F9230C755600E5828B /* AVKit.framework */; };
-		4766B1FD230C819100E5828B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 4766B1FC230C819100E5828B /* SwiftPackageProductDependency */; };
+		4766B1FD230C819100E5828B /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 4766B1FC230C819100E5828B /* AlamofireImage */; };
 		4775A9EE2305C30400B84382 /* BangumiDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9ED2305C30400B84382 /* BangumiDetailViewController.swift */; };
 		4775A9F02305C5C400B84382 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9EF2305C5C400B84382 /* SplitViewController.swift */; };
 		4775A9F22305C60300B84382 /* TabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F12305C60300B84382 /* TabbarViewController.swift */; };
 		4775A9F62306B3A500B84382 /* MyBangumiListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F52306B3A500B84382 /* MyBangumiListViewController.swift */; };
 		4775A9FA2306BA1700B84382 /* BangumiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4775A9F92306BA1700B84382 /* BangumiCell.swift */; };
-		477749102305AAC6002E2D25 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 4777490F2305AAC6002E2D25 /* SwiftPackageProductDependency */; };
+		477749102305AAC6002E2D25 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4777490F2305AAC6002E2D25 /* Alamofire */; };
 		47CB0CB1230E6604008D3034 /* SummaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CB0CB0230E6604008D3034 /* SummaryDetailViewController.swift */; };
 		47D4490D230C69F4000F8C6C /* EPCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D4490C230C69F4000F8C6C /* EPCell.swift */; };
 		863CF9F8230594F800CA958F /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CF9F7230594F800CA958F /* ServerHandler.swift */; };
@@ -207,8 +207,8 @@
 				86FC704A2419442500CC4F2A /* Foundation.framework in Frameworks */,
 				86FC703E241943F000CC4F2A /* CFNetwork.framework in Frameworks */,
 				86FC70542419445A00CC4F2A /* QuartzCore.framework in Frameworks */,
-				4766B1FD230C819100E5828B /* BuildFile in Frameworks */,
-				477749102305AAC6002E2D25 /* BuildFile in Frameworks */,
+				4766B1FD230C819100E5828B /* AlamofireImage in Frameworks */,
+				477749102305AAC6002E2D25 /* Alamofire in Frameworks */,
 				4766B1FA230C755600E5828B /* AVKit.framework in Frameworks */,
 				86FC70582419446900CC4F2A /* VideoToolbox.framework in Frameworks */,
 				86FC70462419441200CC4F2A /* CoreText.framework in Frameworks */,
@@ -447,7 +447,6 @@
 				4706FD87230A871F00094B78 /* Embed App Extensions */,
 				86FC705D241945B800CC4F2A /* Embed Frameworks */,
 				5FED52C72D41CB4033BB1D70 /* [CP] Embed Pods Frameworks */,
-
 			);
 			buildRules = (
 			);
@@ -456,8 +455,8 @@
 			);
 			name = moe.TV;
 			packageProductDependencies = (
-				4777490F2305AAC6002E2D25 /* SwiftPackageProductDependency */,
-				4766B1FC230C819100E5828B /* SwiftPackageProductDependency */,
+				4777490F2305AAC6002E2D25 /* Alamofire */,
+				4766B1FC230C819100E5828B /* AlamofireImage */,
 			);
 			productName = moe.TV;
 			productReference = 86D97C8D2301CF6B00CF5F03 /* moeTV.app */;
@@ -491,8 +490,8 @@
 			);
 			mainGroup = 86D97C842301CF6B00CF5F03;
 			packageReferences = (
-				4777490E2305AAC6002E2D25 /* RemoteSwiftPackageReference */,
-				4766B1FB230C819100E5828B /* RemoteSwiftPackageReference */,
+				4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				4766B1FB230C819100E5828B /* XCRemoteSwiftPackageReference "AlamofireImage" */,
 			);
 			productRefGroup = 86D97C8E2301CF6B00CF5F03 /* Products */;
 			projectDirPath = "";
@@ -549,9 +548,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-
 		5FED52C72D41CB4033BB1D70 /* [CP] Embed Pods Frameworks */ = {
-
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -654,7 +651,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_ENTITLEMENTS = topshelf/topshelf.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202103292217;
+				CURRENT_PROJECT_VERSION = 202105082009;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = topshelf/Info.plist;
@@ -681,7 +678,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_ENTITLEMENTS = topshelf/topshelf.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202103292217;
+				CURRENT_PROJECT_VERSION = 202105082009;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = topshelf/Info.plist;
@@ -825,7 +822,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202103292217;
+				CURRENT_PROJECT_VERSION = 202105082009;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -855,7 +852,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe.TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202103292217;
+				CURRENT_PROJECT_VERSION = 202105082009;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = HR66SGQEZ4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -909,7 +906,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4766B1FB230C819100E5828B /* RemoteSwiftPackageReference */ = {
+		4766B1FB230C819100E5828B /* XCRemoteSwiftPackageReference "AlamofireImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/AlamofireImage";
 			requirement = {
@@ -917,7 +914,7 @@
 				kind = branch;
 			};
 		};
-		4777490E2305AAC6002E2D25 /* RemoteSwiftPackageReference */ = {
+		4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
@@ -928,14 +925,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4766B1FC230C819100E5828B /* SwiftPackageProductDependency */ = {
+		4766B1FC230C819100E5828B /* AlamofireImage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4766B1FB230C819100E5828B /* RemoteSwiftPackageReference */;
+			package = 4766B1FB230C819100E5828B /* XCRemoteSwiftPackageReference "AlamofireImage" */;
 			productName = AlamofireImage;
 		};
-		4777490F2305AAC6002E2D25 /* SwiftPackageProductDependency */ = {
+		4777490F2305AAC6002E2D25 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4777490E2305AAC6002E2D25 /* RemoteSwiftPackageReference */;
+			package = 4777490E2305AAC6002E2D25 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */

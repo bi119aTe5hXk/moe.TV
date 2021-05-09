@@ -28,26 +28,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "86D97C9F2301CF6E00CF5F03"
-               BuildableName = "moe.TVTests.xctest"
-               BlueprintName = "moe.TVTests"
-               ReferencedContainer = "container:moe.TV.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "86D97CAA2301CF6E00CF5F03"
-               BuildableName = "moe.TVUITests.xctest"
-               BlueprintName = "moe.TVUITests"
-               ReferencedContainer = "container:moe.TV.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

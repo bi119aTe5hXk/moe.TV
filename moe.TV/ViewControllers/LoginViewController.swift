@@ -18,7 +18,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var apikeytextfield: UITextField!
     @IBOutlet weak var loginbutton: UIButton!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
-    var serviceType = ""
+    var serviceType = "albireo" //default is albireo
     
     override func viewDidLoad() {
         super.viewDidLoad()
