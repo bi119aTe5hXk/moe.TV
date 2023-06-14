@@ -3,7 +3,9 @@ Watch bangumi on Apple devices
 
 ## Features
 - Sync with iCloud (No need to login multiple times)
-- Multiple platform (iOS/macOS/tvOS)
+- Support multiple platform (iOS/macOS/tvOS)
+- Picture in Picture
+- Save playing progress automatically
 - Yes, SwiftUI
 
 ## Supported platform
