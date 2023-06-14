@@ -51,6 +51,10 @@ struct MyBangumiView: View {
             }
             if let bgmList = data as? [MyBangumiItemModel]{
                 self.myBGMList = bgmList
+#if os(tvOS)
+            let save = SaveHandler()
+                save.setTopShelf(array: bgmList)
+#endif
             }
         }
     }

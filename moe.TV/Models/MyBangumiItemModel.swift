@@ -7,7 +7,7 @@
 import Foundation
 
 
-struct MyBangumiItemModel: Identifiable, Hashable{
+struct MyBangumiItemModel: Identifiable, Hashable, Codable{
     let id:String
     var bgm_id:Int //the id of this bangumi in bgm.tv
     var name:String //the original name (usually the original language) of the bangumi

@@ -47,4 +47,39 @@ class SaveHandler {
         return keyStore.string(forKey: kServerAddr) ?? ""
     }
     
+    
+#if os(tvOS)
+    //For tvOS TopShelf
+    private let UD_SUITE_NAME = "group.moe.TV"
+    private let UD_TOPSHELF_ARR = "topShelfArr"
+    
+    func setTopShelf(array:[MyBangumiItemModel]){
+        var encodeArr = [Any]()
+        array.forEach { item in
+            if let encoded = try? PropertyListEncoder().encode(item) {
+                encodeArr.append(encoded)
+            }
+        }
+        print("saved \(encodeArr.count) items")
+        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(encodeArr, forKey: UD_TOPSHELF_ARR)
+        UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
+    }
+    
+    func getTopShelf() -> [MyBangumiItemModel]?{
+        let arr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.array(forKey: UD_TOPSHELF_ARR)
+        var decodeArr = [MyBangumiItemModel]()
+        arr?.forEach({ item in
+            if let data = item as? Data,
+               let decodeData = try? PropertyListDecoder().decode(MyBangumiItemModel.self, from: data) {
+                decodeArr.append(decodeData)
+                    }
+        })
+        print("read \(decodeArr.count) items")
+        if decodeArr.isEmpty{
+            return nil
+        }
+        return decodeArr
+    }
+    
+#endif
 }
