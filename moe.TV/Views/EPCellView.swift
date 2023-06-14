@@ -13,9 +13,9 @@ struct EPCellView: View {
         HStack{
             CachedAsyncImage(url: URL(string: epItem.thumbnail)){ image in
                 image.resizable()
-            } placeholder: {
-                ProgressView()
-            }.frame(width: 200,height: 150,alignment: .leading)
+            } placeholder:{
+                ProgressView().padding(10)
+            }.frame(width: 100,height: 50,alignment: .leading)
                 .padding(5)
                 .background(Color.clear)
             
@@ -23,8 +23,8 @@ struct EPCellView: View {
                 Text(epItem.name)
                     .background(Color.clear)
                 Spacer()
-                EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)))
-                    .frame(width: 100,height: 100)
+                EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)),color:.constant(epItem.watch_progress?.watch_status == 2 ? Color.green : Color.orange)  )
+                    .frame(width: 50,height: 50)
                     .padding(10)
                 
             }

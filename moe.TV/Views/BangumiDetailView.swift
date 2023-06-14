@@ -78,11 +78,6 @@ struct BangumiDetailView: View {
                     }).buttonStyle(.plain)
                     .padding(5)
                     .frame(minHeight: 50)
-                    
-//                        .focusable(true)
-//                        .onTapGesture {
-//
-//                        }
                 }
             }
             .refreshable {
@@ -107,7 +102,7 @@ struct BangumiDetailView: View {
                     ZStack(alignment: .topLeading){
                         VideoPlayerView(url: url,seekTime: viewModel.seek,ep: viewModel.ep!)
                             .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
-                        //TODO: close button for macOS
+                        //TODO: better close button for macOS
                         Button(action: {
                             viewModel.closePlayer()
                         }, label: {
@@ -125,6 +120,8 @@ struct BangumiDetailView: View {
             }
 #endif
             
+        }else{
+            Text("Please select an item.").font(.title)
         }
             
     }
@@ -145,8 +142,8 @@ struct BangumiDetailView: View {
             if watchProgress.percentage != 0 ||
                 watchProgress.percentage != 1{
                 print("can seek")
-                
                 //TODO: add continue playback alert
+                
                 checkVideoSource(videoFiles: epDetail.video_files, seekTime: watchProgress.last_watch_position,selectEP: epItem)
                 
             }else{
