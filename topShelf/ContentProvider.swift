@@ -37,6 +37,7 @@ class ContentProvider: TVTopShelfContentProvider {
             completionHandler(content);
             
         }else{
+            print("no item")
             completionHandler(nil)
         }
     }

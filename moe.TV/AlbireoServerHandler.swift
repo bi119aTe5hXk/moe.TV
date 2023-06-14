@@ -65,13 +65,13 @@ func initNetwork() -> String{
     
     let cfg = Alamofire.Session.default.session.configuration
     cfg.connectionProxyDictionary = proxyConfiguration
-    //cfg.httpAdditionalHeaders = ["User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"]
+    //cfg.httpAdditionalHeaders = ["User-Agent": "bi119aTe5hXk/moe.TV/1.0 (Apple Multi-platform) (https://github.com/bi119aTe5hXk/moe.TV)"]
     requestManager = Alamofire.Session(configuration: cfg)
     serverAddr = saveHandler.getServerAddr()
     return serverAddr
 }
 
-func postServer(url:String,
+private func postServer(url:String,
                 postdata:Dictionary<String,Any>,
                 completion: @escaping (Bool, Any) -> Void) {
     requestManager.request(url, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
@@ -89,7 +89,7 @@ func postServer(url:String,
     }
 }
 
-func getServer(url:String,
+private func getServer(url:String,
                completion: @escaping (Bool, Any) -> Void) {
     requestManager.request(url, method: .get, encoding: JSONEncoding.default).responseJSON { response in
         //print(response.result)

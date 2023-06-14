@@ -15,7 +15,7 @@
 		47E7802D2A39C19000827D03 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E7802C2A39C19000827D03 /* SettingsView.swift */; };
 		8627A92C2A34293100A5FCAC /* MyBangumiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A92B2A34293100A5FCAC /* MyBangumiView.swift */; };
 		8627A9302A343CDA00A5FCAC /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A92F2A343CDA00A5FCAC /* LoginView.swift */; };
-		8627A9322A343D6500A5FCAC /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9312A343D6500A5FCAC /* ServerHandler.swift */; };
+		8627A9322A343D6500A5FCAC /* AlbireoServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */; };
 		8627A9352A343D7B00A5FCAC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 8627A9342A343D7B00A5FCAC /* Alamofire */; };
 		8627A9372A343DBC00A5FCAC /* SaveHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9362A343DBC00A5FCAC /* SaveHandler.swift */; };
 		86436D4B2A389EE200E6936F /* EpisodeDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */; };
@@ -73,7 +73,7 @@
 		47E7802C2A39C19000827D03 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		8627A92B2A34293100A5FCAC /* MyBangumiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBangumiView.swift; sourceTree = "<group>"; };
 		8627A92F2A343CDA00A5FCAC /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		8627A9312A343D6500A5FCAC /* ServerHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerHandler.swift; sourceTree = "<group>"; };
+		8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbireoServerHandler.swift; sourceTree = "<group>"; };
 		8627A9362A343DBC00A5FCAC /* SaveHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveHandler.swift; sourceTree = "<group>"; };
 		86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeDetailModel.swift; sourceTree = "<group>"; };
 		86436D4C2A38AE4900E6936F /* EPCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCellView.swift; sourceTree = "<group>"; };
@@ -186,7 +186,7 @@
 				86A9C3E52A3306BC00FD0B44 /* moe_TVApp.swift */,
 				47CC30762A37156D001D3F8C /* Models */,
 				8627A9362A343DBC00A5FCAC /* SaveHandler.swift */,
-				8627A9312A343D6500A5FCAC /* ServerHandler.swift */,
+				8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */,
 				86AD92932A337837008461FF /* Views */,
 				47CC30792A388A68001D3F8C /* Support Files */,
 			);
@@ -348,7 +348,7 @@
 				86AD92922A337729008461FF /* MyBangumiItemModel.swift in Sources */,
 				8627A9372A343DBC00A5FCAC /* SaveHandler.swift in Sources */,
 				86BAC66B2A38BE52001C064F /* VideoPlayerView.swift in Sources */,
-				8627A9322A343D6500A5FCAC /* ServerHandler.swift in Sources */,
+				8627A9322A343D6500A5FCAC /* AlbireoServerHandler.swift in Sources */,
 				47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */,
 				86AD92A02A33A540008461FF /* BangumiCellStatusTextView.swift in Sources */,
 				8627A92C2A34293100A5FCAC /* MyBangumiView.swift in Sources */,

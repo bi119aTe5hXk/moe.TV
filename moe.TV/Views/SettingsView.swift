@@ -19,8 +19,9 @@ struct SettingsView: View {
             }
             
             List{
+                //TODO: bgm.tv login
                 Section(header: Text("bgm.tv")) {
-                    Toggle("Sync play status with bgm.tv", isOn: $syncWithBGMTV)
+                    Toggle("Sync play status with bgm.tv", isOn: $syncWithBGMTV).disabled(true)
                 }
                 Section(header: Text("Sign out")) {
                     Button(action: {
