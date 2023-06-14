@@ -31,8 +31,6 @@ class BangumiDetailViewModel : ObservableObject {
 struct BangumiDetailView: View {
     var bangumiItem:MyBangumiItemModel?
     @State var bgmDetailItem:BangumiDetailModel?
-
-    
     @ObservedObject var viewModel : BangumiDetailViewModel = BangumiDetailViewModel()
     
     var body: some View {
@@ -66,16 +64,25 @@ struct BangumiDetailView: View {
             
             List{
                 ForEach(item.episodes){ ep in
-                    EPCellView(epItem: ep)
-                        .onTapGesture {
-                            getEpisodeDetail(ep_id: ep.id) { result, data in
-                                if result{
-                                    if let epDetail = data as? EpisodeDetailModel{
-                                        checkLastWatchPosition(epDetail: epDetail, epItem: ep)
-                                    }
+                    
+                    Button(action: {
+                        getEpisodeDetail(ep_id: ep.id) { result, data in
+                            if result{
+                                if let epDetail = data as? EpisodeDetailModel{
+                                    checkLastWatchPosition(epDetail: epDetail, epItem: ep)
                                 }
                             }
                         }
+                    }, label: {
+                        EPCellView(epItem: ep)
+                    }).buttonStyle(.plain)
+                    .padding(5)
+                    .frame(minHeight: 50)
+                    
+//                        .focusable(true)
+//                        .onTapGesture {
+//
+//                        }
                 }
             }
             .refreshable {

@@ -24,7 +24,7 @@ struct EPCellView: View {
                     .background(Color.clear)
                 Spacer()
                 EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)))
-                    .frame(width: 50,height: 50)
+                    .frame(width: 100,height: 100)
                     .padding(10)
                 
             }
