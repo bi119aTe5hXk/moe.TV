@@ -8,18 +8,31 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @State private var syncWithBGMTV = false
     var body: some View {
         VStack{
-            Text("Settings")
-                .font(.title)
-                .padding(10)
-            Spacer()
-            Button(action: {
-                clearCookie()
-                exit(0)
-            }, label: {
-                Text("Logout & Exit")
-            }).padding(10)
+            HStack{
+                Text("Settings")
+                    .font(.largeTitle).bold()
+                    .padding(10)
+                Spacer()
+            }
+            
+            List{
+                Section(header: Text("bgm.tv")) {
+                    Toggle("Sync play status with bgm.tv", isOn: $syncWithBGMTV)
+                }
+                Section(header: Text("Sign out")) {
+                    Button(action: {
+                        logOutServer { result, data in
+                            clearCookie()
+                            exit(0)
+                        }
+                    }, label: {
+                        Text("Logout & Exit").foregroundColor(.red)
+                    }).padding(10)
+                }
+            }
         }
     }
 }

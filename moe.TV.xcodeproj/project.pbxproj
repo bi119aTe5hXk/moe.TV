@@ -23,9 +23,7 @@
 		866727F02A39C775009E0104 /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 866727EF2A39C775009E0104 /* TVServices.framework */; platformFilters = (tvos, ); };
 		866727F32A39C776009E0104 /* ContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866727F22A39C776009E0104 /* ContentProvider.swift */; };
 		866727F72A39C776009E0104 /* topShelf.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 866727EE2A39C775009E0104 /* topShelf.appex */; platformFilters = (tvos, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		866727FC2A39C8B4009E0104 /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9312A343D6500A5FCAC /* ServerHandler.swift */; };
 		866727FD2A39C8B9009E0104 /* SaveHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9362A343DBC00A5FCAC /* SaveHandler.swift */; };
-		866727FE2A39C8BC009E0104 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC30772A371784001D3F8C /* LoginViewModel.swift */; };
 		866727FF2A39C8BF009E0104 /* EpisodeDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */; };
 		866728002A39C8C1009E0104 /* BangumiDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */; };
 		866728012A39C8C4009E0104 /* MyBangumiItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AD92912A337729008461FF /* MyBangumiItemModel.swift */; };
@@ -335,11 +333,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				866727FF2A39C8BF009E0104 /* EpisodeDetailModel.swift in Sources */,
-				866727FE2A39C8BC009E0104 /* LoginViewModel.swift in Sources */,
 				866728002A39C8C1009E0104 /* BangumiDetailModel.swift in Sources */,
 				866728012A39C8C4009E0104 /* MyBangumiItemModel.swift in Sources */,
 				866727F32A39C776009E0104 /* ContentProvider.swift in Sources */,
-				866727FC2A39C8B4009E0104 /* ServerHandler.swift in Sources */,
 				866727FD2A39C8B9009E0104 /* SaveHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

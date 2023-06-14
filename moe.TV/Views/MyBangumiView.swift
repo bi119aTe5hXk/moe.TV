@@ -34,15 +34,21 @@ struct MyBangumiView: View {
             BangumiDetailView(bangumiItem: nil)
         }
         .sheet(isPresented: $presentSettingView, content: {
-            Spacer()
+            HStack{
+                Button(action: {
+                    self.presentSettingView.toggle()
+                }, label: {
+                    Text("Close")
+                }).padding(20)
+                Spacer()
+            }
             SettingsView()
-            Button(action: {
-                self.presentSettingView.toggle()
-            }, label: {
-                Text("Cancel")
-            }).padding(10)
+#if os(macOS)
+        .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
+#endif
             Spacer()
         })
+
     }
     func getBGMList() {
         getMyBangumiList { result, data in
