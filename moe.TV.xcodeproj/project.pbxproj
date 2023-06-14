@@ -20,9 +20,9 @@
 		8627A9372A343DBC00A5FCAC /* SaveHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9362A343DBC00A5FCAC /* SaveHandler.swift */; };
 		86436D4B2A389EE200E6936F /* EpisodeDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */; };
 		86436D4D2A38AE4900E6936F /* EPCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4C2A38AE4900E6936F /* EPCellView.swift */; };
-		866727F02A39C775009E0104 /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 866727EF2A39C775009E0104 /* TVServices.framework */; };
+		866727F02A39C775009E0104 /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 866727EF2A39C775009E0104 /* TVServices.framework */; platformFilters = (tvos, ); };
 		866727F32A39C776009E0104 /* ContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866727F22A39C776009E0104 /* ContentProvider.swift */; };
-		866727F72A39C776009E0104 /* topShelf.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 866727EE2A39C775009E0104 /* topShelf.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		866727F72A39C776009E0104 /* topShelf.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 866727EE2A39C775009E0104 /* topShelf.appex */; platformFilters = (tvos, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		866727FC2A39C8B4009E0104 /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9312A343D6500A5FCAC /* ServerHandler.swift */; };
 		866727FD2A39C8B9009E0104 /* SaveHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9362A343DBC00A5FCAC /* SaveHandler.swift */; };
 		866727FE2A39C8BC009E0104 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC30772A371784001D3F8C /* LoginViewModel.swift */; };
@@ -373,6 +373,9 @@
 /* Begin PBXTargetDependency section */
 		866727F62A39C776009E0104 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilters = (
+				tvos,
+			);
 			target = 866727ED2A39C775009E0104 /* topShelf */;
 			targetProxy = 866727F52A39C776009E0104 /* PBXContainerItemProxy */;
 		};
@@ -404,6 +407,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "appletvsimulator appletvos";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -437,6 +441,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "appletvsimulator appletvos";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;

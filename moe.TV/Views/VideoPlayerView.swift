@@ -39,7 +39,7 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 //        playerLayer.frame = self.bounds
         
         controller.player = player
-        controller.modalPresentationStyle = .fullScreen
+        controller.modalPresentationStyle = .automatic
         controller.showsPlaybackControls = true
         controller.allowsPictureInPicturePlayback = true
         
