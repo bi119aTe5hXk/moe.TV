@@ -5,12 +5,13 @@
 //  Created by billgateshxk on 2019/08/15.
 //  Copyright © 2019 bi119aTe5hXk. All rights reserved.
 //  Doc for Albireo: https://albireo.docs.apiary.io/
-//  Doc for Sonarr: https://github.com/Sonarr/Sonarr/wiki/API
 //
 import Alamofire
 import Foundation
 
-var requestManager = Alamofire.Session.default
+private var requestManager = Alamofire.Session.default
+private var serverAddr = ""
+private let saveHandler:SaveHandler = SaveHandler()
 
 func saveCookies(response: DataResponse<Any,AFError>) {
     let headerFields = response.response?.allHeaderFields as! [String: String]
@@ -20,16 +21,24 @@ func saveCookies(response: DataResponse<Any,AFError>) {
     for cookie in cookies {
         cookieArray.append(cookie.properties!)
     }
-    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(cookieArray, forKey: UD_SAVED_COOKIES)
-    UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
+    saveHandler.setCookie(array: cookieArray)
 }
-func loadCookies() {
-    guard let cookieArray = UserDefaults.init(suiteName: UD_SUITE_NAME)?.array(forKey: UD_SAVED_COOKIES) as? [[HTTPCookiePropertyKey: Any]] else { return }
+//return true if logined (have cookie result)
+func loadCookies() -> Bool {
+    guard let cookieArray = saveHandler.getCookie()
+    else {
+        print("cookie is empty")
+        return false
+    }
     for cookieProperties in cookieArray {
-        if let cookie = HTTPCookie(properties: cookieProperties) {
+        if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any]) {
             HTTPCookieStorage.shared.setCookie(cookie)
         }
     }
+    return true
+}
+func clearCookie(){
+    saveHandler.setCookie(array: nil)
 }
 
 func cancelRequest(){
@@ -41,19 +50,14 @@ func cancelRequest(){
 //    })
 }
 
-func initNetwork() {
-    let proxyAddr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_PROXY_SERVER)
-    let proxyPort = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_PROXY_PORT)
+func initNetwork() -> String{
     var proxyConfiguration = [NSObject: AnyObject]()
-    
-    if (proxyAddr?.lengthOfBytes(using: .utf8))! > 0 &&
-        (proxyPort?.lengthOfBytes(using: .utf8))! > 0{
-        print("GoWithProxy:",proxyAddr as Any,":",proxyPort as Any)
-        proxyConfiguration[kCFNetworkProxiesHTTPProxy] = proxyAddr as AnyObject?
-        proxyConfiguration[kCFNetworkProxiesHTTPPort] = proxyPort as AnyObject?
-        proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 1 as AnyObject?
+    if let proxySave:HTTPProxyItem = saveHandler.getProxy(){
+        print("GoWithProxy:",proxySave.ip as Any,":",proxySave.port as Any)
+        proxyConfiguration[kCFNetworkProxiesHTTPProxy] = proxySave.ip as AnyObject
+        proxyConfiguration[kCFNetworkProxiesHTTPPort] = proxySave.port as AnyObject
+        proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 1 as AnyObject
     }else{
-        //print("GoWithoutProxy")
         proxyConfiguration[kCFNetworkProxiesHTTPProxy] = "" as AnyObject?
         proxyConfiguration[kCFNetworkProxiesHTTPPort] = "" as AnyObject?
         proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 0 as AnyObject?
@@ -63,461 +67,337 @@ func initNetwork() {
     cfg.connectionProxyDictionary = proxyConfiguration
     //cfg.httpAdditionalHeaders = ["User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"]
     requestManager = Alamofire.Session(configuration: cfg)
-    
-}
-func addPrefix(url:String) -> String{
-        //var url:String = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!
-    //    if (!urlstr.uppercased().hasPrefix("http://".uppercased()) &&
-    //        !urlstr.uppercased().hasPrefix("https://".uppercased())){
-    //        print("URL \(urlstr) has no prefix fond, add https as default")
-    //        urlstr = "https://" + urlstr //use https as default
-    //    }
-    var urlstr = url
-        if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_USING_HTTPS){
-            urlstr = "https://" + urlstr
-        }else{
-            urlstr = "http://" + urlstr
-        }
-    return urlstr
-}
-func addBasicAuth(url:String) -> String{
-    var urlstr = url
-    if UserDefaults.init(suiteName: UD_SUITE_NAME)!.bool(forKey: UD_SONARR_USINGBASICAUTH) {
-        let username = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_USERNAME)
-        let password = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_PASSWORD)
-        //urlstr  = "\(username!):\(password!)@"
-        urlstr.append("\(username!):\(password!)@")
-    }
-    return urlstr
+    serverAddr = saveHandler.getServerAddr()
+    return serverAddr
 }
 
+func postServer(url:String,
+                postdata:Dictionary<String,Any>,
+                completion: @escaping (Bool, Any) -> Void) {
+    requestManager.request(url, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
+        switch response.result {
+        case .success(let value):
+            //save cookies from response
+            saveCookies(response: response)
+            completion(true, value)
+            break
+        case .failure(let error):
+            // error handling
+            completion(false, error.localizedDescription)
+            break
+        }
+    }
+}
+
+func getServer(url:String,
+               completion: @escaping (Bool, Any) -> Void) {
+    requestManager.request(url, method: .get, encoding: JSONEncoding.default).responseJSON { response in
+        //print(response.result)
+        switch response.result {
+        case .success(let value):
+            completion(true,value)
+            break
+        case .failure(let error):
+            // error handling
+            completion(false, error.localizedDescription)
+            break
+        }
+    }
+}
 
 // MARK: - Albireo Server
-func AlbireoLogInAlbireoServer(username: String,
-                               password: String,
-                               completion: @escaping (Bool, String) -> Void) {
-    initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
+func loginServer(server:String,
+                 username: String,
+                 password: String,
+                 completion: @escaping (Bool, String) -> Void) {
+    saveHandler.setServerAddr(serverInfo: server)
+    var urlstr = initNetwork()
     urlstr.append("/api/user/login")
 
     let postdata = ["name": username, "password": password, "remmember": true] as [String: Any]
     print(urlstr)
-    requestManager.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
-        //print(String(data: response.data!, encoding: .utf8) as Any)
-        switch response.result {
-        case .success(let value):
-            
-            if let JSON = value as? [String: Any] {
+    
+    postServer(url: urlstr, postdata: postdata) { result, data in
+        if result{
+            if let JSON = data as? [String: Any] {
                 if let status = JSON["msg"] {
-                    //save cookies from response
-                    saveCookies(response: response)
-                    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(true, forKey: UD_LOGEDIN)
                     //print(status)
-                    completion(true, (status as! String))
+                    completion(true, status as! String)
                 }
                 if let status = JSON["message"] {
-                    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-                    //print(status)
-                    completion(false, (status as! String))
+                    clearCookie()
+                    completion(false, status as! String)
                 }
             }
-            break
-        case .failure(let error):
-            // error handling
-            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
+        }else{
+            completion(false, data as! String)
         }
     }
+    
 }
 
 
-func AlbireoLogOutServer(completion: @escaping (Bool, String) -> Void) {
-    initNetwork()
-    var urlstr = addPrefix(url: (UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!))
+func logOutServer(completion: @escaping (Bool, String) -> Void) {
+    var urlstr = initNetwork()
     urlstr.append("/api/user/logout")
-    loadCookies()
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response.result)
-        switch response.result {
-        case .success(let value):
-            if let JSON = value as? [String: Any] {
-                if let status = JSON["msg"] {
-                    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(true, forKey: UD_LOGEDIN)
-                    //print(status)
-                    completion(true, (status as! String))
+    if loadCookies(){
+        getServer(url: urlstr) { result, data in
+            if result{
+                if let JSON = data as? [String: Any] {
+                    if let status = JSON["msg"] {
+                        //print(status)
+                        completion(true, status as! String)
+                    }
+                    if let status = JSON["message"] {
+                        //print(status)
+                        completion(false, status as! String)
+                    }
                 }
-                if let status = JSON["message"] {
-                    UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-                    //print(status)
-                    completion(false, (status as! String))
-                }
+            }else{
+                completion(false, data as! String)
             }
-            break
-        case .failure(let error):
-            // error handling
-            UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
         }
     }
 }
 
 
-func AlbireoGetMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
-    initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
+func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
+    var urlstr = initNetwork()
     urlstr.append("/api/home/my_bangumi?status=3")
-    loadCookies()
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(String(data: response.data!, encoding: .utf8) as Any)
-        switch response.result {
-        case .success(let value):
-            if let JSON = value as? [String: Any] {
-                if let data = JSON["data"]{
-                    //print(data)
-                    completion(true, data)
-                }else{
-                    completion(false, "")
-                    break
+    if loadCookies(){
+        
+        getServer(url: urlstr) { result, data in
+            if result{
+                if let JSON = data as? [String: Any] {
+                    if let jdata = JSON["data"] as? [Any]{
+                        //print(data)
+                        var myBGMList = [MyBangumiItemModel]()
+                        jdata.forEach { item  in
+                            if let dicItem = item as? [String: Any]{
+                                let myBGMItem = MyBangumiItemModel.init(id: dicItem["id"] as! String,
+                                                                   bgm_id: dicItem["bgm_id"] as! Int,
+                                                                   name: dicItem["name"] as! String,
+                                                                   name_cn: dicItem["name_cn"] as? String,
+                                                                   summary: dicItem["summary"] as? String,
+                                                                   cover_image_url: dicItem["image"] as? String,
+                                                                   type: dicItem["type"] as! Int,
+                                                                   status: dicItem["status"] as! Int,
+                                                                   air_weekday: dicItem["air_weekday"] as! Int,
+                                                                   eps: dicItem["eps"] as! Int,
+                                                                   favorite_status: dicItem["favorite_status"] as! Int,
+                                                                   unwatched_count: dicItem["unwatched_count"] as? Int)
+                                myBGMList.append(myBGMItem)
+                            }else{
+                                print("Item is not Dictionary:\(item)")
+                            }
+                        }
+                        completion(true, myBGMList)
+                    }else{
+                        clearCookie()
+                        completion(false, "")
+                    }
                 }
+            }else{
+                completion(false, data as! String)
             }
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
         }
     }
 }
 
-func AlbireoGetOnAirList(completion: @escaping (Bool, Any?) -> Void) {
-    initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
-    urlstr.append("/api/home/on_air")
-    loadCookies()
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(String(data: response.data!, encoding: .utf8) as Any)
-        //print(response.result)
-        switch response.result {
-        case .success(let value):
-            if let JSON = value as? [String: Any] {
-                let data = JSON["data"] as Any
-                //print(data)
-                completion(true, data)
-            }
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
-        }
-    }
-}
+//func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
+//    var urlstr = initNetwork()
+//    urlstr.append("/api/home/on_air")
+//    if loadCookies(){
+//        getServer(url: urlstr) { result, data in
+//            if result{
+//                if let JSON = data as? [String: Any] {
+//                    let jdata = JSON["data"] as Any
+//                    //print(data)
+//                    completion(true, jdata)
+//                }
+//            }else{
+//                completion(false, data as! String)
+//            }
+//        }
+//    }
+//}
 
-func AlbireoGetAllBangumiList(page: Int,
+func getAllBangumiList(page: Int,
                        name: String,
                        completion: @escaping (Bool, Any?) -> Void) {
-    initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = initNetwork()
     urlstr.append("/api/home/bangumi?page=")
     urlstr.append(String(page))
     urlstr.append("&count=12&sort_field=air_date&sort_order=desc&name=")
     urlstr.append(name)
     urlstr.append("&type=-1")
-    loadCookies()
-
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response.result)
-        switch response.result {
-        case .success(let value):
-            let dic = value as! Dictionary<String,Any>
-            print("result_count:",dic["total"] as Any)
-            if let JSON = value as? [String: Any] {
-                let data = JSON["data"] as Any
-                //print(data)
-                completion(true, data)
+    if loadCookies(){
+        
+        getServer(url: urlstr) { result, data in
+            if result{
+                let dic = data as! [String: Any]
+                print("result_count:",dic["total"] as Any)
+                
+                if let JSON = data as? [String: Any] {
+                    let jdata = JSON["data"] as Any
+                    //print(data)
+                    completion(true, jdata)
+                }
+            }else{
+                completion(false, data as! String)
             }
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
         }
     }
 }
-func AlbireoGetBangumiDetail(id: String,
+func getBangumiDetail(id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
-    initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = initNetwork()
     urlstr.append("/api/home/bangumi/")
     urlstr.append(id)
-    loadCookies()
-
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response.result)
-        switch response.result {
-        case .success(let value):
-            if let JSON = value as? [String: Any] {
-                let data = JSON["data"] as Any
-                //print(data)
-                completion(true, data)
+    if loadCookies(){
+        getServer(url: urlstr) { result, data in
+            if result{
+                if let JSON = data as? [String: Any] {
+                    //print(data)
+                    if let jdata = JSON["data"] as? [String: Any]{
+                        let jdata_eps = jdata["episodes"] as? [Any]
+                        var eps = [BGMEpisode]()
+                        jdata_eps?.forEach({ item in
+                            if let ep = item as? [String: Any]{
+                                
+                                var wpd:watchProgress?
+                                if let wp = ep["watch_progress"] as? [String:Any]{
+                                    wpd = watchProgress(
+                                        id: wp["id"] as! String,
+                                        user_id: wp["user_id"] as! String,
+                                        last_watch_position: (wp["last_watch_position"] as? NSNumber)!.doubleValue,
+                                        bangumi_id: wp["bangumi_id"] as! String,
+                                        watch_status: wp["watch_status"] as! Int,
+                                        episode_id: wp["episode_id"] as! String,
+                                        percentage: (wp["percentage"] as? NSNumber)!.floatValue
+                                    )
+                                }
+                                
+                                
+                                
+                                eps.append(
+                                    BGMEpisode(
+                                    id: ep["id"] as! String,
+                                    bangumi_id: ep["bangumi_id"] as! String,
+                                    bgm_eps_id: ep["bgm_eps_id"] as! Int,
+                                    name: ep["name"] as! String,
+                                    name_cn: ep["name_cn"] as? String,
+                                    thumbnail: serverAddr + (ep["thumbnail"] as! String),
+                                    status: ep["status"] as! Int,
+                                    episode_no: ep["episode_no"] as! Int,
+                                    duration: ep["duration"] as! String,
+                                    watch_progress: wpd ?? nil)
+                                )
+                                
+                            }
+                        })
+                        
+                        let bgmItem = BangumiDetailModel(
+                            id: jdata["id"] as! String,
+                            bgm_id: jdata["bgm_id"] as! Int,
+                            name: jdata["name"] as! String,
+                            name_cn: jdata["name_cn"] as? String,
+                            summary: jdata["summary"] as? String,
+                            cover_image_url: jdata["image"] as? String,
+                            type: jdata["type"] as! Int,
+                            status: jdata["status"] as! Int,
+                            air_weekday: jdata["air_weekday"] as! Int,
+                            eps: jdata["eps"] as! Int,
+                            episodes: eps)
+                        completion(true, bgmItem)
+                    }else{
+                        completion(false, data as! String)
+                    }
+                    //completion(true, jdata)
+                }
+            }else{
+                completion(false, data as! String)
             }
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
         }
     }
 }
-func AlbireoGetEpisodeDetail(ep_id: String,
+func getEpisodeDetail(ep_id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
-    initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = initNetwork()
     urlstr.append("/api/home/episode/")
     urlstr.append(ep_id)
-    loadCookies()
-
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response.result)
-        switch response.result {
-        case .success(let value):
-            if let JSON = value as? [String: Any] {
-                //print(JSON)
-                completion(true, JSON)
+    if loadCookies(){
+        getServer(url: urlstr) { result, data in
+            if result{
+                if let json = data as? [String: Any] {
+                    //print(JSON)
+                    if let videoFiles = json["video_files"] as? [Any]{
+                        var vfiles = [videoFilesListModel]()
+                        videoFiles.forEach { file in
+                            if let vfile = file as? [String:Any]{
+                                vfiles.append(videoFilesListModel(
+                                    id: vfile["id"] as! String,
+                                    status: vfile["status"] as! Int,
+                                    url: (serverAddr + (vfile["url"] as! String)).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!,
+                                    file_path: vfile["file_path"] as! String,
+                                    file_name: vfile["file_name"] as? String,
+                                    episode_id: vfile["episode_id"] as! String,
+                                    bangumi_id: vfile["bangumi_id"] as! String,
+                                    duration: vfile["duration"] as! Int))
+                            }
+                        }
+                        
+                        let epDetail = EpisodeDetailModel(
+                            id: json["id"] as! String,
+                            bangumi_id: json["bangumi_id"] as! String,
+                            bgm_eps_id: json["bgm_eps_id"] as! Int,
+                            name: json["name"] as! String,
+                            name_cn:json["name_cn"] as? String,
+                            summary: json["summary"] as? String,
+                            thumbnail: serverAddr + (json["thumbnail"] as! String),
+                            status: json["status"] as! Int,
+                            episode_no: json["episode_no"] as! Int,
+                            duration: json["duration"] as! String,
+                            video_files: vfiles)
+                        completion(true, epDetail)
+                    }else{
+                        print("video files is empty?!")
+                    }
+                    
+                    //completion(true, JSON)
+                }
+            }else{
+                completion(false, data as! String)
             }
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
         }
+        
     }
 }
 
-func AlbireoSentEPWatchProgress(ep_id: String,
+func sentEPWatchProgress(ep_id: String,
                          bangumi_id:String,
-                         last_watch_position:Float,
+                         last_watch_position:Double,
                          percentage:Double,
                          is_finished:Bool,
                          completion: @escaping (Bool, Any?) -> Void){
-    initNetwork()
-    var urlstr = addPrefix(url: UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
+    var urlstr = initNetwork()
     urlstr.append("/api/watch/history/")
     urlstr.append(ep_id)
-    loadCookies()
+    if loadCookies(){
     let postdata = ["bangumi_id": bangumi_id, "last_watch_position": last_watch_position, "percentage": percentage,"is_finished":is_finished] as [String: Any]
-    requestManager.request(urlstr, method: .post, parameters: postdata, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response.result)
-        switch response.result {
-        case .success(let value):
-            if let JSON = value as? [String: Any] {
-                //print(JSON)
-                completion(true, JSON)
-            }
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
-        }
-    }
-}
-
-
-// MARK: - Sonarr Server
-
-
-func SonarrAddAPIKEY(url:String)->String{
-    var urlstr = url
-    let apikey = UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SONARR_APIKEY)
-    
-    if (apikey?.lengthOfBytes(using: .utf8))! > 0 {
-        urlstr.append("?apikey=\(apikey!)")
-        return urlstr
-    }else{
-        //missing api key, set loggen in to false
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-        return ""
-    }
-}
-func SonarrURL()->String{
-    var urlstr = ""
-    //add http/https prefix
-    urlstr = addPrefix(url: urlstr)
-    
-    //add basic auth info
-    urlstr = addBasicAuth(url: urlstr)
-    
-    //then append host name and port
-    urlstr.append(UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
-    print(urlstr)
-    return urlstr
-}
-
-func SonarrGetSystemStatus(username:String,
-                           password:String,
-                           apikey:String,
-                           completion: @escaping (Bool, Any?) -> Void) {
-    initNetwork()
-    var urlstr = ""
-    if username.lengthOfBytes(using: .utf8) > 0 || password.lengthOfBytes(using: .utf8) > 0 {
-        urlstr =  "\(username):\(password)@"
-    }
-    
-    urlstr.append(UserDefaults.init(suiteName: UD_SUITE_NAME)!.string(forKey: UD_SERVER_ADDR)!)
-    urlstr = addPrefix(url: urlstr)
-    
-    urlstr.append("/api/system/status")
-    //check the api key is valid at first time "login"
-    urlstr.append("?apikey=\(apikey)")//DO NOT REPLACE WITH USER DEFAULT (SonarrAddAPIKEY func)
-    print(urlstr)
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response)
-        switch response.result {
-        case .success(let value):
-            if let JSON = value as? [String: Any] {
-                //print(JSON)
-                completion(true, JSON)
-            }
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
-        }
-    }
-}
-
-func SonarrGetSeries(id:Int,completion: @escaping (Bool, Any?) -> Void){
-    
-    initNetwork()
-    var urlstr = SonarrURL()
-    urlstr.append("/api")
-    
-    var haveID = false
-    if id >= 0{
-        urlstr.append("/series/\(id)")
-        haveID = true
-    }else{
-        urlstr.append("/series")
-        haveID = false
-    }
-    urlstr = SonarrAddAPIKEY(url: urlstr)
-    
-    //print(urlstr)
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response)
-        switch response.result {
-        case .success(let value):
-            if haveID{
-                if let JSON = value as? [String:Any] {
+        
+        postServer(url: urlstr, postdata: postdata) { result, data in
+            if result{
+                if let JSON = data as? [String: Any] {
                     //print(JSON)
                     completion(true, JSON)
                 }
             }else{
-                if let JSON = value as? [Any] {
-                    //print(JSON)
-                    completion(true, JSON)
-                }
+                completion(false, data as! String)
             }
-            
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
         }
-    }
-}
-
-func SonarrGetEPList(seriesId:Int,completion: @escaping (Bool, Any?) -> Void){
-    initNetwork()
-    var urlstr = SonarrURL()
-    urlstr.append("/api")
-    
-    urlstr.append("/episode")
-    urlstr = SonarrAddAPIKEY(url: urlstr)
-    
-    urlstr.append("&seriesId=\(seriesId)")
-    
-    //print(urlstr)
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response)
-        switch response.result {
-        case .success(let value):
-            if let JSON = value as? [Any] {
-                //print(JSON)
-                completion(true, JSON)
-            }
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
-        }
-    }
-}
-
-func SonarrGetCalendar(completion: @escaping (Bool, Any?) -> Void){
-    initNetwork()
-    var urlstr = SonarrURL()
-    urlstr.append("/api")
-    
-    urlstr.append("/calendar")
-    urlstr = SonarrAddAPIKEY(url: urlstr)
-    
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response.result)
-        switch response.result {
-        case .success(let value):
-            if let JSON = value as? [Any] {
-               // print(JSON)
-                completion(true, JSON)
-            }
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
-        }
+        
     }
 }
 
 
-func SonarrGetRootFolder(completion: @escaping (Bool, Any?) -> Void){
-    initNetwork()
-    var urlstr = SonarrURL()
-    urlstr.append("/api")
-    
-    urlstr.append("/rootfolder")
-    urlstr = SonarrAddAPIKEY(url: urlstr)
-    //print(urlstr)
-    requestManager.request(urlstr, method: .get, encoding: JSONEncoding.default).responseJSON { response in
-        //print(response.result)
-        switch response.result {
-        case .success(let value):
-            if let JSON = value as? [Any] {
-                //print(JSON)
-                completion(true, JSON)
-            }
-            break
-        case .failure(let error):
-            // error handling
-            //UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(false, forKey: UD_LOGEDIN)
-            completion(false, error.localizedDescription)
-            break
-        }
-    }
-}
