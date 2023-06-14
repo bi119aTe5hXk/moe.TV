@@ -96,8 +96,21 @@ struct BangumiDetailView: View {
 #if os(macOS)
             .sheet(isPresented:$viewModel.isPresentVideoView ) {
                 if let url = URL(string: viewModel.videoURL){
-                    VideoPlayerView(url: url,seekTime: viewModel.seek)
-                        .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
+                    ZStack(alignment: .topLeading){
+                        VideoPlayerView(url: url,seekTime: viewModel.seek,ep: viewModel.ep!)
+                            .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
+                        //TODO: close button for macOS
+                        Button(action: {
+                            viewModel.closePlayer()
+                        }, label: {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .renderingMode(.template)
+                                .frame(width: 15, height: 15)
+                                .foregroundColor(.white)
+                        }).buttonStyle(.plain)
+                    }
+                    
                 }else{
                     Text("Error: Video URL is empty")
                 }
@@ -125,6 +138,7 @@ struct BangumiDetailView: View {
                 watchProgress.percentage != 1{
                 print("can seek")
                 
+                //TODO: add continue playback alert
                 checkVideoSource(videoFiles: epDetail.video_files, seekTime: watchProgress.last_watch_position,selectEP: epItem)
                 
             }else{
@@ -140,19 +154,21 @@ struct BangumiDetailView: View {
     func checkVideoSource(videoFiles:[videoFilesListModel],seekTime:Double,selectEP:BGMEpisode){
         if videoFiles.count > 1{
             print("more than one source")
-            Menu{
-                List{
-                    ForEach(videoFiles){ playitem in
-                        Button(action: {
-                            showPlayer(video_files: playitem,seekTime: seekTime,selectEP: selectEP)
-                        }, label: {
-                            Text(playitem.file_name ?? playitem.file_path)
-                        })
-                    }
-                }
-            }  label: {
-                Text("Select a source")
-            }
+//            Menu{
+//                List{
+//                    ForEach(videoFiles){ playitem in
+//                        Button(action: {
+//                            showPlayer(video_files: playitem,seekTime: seekTime,selectEP: selectEP)
+//                        }, label: {
+//                            Text(playitem.file_name ?? playitem.file_path)
+//                        })
+//                    }
+//                }
+//            }  label: {
+//                Text("Select a source")
+//            }
+            //TODO: add muiltable source support
+            showPlayer(video_files: videoFiles[0],seekTime: seekTime,selectEP: selectEP)
         }else{
             showPlayer(video_files: videoFiles[0],seekTime: seekTime,selectEP: selectEP)
         }
