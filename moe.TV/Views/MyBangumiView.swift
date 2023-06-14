@@ -22,16 +22,17 @@ struct MyBangumiView: View {
                 }
                 .navigationTitle("My Bangumi")
                 .toolbar(content: {
-                    Menu(content: {
-                        Button(action: {
-                            clearCookie()
-                            exit(0)
-                        }, label: {
-                            Text("Logout & exit")
-                        })
-                        
+//                    Menu(content: {
+//                        
+//                        
+//                    }, label: {
+//                        Image(systemName: "gear")
+//                    })
+                    Button(action: {
+                        clearCookie()
+                        exit(0)
                     }, label: {
-                        Image(systemName: "gear")
+                        Text("Logout & exit")
                     })
                     
                 })

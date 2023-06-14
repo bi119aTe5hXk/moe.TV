@@ -21,7 +21,8 @@ struct BangumiListView: View {
                 }
             }
 
-        }.listStyle(.sidebar)
+        }
+//        .listStyle(.sidebar)
             
             
     }

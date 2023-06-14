@@ -77,7 +77,8 @@ struct BangumiDetailView: View {
                             }
                         }
                 }
-            }.refreshable {
+            }
+            .refreshable {
                 if let item = bangumiItem{
                     getBGMDetail(id: item.id)
                 }
