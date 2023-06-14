@@ -11,6 +11,8 @@ struct MyBangumiView: View {
     @State var myBGMList = [MyBangumiItemModel]()
     @State private var selectedItem:MyBangumiItemModel? = nil
     
+    @State var presentSettingView:Bool = false
+    
     var body: some View {
         NavigationView {
             let _ = {
@@ -22,22 +24,25 @@ struct MyBangumiView: View {
                 }
                 .navigationTitle("My Bangumi")
                 .toolbar(content: {
-//                    Menu(content: {
-//                        
-//                        
-//                    }, label: {
-//                        Image(systemName: "gear")
-//                    })
                     Button(action: {
-                        clearCookie()
-                        exit(0)
+                        self.presentSettingView.toggle()
                     }, label: {
-                        Text("Logout & exit")
+                        Image(systemName: "gear")
+                            
                     })
-                    
                 })
             BangumiDetailView(bangumiItem: nil)
         }
+        .sheet(isPresented: $presentSettingView, content: {
+            Spacer()
+            SettingsView()
+            Button(action: {
+                self.presentSettingView.toggle()
+            }, label: {
+                Text("Cancel")
+            }).padding(10)
+            Spacer()
+        })
     }
     func getBGMList() {
         getMyBangumiList { result, data in

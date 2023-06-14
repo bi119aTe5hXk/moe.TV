@@ -12,6 +12,7 @@
 		47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */; };
 		47CC30802A393E3B001D3F8C /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 47CC307F2A393E3B001D3F8C /* CachedAsyncImage */; };
 		47E7802B2A397ED900827D03 /* EPCellProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E7802A2A397ED900827D03 /* EPCellProgressView.swift */; };
+		47E7802D2A39C19000827D03 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E7802C2A39C19000827D03 /* SettingsView.swift */; };
 		8627A92C2A34293100A5FCAC /* MyBangumiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A92B2A34293100A5FCAC /* MyBangumiView.swift */; };
 		8627A9302A343CDA00A5FCAC /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A92F2A343CDA00A5FCAC /* LoginView.swift */; };
 		8627A9322A343D6500A5FCAC /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9312A343D6500A5FCAC /* ServerHandler.swift */; };
@@ -36,6 +37,7 @@
 		47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiCellUnreadView.swift; sourceTree = "<group>"; };
 		47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailModel.swift; sourceTree = "<group>"; };
 		47E7802A2A397ED900827D03 /* EPCellProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCellProgressView.swift; sourceTree = "<group>"; };
+		47E7802C2A39C19000827D03 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		8627A92B2A34293100A5FCAC /* MyBangumiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBangumiView.swift; sourceTree = "<group>"; };
 		8627A92F2A343CDA00A5FCAC /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8627A9312A343D6500A5FCAC /* ServerHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerHandler.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				86436D4C2A38AE4900E6936F /* EPCellView.swift */,
 				47E7802A2A397ED900827D03 /* EPCellProgressView.swift */,
 				86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */,
+				47E7802C2A39C19000827D03 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -253,6 +256,7 @@
 				86AD92982A338D9C008461FF /* BangumiDetailView.swift in Sources */,
 				86AD92902A33750F008461FF /* BangumiCellView.swift in Sources */,
 				47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */,
+				47E7802D2A39C19000827D03 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,7 +392,6 @@
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe_TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -400,7 +403,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "moe-TV-Info.plist";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -439,7 +441,6 @@
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe_TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -451,7 +452,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "moe-TV-Info.plist";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

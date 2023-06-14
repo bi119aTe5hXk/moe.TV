@@ -15,16 +15,16 @@ struct EPCellProgressView: View {
             Circle()
                 .stroke(lineWidth: 15.0)
                 .opacity(0.3)
-                .foregroundColor(.orange)
+                .foregroundColor(progress > 0.99 ? .green : .orange)
 
             Circle()
                 .trim(from: 0.0, to: min(progress, 1.0))
                 .stroke(style: StrokeStyle(lineWidth: 15, lineCap: .round, lineJoin: .round))
-                .foregroundColor(.orange)
+                .foregroundColor(progress > 0.99 ? .green : .orange)
                 .rotationEffect(Angle(degrees: 270.0))
 
             Text(String(format: "%.0f%%", min(progress, 1.0) * 100.0))
-                .font(.system(size: 20))
+                .font(.system(size: 15))
                 .bold()
         }
     }
@@ -37,7 +37,7 @@ struct ContentView: View {
         VStack {
             EPCellProgressView(progress: $progressValue)
                 //.frame(width: 100.0, height: 100.0)
-                .font(.system(size: 20))
+                .font(.system(size: 10))
                 .padding(32.0)
             Spacer()
         }

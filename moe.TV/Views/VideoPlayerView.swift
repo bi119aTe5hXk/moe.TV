@@ -18,14 +18,42 @@ class PlayerViewModel: ObservableObject {
         avPlayer = AVPlayer(url: url)
     }
 }
-#if os(iOS)
+//TODO: PiP on tvOS
+#if os(iOS) || os(tvOS)
 struct VideoPlayerViewiOS:UIViewControllerRepresentable{
     let player: AVPlayer
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
+        let audioSession = AVAudioSession.sharedInstance()
+            do {
+                try audioSession.setCategory(.playback)
+                try audioSession.setActive(true, options: [])
+            } catch {
+                print("Setting category to AVAudioSessionCategoryPlayback failed.")
+            }
+        
+//        var playerLayer = AVPlayerLayer(player: player)
+//        var pipController: AVPictureInPictureController?
+//        playerLayer.videoGravity = .resizeAspect
+//        layer.addSublayer(playerLayer)
+//        playerLayer.frame = self.bounds
+        
         controller.player = player
         controller.modalPresentationStyle = .fullScreen
         controller.showsPlaybackControls = true
+        controller.allowsPictureInPicturePlayback = true
+        
+        
+        
+        if AVPictureInPictureController.isPictureInPictureSupported() {
+//            pipController = AVPictureInPictureController(playerLayer: playerLayer)!
+            print("canpip")
+            
+        }else{
+            print("nopip")
+        }
+        
+        
         return controller
     }
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
@@ -33,6 +61,21 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
     }
 }
 #endif
+//TODO: PiP macOS support
+//#if os(macOS)
+//struct VideoPlayerViewMacOS:NSViewControllerRepresentable{
+//    typealias NSViewControllerType = NSViewController
+//    let player: AVPlayer
+//    func makeNSViewController(context: Context) -> NSViewController {
+//
+//        return nil
+//    }
+//
+//    func updateNSViewController(_ nsViewController: NSViewController, context: Context) {
+//
+//    }
+//}
+//#endif
 
 struct VideoPlayerView: View {
     var url:URL

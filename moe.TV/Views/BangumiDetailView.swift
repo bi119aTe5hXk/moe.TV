@@ -51,12 +51,12 @@ struct BangumiDetailView: View {
                         .padding(10)
                 }
                 VStack{
-                    Spacer()
+                    //Spacer()
                     Text(item.name).font(.title)
                     Text(item.name_cn ?? "").font(.title3)
                     Divider()
                     Text(item.summary ?? "")
-                    Spacer()
+                    //Spacer()
                 }
             }.padding(10)
             
