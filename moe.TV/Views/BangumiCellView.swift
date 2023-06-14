@@ -26,10 +26,16 @@ struct BangumiCellView: View {
             
             HStack{
                 VStack{
-                    Text(bangumiItem.name)
-                        .font(.subheadline).bold()
-                    Text(bangumiItem.name_cn ?? "")
+                    HStack{
+                        Text(bangumiItem.name)
+                            .font(.subheadline).bold()
+                        Spacer()
+                    }
+                    HStack{
+                        Text(bangumiItem.name_cn ?? "")
                         .font(.footnote)
+                        Spacer()
+                    }
                 }
                 Spacer()
 //                HStack{
