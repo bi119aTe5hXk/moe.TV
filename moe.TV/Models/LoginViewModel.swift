@@ -10,9 +10,12 @@ import Combine
 import AuthenticationServices
 
 class LoginViewModel: ObservableObject {
-    @Published var server: String = ""
-    @Published var username: String = ""
-    @Published var password: String = ""
+    @Published var server:String = ""
+    @Published var username:String = ""
+    @Published var password:String = ""
+    
+    //TODO: HTTP proxy support
+    
     @Published var isValidServer: Bool = false
     @Published var isValidUsername: Bool = false
     @Published var isValidPassword: Bool = false
@@ -27,7 +30,7 @@ class LoginViewModel: ObservableObject {
         self.server = initNetwork()
         
         $server.sink(receiveValue: {
-            self.isValidServer = ($0.isValidURL || $0.isValidIP) && !$0.isEmpty ? true : false
+            self.isValidServer = $0.isValidURL && !$0.isEmpty ? true : false
         }).store(in: &disposables)
         
         $username.sink(receiveValue: {
@@ -37,6 +40,8 @@ class LoginViewModel: ObservableObject {
         $password.sink(receiveValue: {
             self.isValidPassword = $0.isAlphanumeric && !$0.isEmpty ? true : false
         }).store(in: &disposables)
+        
+        
         
         $isLoginButtonTapped.sink(receiveValue: { isTapped in
                         if isTapped == true {
@@ -60,30 +65,12 @@ class LoginViewModel: ObservableObject {
 
 extension String {
     var isValidURL: Bool {
-        guard !contains("..") else { return false }
-    
-        let head     = "((http|https)://)?([(w|W)]{3}+\\.)?"
-        let tail     = "\\.+[A-Za-z]{2,3}+(\\.)?+(/(.)*)?"
-        let urlRegEx = head+"+(.)+"+tail
-    
-        let urlTest = NSPredicate(format:"SELF MATCHES %@", urlRegEx)
-
-        return urlTest.evaluate(with: trimmingCharacters(in: .whitespaces))
-    }
-    var isValidIP: Bool {
-        var sin = sockaddr_in()
-            var sin6 = sockaddr_in6()
-
-            if withCString({ cstring in inet_pton(AF_INET6, cstring, &sin6.sin6_addr) }) == 1 {
-                // IPv6 peer.
-                return true
-            }
-            else if withCString({ cstring in inet_pton(AF_INET, cstring, &sin.sin_addr) }) == 1 {
-                // IPv4 peer.
-                return true
-            }
-
-            return false;
+        let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        if let match = detector.firstMatch(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count)) {
+            return match.range.length == self.utf16.count
+        } else {
+            return false
+        }
     }
     var isAlphanumeric: Bool {
         return !isEmpty && range(of: "[^a-zA-Z0-9]", options: .regularExpression) == nil
