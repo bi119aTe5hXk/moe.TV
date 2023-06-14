@@ -14,4 +14,4 @@ Watch bangumi on Apple devices
 - tvOS 16.0 and up
 
 ## Supported Service
-- Albireo
+- [Albireo](https://github.com/lordfriend/Albireo)
