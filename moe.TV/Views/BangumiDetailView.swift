@@ -123,8 +123,6 @@ struct BangumiDetailView: View {
             }
 #endif
             
-        }else{
-            Text("Please select an item.").font(.title)
         }
             
     }
