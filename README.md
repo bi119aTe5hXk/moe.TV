@@ -2,16 +2,19 @@
 Watch bangumi on Apple devices
 
 ## Features
-- Sync with iCloud (No need to login multiple times)
-- Support multiple platform (iOS/macOS/tvOS)
+- Sync with iCloud (No need to log in multiple times)
+- Support multiple platforms (iOS/macOS/tvOS)
 - Picture in Picture
 - Save playing progress automatically
 - Yes, SwiftUI
 
-## Supported platform
+## Support platform
 - iOS 15.0 and up
 - macOS (Native & Catalyst) 12.0 and up
 - tvOS 16.0 and up
 
-## Supported Service
+## Support Service
 - [Albireo](https://github.com/lordfriend/Albireo)
+
+## URL Schemes
+- moetv://detail?id=\<Bangumi ID\>
