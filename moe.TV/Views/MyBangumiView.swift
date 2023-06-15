@@ -55,6 +55,7 @@ struct MyBangumiView: View {
             if !result{
                 return
             }
+            self.myBGMList = []
             if let bgmList = data as? [MyBangumiItemModel]{
                 self.myBGMList = bgmList
 #if os(tvOS)

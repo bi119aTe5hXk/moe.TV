@@ -16,6 +16,7 @@ class BangumiDetailViewModel : ObservableObject {
     @Published var ep:BGMEpisode?
     
     func presentVideoView(url:String, seekTime:Double, selectEP:BGMEpisode) {
+        print(url)
         videoURL = url
         seek = seekTime
         ep = selectEP
@@ -42,7 +43,7 @@ struct BangumiDetailView: View {
         }()
         if let item = bgmDetailItem{
             HStack{
-                if let coverURL = item.cover_image_url{
+                if let coverURL = item.image{
                     CachedAsyncImage(url: URL(string: coverURL)){ image in
                         image.resizable()
                     } placeholder: {
@@ -71,6 +72,8 @@ struct BangumiDetailView: View {
                                 if let epDetail = data as? EpisodeDetailModel{
                                     checkLastWatchPosition(epDetail: epDetail, epItem: ep)
                                 }
+                            }else{
+                                print(data)
                             }
                         }
                     }, label: {
@@ -180,7 +183,7 @@ struct BangumiDetailView: View {
     }
     
     func showPlayer(video_files:videoFilesListModel,seekTime:Double,selectEP:BGMEpisode) {
-        viewModel.presentVideoView(url: video_files.url, seekTime: seekTime,selectEP: selectEP)
+        viewModel.presentVideoView(url: fixPathNotCompete(path: video_files.url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)! , seekTime: seekTime,selectEP: selectEP)
     }
     
 }

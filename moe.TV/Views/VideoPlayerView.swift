@@ -109,6 +109,7 @@ struct VideoPlayerView: View {
         }.onDisappear{
             Task{
                 if let player = playerViewModel.avPlayer{
+                    player.pause()
                     logPlaybackPosition(player: player)
                 }
             }

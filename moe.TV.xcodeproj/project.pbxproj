@@ -16,7 +16,6 @@
 		8627A92C2A34293100A5FCAC /* MyBangumiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A92B2A34293100A5FCAC /* MyBangumiView.swift */; };
 		8627A9302A343CDA00A5FCAC /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A92F2A343CDA00A5FCAC /* LoginView.swift */; };
 		8627A9322A343D6500A5FCAC /* AlbireoServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */; };
-		8627A9352A343D7B00A5FCAC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 8627A9342A343D7B00A5FCAC /* Alamofire */; };
 		8627A9372A343DBC00A5FCAC /* SaveHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9362A343DBC00A5FCAC /* SaveHandler.swift */; };
 		86436D4B2A389EE200E6936F /* EpisodeDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */; };
 		86436D4D2A38AE4900E6936F /* EPCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4C2A38AE4900E6936F /* EPCellView.swift */; };
@@ -27,7 +26,6 @@
 		866727FF2A39C8BF009E0104 /* EpisodeDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */; };
 		866728002A39C8C1009E0104 /* BangumiDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */; };
 		866728012A39C8C4009E0104 /* MyBangumiItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AD92912A337729008461FF /* MyBangumiItemModel.swift */; };
-		866728032A39C904009E0104 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 866728022A39C904009E0104 /* Alamofire */; };
 		866728052A39E64D009E0104 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86A9C3E92A3306BE00FD0B44 /* Assets.xcassets */; };
 		86A9C3E62A3306BC00FD0B44 /* moe_TVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A9C3E52A3306BC00FD0B44 /* moe_TVApp.swift */; };
 		86A9C3E82A3306BC00FD0B44 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A9C3E72A3306BC00FD0B44 /* MainView.swift */; };
@@ -104,7 +102,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				866727F02A39C775009E0104 /* TVServices.framework in Frameworks */,
-				866728032A39C904009E0104 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +109,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8627A9352A343D7B00A5FCAC /* Alamofire in Frameworks */,
 				47CC30802A393E3B001D3F8C /* CachedAsyncImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,7 +233,6 @@
 			);
 			name = topShelf;
 			packageProductDependencies = (
-				866728022A39C904009E0104 /* Alamofire */,
 			);
 			productName = topShelf;
 			productReference = 866727EE2A39C775009E0104 /* topShelf.appex */;
@@ -259,7 +254,6 @@
 			);
 			name = moe.TV;
 			packageProductDependencies = (
-				8627A9342A343D7B00A5FCAC /* Alamofire */,
 				47CC307F2A393E3B001D3F8C /* CachedAsyncImage */,
 			);
 			productName = moe.TV;
@@ -294,7 +288,6 @@
 			);
 			mainGroup = 86A9C3D92A3306BC00FD0B44;
 			packageReferences = (
-				8627A9332A343D7B00A5FCAC /* XCRemoteSwiftPackageReference "Alamofire" */,
 				47CC307E2A393E3B001D3F8C /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 			);
 			productRefGroup = 86A9C3E32A3306BC00FD0B44 /* Products */;
@@ -721,14 +714,6 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		8627A9332A343D7B00A5FCAC /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -736,16 +721,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 47CC307E2A393E3B001D3F8C /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
 			productName = CachedAsyncImage;
-		};
-		8627A9342A343D7B00A5FCAC /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8627A9332A343D7B00A5FCAC /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-		866728022A39C904009E0104 /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8627A9332A343D7B00A5FCAC /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

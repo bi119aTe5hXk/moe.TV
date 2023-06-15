@@ -13,7 +13,7 @@ struct BangumiCellView: View {
     
     var body: some View {
 //        HStack{
-//            if let picURLStr = bangumiItem.cover_image_url{
+//            if let picURLStr = bangumiItem.image{
 //                CachedAsyncImage(url: URL(string: picURLStr)){ image in
 //                    image.resizable()
 //                } placeholder: {

@@ -26,9 +26,9 @@ struct SettingsView: View {
                 Section(header: Text("Sign out")) {
                     Button(action: {
                         logOutServer { result, data in
-                            clearCookie()
-                            exit(0)
+                            
                         }
+                        exit(0)
                     }, label: {
                         Text("Logout & Exit").foregroundColor(.red)
                     }).padding(10)

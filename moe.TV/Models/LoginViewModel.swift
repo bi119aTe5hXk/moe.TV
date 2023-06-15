@@ -46,10 +46,10 @@ class LoginViewModel: ObservableObject {
         $isLoginButtonTapped.sink(receiveValue: { isTapped in
                         if isTapped == true {
                             loginServer(server:self.server,
-                                                      username: self.username,
-                                                      password: self.password) { result, data in
+                                      username: self.username,
+                                      password: self.password)
+                            { result, data in
                                 if result {
-                                    self.showError = false
                                     self.presentLoginView = false
                                     print("logined")
                                 }else{

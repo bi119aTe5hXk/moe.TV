@@ -6,7 +6,8 @@
 //
 
 import Foundation
-struct EpisodeDetailModel:Identifiable, Hashable{
+
+struct EpisodeDetailModel:Identifiable, Hashable, Codable{
     let id:String
     var bangumi_id:String //Id of bangumi that is the episode belong to.
     var bgm_eps_id:Int //id of this episode in bgm.tv
@@ -21,7 +22,7 @@ struct EpisodeDetailModel:Identifiable, Hashable{
     var watch_progress:watchProgress? //the watch progress information of current episode, can be undefined.
 }
 
-struct videoFilesListModel:Identifiable, Hashable{
+struct videoFilesListModel:Identifiable, Hashable, Codable{
     let id:String
     var status:Int //can be 1 (download pending), 2 (downloading), 3 (downloaded)
     var url:String

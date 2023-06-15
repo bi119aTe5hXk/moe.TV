@@ -11,16 +11,16 @@ struct EPCellView: View {
     @State var epItem:BGMEpisode
     var body: some View {
         HStack{
-            CachedAsyncImage(url: URL(string: epItem.thumbnail)){ image in
+            CachedAsyncImage(url: URL(string: fixPathNotCompete(path: epItem.thumbnail) )){ image in
                 image.resizable()
             } placeholder:{
-                ProgressView().padding(10)
-            }.frame(width: 100,height: 50,alignment: .leading)
+                ProgressView()
+            }.frame(width: 100,height: 50,alignment: .center)
                 .padding(5)
                 .background(Color.clear)
             
             HStack{
-                Text(epItem.name)
+                Text("\(epItem.episode_no). \(epItem.name)")
                     .background(Color.clear)
                 Spacer()
                 EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)),color:.constant(epItem.watch_progress?.watch_status == 2 ? Color.green : Color.orange)  )
@@ -37,6 +37,6 @@ struct EPCellView: View {
 
 struct EPCellView_Previews: PreviewProvider {
     static var previews: some View {
-        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test", thumbnail: "test", status: 1, episode_no: 1, duration: "test"))
+        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test", thumbnail: "", status: 2, episode_no: 1, duration: "test"))
     }
 }
