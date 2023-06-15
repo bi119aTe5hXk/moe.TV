@@ -14,7 +14,7 @@ Watch bangumi on Apple devices
 - tvOS 16.0 and up
 
 ## Support Service
-- [Albireo](https://github.com/lordfriend/Albireo)
+- [Albireo](https://github.com/lordfriend/Albireo) or the new [Mira project](https://github.com/irohalab/mira-docker)
 
 ## URL Schemes
 - moetv://detail?id=\<Bangumi ID\>
