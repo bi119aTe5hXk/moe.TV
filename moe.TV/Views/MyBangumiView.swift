@@ -31,7 +31,7 @@ struct MyBangumiView: View {
                             
                     })
                 })
-            BangumiDetailView(bangumiItem: nil)
+            BangumiDetailView(bgmID: .constant(selectedItem?.id))
         }
         .sheet(isPresented: $presentSettingView, content: {
             HStack{

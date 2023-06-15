@@ -22,7 +22,7 @@ func saveCookies(response: HTTPURLResponse) {
         cookieArray.append(cookie.properties!)
     }
     saveHandler.setCookie(array: cookieArray)
-    print("cookie saved")
+    //print("cookie saved")
 }
 //return true if logined (have cookie result)
 func loadCookies() -> Bool {
@@ -36,7 +36,7 @@ func loadCookies() -> Bool {
             HTTPCookieStorage.shared.setCookie(cookie)
         }
     }
-    print("cookie loaded")
+    //print("cookie loaded")
     return true
 }
 func clearCookie(){

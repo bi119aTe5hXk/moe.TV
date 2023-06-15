@@ -31,20 +31,6 @@ struct EPCellProgressView: View {
     }
 }
 
-struct ContentView: View {
-    @State var progressValue: CGFloat = 0.3
-    @State var color:Color = .orange
-    var body: some View {
-        VStack {
-            EPCellProgressView(progress: $progressValue,color: $color)
-                //.frame(width: 100.0, height: 100.0)
-                .font(.system(size: 10))
-                .padding(32.0)
-            Spacer()
-        }
-    }
-}
-
 struct EPCellProgressView_Previews: PreviewProvider {
     static var previews: some View {
         EPCellProgressView(progress: .constant(0.9999707400885012),color: .constant(.orange))

@@ -30,14 +30,14 @@ class BangumiDetailViewModel : ObservableObject {
 
 
 struct BangumiDetailView: View {
-    var bangumiItem:MyBangumiItemModel?
+    @Binding var bgmID:String?
     @State var bgmDetailItem:BangumiDetailModel?
     @ObservedObject var viewModel : BangumiDetailViewModel = BangumiDetailViewModel()
     
     var body: some View {
         let _ = {
-            if let item = bangumiItem{
-                getBGMDetail(id: item.id)
+            if let item = bgmID{
+                getBGMDetail(id: item)
             }
             
         }()
@@ -84,8 +84,8 @@ struct BangumiDetailView: View {
                 }
             }
             .refreshable {
-                if let item = bangumiItem{
-                    getBGMDetail(id: item.id)
+                if let item = bgmID{
+                    getBGMDetail(id: item)
                 }
             }
 #if os(iOS) || os(tvOS)
@@ -130,6 +130,7 @@ struct BangumiDetailView: View {
     }
     
     func getBGMDetail(id:String){
+        print("getBGMDetail:\(id)")
         getBangumiDetail(id: id) { result, data in
             if !result{
                 return
@@ -190,6 +191,6 @@ struct BangumiDetailView: View {
 
 struct BangumiDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        BangumiDetailView(bangumiItem: testBangumiItem1)
+        BangumiDetailView(bgmID: .constant(""))
     }
 }

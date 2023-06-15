@@ -19,14 +19,14 @@ class ContentProvider: TVTopShelfContentProvider {
             j.forEach { bgmItem in
                 let tsItem  = TVTopShelfSectionedItem(identifier:bgmItem.id)
                 tsItem.imageShape = .poster
-                tsItem.setImageURL(URL(string: bgmItem.cover_image_url ?? "")!, for: .screenScale2x)
+                tsItem.setImageURL(URL(string: bgmItem.image ?? "")!, for: .screenScale2x)
                 tsItem.title = bgmItem.name
                 
                 if let unwatchCount = bgmItem.unwatched_count{
                     tsItem.playbackProgress = Double(unwatchCount) / Double(bgmItem.eps)
                 }
                 
-                tsItem.displayAction = TVTopShelfAction(url: URL(string: "moetv://detail/\(bgmItem.id)/")!)
+                tsItem.displayAction = TVTopShelfAction(url: URL(string: "moetv://detail?id=\(bgmItem.id)")!)
                 tvTSItems.append(tsItem)
             }
             let collection = TVTopShelfItemCollection(items: tvTSItems)

@@ -12,7 +12,7 @@ struct BangumiCellUnreadView: View {
     var body: some View {
         if unreadCount >= 1{
             Text(String(unreadCount))
-                .padding(5)
+                .padding(8)
                 .foregroundColor(.white)
                 .background(Color.orange.cornerRadius(5))
         }

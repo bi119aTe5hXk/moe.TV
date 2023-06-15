@@ -14,7 +14,7 @@ struct BangumiListView: View {
     var body: some View {
         List{
             ForEach(animeArr) { item in
-                NavigationLink(destination: BangumiDetailView(bangumiItem: item),
+                NavigationLink(destination: BangumiDetailView(bgmID: .constant(item.id)),
                                tag: item,
                                selection:$selectedItem){
                     BangumiCellView(bangumiItem: item)
