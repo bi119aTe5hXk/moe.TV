@@ -13,9 +13,9 @@ class BangumiDetailViewModel : ObservableObject {
     @Published var isPresentVideoView:Bool = false
     @Published var videoURL:String = ""
     @Published var seek:Double = 0.0
-    @Published var ep:BGMEpisode?
+    @Published var ep:EpisodeDetailModel?
     
-    func presentVideoView(url:String, seekTime:Double, selectEP:BGMEpisode) {
+    func presentVideoView(url:String, seekTime:Double, selectEP:EpisodeDetailModel) {
         print(url)
         videoURL = url
         seek = seekTime
@@ -70,7 +70,7 @@ struct BangumiDetailView: View {
                         getEpisodeDetail(ep_id: ep.id) { result, data in
                             if result{
                                 if let epDetail = data as? EpisodeDetailModel{
-                                    checkLastWatchPosition(epDetail: epDetail, epItem: ep)
+                                    checkLastWatchPosition(epDetail: epDetail)
                                 }
                             }else{
                                 print(data)
@@ -139,26 +139,28 @@ struct BangumiDetailView: View {
         }
     }
     
-    func checkLastWatchPosition(epDetail:EpisodeDetailModel, epItem:BGMEpisode){
-        if let watchProgress = epItem.watch_progress{
+    func checkLastWatchPosition(epDetail:EpisodeDetailModel){
+        if let watchProgress = epDetail.watch_progress{
             if watchProgress.percentage != 0 ||
                 watchProgress.percentage != 1{
                 print("can seek")
                 //TODO: add continue playback alert
                 
-                checkVideoSource(videoFiles: epDetail.video_files, seekTime: watchProgress.last_watch_position,selectEP: epItem)
+                checkVideoSource(videoFiles: epDetail.video_files, seekTime: watchProgress.last_watch_position,selectEP: epDetail)
                 
             }else{
                 print("percentage 0 or 1")
-                checkVideoSource(videoFiles: epDetail.video_files, seekTime: 0,selectEP: epItem)
+                checkVideoSource(videoFiles: epDetail.video_files, seekTime: 0,selectEP: epDetail)
             }
         }else{
-            print("no watchProgress:\(epItem)")
-            checkVideoSource(videoFiles: epDetail.video_files, seekTime: 0,selectEP: epItem)
+            print("no watchProgress:\(epDetail)")
+            checkVideoSource(videoFiles: epDetail.video_files, seekTime: 0,selectEP: epDetail)
         }
     }
     
-    func checkVideoSource(videoFiles:[videoFilesListModel],seekTime:Double,selectEP:BGMEpisode){
+    func checkVideoSource(videoFiles:[videoFilesListModel],
+                          seekTime:Double,
+                          selectEP:EpisodeDetailModel){
         if videoFiles.count > 1{
             print("more than one source")
 //            Menu{
@@ -181,7 +183,9 @@ struct BangumiDetailView: View {
         }
     }
     
-    func showPlayer(video_files:videoFilesListModel,seekTime:Double,selectEP:BGMEpisode) {
+    func showPlayer(video_files:videoFilesListModel,
+                    seekTime:Double,
+                    selectEP:EpisodeDetailModel) {
         viewModel.presentVideoView(url: fixPathNotCompete(path: video_files.url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)! , seekTime: seekTime,selectEP: selectEP)
     }
     

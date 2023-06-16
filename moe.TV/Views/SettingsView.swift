@@ -22,7 +22,7 @@ struct SettingsView: View {
                 //TODO: bgm.tv login
                 Section(header: Text("Bgm.tv") ) {
 #if os(tvOS)
-                    Text("Bgm.tv setting on tvOS is not supported. You can use iOS or macOS device to setup and will do sync with bgm.tv on tvOS.")
+                    Text("Bgm.tv setting on tvOS is not supported. But you can use iOS or macOS device to setup and will do sync with bgm.tv on tvOS.")
 #endif
                     Toggle("Sync status with bgm.tv", isOn: $syncWithBGMTV)
 #if os(tvOS)

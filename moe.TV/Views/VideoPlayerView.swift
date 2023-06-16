@@ -22,6 +22,7 @@ class PlayerViewModel: ObservableObject {
 #if os(iOS) || os(tvOS)
 struct VideoPlayerViewiOS:UIViewControllerRepresentable{
     let player: AVPlayer
+    let ep:EpisodeDetailModel
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         let audioSession = AVAudioSession.sharedInstance()
@@ -43,7 +44,7 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
         controller.showsPlaybackControls = true
         controller.allowsPictureInPicturePlayback = true
         
-        
+        controller.title = ep.name
         
         if AVPictureInPictureController.isPictureInPictureSupported() {
 //            pipController = AVPictureInPictureController(playerLayer: playerLayer)!
@@ -80,15 +81,15 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 struct VideoPlayerView: View {
     var url:URL
     var seekTime:Double
-    var ep:BGMEpisode
+    var ep:EpisodeDetailModel
     
     @StateObject private var playerViewModel = PlayerViewModel()
     
     var body: some View {
         ZStack {
             if let avPlayer = playerViewModel.avPlayer {
-#if os(iOS)
-                VideoPlayerViewiOS(player: avPlayer)
+#if os(iOS) || os(tvOS)
+                VideoPlayerViewiOS(player: avPlayer,ep: ep)
 #else
                 VideoPlayer(player: avPlayer)
 #endif
@@ -96,6 +97,7 @@ struct VideoPlayerView: View {
         }.onAppear {
             playerViewModel.loadFromUrl(url: url)
             if let player = playerViewModel.avPlayer{
+                
                 if seekTime != 0{
                     print("seekto:\(seekTime)")
                     player.seek(to: CMTime(seconds: seekTime,
@@ -125,7 +127,11 @@ struct VideoPlayerView: View {
         var isFinished = false
         if percent > 0.95{
             isFinished = true
-            updateBGMEPwatched(epID: ep.bgm_eps_id) { result, data in
+//            updateBGMEPwatched(epID: ep.bgm_eps_id) { result, data in
+//                print(data)
+//            }
+            updateBGMSBEPwatched(subject_id: ep.bangumi.bgm_id,
+                                 episode_id: ep.bgm_eps_id) { result, data in
                 print(data)
             }
         }
@@ -144,6 +150,6 @@ struct VideoPlayerView: View {
 
 struct VideoPlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        VideoPlayerView(url: URL(string: "")!, seekTime: 0, ep: BGMEpisode(id: "", bangumi_id: "", bgm_eps_id: 0, name: "", thumbnail: "", status: 0, episode_no: 0, duration: ""))
+        VideoPlayerView(url: URL(string: "")!, seekTime: 0, ep: EpisodeDetailModel(id: "", bangumi_id: "", bgm_eps_id: 1, name: "", thumbnail: "", status: 1, episode_no: 1, duration: "", bangumi: EPbangumiModel(id: "", bgm_id: 1, name: "", type: 1, status: 1, air_weekday: 1, eps: 1), video_files: [videoFilesListModel(id: "", status: 1, url: "", file_path: "", episode_id: "", bangumi_id: "", duration: 1)]))
     }
 }

@@ -40,7 +40,7 @@ struct watchProgress:Identifiable, Hashable, Codable{
     let id: String
     var user_id:String //identify which user this watch progress belongs to.
     var last_watch_position:Double //last watched video progress by seconds
-    var bangumi_id:String
+    var bangumi_id:String?
     var watch_status:Int //can be 1 (WISH), 2 (WATCHED), 3 (WATCHING), 4 (PAUSE), 5 (ABANDONED)
     var episode_id:String
     var percentage:Float //watched percentage of video duration. from 0 ~ 1

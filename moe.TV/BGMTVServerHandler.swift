@@ -71,12 +71,42 @@ func updateBGMEPwatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
         }
     }
 }
+func updateBGMSBEPwatched(subject_id:Int,episode_id:Int,completion: @escaping (Bool, Any) -> Void){
+    if isBGMTVlogined(){
+        let urlstr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)/episodes"
+        patchServer(urlString: urlstr, postdata: ["episode_id":[episode_id],"type":2]) { result, data in
+            completion(result,data)
+        }
+    }
+}
 
-
+private func patchServer(urlString:String,
+                       postdata:[String:Any],
+               completion: @escaping (Bool, Any) -> Void) {
+    do{
+        print(urlString)
+        guard let url = URL(string: urlString) else {return}
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
+        request.setValue("Bearer \(saveHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        URLSession.shared.dataTask(with: request){(data, response, error) in
+            print(response)
+            if let err = error {
+                completion(false, err.localizedDescription)
+            }
+            guard let data = data else{return}
+            completion(true, String.init(data: data, encoding: .utf8))
+        }.resume()
+    }catch{
+        completion(false, "Cannot convert postdata to json")
+    }
+}
 private func putServer(urlString:String,
                        postdata:[String:Any],
                completion: @escaping (Bool, Any) -> Void) {
-
     do{
         print(urlString)
         guard let url = URL(string: urlString) else {return}
@@ -87,15 +117,14 @@ private func putServer(urlString:String,
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
+            print(response)
             if let err = error {
                 completion(false, err.localizedDescription)
             }
             guard let data = data else{return}
-
             completion(true, String.init(data: data, encoding: .utf8))
         }.resume()
     }catch{
         completion(false, "Cannot convert postdata to json")
     }
-    
 }
