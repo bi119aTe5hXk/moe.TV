@@ -35,12 +35,14 @@ struct MyBangumiView: View {
         }
         .sheet(isPresented: $presentSettingView, content: {
             HStack{
+#if !os(tvOS)
                 Button(action: {
                     self.presentSettingView.toggle()
                 }, label: {
                     Text("Close")
                 }).padding(20)
                 Spacer()
+#endif
             }
             SettingsView()
 #if os(macOS)

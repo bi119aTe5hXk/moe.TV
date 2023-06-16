@@ -14,8 +14,6 @@ class LoginViewModel: ObservableObject {
     @Published var username:String = ""
     @Published var password:String = ""
     
-    //TODO: HTTP proxy support
-    
     @Published var isValidServer: Bool = false
     @Published var isValidUsername: Bool = false
     @Published var isValidPassword: Bool = false

@@ -11,6 +11,9 @@ import Foundation
 private var serverAddr = ""
 private let saveHandler:SaveHandler = SaveHandler()
 private let jsonDecoder = JSONDecoder()
+let userAgent = "bi119aTe5hXk/moe.TV/1.0 (Apple Multi-platform) (https://github.com/bi119aTe5hXk/moe.TV)"
+
+
 func saveCookies(response: HTTPURLResponse) {
     
     let headerFields = response.allHeaderFields as! [String: String]
@@ -45,21 +48,6 @@ func clearCookie(){
 
 
 func initNetwork() -> String{
-    //TODO: HTTP proxy support
-//    var proxyConfiguration = [NSObject: AnyObject]()
-//    if let proxySave:HTTPProxyItem = saveHandler.getProxy(){
-//        print("GoWithProxy:",proxySave.ip as Any,":",proxySave.port as Any)
-//        proxyConfiguration[kCFNetworkProxiesHTTPProxy] = proxySave.ip as AnyObject
-//        proxyConfiguration[kCFNetworkProxiesHTTPPort] = proxySave.port as AnyObject
-//        proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 1 as AnyObject
-//    }else{
-//        proxyConfiguration[kCFNetworkProxiesHTTPProxy] = "" as AnyObject?
-//        proxyConfiguration[kCFNetworkProxiesHTTPPort] = "" as AnyObject?
-//        proxyConfiguration[kCFNetworkProxiesHTTPEnable] = 0 as AnyObject?
-//    }
-    
-    //cfg.httpAdditionalHeaders = ["User-Agent": "bi119aTe5hXk/moe.TV/1.0 (Apple Multi-platform) (https://github.com/bi119aTe5hXk/moe.TV)"]
-    
     serverAddr = saveHandler.getServerAddr()
     return serverAddr
 }
@@ -77,6 +65,7 @@ private func postServer(urlString:String,
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
+        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
             if let err = error {
                 completion(false, err.localizedDescription)
@@ -100,6 +89,7 @@ private func getServer(urlString:String,
     var request = URLRequest(url: url)
     request.httpMethod = "GET"
     request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+    request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
     URLSession.shared.dataTask(with: request){(data, response, error) in
         if let err = error {
             completion(false, err.localizedDescription)
@@ -110,9 +100,6 @@ private func getServer(urlString:String,
         guard let data = data else{return}
         completion(true, data)
     }.resume()
-    
-    
-
 }
 
 // MARK: - Albireo Server

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import OAuthSwift
 @main
 struct moe_TVApp: App {
     @State var showBGMDetailView:Bool = false
@@ -32,6 +32,7 @@ struct moe_TVApp: App {
                 .handlesExternalEvents(preferring: ["*"], allowing: ["*"])
 #endif
                 .onOpenURL { url in
+                    print(url.absoluteURL)
                     if let queryUrlComponents = URLComponents(string: url.absoluteString){
                         switch url.host{
                         case "detail":
@@ -41,8 +42,11 @@ struct moe_TVApp: App {
                                 self.showBGMDetailView.toggle()
                             }
                             break
+                        case "bgmtv":
+                            OAuthSwift.handle(url: url)
+                            break
                             default:
-                            print("not vaild host")
+                            print("unknown host")
                         }
                     }
                 }

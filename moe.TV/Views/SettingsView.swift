@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var syncWithBGMTV = false
+    @State private var syncWithBGMTV = isBGMTVlogined()
     var body: some View {
         VStack{
             HStack{
@@ -20,9 +20,32 @@ struct SettingsView: View {
             
             List{
                 //TODO: bgm.tv login
-                Section(header: Text("bgm.tv")) {
-                    Toggle("Sync play status with bgm.tv", isOn: $syncWithBGMTV).disabled(true)
+                Section(header: Text("Bgm.tv") ) {
+#if os(tvOS)
+                    Text("Bgm.tv setting on tvOS is not supported. You can use iOS or macOS device to setup and will do sync with bgm.tv on tvOS.")
+#endif
+                    Toggle("Sync status with bgm.tv", isOn: $syncWithBGMTV)
+#if os(tvOS)
+                        .disabled(true)
+#endif
+                        .onChange(of: syncWithBGMTV) { value in
+                            if value {
+                                loginBGMServer { result, data in
+                                    syncWithBGMTV = result
+                                    if result {
+                                        print("success login to bgmtv")
+                                    }else{
+                                        print("login to bgmtv failed")
+                                    }
+                                }
+                            }else{
+                                syncWithBGMTV = false
+                                logoutBGMTV()
+                            }
+                        }
+                    
                 }
+                
                 Section(header: Text("Sign out")) {
                     Button(action: {
                         logOutServer { result, data in
