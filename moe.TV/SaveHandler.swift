@@ -36,6 +36,15 @@ class SaveHandler {
         return keyStore.string(forKey: kBGMTVAccessToken) ?? ""
     }
     
+    private let kBGMTVRefreshToken = "kBGMTVRefreshToken"
+    func setBGMTVRefreshToken(token:String){
+        keyStore.set(token, forKey: kBGMTVRefreshToken)
+        keyStore.synchronize()
+    }
+    func getBGMTVRefreshToken() -> String {
+        return keyStore.string(forKey: kBGMTVRefreshToken) ?? ""
+    }
+    
 #if os(tvOS)
     //For tvOS TopShelf
     private let UD_SUITE_NAME = "group.moe.TV"

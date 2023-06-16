@@ -126,7 +126,7 @@ struct VideoPlayerView: View {
         if percent > 0.95{
             isFinished = true
             updateBGMEPwatched(epID: ep.bgm_eps_id) { result, data in
-                print(String.init(data: data as! Data, encoding: .utf8))
+                print(data)
             }
         }
         print("logprogress:\(currentTime),\(percent)")

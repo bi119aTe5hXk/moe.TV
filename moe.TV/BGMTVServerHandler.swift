@@ -30,15 +30,15 @@ func loginBGMServer(completion: @escaping (Bool, Any) -> Void) {
         responseType: "code"
     )
     oauthswift?.accessTokenBasicAuthentification = true
-
-    let handle = oauthswift?.authorize(
+    let _ = oauthswift?.authorize(
         withCallbackURL: "moetv://bgmtv/callback",
         scope: "",
-        state:"moetv") { result in
+        state:UUID().uuidString) { result in
         switch result {
         case .success(let (credential, response, parameters)):
             print(credential.oauthToken)
             saveHandler.setBGMTVAccessToken(token: credential.oauthToken)
+            saveHandler.setBGMTVRefreshToken(token: credential.oauthRefreshToken)
             completion(true, credential.oauthToken)
         case .failure(let error):
             print(error.localizedDescription)
@@ -46,12 +46,27 @@ func loginBGMServer(completion: @escaping (Bool, Any) -> Void) {
         }
     }
 }
+//TODO: Refresh oauth token
+//func refreshToken(completion: @escaping (Bool, Any) -> Void){
+//    oauthswift?.renewAccessToken(withRefreshToken: saveHandler.getBGMTVRefreshToken(), completionHandler: { result in
+//        switch result {
+//        case .success(let (credential, response, parameters)):
+//            print(credential.oauthToken)
+//            saveHandler.setBGMTVAccessToken(token: credential.oauthToken)
+//            saveHandler.setBGMTVRefreshToken(token: credential.oauthRefreshToken)
+//            completion(true, credential.oauthToken)
+//        case .failure(let error):
+//            print(error.localizedDescription)
+//            completion(false, error.localizedDescription)
+//        }
+//    })
+//}
 
 func updateBGMEPwatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/-/episodes/\(epID)"
         putServer(urlString: urlStr,
-                  body: ["type":2]) { result, data in
+                  postdata: ["type":2]) { result, data in
             completion(result,data)
         }
     }
@@ -59,23 +74,28 @@ func updateBGMEPwatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
 
 
 private func putServer(urlString:String,
-                       body:[String:Any],
+                       postdata:[String:Any],
                completion: @escaping (Bool, Any) -> Void) {
-    guard let url = URL(string: urlString) else {return}
-    let headers = ["User-Agent":userAgent,
-                   "Content-Type":"application/json; charset=utf-8"]
-    oauthswift?.client.request(url,
-                               method: .PUT,
-                               parameters: body,
-                               headers: headers,
-                               checkTokenExpiration: true,
-                               completionHandler: { result in
-        switch result {
-        case .success(let response):
-            completion(true, response.data)
-        case .failure(let error):
-            print(error.localizedDescription)
-            completion(false, error.localizedDescription)
-        }
-    })
+
+    do{
+        print(urlString)
+        guard let url = URL(string: urlString) else {return}
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
+        request.setValue("Bearer \(saveHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        URLSession.shared.dataTask(with: request){(data, response, error) in
+            if let err = error {
+                completion(false, err.localizedDescription)
+            }
+            guard let data = data else{return}
+
+            completion(true, String.init(data: data, encoding: .utf8))
+        }.resume()
+    }catch{
+        completion(false, "Cannot convert postdata to json")
+    }
+    
 }
