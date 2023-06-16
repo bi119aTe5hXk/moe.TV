@@ -47,20 +47,20 @@ func loginBGMServer(completion: @escaping (Bool, Any) -> Void) {
     }
 }
 //TODO: Refresh oauth token
-//func refreshToken(completion: @escaping (Bool, Any) -> Void){
-//    oauthswift?.renewAccessToken(withRefreshToken: saveHandler.getBGMTVRefreshToken(), completionHandler: { result in
-//        switch result {
-//        case .success(let (credential, response, parameters)):
-//            print(credential.oauthToken)
-//            saveHandler.setBGMTVAccessToken(token: credential.oauthToken)
-//            saveHandler.setBGMTVRefreshToken(token: credential.oauthRefreshToken)
-//            completion(true, credential.oauthToken)
-//        case .failure(let error):
-//            print(error.localizedDescription)
-//            completion(false, error.localizedDescription)
-//        }
-//    })
-//}
+func refreshToken(completion: @escaping (Bool, Any) -> Void){
+    oauthswift?.renewAccessToken(withRefreshToken: saveHandler.getBGMTVRefreshToken(), completionHandler: { result in
+        switch result {
+        case .success(let (credential, response, parameters)):
+            print(credential.oauthToken)
+            saveHandler.setBGMTVAccessToken(token: credential.oauthToken)
+            saveHandler.setBGMTVRefreshToken(token: credential.oauthRefreshToken)
+            completion(true, credential.oauthToken)
+        case .failure(let error):
+            print(error.localizedDescription)
+            completion(false, error.localizedDescription)
+        }
+    })
+}
 
 func updateBGMEPwatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
