@@ -93,7 +93,7 @@ private func patchServer(urlString:String,
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
-            print(response)
+            //print(response)
             if let err = error {
                 completion(false, err.localizedDescription)
             }
@@ -117,7 +117,7 @@ private func putServer(urlString:String,
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
-            print(response)
+            //print(response)
             if let err = error {
                 completion(false, err.localizedDescription)
             }

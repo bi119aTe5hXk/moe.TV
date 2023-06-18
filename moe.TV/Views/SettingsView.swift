@@ -19,7 +19,6 @@ struct SettingsView: View {
             }
             
             List{
-                //TODO: bgm.tv login
                 Section(header: Text("Bgm.tv") ) {
 #if os(tvOS)
                     Text("Bgm.tv setting on tvOS is not supported. But you can use iOS or macOS device to setup and will do sync with bgm.tv on tvOS.")
@@ -51,7 +50,7 @@ struct SettingsView: View {
                         logOutServer { result, data in
                             
                         }
-                        exit(0)
+                        exit(0) //TODO: Logout without exit
                     }, label: {
                         Text("Logout & Exit").foregroundColor(.red)
                     }).padding(10)
