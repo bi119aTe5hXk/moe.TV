@@ -13,7 +13,6 @@
 		47CC30802A393E3B001D3F8C /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 47CC307F2A393E3B001D3F8C /* CachedAsyncImage */; };
 		47E7802B2A397ED900827D03 /* EPCellProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E7802A2A397ED900827D03 /* EPCellProgressView.swift */; };
 		47E7802D2A39C19000827D03 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E7802C2A39C19000827D03 /* SettingsView.swift */; };
-		86112E842A3C73630034AD97 /* OAuthSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 86112E832A3C73630034AD97 /* OAuthSwift */; };
 		86112E862A3C73F60034AD97 /* BGMTVServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86112E852A3C73F60034AD97 /* BGMTVServerHandler.swift */; };
 		8627A92C2A34293100A5FCAC /* MyBangumiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A92B2A34293100A5FCAC /* MyBangumiView.swift */; };
 		8627A9302A343CDA00A5FCAC /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A92F2A343CDA00A5FCAC /* LoginView.swift */; };
@@ -21,6 +20,7 @@
 		8627A9372A343DBC00A5FCAC /* SaveHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9362A343DBC00A5FCAC /* SaveHandler.swift */; };
 		86436D4B2A389EE200E6936F /* EpisodeDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */; };
 		86436D4D2A38AE4900E6936F /* EPCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4C2A38AE4900E6936F /* EPCellView.swift */; };
+		8658C6912A50839100357761 /* OpenURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8658C6902A50839100357761 /* OpenURL.swift */; };
 		866727F02A39C775009E0104 /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 866727EF2A39C775009E0104 /* TVServices.framework */; platformFilters = (tvos, ); };
 		866727F32A39C776009E0104 /* ContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866727F22A39C776009E0104 /* ContentProvider.swift */; };
 		866727F72A39C776009E0104 /* topShelf.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 866727EE2A39C775009E0104 /* topShelf.appex */; platformFilters = (tvos, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -80,6 +80,7 @@
 		86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeDetailModel.swift; sourceTree = "<group>"; };
 		86436D4C2A38AE4900E6936F /* EPCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCellView.swift; sourceTree = "<group>"; };
 		86436D4F2A38B92100E6936F /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/iOSSupport/System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		8658C6902A50839100357761 /* OpenURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenURL.swift; sourceTree = "<group>"; };
 		866727EE2A39C775009E0104 /* topShelf.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = topShelf.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		866727EF2A39C775009E0104 /* TVServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVServices.framework; path = Library/Frameworks/TVServices.framework; sourceTree = DEVELOPER_DIR; };
 		866727F22A39C776009E0104 /* ContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentProvider.swift; sourceTree = "<group>"; };
@@ -114,7 +115,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86112E842A3C73630034AD97 /* OAuthSwift in Frameworks */,
 				47CC30802A393E3B001D3F8C /* CachedAsyncImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -191,6 +191,7 @@
 				8627A9362A343DBC00A5FCAC /* SaveHandler.swift */,
 				8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */,
 				86112E852A3C73F60034AD97 /* BGMTVServerHandler.swift */,
+				8658C6902A50839100357761 /* OpenURL.swift */,
 				86AD92932A337837008461FF /* Views */,
 				47CC30792A388A68001D3F8C /* Support Files */,
 			);
@@ -263,7 +264,6 @@
 			name = moe.TV;
 			packageProductDependencies = (
 				47CC307F2A393E3B001D3F8C /* CachedAsyncImage */,
-				86112E832A3C73630034AD97 /* OAuthSwift */,
 			);
 			productName = moe.TV;
 			productReference = 86A9C3E22A3306BC00FD0B44 /* moe.TV.app */;
@@ -298,7 +298,6 @@
 			mainGroup = 86A9C3D92A3306BC00FD0B44;
 			packageReferences = (
 				47CC307E2A393E3B001D3F8C /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
-				86112E822A3C73630034AD97 /* XCRemoteSwiftPackageReference "OAuthSwift" */,
 			);
 			productRefGroup = 86A9C3E32A3306BC00FD0B44 /* Products */;
 			projectDirPath = "";
@@ -358,6 +357,7 @@
 				8627A92C2A34293100A5FCAC /* MyBangumiView.swift in Sources */,
 				86436D4D2A38AE4900E6936F /* EPCellView.swift in Sources */,
 				866E2DAB2A3B19E400CFB2ED /* DONOTUPLOAD.swift in Sources */,
+				8658C6912A50839100357761 /* OpenURL.swift in Sources */,
 				47CC30782A371784001D3F8C /* LoginViewModel.swift in Sources */,
 				8627A9302A343CDA00A5FCAC /* LoginView.swift in Sources */,
 				86AD929A2A339285008461FF /* BangumiListView.swift in Sources */,
@@ -622,15 +622,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
 				TVOS_DEPLOYMENT_TARGET = 16.0;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
@@ -677,15 +678,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
 				TVOS_DEPLOYMENT_TARGET = 16.0;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
@@ -732,14 +734,6 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		86112E822A3C73630034AD97 /* XCRemoteSwiftPackageReference "OAuthSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/OAuthSwift/OAuthSwift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -747,11 +741,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 47CC307E2A393E3B001D3F8C /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
 			productName = CachedAsyncImage;
-		};
-		86112E832A3C73630034AD97 /* OAuthSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 86112E822A3C73630034AD97 /* XCRemoteSwiftPackageReference "OAuthSwift" */;
-			productName = OAuthSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

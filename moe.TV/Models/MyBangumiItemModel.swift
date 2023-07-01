@@ -23,8 +23,6 @@ struct MyBangumiItemModel: Codable, Hashable, Identifiable{
     var eps:Int //how many episodes the bangumi has
     var favorite_status:Int //current favorite status of the bangumi, this field can be one of the following value: 1 (WISH), 2 (WATCHED), 3 (WATCHING), 4 (PAUSE), 5 (ABANDONED)
     var unwatched_count:Int? = 0 //how many episodes which is downloaded but not been watched by current user.
-    
-    
 }
 
 let testBangumiItem1 = MyBangumiItemModel.init(

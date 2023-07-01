@@ -111,7 +111,7 @@ func loginServer(server:String,
     var urlstr = initNetwork()
     urlstr.append("/api/user/login")
 
-    let postdata = ["name": username, "password": password, "remmember": true] as [String: Any]
+    let postdata = ["name": username, "password": password, "remmember": true] as [String : Any]
     print(urlstr)
     
     postServer(urlString: urlstr, postdata: postdata) { result, data in

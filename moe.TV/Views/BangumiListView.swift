@@ -28,12 +28,12 @@ struct BangumiListView: View {
            
     }
     
+    //TODO: search all bangumi via albireo API
     private var bangumiFiltered: [MyBangumiItemModel] {
         let searchResult = animeArr.filter {
             $0.name.localizedStandardContains(searchText) || (($0.name_cn ?? "").localizedStandardContains(searchText))
             
         }
-
             return searchText.isEmpty ? animeArr : searchResult
         }
 }

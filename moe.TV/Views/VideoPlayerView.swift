@@ -18,7 +18,7 @@ class PlayerViewModel: ObservableObject {
         avPlayer = AVPlayer(url: url)
     }
 }
-//TODO: PiP on tvOS
+//TODO: PiP on tvOS & sharePlay
 #if os(iOS) || os(tvOS)
 struct VideoPlayerViewiOS:UIViewControllerRepresentable{
     let player: AVPlayer

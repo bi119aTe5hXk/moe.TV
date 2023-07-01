@@ -43,6 +43,7 @@ struct BangumiDetailView: View {
         }()
         if let item = bgmDetailItem{
             HStack{
+                Spacer()
                 if let coverURL = item.image{
                     CachedAsyncImage(url: URL(string: coverURL)){ image in
                         image.resizable()
@@ -51,14 +52,29 @@ struct BangumiDetailView: View {
                     }.frame(width: 150,height: 200,alignment: .leading)
                         .padding(10)
                 }
+                Spacer()
                 VStack{
                     //Spacer()
                     Text(item.name).font(.title)
                     Text(item.name_cn ?? "").font(.title3)
                     Divider()
-                    Text(item.summary ?? "")
-                    //Spacer()
+                    HStack{
+                        Spacer()
+                        Text(item.summary ?? "")
+                        //Spacer()
+                        Button(action: {
+                            let urlString = "https://bgm.tv/subject/\(item.bgm_id)"
+                            openURL(urlString: urlString)
+                        }, label: {
+                            Image("bgmtv")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                        })
+                        Spacer()
+                    }
                 }
+                
+                Spacer()
             }.padding(10)
             
             Divider()

@@ -29,14 +29,7 @@ struct SettingsView: View {
 #endif
                         .onChange(of: syncWithBGMTV) { value in
                             if value {
-                                loginBGMServer { result, data in
-                                    syncWithBGMTV = result
-                                    if result {
-                                        print("success login to bgmtv")
-                                    }else{
-                                        print("login to bgmtv failed")
-                                    }
-                                }
+                                startBGMTVLogin()
                             }else{
                                 syncWithBGMTV = false
                                 logoutBGMTV()

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import OAuthSwift
+
 @main
 struct moe_TVApp: App {
     @State var showBGMDetailView:Bool = false
@@ -43,7 +43,10 @@ struct moe_TVApp: App {
                             }
                             break
                         case "bgmtv":
-                            OAuthSwift.handle(url: url)
+                            if let code = queryUrlComponents.queryItems?.first(where: { $0.name == "code" })?.value{
+                                print(code)
+                                getBGMTVAccessToken(code: code)
+                            }
                             break
                             default:
                             print("unknown host")
