@@ -8,27 +8,6 @@
 import SwiftUI
 import CachedAsyncImage
 
-
-class BangumiDetailViewModel : ObservableObject {
-    @Published var isPresentVideoView:Bool = false
-    @Published var videoURL:String = ""
-    @Published var seek:Double = 0.0
-    @Published var ep:EpisodeDetailModel?
-    
-    func presentVideoView(url:String, seekTime:Double, selectEP:EpisodeDetailModel) {
-        print(url)
-        videoURL = url
-        seek = seekTime
-        ep = selectEP
-        isPresentVideoView.toggle()
-    }
-    func closePlayer(){
-        isPresentVideoView.toggle()
-    }
-}
-
-
-
 struct BangumiDetailView: View {
     @Binding var bgmID:String?
     @State var bgmDetailItem:BangumiDetailModel?
@@ -62,14 +41,16 @@ struct BangumiDetailView: View {
                         Spacer()
                         Text(item.summary ?? "")
                         //Spacer()
+#if !os(tvOS)
                         Button(action: {
                             let urlString = "https://bgm.tv/subject/\(item.bgm_id)"
                             openURL(urlString: urlString)
                         }, label: {
                             Image("bgmtv")
                                 .resizable()
-                                .frame(width: 50, height: 50)
+                                .frame(width: 30, height: 30)
                         })
+#endif
                         Spacer()
                     }
                 }
@@ -207,8 +188,8 @@ struct BangumiDetailView: View {
     
 }
 
-struct BangumiDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        BangumiDetailView(bgmID: .constant(""))
-    }
-}
+//struct BangumiDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        BangumiDetailView(bgmID: .constant(""))
+//    }
+//}

@@ -9,15 +9,6 @@ import SwiftUI
 import AVKit
 import AVFoundation
 
-
-class PlayerViewModel: ObservableObject {
-
-    @Published var avPlayer:AVPlayer?
-
-    func loadFromUrl(url: URL) {
-        avPlayer = AVPlayer(url: url)
-    }
-}
 //TODO: PiP on tvOS & sharePlay
 #if os(iOS) || os(tvOS)
 struct VideoPlayerViewiOS:UIViewControllerRepresentable{
@@ -145,11 +136,16 @@ struct VideoPlayerView: View {
         ) { result, data in
             print(data)
         }
+        
+        if ep.episode_no == ep.bangumi.eps{
+            print("set the subject as watched")
+        }
+        
     }
 }
 
-struct VideoPlayerView_Previews: PreviewProvider {
-    static var previews: some View {
-        VideoPlayerView(url: URL(string: "")!, seekTime: 0, ep: EpisodeDetailModel(id: "", bangumi_id: "", bgm_eps_id: 1, name: "", thumbnail: "", status: 1, episode_no: 1, duration: "", bangumi: EPbangumiModel(id: "", bgm_id: 1, name: "", type: 1, status: 1, air_weekday: 1, eps: 1), video_files: [videoFilesListModel(id: "", status: 1, url: "", file_path: "", episode_id: "", bangumi_id: "", duration: 1)]))
-    }
-}
+//struct VideoPlayerView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        VideoPlayerView(url: URL(string: "")!, seekTime: 0, ep: EpisodeDetailModel(id: "", bangumi_id: "", bgm_eps_id: 1, name: "", thumbnail: "", status: 1, episode_no: 1, duration: "", bangumi: EPbangumiModel(id: "", bgm_id: 1, name: "", type: 1, status: 1, air_weekday: 1, eps: 1), video_files: [videoFilesListModel(id: "", status: 1, url: "", file_path: "", episode_id: "", bangumi_id: "", duration: 1)]))
+//    }
+//}

@@ -9,22 +9,26 @@ import SwiftUI
 
 
 struct MainView: View {
-    @ObservedObject var viewModel: LoginViewModel
+    @ObservedObject var loginVM: LoginViewModel
     var body: some View {
         
-        MyBangumiView()
+        MyBangumiView(myBangumiVM: MyBangumiViewModel())
             .onAppear(perform: {
-                viewModel.presentLoginView = !loadCookies()
+                isAlbireoLoginValid { result in
+                    if !result{
+                        loginVM.showLoginView()
+                    }
+                }
             })
-            .sheet(isPresented: $viewModel.presentLoginView, content: {
-                LoginView(viewModel: viewModel)
+            .sheet(isPresented: $loginVM.presentLoginView, content: {
+                LoginView(viewModel: loginVM)
             })
         }
 }
 
 
-struct MainView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainView(viewModel: LoginViewModel())
-    }
-}
+//struct MainView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        MainView(viewModel: LoginViewModel())
+//    }
+//}

@@ -9,6 +9,10 @@ import SwiftUI
 
 struct SettingsView: View {
     @State private var syncWithBGMTV = isBGMTVlogined()
+    
+    @ObservedObject var loginVM: LoginViewModel
+    @ObservedObject var myBangumiVM: MyBangumiViewModel
+    
     var body: some View {
         VStack{
             HStack{
@@ -43,7 +47,10 @@ struct SettingsView: View {
                         logOutServer { result, data in
                             
                         }
-                        exit(0) //TODO: Logout without exit
+                        myBangumiVM.myBGMList = []
+                        //loginVM.toggleLoginView() //TODO: show login view after logout
+                        myBangumiVM.toggleSettingView()
+                        exit(0) //TODO: logout without exit
                     }, label: {
                         Text("Logout & Exit").foregroundColor(.red)
                     }).padding(10)
@@ -53,8 +60,8 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
-}
+//struct SettingsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SettingsView(loginViewModel: LoginViewModel())
+//    }
+//}

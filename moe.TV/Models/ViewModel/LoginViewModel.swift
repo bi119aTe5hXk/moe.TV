@@ -23,9 +23,18 @@ class LoginViewModel: ObservableObject {
     
     private var disposables = [AnyCancellable]()
     
+    func showLoginView(){
+        self.presentLoginView = true
+    }
+    func dismissLoginView(){
+        self.presentLoginView = false
+    }
+    func toggleErrorView(){
+        self.showError = true
+    }
     
     init(){
-        self.server = initNetwork()
+        self.server = getAlbireoServer()
         
         $server.sink(receiveValue: {
             self.isValidServer = $0.isValidURL && !$0.isEmpty ? true : false
@@ -48,10 +57,10 @@ class LoginViewModel: ObservableObject {
                                       password: self.password)
                             { result, data in
                                 if result {
-                                    self.presentLoginView = false
+                                    self.dismissLoginView()
                                     print("logined")
                                 }else{
-                                    self.showError = true
+                                    self.toggleErrorView()
                                     print("login error")
                                 }
                             }

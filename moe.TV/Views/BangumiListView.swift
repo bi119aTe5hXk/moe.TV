@@ -38,8 +38,8 @@ struct BangumiListView: View {
         }
 }
 
-struct BangumiListView_Previews: PreviewProvider {
-    static var previews: some View {
-        BangumiListView(animeArr: .constant([testBangumiItem1]), selectedItem: testBangumiItem1)
-    }
-}
+//struct BangumiListView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        BangumiListView(animeArr: .constant([testBangumiItem1]), selectedItem: testBangumiItem1)
+//    }
+//}

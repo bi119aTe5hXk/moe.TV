@@ -8,14 +8,19 @@
 import Foundation
 #if os(iOS)
 import UIKit
-#endif
-
 func openURL(urlString:String){
     if let url = URL(string: urlString){
-#if os(macOS)
-        NSWorkspace.shared.open(url)
-#else
         UIApplication.shared.open(url)
-#endif
     }
 }
+#endif
+
+#if os(macOS)
+import Cocoa
+func openURL(urlString:String){
+    if let url = URL(string: urlString){
+        NSWorkspace.shared.open(url)
+    }
+}
+#endif
+

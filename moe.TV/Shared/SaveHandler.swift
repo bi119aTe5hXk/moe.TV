@@ -10,20 +10,20 @@ class SaveHandler {
     private var keyStore = NSUbiquitousKeyValueStore()
     
     private let kCookie = "kCookie"
-    func setCookie(array: Array<Any>?){
+    func setAlbireoCookie(array: Array<Any>?){
         keyStore.set(array, forKey: kCookie)
         keyStore.synchronize()
     }
-    func getCookie() -> Array<Any>?{
+    func getAlbireoCookie() -> Array<Any>?{
         return keyStore.array(forKey: kCookie) ?? nil
     }
     
     private let kServerAddr = "kServerAddr"
-    func setServerAddr(serverInfo:String){
+    func setAlbireoServerAddr(serverInfo:String){
         keyStore.set(serverInfo, forKey: kServerAddr)
         keyStore.synchronize()
     }
-    func getServerAddr() -> String {
+    func getAlbireoServerAddr() -> String {
         return keyStore.string(forKey: kServerAddr) ?? ""
     }
     

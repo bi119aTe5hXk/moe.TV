@@ -6,8 +6,9 @@
 //
 
 import Foundation
+#if !os(tvOS)
 import SafariServices
-
+#endif
 private let saveHandler:SaveHandler = SaveHandler()
 private let jsonDecoder = JSONDecoder()
 
@@ -32,7 +33,9 @@ func logoutBGMTV(){
 
 func startBGMTVLogin() {
     let urlString = "https://bgm.tv/oauth/authorize?client_id=\(bgmAppID)&response_type=code&redirect_uri=moetv%3A%2F%2Fbgmtv"
+#if !os(tvOS)
     openURL(urlString: urlString)
+#endif
 }
 
 func getBGMTVAccessToken(code:String){
@@ -93,7 +96,7 @@ func saveBGMLoginInfo(accessToken:String, refreshToken:String, expireIn:Int){
     saveHandler.setBGMTVAccessToken(token: accessToken)
     saveHandler.setBGMTVRefreshToken(token: refreshToken)
     saveHandler.setBGMTVExpireTime(time: ts)
-    print("bgm.tv oauth login compete")
+    print("bgm.tv oauth token saved")
 }
 
 func isBGMAccessTokenExpired() -> Bool{
@@ -101,8 +104,10 @@ func isBGMAccessTokenExpired() -> Bool{
     let now = Int(Date().timeIntervalSince1970)
     
     if now >= ts{
+        print("bgm.tv accesstoken expired, refresh required")
         return true
     }
+    print("bgm.tv access token \(ts - now)s left")
     return false
 }
 

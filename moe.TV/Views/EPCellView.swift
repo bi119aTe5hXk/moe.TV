@@ -35,8 +35,8 @@ struct EPCellView: View {
     }
 }
 
-struct EPCellView_Previews: PreviewProvider {
-    static var previews: some View {
-        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test", thumbnail: "", status: 2, episode_no: 1, duration: "test"))
-    }
-}
+//struct EPCellView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test", thumbnail: "", status: 2, episode_no: 1, duration: "test"))
+//    }
+//}

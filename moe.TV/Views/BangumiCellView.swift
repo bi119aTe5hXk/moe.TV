@@ -54,8 +54,8 @@ struct BangumiCellView: View {
     }
 }
 
-struct BangumiCellView_Previews: PreviewProvider {
-    static var previews: some View {
-        BangumiCellView(bangumiItem:testBangumiItem2)
-    }
-}
+//struct BangumiCellView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        BangumiCellView(bangumiItem:testBangumiItem2)
+//    }
+//}

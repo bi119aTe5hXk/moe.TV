@@ -14,7 +14,7 @@ struct moe_TVApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainView(viewModel: LoginViewModel())
+            MainView(loginVM: LoginViewModel())
                 .sheet(isPresented: $showBGMDetailView, content: {
 #if !os(tvOS)
                     HStack{

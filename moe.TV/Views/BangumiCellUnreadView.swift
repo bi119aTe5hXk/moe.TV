@@ -19,8 +19,8 @@ struct BangumiCellUnreadView: View {
     }
 }
 
-struct BangumiCellUnreadView_Previews: PreviewProvider {
-    static var previews: some View {
-        BangumiCellUnreadView(unreadCount: 5)
-    }
-}
+//struct BangumiCellUnreadView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        BangumiCellUnreadView(unreadCount: 5)
+//    }
+//}

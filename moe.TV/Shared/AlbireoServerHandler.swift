@@ -15,7 +15,6 @@ let userAgent = "bi119aTe5hXk/moe.TV/1.0 (Apple Multi-platform) (https://github.
 
 
 func saveCookies(response: HTTPURLResponse) {
-    
     let headerFields = response.allHeaderFields as! [String: String]
     let url = response.url
     
@@ -24,14 +23,15 @@ func saveCookies(response: HTTPURLResponse) {
     for cookie in cookies {
         cookieArray.append(cookie.properties!)
     }
-    saveHandler.setCookie(array: cookieArray)
-    //print("cookie saved")
+    saveHandler.setAlbireoCookie(array: cookieArray)
+    print("albireo cookie saved")
 }
-//return true if logined (have cookie result)
+
+//return true if have cookie result
 func loadCookies() -> Bool {
-    guard let cookieArray = saveHandler.getCookie()
+    guard let cookieArray = saveHandler.getAlbireoCookie()
     else {
-        print("cookie is empty")
+        //print("albireo cookie is empty")
         return false
     }
     for cookieProperties in cookieArray {
@@ -39,25 +39,33 @@ func loadCookies() -> Bool {
             HTTPCookieStorage.shared.setCookie(cookie)
         }
     }
-    //print("cookie loaded")
+    print("albireo cookie loaded")
     return true
 }
 func clearCookie(){
-    saveHandler.setCookie(array: nil)
+    saveHandler.setAlbireoCookie(array: nil)
+    print("albireo cookie cleared")
+}
+
+func isAlbireoLoginValid(completion: @escaping (Bool) -> Void){
+    getAlbireoUserInfo { result, data in
+        completion(result)
+    }
 }
 
 
-func initNetwork() -> String{
-    serverAddr = saveHandler.getServerAddr()
+func getAlbireoServer() -> String{
+    serverAddr = saveHandler.getAlbireoServerAddr()
     return serverAddr
 }
 func fixPathNotCompete(path:String) -> String{
-    return "\(saveHandler.getServerAddr())\(path)"
+    return "\(saveHandler.getAlbireoServerAddr())\(path)"
 }
 
 private func postServer(urlString:String,
                 postdata:Dictionary<String,Any>,
                 completion: @escaping (Bool, Any) -> Void) {
+    //print("connecting server via POST")
     do{
         print(urlString)
         guard let url = URL(string: urlString) else {return}
@@ -85,6 +93,7 @@ private func postServer(urlString:String,
 
 private func getServer(urlString:String,
                completion: @escaping (Bool, Any) -> Void) {
+    //print("connecting server via GET:\(urlString)")
     guard let url = URL(string: urlString) else {return}
     var request = URLRequest(url: url)
     request.httpMethod = "GET"
@@ -102,13 +111,13 @@ private func getServer(urlString:String,
     }.resume()
 }
 
-// MARK: - Albireo Server
+// MARK: - Albireo Server APIs
 func loginServer(server:String,
                  username: String,
                  password: String,
                  completion: @escaping (Bool, String) -> Void) {
-    saveHandler.setServerAddr(serverInfo: server)
-    var urlstr = initNetwork()
+    saveHandler.setAlbireoServerAddr(serverInfo: server)
+    var urlstr = getAlbireoServer()
     urlstr.append("/api/user/login")
 
     let postdata = ["name": username, "password": password, "remmember": true] as [String : Any]
@@ -140,21 +149,43 @@ func loginServer(server:String,
 
 
 func logOutServer(completion: @escaping (Bool, String) -> Void) {
-    var urlstr = initNetwork()
-    urlstr.append("/api/user/logout")
+    //TODO: logout via API, get method will save cookie couse logout failed
+//    var urlstr = getAlbireoServer()
+//    urlstr.append("/api/user/logout")
+//    getServer(urlString: urlstr) { result, data in
+//        if result{
+//            do{
+//                if let JSON = try jsonDecoder.decode([String: String]?.self, from: data as! Data){
+//                    if let status = JSON["msg"] {
+//                        print(status)
+//                        completion(true, status)
+//                    }
+//                    if let status = JSON["message"] {//logout failed?
+//                        print(status)
+//                        completion(false, status)
+//                    }
+//                }
+//            }catch{
+//                completion(false, "there is a problem with json decode")
+//            }
+//        }else{
+//            completion(false, data as! String)
+//        }
+//    }
+    clearCookie()
+}
+
+func getAlbireoUserInfo(completion: @escaping (Bool, Any?) -> Void){
+    var urlstr = getAlbireoServer()
+    urlstr.append("/api/user/info")
     if loadCookies(){
         getServer(urlString: urlstr) { result, data in
             if result{
-                do{
-                    if let JSON = try jsonDecoder.decode([String: String]?.self, from: data as! Data){
-                        if let status = JSON["msg"] {
-                            print(status)
-                            completion(true, status)
-                        }
-                        if let status = JSON["message"] {
-                            completion(false, status)
-                        }
-                        clearCookie()
+                do {
+                    if let userInfo = try jsonDecoder.decode(AlbireoUserInfoData?.self, from: data as! Data){
+                        completion(true, userInfo)
+                    }else{
+                        completion(false, data as! String)
                     }
                 }catch{
                     completion(false, "there is a problem with json decode")
@@ -163,19 +194,20 @@ func logOutServer(completion: @escaping (Bool, String) -> Void) {
                 completion(false, data as! String)
             }
         }
+    }else{
+        completion(false, "no cookies!")
     }
 }
 
 
 func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = initNetwork()
+    var urlstr = getAlbireoServer()
     urlstr.append("/api/home/my_bangumi?status=3")
     if loadCookies(){
-        
         getServer(urlString: urlstr) { result, data in
             if result{
                 do {
-                    if let myBGMList:MyBangumiList = try jsonDecoder.decode(MyBangumiList?.self, from: data as! Data){
+                    if let myBGMList = try jsonDecoder.decode(MyBangumiList?.self, from: data as! Data){
                         completion(true, myBGMList.data)
                     }else{
                         completion(false, data as! String)
@@ -192,7 +224,7 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
 }
 
 //func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
-//    var urlstr = initNetwork()
+//    var urlstr = getAlbireoServer()
 //    urlstr.append("/api/home/on_air")
 //    if loadCookies(){
 //        getServer(urlString: urlstr) { result, data in
@@ -212,7 +244,7 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
 //func getAllBangumiList(page: Int,
 //                       name: String,
 //                       completion: @escaping (Bool, Any?) -> Void) {
-//    var urlstr = initNetwork()
+//    var urlstr = getAlbireoServer()
 //    urlstr.append("/api/home/bangumi?page=")
 //    urlstr.append(String(page))
 //    urlstr.append("&count=12&sort_field=air_date&sort_order=desc&name=")
@@ -238,14 +270,14 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
 //}
 func getBangumiDetail(id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = initNetwork()
+    var urlstr = getAlbireoServer()
     urlstr.append("/api/home/bangumi/")
     urlstr.append(id)
     if loadCookies(){
         getServer(urlString: urlstr) { result, data in
             if result{
                 do {
-                    if let detail:BGMDetailDataModel = try jsonDecoder.decode(BGMDetailDataModel?.self, from: data as! Data){
+                    if let detail = try jsonDecoder.decode(BGMDetailDataModel?.self, from: data as! Data){
                         completion(true, detail.data)
                     }else{
                         completion(false, data as! String)
@@ -261,14 +293,14 @@ func getBangumiDetail(id: String,
 }
 func getEpisodeDetail(ep_id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = initNetwork()
+    var urlstr = getAlbireoServer()
     urlstr.append("/api/home/episode/")
     urlstr.append(ep_id)
     if loadCookies(){
         getServer(urlString: urlstr) { result, data in
             if result{
                 do {
-                    if let epDetail:EpisodeDetailModel = try jsonDecoder.decode(EpisodeDetailModel?.self, from: data as! Data){
+                    if let epDetail = try jsonDecoder.decode(EpisodeDetailModel?.self, from: data as! Data){
                         completion(true, epDetail)
                     }else{
                         completion(false, data as! String)
@@ -291,7 +323,7 @@ func sentEPWatchProgress(ep_id: String,
                          percentage:Double,
                          is_finished:Bool,
                          completion: @escaping (Bool, Any?) -> Void){
-    var urlstr = initNetwork()
+    var urlstr = getAlbireoServer()
     urlstr.append("/api/watch/history/")
     urlstr.append(ep_id)
     if loadCookies(){
@@ -301,7 +333,6 @@ func sentEPWatchProgress(ep_id: String,
             if result{
                 if let d = data as? Data{
                     let s = String(data: d, encoding: .utf8)
-                    print(s)
                     completion(true, s)
                 }
             }else{

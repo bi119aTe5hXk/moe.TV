@@ -31,8 +31,8 @@ struct EPCellProgressView: View {
     }
 }
 
-struct EPCellProgressView_Previews: PreviewProvider {
-    static var previews: some View {
-        EPCellProgressView(progress: .constant(0.9999707400885012),color: .constant(.orange))
-    }
-}
+//struct EPCellProgressView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        EPCellProgressView(progress: .constant(0.9999707400885012),color: .constant(.orange))
+//    }
+//}

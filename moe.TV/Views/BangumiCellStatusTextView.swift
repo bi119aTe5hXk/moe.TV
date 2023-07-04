@@ -47,8 +47,8 @@ struct BangumiCellStatusTextView: View {
     }
 }
 
-struct BangumiCellStatusTextView_Previews: PreviewProvider {
-    static var previews: some View {
-        BangumiCellStatusTextView(bangumiStatus: 0)
-    }
-}
+//struct BangumiCellStatusTextView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        BangumiCellStatusTextView(bangumiStatus: 0)
+//    }
+//}
