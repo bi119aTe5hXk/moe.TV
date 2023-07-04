@@ -23,6 +23,7 @@ struct SettingsView: View {
             }
             
             List{
+                //TODO: BGMTV profile name/icon etc.
                 Section(header: Text("Bgm.tv") ) {
 #if os(tvOS)
                     Text("Bgm.tv setting on tvOS is not supported. But you can use iOS or macOS device to setup and will do sync with bgm.tv on tvOS.")

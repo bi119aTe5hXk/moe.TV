@@ -14,11 +14,25 @@ struct MainView: View {
         
         MyBangumiView(myBangumiVM: MyBangumiViewModel())
             .onAppear(perform: {
-                isAlbireoLoginValid { result in
-                    if !result{
-                        loginVM.showLoginView()
+                if loadAlbireoCookies(){
+                    isAlbireoLoginValid { result in
+                        if !result{
+                            loginVM.showLoginView()
+                        }
+                    }
+                }else{
+                    loginVM.showLoginView()
+                }
+                
+                if isBGMTVlogined(){
+                    getBGMTVUserInfo { result, _ in
+                        if !result{
+                            print("bgm.tv oauth info invalid, cleaning...")
+                            logoutBGMTV()
+                        }
                     }
                 }
+                
             })
             .sheet(isPresented: $loginVM.presentLoginView, content: {
                 LoginView(viewModel: loginVM)

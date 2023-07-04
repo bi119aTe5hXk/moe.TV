@@ -14,7 +14,7 @@ private let jsonDecoder = JSONDecoder()
 let userAgent = "bi119aTe5hXk/moe.TV/1.0 (Apple Multi-platform) (https://github.com/bi119aTe5hXk/moe.TV)"
 
 
-func saveCookies(response: HTTPURLResponse) {
+func saveAlbireoCookies(response: HTTPURLResponse) {
     let headerFields = response.allHeaderFields as! [String: String]
     let url = response.url
     
@@ -28,7 +28,7 @@ func saveCookies(response: HTTPURLResponse) {
 }
 
 //return true if have cookie result
-func loadCookies() -> Bool {
+func loadAlbireoCookies() -> Bool {
     guard let cookieArray = saveHandler.getAlbireoCookie()
     else {
         //print("albireo cookie is empty")
@@ -81,7 +81,7 @@ private func postServer(urlString:String,
             guard let data = data else{return}
             
             if let r = response as? HTTPURLResponse{
-                saveCookies(response: r)
+                saveAlbireoCookies(response: r)
             }
             completion(true, data)
         }.resume()
@@ -104,7 +104,7 @@ private func getServer(urlString:String,
             completion(false, err.localizedDescription)
         }
         if let r = response as? HTTPURLResponse{
-            saveCookies(response: r)
+            saveAlbireoCookies(response: r)
         }
         guard let data = data else{return}
         completion(true, data)
@@ -178,7 +178,7 @@ func logOutServer(completion: @escaping (Bool, String) -> Void) {
 func getAlbireoUserInfo(completion: @escaping (Bool, Any?) -> Void){
     var urlstr = getAlbireoServer()
     urlstr.append("/api/user/info")
-    if loadCookies(){
+    if loadAlbireoCookies(){
         getServer(urlString: urlstr) { result, data in
             if result{
                 do {
@@ -203,7 +203,7 @@ func getAlbireoUserInfo(completion: @escaping (Bool, Any?) -> Void){
 func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getAlbireoServer()
     urlstr.append("/api/home/my_bangumi?status=3")
-    if loadCookies(){
+    if loadAlbireoCookies(){
         getServer(urlString: urlstr) { result, data in
             if result{
                 do {
@@ -273,7 +273,7 @@ func getBangumiDetail(id: String,
     var urlstr = getAlbireoServer()
     urlstr.append("/api/home/bangumi/")
     urlstr.append(id)
-    if loadCookies(){
+    if loadAlbireoCookies(){
         getServer(urlString: urlstr) { result, data in
             if result{
                 do {
@@ -296,7 +296,7 @@ func getEpisodeDetail(ep_id: String,
     var urlstr = getAlbireoServer()
     urlstr.append("/api/home/episode/")
     urlstr.append(ep_id)
-    if loadCookies(){
+    if loadAlbireoCookies(){
         getServer(urlString: urlstr) { result, data in
             if result{
                 do {
@@ -326,7 +326,7 @@ func sentEPWatchProgress(ep_id: String,
     var urlstr = getAlbireoServer()
     urlstr.append("/api/watch/history/")
     urlstr.append(ep_id)
-    if loadCookies(){
+    if loadAlbireoCookies(){
     let postdata = ["bangumi_id": bangumi_id, "last_watch_position": last_watch_position, "percentage": percentage,"is_finished":is_finished] as [String: Any]
         
         postServer(urlString: urlstr, postdata: postdata) { result, data in
