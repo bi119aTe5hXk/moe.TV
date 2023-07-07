@@ -35,7 +35,7 @@ struct MainView: View {
                 
             })
             .sheet(isPresented: $loginVM.presentLoginView, content: {
-                LoginView(viewModel: loginVM)
+                LoginView(loginVM: loginVM)
             })
         }
 }

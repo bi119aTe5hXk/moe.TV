@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @ObservedObject var viewModel: LoginViewModel
+    @ObservedObject var loginVM: LoginViewModel
     
     var body: some View {
         VStack{
@@ -18,24 +18,24 @@ struct LoginView: View {
                 .font(.title)
                 .padding(50)
             Spacer()
-            TextField("Server URL", text: $viewModel.server)
+            TextField("Server URL", text: $loginVM.server)
                 .padding(10)
-            TextField("Username", text: $viewModel.username)
+            TextField("Username", text: $loginVM.username)
                 .padding(10)
-            SecureField("Password", text: $viewModel.password)
+            SecureField("Password", text: $loginVM.password)
                 .padding(10)
             Spacer()
             Button(action: {
-                viewModel.isLoginButtonTapped = true
+                loginVM.isLoginButtonTapped = true
             }, label: {
                 Text("Login")
                     .foregroundColor(.white)
             })
             .padding(10)
-            .background(viewModel.isValidUsername && viewModel.isValidPassword && viewModel.isValidServer ? Color.blue : Color.gray)
+            .background(loginVM.isValidUsername && loginVM.isValidPassword && loginVM.isValidServer ? Color.blue : Color.gray)
                         .cornerRadius(10, antialiased: true)
-                        .disabled(!viewModel.isValidUsername || !viewModel.isValidPassword || !viewModel.isValidServer)
-                        .alert("Server URL or Username / Password error.", isPresented: $viewModel.showError) {
+                        .disabled(!loginVM.isValidUsername || !loginVM.isValidPassword || !loginVM.isValidServer)
+                        .alert("Server URL or Username / Password error.", isPresented: $loginVM.showError) {
                                     Button("OK", role: .cancel) { }
                                 }
             Spacer()

@@ -44,7 +44,7 @@ struct BangumiDetailView: View {
 #if !os(tvOS)
                         Button(action: {
                             let urlString = "https://bgm.tv/subject/\(item.bgm_id)"
-                            openURL(urlString: urlString)
+                            openURLInApp(urlString: urlString)
                         }, label: {
                             Image("bgmtv")
                                 .resizable()

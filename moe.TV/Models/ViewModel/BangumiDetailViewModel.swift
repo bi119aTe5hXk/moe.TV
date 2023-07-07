@@ -7,7 +7,7 @@
 
 import Foundation
 class BangumiDetailViewModel : ObservableObject {
-    @Published var isPresentVideoView:Bool = false
+    @Published var isPresentVideoView = false
     @Published var videoURL:String = ""
     @Published var seek:Double = 0.0
     @Published var ep:EpisodeDetailModel?

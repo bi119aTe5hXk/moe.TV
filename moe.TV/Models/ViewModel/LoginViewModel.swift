@@ -10,16 +10,16 @@ import Combine
 import AuthenticationServices
 
 class LoginViewModel: ObservableObject {
-    @Published var server:String = ""
-    @Published var username:String = ""
-    @Published var password:String = ""
+    @Published var server = ""
+    @Published var username = ""
+    @Published var password = ""
     
-    @Published var isValidServer: Bool = false
-    @Published var isValidUsername: Bool = false
-    @Published var isValidPassword: Bool = false
-    @Published var isLoginButtonTapped: Bool = false
-    @Published var showError: Bool = false
-    @Published var presentLoginView: Bool = false
+    @Published var isValidServer = false
+    @Published var isValidUsername = false
+    @Published var isValidPassword = false
+    @Published var isLoginButtonTapped = false
+    @Published var showError = false
+    @Published var presentLoginView = false
     
     private var disposables = [AnyCancellable]()
     

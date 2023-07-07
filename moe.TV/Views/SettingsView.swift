@@ -12,6 +12,7 @@ struct SettingsView: View {
     
     @ObservedObject var loginVM: LoginViewModel
     @ObservedObject var myBangumiVM: MyBangumiViewModel
+    @ObservedObject var settingsVM: SettingsViewModel
     
     var body: some View {
         VStack{
@@ -34,29 +35,54 @@ struct SettingsView: View {
 #endif
                         .onChange(of: syncWithBGMTV) { value in
                             if value {
-                                startBGMTVLogin()
+                                if !isBGMTVlogined(){
+                                    startBGMTVLogin()
+                                }
                             }else{
-                                syncWithBGMTV = false
-                                logoutBGMTV()
+                                settingsVM.showLogoutBGMTVAlert()
                             }
+                        }
+                        .alert(isPresented: $settingsVM.presentLogoutBGMTVAlert) {
+                            Alert(
+                                title: Text("Are you sure you want to logout from bgm.tv?"),
+                                primaryButton: .destructive(Text("Logout")) {
+                                    syncWithBGMTV = false
+                                    logoutBGMTV()
+                                },
+                                secondaryButton: .cancel(){
+                                    syncWithBGMTV = true
+                                }
+                            )
                         }
                     
                 }
                 
                 Section(header: Text("Sign out")) {
                     Button(action: {
-                        logOutServer { result, data in
-                            
-                        }
-                        myBangumiVM.myBGMList = []
-                        //loginVM.toggleLoginView() //TODO: show login view after logout
-                        myBangumiVM.toggleSettingView()
-                        exit(0) //TODO: logout without exit
+                        settingsVM.showLogoutAlbireoAlert()
                     }, label: {
                         Text("Logout & Exit").foregroundColor(.red)
                     }).padding(10)
+                    
+                        .alert(isPresented: $settingsVM.presentLogoutAlbireoAlert) {
+                            Alert(
+                                title: Text("Are you sure you want to logout and exit app?"),
+                                            primaryButton: .destructive(Text("Logout")) {
+                                                logOutServer { result, data in
+                                                    
+                                                }
+                                                myBangumiVM.myBGMList = []
+                                                //loginVM.toggleLoginView() //TODO: show login view after logout
+                                                myBangumiVM.toggleSettingView()
+                                                exit(0) //TODO: logout without exit
+                                            },
+                                            secondaryButton: .cancel()
+                                )
+                        }
                 }
             }
+            
+            
         }
     }
 }

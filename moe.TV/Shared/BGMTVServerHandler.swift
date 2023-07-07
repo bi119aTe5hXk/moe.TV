@@ -21,6 +21,7 @@ func logoutBGMTV(){
     saveHandler.setBGMTVAccessToken(token: "")
     saveHandler.setBGMTVRefreshToken(token: "")
     saveHandler.setBGMTVExpireTime(time: 0)
+    print("bgm.tv auth cleared")
 }
 
 private func patchServer(urlString:String,

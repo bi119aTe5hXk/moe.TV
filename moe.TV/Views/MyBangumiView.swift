@@ -48,7 +48,9 @@ struct MyBangumiView: View {
                 Spacer()
 #endif
             }
-            SettingsView(loginVM: LoginViewModel(), myBangumiVM: myBangumiVM)
+            SettingsView(loginVM: LoginViewModel(),
+                         myBangumiVM: myBangumiVM,
+                         settingsVM: SettingsViewModel())
 #if os(macOS)
         .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
 #endif
