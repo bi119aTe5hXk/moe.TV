@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MainView: View {
     @ObservedObject var loginVM: LoginViewModel
+    @ObservedObject var myBangumiVM: MyBangumiViewModel
     var body: some View {
         
         MyBangumiView(myBangumiVM: MyBangumiViewModel())
@@ -24,14 +25,6 @@ struct MainView: View {
                     loginVM.showLoginView()
                 }
                 
-                if isBGMTVlogined(){
-                    getBGMTVUserInfo { result, _ in
-                        if !result{
-                            print("bgm.tv oauth info invalid, cleaning...")
-                            logoutBGMTV()
-                        }
-                    }
-                }
                 
             })
             .sheet(isPresented: $loginVM.presentLoginView, content: {

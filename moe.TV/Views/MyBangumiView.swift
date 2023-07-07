@@ -8,31 +8,45 @@
 import SwiftUI
 
 struct MyBangumiView: View {
-    @State private var selectedItem:MyBangumiItemModel? = nil
-    
     @ObservedObject var myBangumiVM: MyBangumiViewModel
-    
+    @State private var selectedItem:MyBangumiItemModel? = nil
     
     var body: some View {
         NavigationView {
             let _ = {
                 if myBangumiVM.myBGMList.count <= 0{
                     print("init.getBGMList")
-                    getBGMList()
+                    Task.init(operation: {
+                        await getBGMList()
+                    })
+                }
+                if isBGMTVlogined() && myBangumiVM.getBGMProfileIcon().isEmpty{
+                    fetchBGMProfileIcon()
                 }
             }()
             BangumiListView(animeArr: $myBangumiVM.myBGMList)
                 .refreshable {
+                    myBangumiVM.myBGMList = []
                     print("pulled")
-                    getBGMList()
+                    await getBGMList()
                 }
                 .navigationTitle("My Bangumi")
                 .toolbar(content: {
                     Button(action: {
                         myBangumiVM.toggleSettingView()
                     }, label: {
-                        Image(systemName: "gear")
-                            
+                        if isBGMTVlogined(){
+                            AsyncImage(url: URL(string: myBangumiVM.getBGMProfileIcon())) { image in
+                                image.resizable()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(.white)
+                                    .clipShape(Circle())
+                            } placeholder: {
+                                ProgressView()
+                            }
+                        }else{
+                            Image(systemName: "gear")
+                        }
                     })
                 })
             BangumiDetailView(bgmID: .constant(selectedItem?.id))
@@ -58,7 +72,7 @@ struct MyBangumiView: View {
         })
 
     }
-    func getBGMList() {
+    func getBGMList() async {
         getMyBangumiList { result, data in
             if !result{
                 //TODO: login failed, cookie expired
@@ -73,6 +87,24 @@ struct MyBangumiView: View {
             }
         }
     }
+    
+    func fetchBGMProfileIcon(){
+        if isBGMTVlogined(){
+            getBGMTVUserInfo { result, data in
+                if result{
+                    if let d = data as? BGMTVUserInfoModel{
+                        let url = d.avatar?.large ?? ""
+                        myBangumiVM.setBGMProfileIcon(url: url)
+                    }
+                }else{
+                    print("bgm.tv oauth info invalid, cleaning...")
+                    logoutBGMTV()
+                }
+            }
+        }
+    }
+    
+    
 }
 
 

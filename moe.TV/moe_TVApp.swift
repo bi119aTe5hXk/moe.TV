@@ -14,7 +14,8 @@ struct moe_TVApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainView(loginVM: LoginViewModel())
+            MainView(loginVM: LoginViewModel(),
+                     myBangumiVM: MyBangumiViewModel())
                 .sheet(isPresented: $showBGMDetailView, content: {
 #if !os(tvOS)
                     HStack{
