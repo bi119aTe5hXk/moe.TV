@@ -8,6 +8,7 @@
 import SwiftUI
 import AVKit
 import AVFoundation
+import Combine
 
 //TODO: PiP on tvOS & sharePlay
 #if os(iOS) || os(tvOS)
@@ -69,6 +70,16 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 //}
 //#endif
 
+class PlayerItemObserver {
+    @Published var currentStatus: AVPlayer.TimeControlStatus?
+    private var itemObservation: AnyCancellable?
+    init(player: AVPlayer) {
+        itemObservation = player.publisher(for: \.timeControlStatus).sink { newStatus in
+            self.currentStatus = newStatus
+        }
+    }
+}
+
 struct VideoPlayerView: View {
     var url:URL
     var seekTime:Double
@@ -80,9 +91,41 @@ struct VideoPlayerView: View {
         ZStack {
             if let avPlayer = playerViewModel.avPlayer {
 #if os(iOS) || os(tvOS)
-                VideoPlayerViewiOS(player: avPlayer,ep: ep)
+                let playerObserver = PlayerItemObserver(player: avPlayer)
+                VideoPlayerViewiOS(player: avPlayer, ep: ep)
+                    .onReceive(playerObserver.$currentStatus) { status in
+                        switch status{
+                        case nil:
+                            print("nothing is here")
+                        case .waitingToPlayAtSpecifiedRate:
+                            print("waiting")
+                        case .paused:
+                            print("paused")
+                            logPlaybackPosition(player: avPlayer)
+                        case .playing:
+                            print("playing")
+                        case .some(_):
+                            print("unknown player status")
+                        }
+                    }
 #else
+                let playerObserver = PlayerItemObserver(player: avPlayer)
                 VideoPlayer(player: avPlayer)
+                    .onReceive(playerObserver.$currentStatus) { status in
+                        switch status{
+                        case nil:
+                            print("nothing is here")
+                        case .waitingToPlayAtSpecifiedRate:
+                            print("waiting")
+                        case .paused:
+                            print("paused")
+                            logPlaybackPosition(player: avPlayer)
+                        case .playing:
+                            print("playing")
+                        case .some(_):
+                            print("unknown player status")
+                        }
+                    }
 #endif
             }
         }.onAppear {
@@ -107,7 +150,6 @@ struct VideoPlayerView: View {
                 }
             }
         }.edgesIgnoringSafeArea(.all)
-        
     }
     
     func logPlaybackPosition(player:AVPlayer) {
