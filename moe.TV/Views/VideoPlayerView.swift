@@ -121,25 +121,37 @@ struct VideoPlayerView: View {
 //            updateBGMEPwatched(epID: ep.bgm_eps_id) { result, data in
 //                print(data)
 //            }
-            updateBGMSBEPwatched(subject_id: ep.bangumi.bgm_id,
-                                 episode_id: ep.bgm_eps_id) { result, data in
-                print(data)
+            if let subject_id = ep.bangumi?.bgm_id{
+                if let episode_id = ep.bgm_eps_id{
+                    updateBGMSBEPwatched(subject_id: subject_id,
+                                         episode_id: episode_id) { result, data in
+                        print(data)
+                    }
+                }else{
+                    print("ep.bgm_eps_id is missing")
+                }
+            }else{
+                print("ep.bangumi.bgm_id is missing")
             }
+            
         }
         print("logprogress:\(currentTime),\(percent)")
-        
-        sentEPWatchProgress(ep_id: ep.id,
-                            bangumi_id: ep.bangumi_id,
-                            last_watch_position: currentTime,
-                            percentage: percent,
-                            is_finished: isFinished
-        ) { result, data in
-            print(data)
+        if let bangumi_id = ep.bangumi_id{
+            sentEPWatchProgress(ep_id: ep.id,
+                                bangumi_id: bangumi_id,
+                                last_watch_position: currentTime,
+                                percentage: percent,
+                                is_finished: isFinished
+            ) { result, data in
+                print(data as Any)
+            }
+        }else{
+            print("ep.bangumi_id is missing")
         }
         
-        if ep.episode_no == ep.bangumi.eps{
-            print("set the subject as watched")
-        }
+//        if ep.episode_no == ep.bangumi.eps{
+//            print("set the subject as watched")
+//        }
         
     }
 }

@@ -27,7 +27,7 @@ struct BangumiCellView: View {
             HStack{
                 VStack{
                     HStack{
-                        Text(bangumiItem.name)
+                        Text(bangumiItem.name ?? "")
                             .font(.subheadline).bold()
                         Spacer()
                     }

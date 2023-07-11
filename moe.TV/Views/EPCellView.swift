@@ -11,7 +11,7 @@ struct EPCellView: View {
     @State var epItem:BGMEpisode
     var body: some View {
         HStack{
-            CachedAsyncImage(url: URL(string: fixPathNotCompete(path: epItem.thumbnail) )){ image in
+            CachedAsyncImage(url: URL(string: fixPathNotCompete(path: epItem.thumbnail ?? "") )){ image in
                 image.resizable()
             } placeholder:{
                 ProgressView()
@@ -20,7 +20,7 @@ struct EPCellView: View {
                 .background(Color.clear)
             
             HStack{
-                Text("\(epItem.episode_no). \(epItem.name)")
+                Text("\(epItem.episode_no ?? 0). \(epItem.name ?? "")")
                     .background(Color.clear)
                 Spacer()
                 EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)),color:.constant(epItem.watch_progress?.watch_status == 2 ? Color.green : Color.orange)  )

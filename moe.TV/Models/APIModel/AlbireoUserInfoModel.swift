@@ -7,11 +7,11 @@
 
 import Foundation
 struct AlbireoUserInfoData: Codable{
-    let data:AlbireoUserInfo
+    let data:AlbireoUserInfo?
 }
 struct AlbireoUserInfo: Codable{
-    let name:String
-    let level:Int
-    let email:String
-    let email_confirmed:Bool
+    let name:String?
+    let level:Int?
+    let email:String?
+    let email_confirmed:Bool?
 }

@@ -11,7 +11,7 @@ import CachedAsyncImage
 struct BangumiDetailView: View {
     @Binding var bgmID:String?
     @State var bgmDetailItem:BangumiDetailModel?
-    @ObservedObject var viewModel : BangumiDetailViewModel = BangumiDetailViewModel()
+    @ObservedObject var detailVM : BangumiDetailViewModel = BangumiDetailViewModel()
     
     var body: some View {
         let _ = {
@@ -34,7 +34,7 @@ struct BangumiDetailView: View {
                 Spacer()
                 VStack{
                     //Spacer()
-                    Text(item.name).font(.title)
+                    Text(item.name ?? "").font(.title)
                     Text(item.name_cn ?? "").font(.title3)
                     Divider()
                     HStack{
@@ -43,7 +43,7 @@ struct BangumiDetailView: View {
                         //Spacer()
 #if !os(tvOS)
                         Button(action: {
-                            let urlString = "https://bgm.tv/subject/\(item.bgm_id)"
+                            let urlString = "https://bgm.tv/subject/\(String(describing: item.bgm_id))"
                             openURLInApp(urlString: urlString)
                         }, label: {
                             Image("bgmtv")
@@ -61,16 +61,17 @@ struct BangumiDetailView: View {
             Divider()
             
             List{
-                ForEach(item.episodes){ ep in
+                ForEach(item.episodes ?? []){ ep in
                     
                     Button(action: {
                         getEpisodeDetail(ep_id: ep.id) { result, data in
                             if result{
                                 if let epDetail = data as? EpisodeDetailModel{
-                                    checkLastWatchPosition(epDetail: epDetail)
+                                    detailVM.setSelectedEP(ep: epDetail)
+                                    checkVideoSource()
                                 }
                             }else{
-                                print(data)
+                                print(data as Any)
                             }
                         }
                     }, label: {
@@ -86,25 +87,25 @@ struct BangumiDetailView: View {
                 }
             }
 #if os(iOS) || os(tvOS)
-            .fullScreenCover(isPresented:$viewModel.isPresentVideoView,
+            .fullScreenCover(isPresented:$detailVM.presentVideoView,
                              onDismiss: { },
                              content: {
-                if let url = URL(string: viewModel.videoURL){
-                    VideoPlayerView(url: url, seekTime: viewModel.seek,ep: viewModel.ep!)
+                if let url = URL(string: detailVM.videoURL){
+                    VideoPlayerView(url: url, seekTime: detailVM.seek,ep: detailVM.ep!)
                 }else{
                     Text("Error: Video URL is empty")
                 }
             })
 #endif
 #if os(macOS)
-            .sheet(isPresented:$viewModel.isPresentVideoView ) {
-                if let url = URL(string: viewModel.videoURL){
+            .sheet(isPresented:$detailVM.isPresentVideoView ) {
+                if let url = URL(string: detailVM.videoURL){
                     ZStack(alignment: .topLeading){
                         VideoPlayerView(url: url,seekTime: viewModel.seek,ep: viewModel.ep!)
                             .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
                         //TODO: better close button for macOS
                         Button(action: {
-                            viewModel.closePlayer()
+                            detailVM.closePlayer()
                         }, label: {
                             Image(systemName: "xmark")
                                 .resizable()
@@ -119,7 +120,26 @@ struct BangumiDetailView: View {
                 }
             }
 #endif
-            
+            .alert("Please select a source:",isPresented: $detailVM.presentSourceSelectAlert) {
+                if let ep = detailVM.ep{
+                    ForEach(ep.video_files
+                            ?? [], id: \.self){ item in
+                        Button(item.file_name ?? "unknow source"){
+                            detailVM.setVideoURL(url: fixPathNotCompete(path: item.url ?? "").addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!)
+                        }
+                    }
+                }
+            }
+            .alert("Continue from last position?",isPresented: $detailVM.presentContinuePlayAlert) {
+                Button("Yes") {
+                    detailVM.setSeekTime(time: detailVM.ep!.watch_progress!.last_watch_position!)
+                    detailVM.showVideoView()
+                }
+                Button("No, start from beginning"){
+                    detailVM.setSeekTime(time: 0)
+                    detailVM.showVideoView()
+                }
+            }
         }
             
     }
@@ -135,55 +155,38 @@ struct BangumiDetailView: View {
             }
         }
     }
-    
-    func checkLastWatchPosition(epDetail:EpisodeDetailModel){
-        if let watchProgress = epDetail.watch_progress{
-            if watchProgress.percentage != 0 ||
-                watchProgress.percentage != 1{
-                print("can seek")
-                //TODO: add continue playback alert
-                
-                checkVideoSource(videoFiles: epDetail.video_files, seekTime: watchProgress.last_watch_position,selectEP: epDetail)
-                
+    func checkVideoSource(){
+        if let ep = detailVM.ep{
+            if (ep.video_files ?? []).count > 1{
+                print("more than one source")
+                detailVM.showSourceSelectAlert()
             }else{
-                print("percentage 0 or 1")
-                checkVideoSource(videoFiles: epDetail.video_files, seekTime: 0,selectEP: epDetail)
+                detailVM.setVideoURL(url: fixPathNotCompete(path: ep.video_files![0].url ?? "").addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!)
+                
             }
-        }else{
-            print("no watchProgress:\(epDetail)")
-            checkVideoSource(videoFiles: epDetail.video_files, seekTime: 0,selectEP: epDetail)
+            checkLastWatchPosition()
         }
     }
     
-    func checkVideoSource(videoFiles:[videoFilesListModel],
-                          seekTime:Double,
-                          selectEP:EpisodeDetailModel){
-        if videoFiles.count > 1{
-            print("more than one source")
-//            Menu{
-//                List{
-//                    ForEach(videoFiles){ playitem in
-//                        Button(action: {
-//                            showPlayer(video_files: playitem,seekTime: seekTime,selectEP: selectEP)
-//                        }, label: {
-//                            Text(playitem.file_name ?? playitem.file_path)
-//                        })
-//                    }
-//                }
-//            }  label: {
-//                Text("Select a source")
-//            }
-            //TODO: add muiltable source support
-            showPlayer(video_files: videoFiles[0],seekTime: seekTime,selectEP: selectEP)
-        }else{
-            showPlayer(video_files: videoFiles[0],seekTime: seekTime,selectEP: selectEP)
+    func checkLastWatchPosition(){
+        if let ep = detailVM.ep{
+            if let watchProgress = ep.watch_progress{
+                if watchProgress.percentage != 0 ||
+                    watchProgress.percentage != 1{
+                    print("can seek")
+                    detailVM.showContinuePlayAlert()
+                }else{
+                    print("percentage 0 or 1")
+                    detailVM.setSeekTime(time: 0)
+                    detailVM.showVideoView()
+                }
+            }else{
+                print("no watchProgress")
+                detailVM.setSeekTime(time: 0)
+                detailVM.showVideoView()
+            }
+            
         }
-    }
-    
-    func showPlayer(video_files:videoFilesListModel,
-                    seekTime:Double,
-                    selectEP:EpisodeDetailModel) {
-        viewModel.presentVideoView(url: fixPathNotCompete(path: video_files.url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)! , seekTime: seekTime,selectEP: selectEP)
     }
     
 }
