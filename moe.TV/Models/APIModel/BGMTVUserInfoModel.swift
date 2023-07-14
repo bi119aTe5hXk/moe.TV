@@ -2,7 +2,7 @@
 //  BGMTVUserInfoModel.swift
 //  moe.TV
 //
-//  Created by billgateshxk on 2023/07/05.
+//  Created by bi119aTe5hXk on 2023/07/05.
 //
 
 import Foundation

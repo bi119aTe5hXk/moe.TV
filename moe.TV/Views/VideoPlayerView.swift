@@ -2,7 +2,7 @@
 //  VideoPlayerView.swift
 //  moe.TV
 //
-//  Created by billgateshxk on 2023/06/14.
+//  Created by bi119aTe5hXk on 2023/06/14.
 //
 
 import SwiftUI
@@ -160,9 +160,6 @@ struct VideoPlayerView: View {
         var isFinished = false
         if percent > 0.95{
             isFinished = true
-//            updateBGMEPwatched(epID: ep.bgm_eps_id) { result, data in
-//                print(data)
-//            }
             if let subject_id = ep.bangumi?.bgm_id{
                 if let episode_id = ep.bgm_eps_id{
                     updateBGMSBEPwatched(subject_id: subject_id,
@@ -191,6 +188,7 @@ struct VideoPlayerView: View {
             print("ep.bangumi_id is missing")
         }
         
+        //TODO: update bangumi fav status when final ep watched
 //        if ep.episode_no == ep.bangumi.eps{
 //            print("set the subject as watched")
 //        }

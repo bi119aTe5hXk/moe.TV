@@ -2,7 +2,7 @@
 //  BangumiDetailView.swift
 //  moe.TV
 //
-//  Created by billgateshxk on 2023/06/10.
+//  Created by bi119aTe5hXk on 2023/06/10.
 //
 
 import SwiftUI
@@ -98,10 +98,10 @@ struct BangumiDetailView: View {
             })
 #endif
 #if os(macOS)
-            .sheet(isPresented:$detailVM.isPresentVideoView ) {
+            .sheet(isPresented:$detailVM.presentVideoView ) {
                 if let url = URL(string: detailVM.videoURL){
                     ZStack(alignment: .topLeading){
-                        VideoPlayerView(url: url,seekTime: viewModel.seek,ep: viewModel.ep!)
+                        VideoPlayerView(url: url,seekTime: detailVM.seek,ep: detailVM.ep!)
                             .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
                         //TODO: better close button for macOS
                         Button(action: {

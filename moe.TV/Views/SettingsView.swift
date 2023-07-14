@@ -33,6 +33,11 @@ struct SettingsView: View {
 #if os(tvOS)
                         .disabled(true)
 #endif
+                        .onAppear(){
+                            if syncWithBGMTV{
+                                getBGMUserInfo()
+                            }
+                        }
                         .onChange(of: syncWithBGMTV) { value in
                             if value {
                                 if !isBGMTVlogined(){
@@ -54,6 +59,37 @@ struct SettingsView: View {
                                 }
                             )
                         }
+                    if settingsVM.isBGMUserInfoReady{
+                        HStack{
+                            VStack{
+                                HStack{
+                                    Text("Nickname: \(settingsVM.bgmNickname)")
+                                    Spacer()
+                                }
+                                HStack{
+                                    Text("Username: \(settingsVM.bgmUsername)")
+                                    Spacer()
+                                }
+                                HStack{
+                                    Text("ID: \(String(settingsVM.bgmID))")
+                                    Spacer()
+                                }
+                                
+                            }
+                            Spacer()
+                            AsyncImage(url: URL(string: settingsVM.avatar_url)) { image in
+                                image.resizable()
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.white)
+                            } placeholder: {
+                                ProgressView()
+                            }
+                        }
+                        HStack{
+                            Text("Sign: \(settingsVM.bgmSign)")
+                            Spacer()
+                        }
+                    }
                     
                 }
                 
@@ -67,23 +103,40 @@ struct SettingsView: View {
                         .alert(isPresented: $settingsVM.presentLogoutAlbireoAlert) {
                             Alert(
                                 title: Text("Are you sure you want to logout and exit app?"),
-                                            primaryButton: .destructive(Text("Logout")) {
-                                                logOutServer { result, data in
-                                                    
-                                                }
-                                                myBangumiVM.myBGMList = []
-                                                //loginVM.toggleLoginView() //TODO: show login view after logout
-                                                myBangumiVM.toggleSettingView()
-                                                exit(0) //TODO: logout without exit
-                                            },
-                                            secondaryButton: .cancel()
-                                )
+                                primaryButton: .destructive(Text("Logout")) {
+                                    logOutServer { result, data in
+                                        
+                                    }
+                                    myBangumiVM.myBGMList = []
+                                    //loginVM.toggleLoginView() //TODO: show login view after logout
+                                    myBangumiVM.toggleSettingView()
+                                    exit(0) //TODO: logout without exit
+                                },
+                                secondaryButton: .cancel()
+                            )
                         }
                 }
             }
-            
-            
         }
+    }
+    
+    
+    func getBGMUserInfo() {
+        print("getBGMUserInfo")
+        getBGMTVUserInfo(refreshToken: false, completion: { result, data in
+            if result{
+                if let d = data as? BGMTVUserInfoModel{
+                    settingsVM.setBGMInfo(avatar_url: d.avatar?.large ?? "",
+                                          bgmUsername: d.username ?? "",
+                                          bgmNickname: d.nickname ?? "",
+                                          bgmID: d.id ?? 0,
+                                          bgmSign: d.sign ?? "")
+                    settingsVM.showBGMUserInfo()
+                }
+            }else{
+                print("bgm.tv oauth info invalid")
+            }
+        }) 
     }
 }
 

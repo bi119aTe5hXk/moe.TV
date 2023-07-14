@@ -2,7 +2,7 @@
 //  BangumiDetailViewModel.swift
 //  moe.TV
 //
-//  Created by billgateshxk on 2023/07/04.
+//  Created by bi119aTe5hXk on 2023/07/04.
 //
 
 import Foundation
@@ -15,27 +15,41 @@ class BangumiDetailViewModel : ObservableObject {
     @Published var ep:EpisodeDetailModel?
     
     func setSelectedEP(ep:EpisodeDetailModel){
-        self.ep = ep
+        DispatchQueue.main.async {
+            self.ep = ep
+        }
     }
     func setVideoURL(url:String){
-        videoURL = url
+        DispatchQueue.main.async {
+            self.videoURL = url
+        }
     }
     func showVideoView() {
-        self.presentContinuePlayAlert = false
-        self.presentSourceSelectAlert = false
-        self.presentVideoView = true
+        DispatchQueue.main.async {
+            self.presentContinuePlayAlert = false
+            self.presentSourceSelectAlert = false
+            self.presentVideoView = true
+        }
     }
     func closePlayer(){
-        presentVideoView.toggle()
+        DispatchQueue.main.async {
+            self.presentVideoView.toggle()
+        }
     }
     func showContinuePlayAlert(){
-        self.presentContinuePlayAlert = true
+        DispatchQueue.main.async {
+            self.presentContinuePlayAlert = true
+        }
     }
     func showSourceSelectAlert(){
-        self.presentSourceSelectAlert = true
+        DispatchQueue.main.async {
+            self.presentSourceSelectAlert = true
+        }
     }
     func setSeekTime(time:Double){
-        self.seek = time
+        DispatchQueue.main.async {
+            self.seek = time
+        }
     }
     
 }

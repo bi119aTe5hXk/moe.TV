@@ -2,7 +2,7 @@
 //  BGMTVServerHandler.swift
 //  moe.TV
 //
-//  Created by billgateshxk on 2023/06/16.
+//  Created by bi119aTe5hXk on 2023/06/16.
 //
 
 import Foundation
@@ -170,6 +170,7 @@ func refreshBGMTVToken(){
             do{
                 if let r = try jsonDecoder.decode(BGMTVOauthAccessTokenModel?.self, from: data as! Data){
                     if let accesstoken = r.access_token{
+//                        print(r)
                         saveBGMLoginInfo(accessToken: accesstoken,
                                          refreshToken: r.refresh_token!,
                                          expireIn: r.expires_in!)
@@ -261,9 +262,9 @@ func updateBGMSBEPwatched(subject_id:Int,episode_id:Int,completion: @escaping (B
     }
 }
 
-func getBGMTVUserInfo(completion: @escaping (Bool, Any) -> Void){
+func getBGMTVUserInfo(refreshToken:Bool, completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
-        if isBGMAccessTokenExpired(){
+        if refreshToken{
             refreshBGMTVToken()
         }
         let urlstr = "\(baseBGMTVAPIURL)/v0/me"

@@ -2,7 +2,7 @@
 //  OpenURL.swift
 //  moe.TV
 //
-//  Created by billgateshxk on 2023/07/02.
+//  Created by bi119aTe5hXk on 2023/07/02.
 //
 
 import Foundation

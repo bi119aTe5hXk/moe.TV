@@ -2,7 +2,7 @@
 //  MyBangumiView.swift
 //  moe.TV
 //
-//  Created by billgateshxk on 2023/06/10.
+//  Created by bi119aTe5hXk on 2023/06/10.
 //
 
 import SwiftUI
@@ -32,6 +32,7 @@ struct MyBangumiView: View {
                 }
                 .navigationTitle("My Bangumi")
                 .toolbar(content: {
+                    Spacer()
                     Button(action: {
                         myBangumiVM.toggleSettingView()
                     }, label: {
@@ -90,7 +91,7 @@ struct MyBangumiView: View {
     
     func fetchBGMProfileIcon(){
         if isBGMTVlogined(){
-            getBGMTVUserInfo { result, data in
+            getBGMTVUserInfo(refreshToken: true, completion: { result, data in
                 if result{
                     if let d = data as? BGMTVUserInfoModel{
                         let url = d.avatar?.large ?? ""
@@ -100,7 +101,7 @@ struct MyBangumiView: View {
                     print("bgm.tv oauth info invalid, cleaning...")
                     logoutBGMTV()
                 }
-            }
+            })
         }
     }
     

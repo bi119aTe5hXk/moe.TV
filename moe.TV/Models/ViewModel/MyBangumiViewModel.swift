@@ -2,7 +2,7 @@
 //  MyBangumiViewModel.swift
 //  moe.TV
 //
-//  Created by billgateshxk on 2023/07/04.
+//  Created by bi119aTe5hXk on 2023/07/04.
 //
 
 import Foundation
@@ -13,15 +13,19 @@ class MyBangumiViewModel: ObservableObject{
     @Published var bgmProfileIcon = ""
     
     func setBGMProfileIcon(url:String){
-        self.bgmProfileIcon = url
+        DispatchQueue.main.async {
+            self.bgmProfileIcon = url
+        }
     }
     func getBGMProfileIcon() -> String{
-        print("bgmtv profile url:\(self.bgmProfileIcon)")
+//        print("bgmtv profile url:\(self.bgmProfileIcon)")
         return self.bgmProfileIcon
     }
     
     func setBGMList(list:[MyBangumiItemModel]){
-        self.myBGMList = list
+        DispatchQueue.main.async {
+            self.myBGMList = list
+        }
     }
     func getBGMList() -> [MyBangumiItemModel]{
         return self.myBGMList

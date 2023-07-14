@@ -2,7 +2,7 @@
 //  ServerHandler.swift
 //  moe.TV
 //
-//  Created by billgateshxk on 2019/08/15.
+//  Created by bi119aTe5hXk on 2019/08/15.
 //  Copyright © 2019 bi119aTe5hXk. All rights reserved.
 //  Doc for Albireo: https://albireo.docs.apiary.io/
 //

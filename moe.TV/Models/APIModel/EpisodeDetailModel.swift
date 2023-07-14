@@ -2,7 +2,7 @@
 //  EpisodeDetailModel.swift
 //  moe.TV
 //
-//  Created by billgateshxk on 2023/06/13.
+//  Created by bi119aTe5hXk on 2023/06/13.
 //
 
 import Foundation
@@ -15,7 +15,7 @@ struct EpisodeDetailModel:Identifiable, Hashable, Codable{
     var name_cn:String? = "" //the chinese translated name of the bangumi, can be null.
     var summary:String? = "" //description for bangumi, can be null
     var thumbnail:String?
-    var status:Int? //the status of episode, can be: 0 (not downloaded), 1 (downloading), 2 (downloaded)
+    var status:Int //the status of episode, can be: 0 (not downloaded), 1 (downloading), 2 (downloaded)
     var episode_no:Int? //the number of the episode
     var duration:String?
     var bangumi:EPbangumiModel?
@@ -29,10 +29,10 @@ struct EPbangumiModel:Identifiable, Hashable, Codable{
     var name_cn:String? = "" //the chinese translated name of the bangumi, can be null.
     var summary:String? = "" //description for bangumi, can be null
     var image:String? = "" //the original image url from bgm.tv, this should not be used except the bangumi is not saved into database yet. A client should use cover property.
-    var type:Int?
-    var status:Int? //status of a bangumi, can be 0 (pending), 1 (on air), 2 (finished)
+    var type:Int
+    var status:Int //status of a bangumi, can be 0 (pending), 1 (on air), 2 (finished)
     var air_weekday:Int? //Which day of a week this bangumi is on air.
-    var eps:Int? //how many episodes the bangumi has
+    var eps:Int //how many episodes the bangumi has
 }
 
 struct videoFilesListModel:Identifiable, Hashable, Codable{
