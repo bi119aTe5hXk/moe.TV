@@ -21,46 +21,46 @@ struct BangumiDetailView: View {
             
         }()
         if let item = bgmDetailItem{
-            HStack{
-                Spacer()
-                if let coverURL = item.image{
-                    CachedAsyncImage(url: URL(string: coverURL)){ image in
-                        image.resizable()
-                    } placeholder: {
-                        ProgressView()
-                    }.frame(width: 150,height: 200,alignment: .leading)
-                        .padding(10)
-                }
-                Spacer()
-                VStack{
-                    //Spacer()
-                    Text(item.name ?? "").font(.title)
-                    Text(item.name_cn ?? "").font(.title3)
-                    Divider()
-                    HStack{
-                        Spacer()
-                        Text(item.summary ?? "")
-                        //Spacer()
-#if !os(tvOS)
-                        Button(action: {
-                            let urlString = "https://bgm.tv/subject/\(String(describing: item.bgm_id))"
-                            openURLInApp(urlString: urlString)
-                        }, label: {
-                            Image("bgmtv")
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                        })
-#endif
-                        Spacer()
+            ScrollView{
+                HStack{
+                    Spacer()
+                    if let coverURL = item.image{
+                        CachedAsyncImage(url: URL(string: coverURL)){ image in
+                            image.resizable()
+                        } placeholder: {
+                            ProgressView()
+                        }.frame(width: 150,height: 200,alignment: .leading)
+                            .padding(10)
                     }
-                }
+                    Spacer()
+                    VStack{
+                        //Spacer()
+                        Text(item.name ?? "").font(.title)
+                        Text(item.name_cn ?? "").font(.title3)
+                        Divider()
+                        HStack{
+                            Spacer()
+                            Text(item.summary ?? "")
+                            //Spacer()
+#if !os(tvOS)
+                            Button(action: {
+                                let urlString = "https://bgm.tv/subject/\(String(describing: item.bgm_id))"
+                                openURLInApp(urlString: urlString)
+                            }, label: {
+                                Image("bgmtv")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                            })
+#endif
+                            Spacer()
+                        }
+                    }
+                    
+                    Spacer()
+                }.padding(10)
                 
-                Spacer()
-            }.padding(10)
-            
-            Divider()
-            
-            List{
+                Divider()
+                
                 ForEach(item.episodes ?? []){ ep in
                     
                     Button(action: {
@@ -77,13 +77,8 @@ struct BangumiDetailView: View {
                     }, label: {
                         EPCellView(epItem: ep)
                     }).buttonStyle(.plain)
-                    .padding(5)
-                    .frame(minHeight: 50)
-                }
-            }
-            .refreshable {
-                if let item = bgmID{
-                    getBGMDetail(id: item)
+                        .padding(5)
+                        .frame(minHeight: 50)
                 }
             }
 #if os(iOS) || os(tvOS)
@@ -138,6 +133,11 @@ struct BangumiDetailView: View {
                 Button("No, start from beginning"){
                     detailVM.setSeekTime(time: 0)
                     detailVM.showVideoView()
+                }
+            }
+            .refreshable {
+                if let item = bgmID{
+                    getBGMDetail(id: item)
                 }
             }
         }
