@@ -40,7 +40,7 @@ struct EPCellView: View {
                 .buttonStyle(.plain)
                 .frame(minHeight: 80)
             
-//            Spacer()
+//             
             if !((epItem.name ?? "").isEmpty){
                 Text("\(epItem.episode_no ?? 0). \(epItem.name ?? "")")
                     .background(Color.clear)

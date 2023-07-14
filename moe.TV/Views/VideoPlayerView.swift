@@ -9,9 +9,9 @@ import SwiftUI
 import AVKit
 import AVFoundation
 import Combine
-
 //TODO: PiP on tvOS & sharePlay
 #if os(iOS) || os(tvOS)
+import UIKit
 struct VideoPlayerViewiOS:UIViewControllerRepresentable{
     let player: AVPlayer
     let ep:EpisodeDetailModel
@@ -85,11 +85,11 @@ struct VideoPlayerView: View {
     var seekTime:Double
     var ep:EpisodeDetailModel
     
-    @StateObject private var playerViewModel = PlayerViewModel()
+    @StateObject private var playerVM = PlayerViewModel()
     
     var body: some View {
         ZStack {
-            if let avPlayer = playerViewModel.avPlayer {
+            if let avPlayer = playerVM.avPlayer {
 #if os(iOS) || os(tvOS)
                 let playerObserver = PlayerItemObserver(player: avPlayer)
                 VideoPlayerViewiOS(player: avPlayer, ep: ep)
@@ -101,7 +101,7 @@ struct VideoPlayerView: View {
                             print("waiting")
                         case .paused:
                             print("paused")
-                            logPlaybackPosition(player: avPlayer)
+                            playerVM.logPlaybackPosition(player: avPlayer, ep: ep)
                         case .playing:
                             print("playing")
                         case .some(_):
@@ -119,7 +119,7 @@ struct VideoPlayerView: View {
                             print("waiting")
                         case .paused:
                             print("paused")
-                            logPlaybackPosition(player: avPlayer)
+                            playerVM.logPlaybackPosition(player: avPlayer, ep: ep)
                         case .playing:
                             print("playing")
                         case .some(_):
@@ -129,8 +129,8 @@ struct VideoPlayerView: View {
 #endif
             }
         }.onAppear {
-            playerViewModel.loadFromUrl(url: url)
-            if let player = playerViewModel.avPlayer{
+            playerVM.loadFromUrl(url: url)
+            if let player = playerVM.avPlayer{
                 
                 if seekTime != 0{
                     print("seekto:\(seekTime)")
@@ -144,62 +144,15 @@ struct VideoPlayerView: View {
             
         }.onDisappear{
             Task{
-                if let player = playerViewModel.avPlayer{
+                if let player = playerVM.avPlayer{
                     player.pause()
-                    logPlaybackPosition(player: player)
+                    playerVM.logPlaybackPosition(player: player, ep: ep)
                 }
             }
         }.edgesIgnoringSafeArea(.all)
     }
     
-    func logPlaybackPosition(player:AVPlayer) {
-        let currentItem = player.currentItem;
-        let currentTime = CMTimeGetSeconds(currentItem!.currentTime())
-        let percent = CMTimeGetSeconds(currentItem!.currentTime()) / CMTimeGetSeconds(currentItem!.duration)
-        
-        var isFinished = false
-        if percent > 0.95{
-            isFinished = true
-            if let subject_id = ep.bangumi?.bgm_id{
-                if let episode_id = ep.bgm_eps_id{
-                    updateBGMSBEPwatched(subject_id: subject_id,
-                                         episode_id: episode_id) { result, data in
-                        print(data)
-                    }
-                }else{
-                    print("ep.bgm_eps_id is missing")
-                }
-            }else{
-                print("ep.bangumi.bgm_id is missing")
-            }
-            
-        }
-        print("logprogress:\(currentTime),\(percent)")
-        if let bangumi_id = ep.bangumi_id{
-            sentEPWatchProgress(ep_id: ep.id,
-                                bangumi_id: bangumi_id,
-                                last_watch_position: currentTime,
-                                percentage: percent,
-                                is_finished: isFinished
-            ) { result, data in
-                print(data as Any)
-            }
-        }else{
-            print("ep.bangumi_id is missing")
-        }
-        
-        //TODO: update bangumi fav status when final ep watched
-        if let episode_no  = ep.episode_no{
-            if let eps = ep.bangumi?.eps{
-                if episode_no == eps{
-                    print("should set the subject as watched")
-                    
-                }
-            }
-        }
-        
-        
-    }
+    
 }
 
 //struct VideoPlayerView_Previews: PreviewProvider {
