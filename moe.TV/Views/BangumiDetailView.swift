@@ -29,10 +29,10 @@ struct BangumiDetailView: View {
                             image.resizable()
                         } placeholder: {
                             ProgressView()
-                        }.frame(width: 150,height: 200,alignment: .leading)
+                        }.frame(width: 300,height: 380,alignment: .leading)
                             .padding(10)
                     }
-                    Spacer()
+                    //Spacer()
                     VStack{
                         //Spacer()
                         Text(item.name ?? "").font(.title)
@@ -40,12 +40,15 @@ struct BangumiDetailView: View {
                         Divider()
                         HStack{
                             Spacer()
-                            Text(item.summary ?? "")
+                            Text((item.summary ?? "").prefix(250))
+                            
                             //Spacer()
 #if !os(tvOS)
                             Button(action: {
-                                let urlString = "https://bgm.tv/subject/\(String(describing: item.bgm_id))"
-                                openURLInApp(urlString: urlString)
+                                if let bgm_id = item.bgm_id{
+                                    let urlString = "https://bgm.tv/subject/\(String(bgm_id))"
+                                    openURLInApp(urlString: urlString)
+                                }
                             }, label: {
                                 Image("bgmtv")
                                     .resizable()
@@ -62,25 +65,10 @@ struct BangumiDetailView: View {
                 Divider()
                 
                 ForEach(item.episodes ?? []){ ep in
-                    
-                    Button(action: {
-                        getEpisodeDetail(ep_id: ep.id) { result, data in
-                            if result{
-                                if let epDetail = data as? EpisodeDetailModel{
-                                    detailVM.setSelectedEP(ep: epDetail)
-                                    checkVideoSource()
-                                }
-                            }else{
-                                print(data as Any)
-                            }
-                        }
-                    }, label: {
-                        EPCellView(epItem: ep)
-                    }).buttonStyle(.plain)
+                    EPCellView(epItem: ep, detailVM: detailVM)
                         .padding(10)
-                        .frame(minHeight: 50)
                 }
-            }
+            }.padding(0)
 #if os(iOS) || os(tvOS)
             .fullScreenCover(isPresented:$detailVM.presentVideoView,
                              onDismiss: { },
@@ -153,39 +141,6 @@ struct BangumiDetailView: View {
             if let bgmItem = data as? BangumiDetailModel{
                 self.bgmDetailItem = bgmItem
             }
-        }
-    }
-    func checkVideoSource(){
-        if let ep = detailVM.ep{
-            if (ep.video_files ?? []).count > 1{
-                print("more than one source")
-                detailVM.showSourceSelectAlert()
-            }else{
-                detailVM.setVideoURL(url: fixPathNotCompete(path: ep.video_files![0].url ?? "").addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!)
-                
-            }
-            checkLastWatchPosition()
-        }
-    }
-    
-    func checkLastWatchPosition(){
-        if let ep = detailVM.ep{
-            if let watchProgress = ep.watch_progress{
-                if watchProgress.percentage != 0 ||
-                    watchProgress.percentage != 1{
-                    print("can seek")
-                    detailVM.showContinuePlayAlert()
-                }else{
-                    print("percentage 0 or 1")
-                    detailVM.setSeekTime(time: 0)
-                    detailVM.showVideoView()
-                }
-            }else{
-                print("no watchProgress")
-                detailVM.setSeekTime(time: 0)
-                detailVM.showVideoView()
-            }
-            
         }
     }
     

@@ -79,6 +79,7 @@ struct MyBangumiView: View {
         getMyBangumiList { result, data in
             if !result{
                 //TODO: login failed, cookie expired
+                print("login failed, cookie expired")
                 return
             }
             if let bgmList = data as? [MyBangumiItemModel]{
@@ -93,7 +94,7 @@ struct MyBangumiView: View {
     
     func fetchBGMProfileIcon(){
         if isBGMTVlogined(){
-            getBGMTVUserInfo(refreshToken: true, completion: { result, data in
+            getBGMTVUserInfo(completion: { result, data in
                 if result{
                     if let d = data as? BGMTVUserInfoModel{
                         let url = d.avatar?.large ?? ""

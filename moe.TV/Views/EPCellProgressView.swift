@@ -14,18 +14,18 @@ struct EPCellProgressView: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(lineWidth: 5.0)
+                .stroke(lineWidth: 8.0)
                 .opacity(0.3)
                 .foregroundColor(color)
 
             Circle()
                 .trim(from: 0.0, to: min(progress, 1.0))
-                .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
+                .stroke(style: StrokeStyle(lineWidth: 8, lineCap: .round, lineJoin: .round))
                 .foregroundColor(color)
                 .rotationEffect(Angle(degrees: 270.0))
 
             Text(String(format: "%.0f%%", min(progress, 1.0) * 100.0))
-                .font(.system(size: 10))
+                .font(.system(size: 15))
                 .bold()
         }
     }

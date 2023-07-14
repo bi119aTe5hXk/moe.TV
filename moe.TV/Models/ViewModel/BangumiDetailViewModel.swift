@@ -33,7 +33,7 @@ class BangumiDetailViewModel : ObservableObject {
     }
     func closePlayer(){
         DispatchQueue.main.async {
-            self.presentVideoView.toggle()
+            self.presentVideoView = false
         }
     }
     func showContinuePlayAlert(){
@@ -52,4 +52,36 @@ class BangumiDetailViewModel : ObservableObject {
         }
     }
     
+    
+    func checkVideoSource(){
+        if let ep = self.ep{
+            if (ep.video_files ?? []).count > 1{
+                print("more than one source")
+                self.showSourceSelectAlert()
+            }else{
+                self.setVideoURL(url: fixPathNotCompete(path: ep.video_files![0].url ?? "").addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!)
+                
+            }
+            checkLastWatchPosition()
+        }
+    }
+    func checkLastWatchPosition(){
+        if let ep = self.ep{
+            if let watchProgress = ep.watch_progress{
+                if watchProgress.percentage != 0 ||
+                    watchProgress.percentage != 1{
+                    print("can seek")
+                    self.showContinuePlayAlert()
+                }else{
+                    print("percentage 0 or 1")
+                    self.setSeekTime(time: 0)
+                    self.showVideoView()
+                }
+            }else{
+                print("no watchProgress")
+                self.setSeekTime(time: 0)
+                self.showVideoView()
+            }
+        }
+    }
 }

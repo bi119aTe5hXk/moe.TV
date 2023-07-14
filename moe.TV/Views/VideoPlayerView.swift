@@ -189,9 +189,15 @@ struct VideoPlayerView: View {
         }
         
         //TODO: update bangumi fav status when final ep watched
-//        if ep.episode_no == ep.bangumi.eps{
-//            print("set the subject as watched")
-//        }
+        if let episode_no  = ep.episode_no{
+            if let eps = ep.bangumi?.eps{
+                if episode_no == eps{
+                    print("should set the subject as watched")
+                    
+                }
+            }
+        }
+        
         
     }
 }

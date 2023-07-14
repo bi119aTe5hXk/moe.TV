@@ -272,9 +272,9 @@ func updateBGMSBEPwatched(subject_id:Int,episode_id:Int,completion: @escaping (B
     }
 }
 
-func getBGMTVUserInfo(refreshToken:Bool, completion: @escaping (Bool, Any) -> Void){
+func getBGMTVUserInfo(completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
-        if refreshToken{
+        if isBGMAccessTokenExpired(){
             refreshBGMTVToken()
         }
         let urlstr = "\(baseBGMTVAPIURL)/v0/me"

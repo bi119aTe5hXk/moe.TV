@@ -122,7 +122,7 @@ struct SettingsView: View {
     
     func getBGMUserInfo() {
         print("getBGMUserInfo")
-        getBGMTVUserInfo(refreshToken: false, completion: { result, data in
+        getBGMTVUserInfo(completion: { result, data in
             if result{
                 if let d = data as? BGMTVUserInfoModel{
                     settingsVM.setBGMInfo(avatar_url: d.avatar?.large ?? "",
