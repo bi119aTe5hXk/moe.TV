@@ -25,8 +25,8 @@ func logoutBGMTV(){
 }
 
 private func patchServer(urlString:String,
-                       postdata:[String:Any],
-               completion: @escaping (Bool, Any) -> Void) {
+                          postdata:[String:Any],
+                        completion:@escaping (Bool, Any) -> Void) {
     do{
         print(urlString)
         guard let url = URL(string: urlString) else {return}
@@ -49,8 +49,8 @@ private func patchServer(urlString:String,
     }
 }
 private func putServer(urlString:String,
-                       postdata:[String:Any],
-               completion: @escaping (Bool, Any) -> Void) {
+                        postdata:[String:Any],
+                      completion:@escaping (Bool, Any) -> Void) {
     do{
         print(urlString)
         guard let url = URL(string: urlString) else {return}
@@ -73,7 +73,7 @@ private func putServer(urlString:String,
     }
 }
 private func getServer(urlString:String,
-                completion: @escaping (Bool, Any) -> Void) {
+                      completion: @escaping (Bool, Any) -> Void) {
     print(urlString)
     guard let url = URL(string: urlString) else {return}
     var request = URLRequest(url: url)
@@ -90,8 +90,8 @@ private func getServer(urlString:String,
     }.resume()
 }
 private func postServer(urlString:String,
-                postdata:Dictionary<String,Any>,
-                completion: @escaping (Bool, Any) -> Void) {
+                         postdata:Dictionary<String,Any>,
+                       completion:@escaping (Bool, Any) -> Void) {
     do{
         print(urlString)
         guard let url = URL(string: urlString) else {return}
@@ -147,11 +147,17 @@ func getBGMTVAccessToken(code:String){
                         saveBGMLoginInfo(accessToken: accesstoken,
                                          refreshToken: r.refresh_token!,
                                          expireIn: r.expires_in!)
+                    }else{
+                        print("get bgm.tv access token error -1")
                     }
+                }else{
+                    print("json decode error -1")
                 }
             }catch{
                 print("json decode error")
             }
+        }else{
+            print("get bgm.tv access token error")
         }
     }
 }
@@ -174,11 +180,17 @@ func refreshBGMTVToken(){
                         saveBGMLoginInfo(accessToken: accesstoken,
                                          refreshToken: r.refresh_token!,
                                          expireIn: r.expires_in!)
+                    }else{
+                        print("refresh bgm.tv token error -1")
                     }
+                }else{
+                    print("json decode error -1")
                 }
             }catch{
                 print("json decode error")
             }
+        }else{
+            print("refresh bgm.tv token error")
         }
     }
 }
@@ -236,8 +248,6 @@ func isBGMAccessTokenExpired() -> Bool{
 
 
 // MARK: - bgm.tv APIs
-
-
 func updateBGMEPwatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         if isBGMAccessTokenExpired(){

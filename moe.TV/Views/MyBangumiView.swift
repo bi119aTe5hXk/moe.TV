@@ -32,7 +32,9 @@ struct MyBangumiView: View {
                 }
                 .navigationTitle("My Bangumi")
                 .toolbar(content: {
+#if os(macOS)
                     Spacer()
+#endif
                     Button(action: {
                         myBangumiVM.toggleSettingView()
                     }, label: {

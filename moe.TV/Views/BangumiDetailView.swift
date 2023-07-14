@@ -77,7 +77,7 @@ struct BangumiDetailView: View {
                     }, label: {
                         EPCellView(epItem: ep)
                     }).buttonStyle(.plain)
-                        .padding(5)
+                        .padding(10)
                         .frame(minHeight: 50)
                 }
             }

@@ -19,19 +19,13 @@ struct EPCellView: View {
                 .padding(5)
                 .background(Color.clear)
             
-            HStack{
-                Text("\(epItem.episode_no ?? 0). \(epItem.name ?? "")")
-                    .background(Color.clear)
-                Spacer()
-                EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)),color:.constant(epItem.watch_progress?.watch_status == 2 ? Color.green : Color.orange)  )
-                    .frame(width: 50,height: 50)
-                    .padding(10)
-                
-            }
-            
-            
+            Text("\(epItem.episode_no ?? 0). \(epItem.name ?? "")")
+                .background(Color.clear)
+            Spacer()
+            EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)),color:.constant(epItem.watch_progress?.watch_status == 2 ? Color.green : Color.orange)  )
+                .frame(width: 50,height: 50)
+                .padding(10)
         }.background(Color.clear)
-        
     }
 }
 

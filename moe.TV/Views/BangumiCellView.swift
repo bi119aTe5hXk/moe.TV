@@ -47,7 +47,7 @@ struct BangumiCellView: View {
                     //Spacer()
 //                }
                 
-            }.padding(5)
+            }.padding(10)
             
 //        }.frame(width: 300,height: 80,alignment: .leading)
         
