@@ -29,7 +29,8 @@ struct BangumiDetailView: View {
                             image.resizable()
                         } placeholder: {
                             ProgressView()
-                        }.frame(width: 300,height: 380,alignment: .leading)
+                        }
+                        .frame(width: 100,height: 150,alignment: .center)
                             .padding(10)
                     }
                     //Spacer()

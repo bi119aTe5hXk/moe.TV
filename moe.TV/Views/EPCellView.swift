@@ -30,7 +30,8 @@ struct EPCellView: View {
                         image.resizable()
                     } placeholder:{
                         ProgressView()
-                    }.frame(width: 250,height: 150,alignment: .center)
+                    }
+                    .frame(width: 100,height: 50,alignment: .center)
                         .padding(5)
                         .background(Color.clear)
                 }
@@ -40,7 +41,6 @@ struct EPCellView: View {
                 .buttonStyle(.plain)
                 .frame(minHeight: 80)
             
-//             
             if !((epItem.name ?? "").isEmpty){
                 Text("\(epItem.episode_no ?? 0). \(epItem.name ?? "")")
                     .background(Color.clear)
