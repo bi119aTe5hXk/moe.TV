@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
 
 struct BangumiDetailView: View {
     @Binding var bgmID:String?
@@ -22,27 +21,7 @@ struct BangumiDetailView: View {
         }()
         if let item = bgmDetailItem{
             ScrollView{
-                HStack{
-                    Spacer()
-                    
-                    if let coverURL = item.image{
-                        CachedAsyncImage(url: URL(string: coverURL)){ image in
-                            image.resizable()
-                        } placeholder: {
-                            ProgressView()
-                        }
-                        .frame(width: 100,height: 150,alignment: .center)
-                        .padding(10)
-                    }
-                    
-                    Spacer()
-                    
-                    Text((item.summary ?? "").prefix(250))
-                        .frame(maxWidth: 500)
-                    
-                    Spacer()
-                    
-                }.padding(10)
+                BangumiDetailCoverTextView(item: item)
                 
                 Divider()
                 

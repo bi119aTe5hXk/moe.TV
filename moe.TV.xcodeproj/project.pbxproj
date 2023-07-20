@@ -50,6 +50,7 @@
 		86AD92A02A33A540008461FF /* BangumiCellStatusTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AD929F2A33A540008461FF /* BangumiCellStatusTextView.swift */; };
 		86B36A8A2A581B9D00824050 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B36A892A581B9D00824050 /* SettingsViewModel.swift */; };
 		86BAC66B2A38BE52001C064F /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */; };
+		86E83E6E2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E83E6D2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +120,7 @@
 		86AD929F2A33A540008461FF /* BangumiCellStatusTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiCellStatusTextView.swift; sourceTree = "<group>"; };
 		86B36A892A581B9D00824050 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		86E83E6D2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailCoverTextView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -261,20 +263,37 @@
 			children = (
 				86A9C3E72A3306BC00FD0B44 /* MainView.swift */,
 				8627A92F2A343CDA00A5FCAC /* LoginView.swift */,
+				47E7802C2A39C19000827D03 /* SettingsView.swift */,
 				8627A92B2A34293100A5FCAC /* MyBangumiView.swift */,
+				86E83E6F2A695D9800E3EB04 /* BGMMaster */,
+				86E83E702A695DBE00E3EB04 /* BGMDetail */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		86E83E6F2A695D9800E3EB04 /* BGMMaster */ = {
+			isa = PBXGroup;
+			children = (
 				86AD92992A339285008461FF /* BangumiListView.swift */,
 				86AD928F2A33750F008461FF /* BangumiCellView.swift */,
 				86AD929F2A33A540008461FF /* BangumiCellStatusTextView.swift */,
 				47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */,
+			);
+			path = BGMMaster;
+			sourceTree = "<group>";
+		};
+		86E83E702A695DBE00E3EB04 /* BGMDetail */ = {
+			isa = PBXGroup;
+			children = (
 				86AD92972A338D9C008461FF /* BangumiDetailView.swift */,
+				86E83E6D2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift */,
 				86624A0C2A68250B00F61BAF /* BangumiDetailNavTitleView.swift */,
 				86624A0E2A6825F400F61BAF /* BangumiDetailNavItemView.swift */,
 				86436D4C2A38AE4900E6936F /* EPCellView.swift */,
 				47E7802A2A397ED900827D03 /* EPCellProgressView.swift */,
 				86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */,
-				47E7802C2A39C19000827D03 /* SettingsView.swift */,
 			);
-			path = Views;
+			path = BGMDetail;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -399,6 +418,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86E83E6E2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift in Sources */,
 				86A9C3E82A3306BC00FD0B44 /* MainView.swift in Sources */,
 				86624A0D2A68250B00F61BAF /* BangumiDetailNavTitleView.swift in Sources */,
 				86AD92922A337729008461FF /* MyBangumiItemModel.swift in Sources */,
