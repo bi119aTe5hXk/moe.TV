@@ -24,6 +24,7 @@ struct BangumiDetailView: View {
             ScrollView{
                 HStack{
                     Spacer()
+                    
                     if let coverURL = item.image{
                         CachedAsyncImage(url: URL(string: coverURL)){ image in
                             image.resizable()
@@ -31,36 +32,16 @@ struct BangumiDetailView: View {
                             ProgressView()
                         }
                         .frame(width: 100,height: 150,alignment: .center)
-                            .padding(10)
-                    }
-                    //Spacer()
-                    VStack{
-                        //Spacer()
-                        Text(item.name ?? "").font(.title)
-                        Text(item.name_cn ?? "").font(.title3)
-                        Divider()
-                        HStack{
-                            Spacer()
-                            Text((item.summary ?? "").prefix(250))
-                            
-                            //Spacer()
-#if !os(tvOS)
-                            Button(action: {
-                                if let bgm_id = item.bgm_id{
-                                    let urlString = "https://bgm.tv/subject/\(String(bgm_id))"
-                                    openURLInApp(urlString: urlString)
-                                }
-                            }, label: {
-                                Image("bgmtv")
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
-                            })
-#endif
-                            Spacer()
-                        }
+                        .padding(10)
                     }
                     
                     Spacer()
+                    
+                    Text((item.summary ?? "").prefix(250))
+                        .frame(maxWidth: 500)
+                    
+                    Spacer()
+                    
                 }.padding(10)
                 
                 Divider()
@@ -69,7 +50,8 @@ struct BangumiDetailView: View {
                     EPCellView(epItem: ep, detailVM: detailVM)
                         .padding(10)
                 }
-            }.padding(0)
+            }
+            .padding(0)
 #if os(iOS) || os(tvOS)
             .fullScreenCover(isPresented:$detailVM.presentVideoView,
                              onDismiss: { },
@@ -129,9 +111,25 @@ struct BangumiDetailView: View {
                     getBGMDetail(id: item)
                 }
             }
-        }
+            .toolbar(content:{
+                ToolbarItem(placement: .principal) {
+                    HStack{
+                        Spacer()
+                        BangumiDetailNavTitleView(item: item)
+                        Spacer()
+                        BangumiDetailNavItemView(item: item)
+                    }
+                }
+            })
             
+        }
+        
+        
     }
+
+                
+        
+    
     
     func getBGMDetail(id:String){
         print("getBGMDetail:\(id)")

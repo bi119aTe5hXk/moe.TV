@@ -28,6 +28,8 @@
 		86436D4B2A389EE200E6936F /* EpisodeDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */; };
 		86436D4D2A38AE4900E6936F /* EPCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4C2A38AE4900E6936F /* EPCellView.swift */; };
 		8658C6912A50839100357761 /* OpenURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8658C6902A50839100357761 /* OpenURL.swift */; };
+		86624A0D2A68250B00F61BAF /* BangumiDetailNavTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86624A0C2A68250B00F61BAF /* BangumiDetailNavTitleView.swift */; };
+		86624A0F2A6825F400F61BAF /* BangumiDetailNavItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86624A0E2A6825F400F61BAF /* BangumiDetailNavItemView.swift */; };
 		866727F02A39C775009E0104 /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 866727EF2A39C775009E0104 /* TVServices.framework */; platformFilters = (tvos, ); };
 		866727F32A39C776009E0104 /* ContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866727F22A39C776009E0104 /* ContentProvider.swift */; };
 		866727F72A39C776009E0104 /* topShelf.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 866727EE2A39C775009E0104 /* topShelf.appex */; platformFilters = (tvos, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -95,6 +97,8 @@
 		86436D4C2A38AE4900E6936F /* EPCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCellView.swift; sourceTree = "<group>"; };
 		86436D4F2A38B92100E6936F /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/iOSSupport/System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		8658C6902A50839100357761 /* OpenURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenURL.swift; sourceTree = "<group>"; };
+		86624A0C2A68250B00F61BAF /* BangumiDetailNavTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailNavTitleView.swift; sourceTree = "<group>"; };
+		86624A0E2A6825F400F61BAF /* BangumiDetailNavItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailNavItemView.swift; sourceTree = "<group>"; };
 		866727EE2A39C775009E0104 /* topShelf.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = topShelf.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		866727EF2A39C775009E0104 /* TVServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVServices.framework; path = Library/Frameworks/TVServices.framework; sourceTree = DEVELOPER_DIR; };
 		866727F22A39C776009E0104 /* ContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentProvider.swift; sourceTree = "<group>"; };
@@ -263,6 +267,8 @@
 				86AD929F2A33A540008461FF /* BangumiCellStatusTextView.swift */,
 				47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */,
 				86AD92972A338D9C008461FF /* BangumiDetailView.swift */,
+				86624A0C2A68250B00F61BAF /* BangumiDetailNavTitleView.swift */,
+				86624A0E2A6825F400F61BAF /* BangumiDetailNavItemView.swift */,
 				86436D4C2A38AE4900E6936F /* EPCellView.swift */,
 				47E7802A2A397ED900827D03 /* EPCellProgressView.swift */,
 				86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */,
@@ -394,6 +400,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				86A9C3E82A3306BC00FD0B44 /* MainView.swift in Sources */,
+				86624A0D2A68250B00F61BAF /* BangumiDetailNavTitleView.swift in Sources */,
 				86AD92922A337729008461FF /* MyBangumiItemModel.swift in Sources */,
 				8627A9372A343DBC00A5FCAC /* SaveHandler.swift in Sources */,
 				86BAC66B2A38BE52001C064F /* VideoPlayerView.swift in Sources */,
@@ -421,6 +428,7 @@
 				86AD92902A33750F008461FF /* BangumiCellView.swift in Sources */,
 				47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */,
 				47E7802D2A39C19000827D03 /* SettingsView.swift in Sources */,
+				86624A0F2A6825F400F61BAF /* BangumiDetailNavItemView.swift in Sources */,
 				862C25AA2A54710C006827E6 /* BGMTVUserInfoModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
