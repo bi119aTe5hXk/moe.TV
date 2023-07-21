@@ -13,37 +13,49 @@ struct EPCellView: View {
     
     var body: some View {
         HStack{
-            Button(action: {
-                getEpisodeDetail(ep_id: epItem.id) { result, data in
-                    if result{
-                        if let epDetail = data as? EpisodeDetailModel{
-                            detailVM.setSelectedEP(ep: epDetail)
-                            detailVM.checkVideoSource()
+            GeometryReader { geo in
+                Button(action: {
+                    getEpisodeDetail(ep_id: epItem.id) { result, data in
+                        if result{
+                            if let epDetail = data as? EpisodeDetailModel{
+                                detailVM.setSelectedEP(ep: epDetail)
+                                detailVM.checkVideoSource()
+                            }
+                        }else{
+                            print(data as Any)
                         }
-                    }else{
-                        print(data as Any)
                     }
-                }
-            }, label: {
-                if let thumbnail = epItem.thumbnail{
-                    CachedAsyncImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
-                        image.resizable()
-                    } placeholder:{
-                        ProgressView()
+                }, label: {
+                    
+                    if let thumbnail = epItem.thumbnail{
+                        CachedAsyncImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
+                            ZStack{
+                                image.resizable()
+                                    .scaledToFit()
+                                    .cornerRadius(10)
+                                Image(systemName: "play.circle.fill")
+                                    .font(.largeTitle)
+                                    .foregroundColor(.gray)
+                            }
+                        } placeholder:{
+                            ProgressView()
+                        }
                     }
-                    .frame(width: 100,height: 50,alignment: .center)
-                        .padding(5)
-                        .background(Color.clear)
-                }
+                    
+                })
                 
-            })
-                .padding(10)
                 .buttonStyle(.plain)
-                .frame(minHeight: 80)
+                .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
+                
+            }
+            .frame(maxWidth: 400)
+            
+            
             
             if !((epItem.name ?? "").isEmpty){
                 Text("\(epItem.episode_no ?? 0). \(epItem.name ?? "")")
                     .background(Color.clear)
+                    
             }
             
             Spacer()
@@ -62,7 +74,7 @@ struct EPCellView: View {
 #endif
             EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)),
                                color:.constant(epItem.watch_progress?.watch_status == 2 ? Color.green : Color.orange))
-                .frame(width: 80,height: 80)
+                .frame(maxWidth: 100,maxHeight: 100)
                 .padding(10)
             
         }.background(Color.clear)
@@ -70,8 +82,8 @@ struct EPCellView: View {
     }
 }
 
-//struct EPCellView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test", thumbnail: "", status: 2, episode_no: 1, duration: "test"))
-//    }
-//}
+struct EPCellView_Previews: PreviewProvider {
+    static var previews: some View {
+        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: "https://suki.moe/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0", status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVM: BangumiDetailViewModel())
+    }
+}
