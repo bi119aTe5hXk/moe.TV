@@ -7,6 +7,7 @@ Watch bangumi on Apple devices
 - Sync progress with bgm.tv
 - Picture in Picture
 - Save playing progress automatically
+- Cache video files locally (offline mode)
 - Yes, SwiftUI
 
 ## Support platform
