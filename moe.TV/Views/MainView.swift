@@ -55,7 +55,17 @@ struct MainView: View {
                 })
                 .padding(10)
                 .sheet(isPresented: self.$showDownloadList, content: {
-                    DownloadListView()
+                    HStack{
+#if !os(tvOS)
+                        Button(action: {
+                            self.showDownloadList.toggle()
+                        }, label: {
+                            Text("Close")
+                        }).padding(20)
+                        Spacer()
+#endif
+                    }
+                    DownloadListView( dlListVM: DownloadListViewModel()).environmentObject(DownloadManager())
                 })
                 
                 Spacer()

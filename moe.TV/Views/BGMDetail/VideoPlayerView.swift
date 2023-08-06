@@ -14,7 +14,7 @@ import Combine
 import UIKit
 struct VideoPlayerViewiOS:UIViewControllerRepresentable{
     let player: AVPlayer
-    let ep:EpisodeDetailModel
+//    let ep:EpisodeDetailModel?
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         let audioSession = AVAudioSession.sharedInstance()
@@ -36,7 +36,7 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
         controller.showsPlaybackControls = true
         controller.allowsPictureInPicturePlayback = true
         
-        controller.title = ep.name
+//        controller.title = ep.name
         
         if AVPictureInPictureController.isPictureInPictureSupported() {
 //            pipController = AVPictureInPictureController(playerLayer: playerLayer)!
@@ -83,8 +83,8 @@ class PlayerItemObserver {
 struct VideoPlayerView: View {
     var url:URL
     var seekTime:Double
-    var ep:EpisodeDetailModel
-    
+    var ep:EpisodeDetailModel?
+    var isOffline:Bool
     @StateObject private var playerVM = PlayerViewModel()
     
     var body: some View {
@@ -92,7 +92,7 @@ struct VideoPlayerView: View {
             if let avPlayer = playerVM.avPlayer {
 #if os(iOS) || os(tvOS)
                 let playerObserver = PlayerItemObserver(player: avPlayer)
-                VideoPlayerViewiOS(player: avPlayer, ep: ep)
+                VideoPlayerViewiOS(player: avPlayer)
                     .onReceive(playerObserver.$currentStatus) { status in
                         switch status{
                         case nil:
@@ -101,7 +101,11 @@ struct VideoPlayerView: View {
                             print("waiting")
                         case .paused:
                             print("paused")
-                            playerVM.logPlaybackPosition(player: avPlayer, ep: ep)
+                            if !isOffline{
+                                playerVM.logPlaybackPosition(player: avPlayer, ep: ep!)
+                            }else{
+                                //TODO: log playback position offline
+                            }
                         case .playing:
                             print("playing")
                         case .some(_):
@@ -119,7 +123,11 @@ struct VideoPlayerView: View {
                             print("waiting")
                         case .paused:
                             print("paused")
-                            playerVM.logPlaybackPosition(player: avPlayer, ep: ep)
+                            if !isOffline{
+                                playerVM.logPlaybackPosition(player: avPlayer, ep: ep!)
+                            }else{
+                                //TODO: log playback position offline
+                            }
                         case .playing:
                             print("playing")
                         case .some(_):
@@ -146,7 +154,11 @@ struct VideoPlayerView: View {
             Task{
                 if let player = playerVM.avPlayer{
                     player.pause()
-                    playerVM.logPlaybackPosition(player: player, ep: ep)
+                    if !isOffline{
+                        playerVM.logPlaybackPosition(player: player, ep: ep!)
+                    }else{
+                        //TODO: log playback position offline
+                    }
                 }
             }
         }.edgesIgnoringSafeArea(.all)

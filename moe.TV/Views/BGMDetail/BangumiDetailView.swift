@@ -26,7 +26,7 @@ struct BangumiDetailView: View {
                 Divider()
                 
                 ForEach(item.episodes ?? []){ ep in
-                    EPCellView(epItem: ep, detailVM: detailVM)
+                    EPCellView(epItem: ep, detailVM: detailVM).environmentObject(DownloadManager())
                         .padding(10)
                 }
             }
@@ -36,7 +36,7 @@ struct BangumiDetailView: View {
                              onDismiss: { },
                              content: {
                 if let url = URL(string: detailVM.videoURL){
-                    VideoPlayerView(url: url, seekTime: detailVM.seek,ep: detailVM.ep!)
+                    VideoPlayerView(url: url, seekTime: detailVM.seek,ep: detailVM.ep!,isOffline: false)
                 }else{
                     Text("Error: Video URL is empty")
                 }
@@ -46,7 +46,7 @@ struct BangumiDetailView: View {
             .sheet(isPresented:$detailVM.presentVideoView ) {
                 if let url = URL(string: detailVM.videoURL){
                     ZStack(alignment: .topLeading){
-                        VideoPlayerView(url: url,seekTime: detailVM.seek,ep: detailVM.ep!)
+                        VideoPlayerView(url: url,seekTime: detailVM.seek,ep: detailVM.ep!,isOffline: false)
                             .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
                         //TODO: better close button for macOS
                         Button(action: {

@@ -10,6 +10,7 @@ import CachedAsyncImage
 struct EPCellView: View {
     @State var epItem:BGMEpisode
     @ObservedObject var detailVM : BangumiDetailViewModel
+    @EnvironmentObject var downloadManager: DownloadManager
     
     var body: some View {
         HStack{
@@ -53,12 +54,35 @@ struct EPCellView: View {
                     }
                     
                 })
-                
                 .buttonStyle(.plain)
                 .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
-                
             }
             .frame(maxWidth: 400)
+            
+            Spacer()
+            Button(action: {
+                getEpisodeDetail(ep_id: epItem.id) { result, data in
+                    if result{
+                        if let epDetail = data as? EpisodeDetailModel{
+                            if let url = epDetail.video_files![0].url{
+                                let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
+                                if let filename = epDetail.video_files![0].file_path{
+                                    downloadManager.downloadFile(urlString: fileURL,savedAs: filename)
+                                }else{
+                                    print("filename is missing")
+                                }
+                            }else{
+                                print("url is missing")
+                            }
+                        }
+                    }else{
+                        print(data as Any)
+                    }
+                }
+            }, label: {
+                Image(systemName: "arrow.down.to.line.circle")
+                
+            })
             
             Spacer()
 #if !os(tvOS)
