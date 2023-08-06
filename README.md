@@ -1,6 +1,9 @@
 # moe.TV
 Watch bangumi on Apple devices
 
+# App
+TestFlight: TBD
+
 ## Features
 - Sync with iCloud (No need to log in multiple times)
 - Support multiple platforms (iOS/macOS/tvOS)
@@ -11,9 +14,9 @@ Watch bangumi on Apple devices
 - Yes, SwiftUI
 
 ## Support platform
-- iOS 15.0 and up
-- macOS (Native & Catalyst) 12.0 and up
-- tvOS 16.0 and up
+- iOS 15.0 and later
+- macOS (Native & Catalyst) 12.0 and later
+- tvOS 16.0 and later
 
 ## Support Service
 - [Albireo](https://github.com/lordfriend/Albireo) or the new [Mira project](https://github.com/irohalab/mira-docker)
