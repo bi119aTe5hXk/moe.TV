@@ -13,6 +13,7 @@ struct EPCellView: View {
     
     var body: some View {
         HStack{
+            Text("\(epItem.episode_no ?? 0).")
             GeometryReader { geo in
                 Button(action: {
                     getEpisodeDetail(ep_id: epItem.id) { result, data in
@@ -26,19 +27,28 @@ struct EPCellView: View {
                         }
                     }
                 }, label: {
-                    
-                    if let thumbnail = epItem.thumbnail{
-                        CachedAsyncImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
-                            ZStack{
-                                image.resizable()
-                                    .scaledToFit()
-                                    .cornerRadius(10)
-                                Image(systemName: "play.circle.fill")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.gray)
+                    VStack{
+                        ZStack{
+                            if let thumbnail = epItem.thumbnail{
+                                CachedAsyncImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
+                                    
+                                    image.resizable()
+                                        .scaledToFit()
+                                        .cornerRadius(10)
+                                    Image(systemName: "play.circle.fill")
+                                        .font(.largeTitle)
+                                        .foregroundColor(.gray)
+                                    
+                                } placeholder:{
+                                    ProgressView()
+                                }
                             }
-                        } placeholder:{
-                            ProgressView()
+                        }
+                        if !((epItem.name ?? "").isEmpty){
+                            Text("\(epItem.name ?? "")")
+                                .lineLimit(1)
+                                .background(Color.clear)
+                            
                         }
                     }
                     
@@ -49,14 +59,6 @@ struct EPCellView: View {
                 
             }
             .frame(maxWidth: 400)
-            
-            
-            
-            if !((epItem.name ?? "").isEmpty){
-                Text("\(epItem.episode_no ?? 0). \(epItem.name ?? "")")
-                    .background(Color.clear)
-                    
-            }
             
             Spacer()
 #if !os(tvOS)
@@ -84,6 +86,6 @@ struct EPCellView: View {
 
 struct EPCellView_Previews: PreviewProvider {
     static var previews: some View {
-        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: "https://suki.moe/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0", status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVM: BangumiDetailViewModel())
+        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: testURL.appending("/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0"), status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVM: BangumiDetailViewModel())
     }
 }

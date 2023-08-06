@@ -39,6 +39,8 @@
 		866728012A39C8C4009E0104 /* MyBangumiItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AD92912A337729008461FF /* MyBangumiItemModel.swift */; };
 		866728052A39E64D009E0104 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86A9C3E92A3306BE00FD0B44 /* Assets.xcassets */; };
 		866E2DAB2A3B19E400CFB2ED /* DONOTUPLOAD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866E2DAA2A3B19E400CFB2ED /* DONOTUPLOAD.swift */; };
+		868E9DEC2A7E3F6B00967773 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E9DEB2A7E3F6B00967773 /* NetworkMonitor.swift */; };
+		86A968F82A7FC46500E9BD59 /* DownloadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A968F72A7FC46500E9BD59 /* DownloadListView.swift */; };
 		86A9C3E62A3306BC00FD0B44 /* moe_TVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A9C3E52A3306BC00FD0B44 /* moe_TVApp.swift */; };
 		86A9C3E82A3306BC00FD0B44 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A9C3E72A3306BC00FD0B44 /* MainView.swift */; };
 		86A9C3EA2A3306BE00FD0B44 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86A9C3E92A3306BE00FD0B44 /* Assets.xcassets */; };
@@ -106,6 +108,8 @@
 		866727F42A39C776009E0104 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		866728042A39CC95009E0104 /* topShelf.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = topShelf.entitlements; sourceTree = "<group>"; };
 		866E2DAA2A3B19E400CFB2ED /* DONOTUPLOAD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DONOTUPLOAD.swift; sourceTree = "<group>"; };
+		868E9DEB2A7E3F6B00967773 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		86A968F72A7FC46500E9BD59 /* DownloadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadListView.swift; sourceTree = "<group>"; };
 		86A9C3E22A3306BC00FD0B44 /* moe.TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = moe.TV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		86A9C3E52A3306BC00FD0B44 /* moe_TVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moe_TVApp.swift; sourceTree = "<group>"; };
 		86A9C3E72A3306BC00FD0B44 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -188,6 +192,7 @@
 		862C25A62A545912006827E6 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				868E9DEB2A7E3F6B00967773 /* NetworkMonitor.swift */,
 				8627A9362A343DBC00A5FCAC /* SaveHandler.swift */,
 				8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */,
 				86112E852A3C73F60034AD97 /* BGMTVServerHandler.swift */,
@@ -264,6 +269,7 @@
 				86A9C3E72A3306BC00FD0B44 /* MainView.swift */,
 				8627A92F2A343CDA00A5FCAC /* LoginView.swift */,
 				47E7802C2A39C19000827D03 /* SettingsView.swift */,
+				86A968F72A7FC46500E9BD59 /* DownloadListView.swift */,
 				8627A92B2A34293100A5FCAC /* MyBangumiView.swift */,
 				86E83E6F2A695D9800E3EB04 /* BGMMaster */,
 				86E83E702A695DBE00E3EB04 /* BGMDetail */,
@@ -430,6 +436,7 @@
 				86AD92A02A33A540008461FF /* BangumiCellStatusTextView.swift in Sources */,
 				862C259E2A545806006827E6 /* MyBangumiViewModel.swift in Sources */,
 				8627A92C2A34293100A5FCAC /* MyBangumiView.swift in Sources */,
+				86A968F82A7FC46500E9BD59 /* DownloadListView.swift in Sources */,
 				86436D4D2A38AE4900E6936F /* EPCellView.swift in Sources */,
 				866E2DAB2A3B19E400CFB2ED /* DONOTUPLOAD.swift in Sources */,
 				862C259C2A544FC0006827E6 /* AlbireoUserInfoModel.swift in Sources */,
@@ -440,6 +447,7 @@
 				8627A9302A343CDA00A5FCAC /* LoginView.swift in Sources */,
 				86AD929A2A339285008461FF /* BangumiListView.swift in Sources */,
 				862C25A52A5458D3006827E6 /* PlayerViewModel.swift in Sources */,
+				868E9DEC2A7E3F6B00967773 /* NetworkMonitor.swift in Sources */,
 				862C25A32A545899006827E6 /* BangumiDetailViewModel.swift in Sources */,
 				47E7802B2A397ED900827D03 /* EPCellProgressView.swift in Sources */,
 				86436D4B2A389EE200E6936F /* EpisodeDetailModel.swift in Sources */,

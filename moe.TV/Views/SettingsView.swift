@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @State private var syncWithBGMTV = isBGMTVlogined()
+    @State private var showDownloadList = false
     
     @ObservedObject var loginVM: LoginViewModel
     @ObservedObject var myBangumiVM: MyBangumiViewModel
@@ -90,6 +91,17 @@ struct SettingsView: View {
                         }
                     }
                     
+                }
+                
+                Section(header: Text("Download manager")) {
+                    Button {
+                        self.showDownloadList.toggle()
+                    } label: {
+                        Text("Show download list")
+                    }
+                    .sheet(isPresented: self.$showDownloadList, content: {
+                        DownloadListView()
+                    })
                 }
                 
                 Section(header: Text("Sign out")) {

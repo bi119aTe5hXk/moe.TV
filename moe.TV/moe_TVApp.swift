@@ -11,6 +11,7 @@ import SwiftUI
 struct moe_TVApp: App {
     @State var showBGMDetailView:Bool = false
     @State var bgmID:String?
+    @StateObject var networkMonitor = NetworkMonitor()
     
     var body: some Scene {
         WindowGroup {
@@ -29,6 +30,7 @@ struct moe_TVApp: App {
 #endif
                     BangumiDetailView(bgmID:$bgmID)
                 })
+                .environmentObject(networkMonitor)
 #if !os(tvOS)
                 .handlesExternalEvents(preferring: ["*"], allowing: ["*"])
 #endif

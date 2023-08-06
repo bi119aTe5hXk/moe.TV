@@ -279,7 +279,6 @@ func getBGMTVUserInfo(completion: @escaping (Bool, Any) -> Void){
         }
         let urlstr = "\(baseBGMTVAPIURL)/v0/me"
         getServer(urlString: urlstr) { result, data in
-            print(String.init(data: data as! Data, encoding: .utf8) as Any)
             if result{
                 do {
                     if let u = try jsonDecoder.decode(BGMTVUserInfoModel?.self, from: data as! Data){
