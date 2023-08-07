@@ -9,6 +9,27 @@ import Foundation
 
 final class DownloadManager: ObservableObject {
     @Published var isDownloading = false
+    let videoFolder = "videos"
+    
+    func getVideoPath(write:Bool) -> [URL]?{
+        do {
+            let vPath = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask,appropriateFor: nil,create: write).appendingPathComponent(videoFolder)
+            print(vPath)
+            if !FileManager.default.fileExists(atPath: vPath.path) {
+                print("create video folder")
+                do {
+                    try FileManager.default.createDirectory(atPath: vPath.path, withIntermediateDirectories: true, attributes: nil)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+            return try FileManager.default.contentsOfDirectory(at: vPath, includingPropertiesForKeys: nil)
+        }catch{
+            print(error)
+            return []
+        }
+        
+    }
     
     func downloadFile(urlString:String,savedAs:String) {
         print("start download url:\(urlString)")
@@ -42,7 +63,7 @@ final class DownloadManager: ObservableObject {
                 }
                 DispatchQueue.main.async {
                     do {
-                        let destinationUrl = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent(savedAs)
+                        let destinationUrl = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent(self.videoFolder).appendingPathComponent(savedAs)
                         try data.write(to: destinationUrl, options: Data.WritingOptions.atomic)
 
                         DispatchQueue.main.async {
@@ -60,36 +81,32 @@ final class DownloadManager: ObservableObject {
         dataTask.resume()
     }
     func checkFileExists(fileName:String) -> Bool {
-        let fileList = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        for file in fileList {
-            let destinationUrl = file.appendingPathComponent(fileName)
-            if (FileManager().fileExists(atPath: destinationUrl.path)) {
-                return true
+        if let fileList = getVideoPath(write: false){
+            for file in fileList {
+                let destinationUrl = file.appendingPathComponent(fileName)
+                if (FileManager().fileExists(atPath: destinationUrl.path)) {
+                    return true
+                }
             }
         }
         return false
     }
     
     func getDownloadList(completion:@escaping (Array<URL>) -> Void){
-        do{
-            let path = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask,appropriateFor: nil, create: false)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: path, includingPropertiesForKeys: nil)
-            completion(directoryContents)
-        }catch{
-            print(error)
-        }
+        completion(getVideoPath(write: false) ?? [])
     }
 
     func deleteFile(fileName:String) {
-        let fileList = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        for file in fileList {
-            let destinationUrl = file.appendingPathComponent(fileName)
-            if FileManager().fileExists(atPath: destinationUrl.path) {
-                do {
-                    try FileManager().removeItem(atPath: destinationUrl.path)
-                    print("File deleted successfully")
-                } catch let error {
-                    print("Error while deleting video file: ", error)
+        if let fileList = getVideoPath(write: true){
+            for file in fileList {
+                let destinationUrl = file.appendingPathComponent(fileName)
+                if FileManager().fileExists(atPath: destinationUrl.path) {
+                    do {
+                        try FileManager().removeItem(atPath: destinationUrl.path)
+                        print("File deleted successfully")
+                    } catch let error {
+                        print("Error while deleting video file: ", error)
+                    }
                 }
             }
         }
@@ -98,17 +115,17 @@ final class DownloadManager: ObservableObject {
     
 
     func getVideoFileAsset(filename:String) -> URL? {
-        let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-
-        let destinationUrl = docsUrl?.appendingPathComponent(filename)
-        if let destinationUrl = destinationUrl {
+        do{
+            let vPath = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask,appropriateFor: nil,create: true).appendingPathComponent(videoFolder)
+            let destinationUrl = vPath.appendingPathComponent(filename)
             if (FileManager().fileExists(atPath: destinationUrl.path)) {
                 return destinationUrl
             } else {
                 return nil
             }
-        } else {
-            return nil
+        }catch{
+            print(error)
         }
+        return nil
     }
 }

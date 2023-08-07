@@ -9,22 +9,34 @@ import SwiftUI
 
 struct BangumiDetailNavItemView: View {
     @State var item:BangumiDetailModel
-    var body: some View {
 #if !os(tvOS)
-        Button(action: {
-            if let bgm_id = item.bgm_id{
-                let urlString = "https://bgm.tv/subject/\(String(bgm_id))"
-                openURLInApp(urlString: urlString)
-            }
-        }, label: {
-            Image("bgmtv")
-                .resizable()
-                .frame(width: 30, height: 30)
-        })
+    var body: some View {
+        Menu {
+            //TODO:  download status
+            Button("Download All", action: startDwonloadAll)
+
+            Button("Show in bgm.tv", action: openBangumi)
+
+        } label: {
+            Image(systemName: "ellipsis")
+        }
+    }
+    private  func openBangumi(){
+        if let bgm_id = item.bgm_id{
+            let urlString = "https://bgm.tv/subject/\(String(bgm_id))"
+            openURLInApp(urlString: urlString)
+        }
+    }
 #endif
+#if os(tvOS)
+    var body: some View {
+        Button("Download All", action: startDwonloadAll)
+    }
+#endif
+    private func startDwonloadAll(){
+        //TODO: Download all EPs
     }
 }
-
 //struct BangumiDetailNavItemView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        BangumiDetailNavItemView()

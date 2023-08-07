@@ -14,7 +14,6 @@ struct EPCellView: View {
     
     var body: some View {
         HStack{
-            Text("\(epItem.episode_no ?? 0).")
             GeometryReader { geo in
                 Button(action: {
                     getEpisodeDetail(ep_id: epItem.id) { result, data in
@@ -28,84 +27,93 @@ struct EPCellView: View {
                         }
                     }
                 }, label: {
-                    VStack{
-                        ZStack{
-                            if let thumbnail = epItem.thumbnail{
-                                CachedAsyncImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
-                                    
-                                    image.resizable()
-                                        .scaledToFit()
-                                        .cornerRadius(10)
-                                    Image(systemName: "play.circle.fill")
-                                        .font(.largeTitle)
-                                        .foregroundColor(.gray)
-                                    
-                                } placeholder:{
-                                    ProgressView()
-                                }
+                    ZStack{
+                        if let thumbnail = epItem.thumbnail{
+                            CachedAsyncImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
+                                image.resizable()
+                                    .scaledToFit()
+                                    .cornerRadius(10)
+                                Image(systemName: "play.circle.fill")
+                                    .font(.largeTitle)
+                                    .foregroundColor(.gray)
+                                
+                            } placeholder:{
+                                ProgressView()
                             }
                         }
-                        if !((epItem.name ?? "").isEmpty){
-                            Text("\(epItem.name ?? "")")
-                                .lineLimit(1)
-                                .background(Color.clear)
-                            
-                        }
                     }
+                        
                     
                 })
                 .buttonStyle(.plain)
                 .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
             }
             .frame(maxWidth: 400)
+            .padding(10)
             
-            Spacer()
-            Button(action: {
-                getEpisodeDetail(ep_id: epItem.id) { result, data in
-                    if result{
-                        if let epDetail = data as? EpisodeDetailModel{
-                            if let url = epDetail.video_files![0].url{
-                                let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
-                                if let filename = epDetail.video_files![0].file_path{
-                                    downloadManager.downloadFile(urlString: fileURL,savedAs: filename)
-                                }else{
-                                    print("filename is missing")
-                                }
-                            }else{
-                                print("url is missing")
-                            }
-                        }
-                    }else{
-                        print(data as Any)
-                    }
-                }
-            }, label: {
-                Image(systemName: "arrow.down.to.line.circle")
+            Text("\(epItem.episode_no ?? 0).")
+            if !((epItem.name ?? "").isEmpty){
+                Text("\(epItem.name ?? "")")
+                    .lineLimit(1)
+                    .background(Color.clear)
                 
-            })
+            }
+            
             
             Spacer()
-#if !os(tvOS)
-            Button(action: {
-                if let bgm_eps_id = epItem.bgm_eps_id{
-                    let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
-                    openURLInApp(urlString: urlString)
-                }
-            }, label: {
-                Image("bgmtv")
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .padding(5)
-            }).padding(10)
-#endif
+
             EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)),
                                color:.constant(epItem.watch_progress?.watch_status == 2 ? Color.green : Color.orange))
                 .frame(maxWidth: 100,maxHeight: 100)
                 .padding(10)
-            
+#if !os(tvOS)
+            Menu {
+                //TODO:  download status
+                Button("Download", action: startDwonload)
+                Button("Show in bgm.tv", action: openBangumi)
+            } label: {
+                Image(systemName: "ellipsis.circle")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 30)
+                    .padding(10)
+            }
+#else
+            Button("Download", action: startDwonload)
+#endif
         }.background(Color.clear)
             .padding(10)
+        
+        
     }
+    func startDwonload(){
+        getEpisodeDetail(ep_id: epItem.id) { result, data in
+            if result{
+                if let epDetail = data as? EpisodeDetailModel{
+                    if let url = epDetail.video_files![0].url{
+                        let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
+                        if let filename = epDetail.video_files![0].file_path{
+                            downloadManager.downloadFile(urlString: fileURL,savedAs: filename)
+                        }else{
+                            print("filename is missing")
+                        }
+                    }else{
+                        print("url is missing")
+                    }
+                }
+            }else{
+                print(data as Any)
+            }
+        }
+    }
+#if !os(tvOS)
+    func openBangumi(){
+        if let bgm_eps_id = epItem.bgm_eps_id{
+            let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
+            openURLInApp(urlString: urlString)
+        }
+    }
+#endif
 }
 
 struct EPCellView_Previews: PreviewProvider {

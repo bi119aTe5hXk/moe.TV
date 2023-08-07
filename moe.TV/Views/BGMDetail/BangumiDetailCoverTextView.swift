@@ -26,9 +26,10 @@ struct BangumiDetailCoverTextView: View {
                            height: geo.size.height,
                            alignment: .center)
                 }
+                .padding(10)
             }
             
-            Spacer()
+            //Spacer()
             
             Text((item.summary ?? ""))
                 .lineLimit(10)
