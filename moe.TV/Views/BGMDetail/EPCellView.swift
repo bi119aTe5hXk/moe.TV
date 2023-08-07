@@ -9,6 +9,7 @@ import SwiftUI
 import CachedAsyncImage
 struct EPCellView: View {
     @State var epItem:BGMEpisode
+    @State var showVideoFileExisitAlert = false
     @ObservedObject var detailVM : BangumiDetailViewModel
     @EnvironmentObject var downloadManager: DownloadManager
     
@@ -84,7 +85,9 @@ struct EPCellView: View {
         }.background(Color.clear)
             .padding(10)
         
-        
+            .alert("Already downloaded",isPresented: self.$showVideoFileExisitAlert) {
+                
+            }
     }
     func startDwonload(){
         getEpisodeDetail(ep_id: epItem.id) { result, data in
@@ -93,7 +96,12 @@ struct EPCellView: View {
                     if let url = epDetail.video_files![0].url{
                         let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
                         if let filename = epDetail.video_files![0].file_path{
-                            downloadManager.downloadFile(urlString: fileURL,savedAs: filename)
+                            if !downloadManager.checkFileExists(fileName: filename){
+                                downloadManager.downloadFile(urlString: fileURL,savedAs: filename)
+                            }else{
+                                print("video file exists")
+                                self.showVideoFileExisitAlert.toggle()
+                            }
                         }else{
                             print("filename is missing")
                         }
