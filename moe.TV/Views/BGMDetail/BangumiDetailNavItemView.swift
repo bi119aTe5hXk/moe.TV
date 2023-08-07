@@ -13,8 +13,7 @@ struct BangumiDetailNavItemView: View {
     var body: some View {
         Menu {
             //TODO:  download status
-            Button("Download All", action: startDwonloadAll)
-
+//            Button("Download All", action: startDwonloadAll)
             Button("Show in bgm.tv", action: openBangumi)
 
         } label: {
@@ -28,14 +27,14 @@ struct BangumiDetailNavItemView: View {
         }
     }
 #endif
-#if os(tvOS)
-    var body: some View {
-        Button("Download All", action: startDwonloadAll)
-    }
-#endif
-    private func startDwonloadAll(){
-        //TODO: Download all EPs
-    }
+//#if os(tvOS)
+//    var body: some View {
+//        Button("Download All", action: startDwonloadAll)
+//    }
+//#endif
+//    private func startDwonloadAll(){
+//        //TODO: Download all EPs
+//    }
 }
 //struct BangumiDetailNavItemView_Previews: PreviewProvider {
 //    static var previews: some View {

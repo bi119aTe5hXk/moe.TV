@@ -14,7 +14,7 @@ final class DownloadManager: ObservableObject {
     func getVideoPath(write:Bool) -> URL?{
         do {
             let vPath = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask,appropriateFor: nil,create: write).appendingPathComponent(videoFolder)
-            print(vPath)
+//            print(vPath)
             if !FileManager.default.fileExists(atPath: vPath.path) {
                 print("create video folder")
                 do {

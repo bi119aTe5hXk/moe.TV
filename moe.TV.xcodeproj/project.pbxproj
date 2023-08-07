@@ -27,6 +27,7 @@
 		862C25AA2A54710C006827E6 /* BGMTVUserInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862C25A92A54710C006827E6 /* BGMTVUserInfoModel.swift */; };
 		86436D4B2A389EE200E6936F /* EpisodeDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */; };
 		86436D4D2A38AE4900E6936F /* EPCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4C2A38AE4900E6936F /* EPCellView.swift */; };
+		864F0BD52A812BE700604B7F /* OfflinePlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F0BD42A812BE700604B7F /* OfflinePlaybackManager.swift */; };
 		8658C6912A50839100357761 /* OpenURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8658C6902A50839100357761 /* OpenURL.swift */; };
 		86624A0D2A68250B00F61BAF /* BangumiDetailNavTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86624A0C2A68250B00F61BAF /* BangumiDetailNavTitleView.swift */; };
 		86624A0F2A6825F400F61BAF /* BangumiDetailNavItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86624A0E2A6825F400F61BAF /* BangumiDetailNavItemView.swift */; };
@@ -101,6 +102,7 @@
 		86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeDetailModel.swift; sourceTree = "<group>"; };
 		86436D4C2A38AE4900E6936F /* EPCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCellView.swift; sourceTree = "<group>"; };
 		86436D4F2A38B92100E6936F /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/iOSSupport/System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		864F0BD42A812BE700604B7F /* OfflinePlaybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflinePlaybackManager.swift; sourceTree = "<group>"; };
 		8658C6902A50839100357761 /* OpenURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenURL.swift; sourceTree = "<group>"; };
 		86624A0C2A68250B00F61BAF /* BangumiDetailNavTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailNavTitleView.swift; sourceTree = "<group>"; };
 		86624A0E2A6825F400F61BAF /* BangumiDetailNavItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailNavItemView.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 			children = (
 				868E9DEB2A7E3F6B00967773 /* NetworkMonitor.swift */,
 				86A968F92A7FCD4900E9BD59 /* DownloadManager.swift */,
+				864F0BD42A812BE700604B7F /* OfflinePlaybackManager.swift */,
 				8627A9362A343DBC00A5FCAC /* SaveHandler.swift */,
 				8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */,
 				86112E852A3C73F60034AD97 /* BGMTVServerHandler.swift */,
@@ -458,6 +461,7 @@
 				868E9DEC2A7E3F6B00967773 /* NetworkMonitor.swift in Sources */,
 				862C25A32A545899006827E6 /* BangumiDetailViewModel.swift in Sources */,
 				47E7802B2A397ED900827D03 /* EPCellProgressView.swift in Sources */,
+				864F0BD52A812BE700604B7F /* OfflinePlaybackManager.swift in Sources */,
 				86436D4B2A389EE200E6936F /* EpisodeDetailModel.swift in Sources */,
 				86A9C3E62A3306BC00FD0B44 /* moe_TVApp.swift in Sources */,
 				86AD92982A338D9C008461FF /* BangumiDetailView.swift in Sources */,

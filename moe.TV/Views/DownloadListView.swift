@@ -77,7 +77,7 @@ struct DownloadListView: View {
     
     func getDownloadList(){
         downloadManager.getDownloadList { list in
-            print(list)
+            //print(list)
             dlListVM.setFileList(list: list)
         }
     }
