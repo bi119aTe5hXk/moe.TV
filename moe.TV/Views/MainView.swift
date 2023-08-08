@@ -65,7 +65,9 @@ struct MainView: View {
                         Spacer()
 #endif
                     }
-                    DownloadListView( dlListVM: DownloadListViewModel()).environmentObject(DownloadManager())
+                    DownloadListView( dlListVM: DownloadListViewModel())
+                        .environmentObject(DownloadManager())
+                        .environmentObject(OfflinePlaybackManager())
                 })
                 
                 Spacer()

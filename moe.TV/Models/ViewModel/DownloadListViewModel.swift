@@ -8,14 +8,22 @@
 import Foundation
 class DownloadListViewModel: ObservableObject{
     @Published var fileList = [URL]()
+    @Published var fileName = ""
+    @Published var playbackPosition:Double?
     @Published var presentVideoView = false
     @Published var videoFilePath:URL?
+    let offlinePBM = OfflinePlaybackManager()
     
     func setFileList(list:Array<URL>){
         self.fileList = list
     }
-    func showVideoView(path:URL){
+    func showVideoView(path:URL, filename:String){
         self.videoFilePath = path
+        self.fileName = filename
+        if let pbItem = offlinePBM.getPlayBackStatus(filename: filename){
+            print("getPosition:\(pbItem.position)")
+            self.playbackPosition = pbItem.position
+        }
         self.presentVideoView.toggle()
     }
     

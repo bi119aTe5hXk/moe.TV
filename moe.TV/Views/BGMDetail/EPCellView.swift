@@ -12,6 +12,7 @@ struct EPCellView: View {
     @State var showVideoFileExisitAlert = false
     @ObservedObject var detailVM : BangumiDetailViewModel
     @EnvironmentObject var downloadManager: DownloadManager
+    @EnvironmentObject var offlinePBM:OfflinePlaybackManager
     
     var body: some View {
         HStack{
@@ -98,6 +99,7 @@ struct EPCellView: View {
                         if let filename = epDetail.video_files![0].file_path{
                             if !downloadManager.checkFileExists(fileName: filename){
                                 downloadManager.downloadFile(urlString: fileURL,savedAs: filename)
+                                offlinePBM.setPlayBackStatus(item: OfflineVideoItem(epID: epDetail.id, bgm_eps_id: epDetail.bgm_eps_id,  filename: filename, position: epDetail.watch_progress?.last_watch_position ?? 0, isFinished: false))
                             }else{
                                 print("video file exists")
                                 self.showVideoFileExisitAlert.toggle()

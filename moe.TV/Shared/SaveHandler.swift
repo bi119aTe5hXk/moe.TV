@@ -53,14 +53,49 @@ class SaveHandler {
     func getBGMTVExpireTime() -> Int {
         return Int(keyStore.longLong(forKey: kBGMTVExpireTime))
     }
-
+    
+    func saveToPList(key:String, data:Any) {
+        if let path = getSaveFilePath(key: key){
+            print("savekeyPath:\(path)")
+            do{
+                let data = try PropertyListSerialization.data(fromPropertyList: data, format: .xml, options: 0)
+                try data.write(to: path)
+            }catch{
+                print(error)
+            }
+        }
+    }
+    func readArrayFromPList(key:String) -> [Any]? {
+        if let path = getSaveFilePath(key: key){
+            print("readkeyPath:\(path)")
+            guard let plistData = FileManager.default.contents(atPath: path.path) else { return nil }
+            guard let plist = try? PropertyListSerialization.propertyList(from: plistData, options: .mutableContainers, format:nil) as? [Any] else { return nil }
+            //print(plist)
+            return plist
+        }else{
+            print("failed to read \(key).plist")
+            return nil
+        }
+    }
+        
+    func getSaveFilePath(key:String) -> URL?{
+        do {
+            let documentsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            return documentsDirectory.appendingPathComponent("\(key).plist")
+        }catch{
+            print(error)
+            return nil
+        }
+    }
     
 #if os(tvOS)
     //For tvOS TopShelf
-    private let UD_SUITE_NAME = "group.moe.TV"
-    private let UD_TOPSHELF_ARR = "topShelfArr"
     
+    private let kTopShelfArr = "topShelfArr"
     func setTopShelf(array:[MyBangumiItemModel]){
+        if array.isEmpty{
+            return
+        }
         var encodeArr = [Any]()
         array.forEach { item in
             if let encoded = try? PropertyListEncoder().encode(item) {
@@ -68,12 +103,11 @@ class SaveHandler {
             }
         }
         print("saved \(encodeArr.count) items")
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(encodeArr, forKey: UD_TOPSHELF_ARR)
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
+        self.saveToPList(key: kTopShelfArr, data: encodeArr)
     }
     
     func getTopShelf() -> [MyBangumiItemModel]?{
-        let arr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.array(forKey: UD_TOPSHELF_ARR)
+        let arr = self.readArrayFromPList(key: kTopShelfArr)
         var decodeArr = [MyBangumiItemModel]()
         arr?.forEach({ item in
             if let data = item as? Data,

@@ -20,7 +20,7 @@ struct MyBangumiView: View {
                         await getBGMList()
                     })
                 }
-                if isBGMTVlogined() && myBangumiVM.getBGMProfileIcon().isEmpty{
+                if isBGMTVlogined() && myBangumiVM.bgmProfileIcon.isEmpty{
                     fetchBGMProfileIcon()
                 }
             }()
@@ -99,10 +99,13 @@ struct MyBangumiView: View {
                     if let d = data as? BGMTVUserInfoModel{
                         let url = d.avatar?.large ?? ""
                         myBangumiVM.setBGMProfileIcon(url: url)
+                    }else{
+                        print("bgm.tv user info invalid, should delete bgm.tv user info")
+                        logoutBGMTV()
                     }
                 }else{
-                    print("bgm.tv oauth info invalid, cleaning...")
-                    logoutBGMTV()
+                    print("bgm.tv oauth info invalid")
+                    //logoutBGMTV()
                 }
             })
         }

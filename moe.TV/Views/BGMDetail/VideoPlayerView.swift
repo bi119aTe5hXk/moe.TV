@@ -85,6 +85,7 @@ struct VideoPlayerView: View {
     var seekTime:Double
     var ep:EpisodeDetailModel?
     var isOffline:Bool
+    var filename:String?
     @StateObject private var playerVM = PlayerViewModel()
     
     var body: some View {
@@ -101,11 +102,10 @@ struct VideoPlayerView: View {
                             print("waiting")
                         case .paused:
                             print("paused")
-                            if !isOffline{
-                                playerVM.logPlaybackPosition(player: avPlayer, ep: ep!)
-                            }else{
-                                //TODO: log playback position offline
-                            }
+                            playerVM.logPlaybackPosition(player: avPlayer,
+                                                         ep: ep,
+                                                         isOffline: isOffline,
+                                                         filename: filename)
                         case .playing:
                             print("playing")
                         case .some(_):
@@ -123,11 +123,10 @@ struct VideoPlayerView: View {
                             print("waiting")
                         case .paused:
                             print("paused")
-                            if !isOffline{
-                                playerVM.logPlaybackPosition(player: avPlayer, ep: ep!)
-                            }else{
-                                //TODO: log playback position offline
-                            }
+                            playerVM.logPlaybackPosition(player: avPlayer,
+                                                         ep: ep,
+                                                         isOffline: isOffline,
+                                                         filename: filename)
                         case .playing:
                             print("playing")
                         case .some(_):
@@ -146,6 +145,8 @@ struct VideoPlayerView: View {
                                            preferredTimescale: Int32(NSEC_PER_SEC)),
                                 toleranceBefore: CMTime.zero,
                                 toleranceAfter: CMTime.zero)
+                }else{
+                    print("seek0")
                 }
                 player.play()
             }
@@ -154,11 +155,10 @@ struct VideoPlayerView: View {
             Task{
                 if let player = playerVM.avPlayer{
                     player.pause()
-                    if !isOffline{
-                        playerVM.logPlaybackPosition(player: player, ep: ep!)
-                    }else{
-                        //TODO: log playback position offline
-                    }
+                    playerVM.logPlaybackPosition(player: player,
+                                                 ep: ep,
+                                                 isOffline: isOffline,
+                                                 filename: filename)
                 }
             }
         }.edgesIgnoringSafeArea(.all)

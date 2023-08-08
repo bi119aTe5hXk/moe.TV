@@ -8,6 +8,7 @@
 import SwiftUI
 struct DownloadListView: View {
     @EnvironmentObject var downloadManager: DownloadManager
+    @EnvironmentObject var offlinePBM: OfflinePlaybackManager
     @ObservedObject var dlListVM: DownloadListViewModel
     
     var body: some View {
@@ -16,9 +17,15 @@ struct DownloadListView: View {
                 ForEach(dlListVM.fileList, id: \.self){ item in
                     Button {
                         let playerItem = downloadManager.getVideoFileAsset(filename: item.lastPathComponent)
-                        dlListVM.showVideoView(path: playerItem!)
+                        dlListVM.showVideoView(path: playerItem!,filename: item.lastPathComponent)
                     } label: {
-                        Text(item.lastPathComponent)
+                        HStack{
+                            Text(item.lastPathComponent)
+                            Spacer()
+                            if let status = offlinePBM.getPlayBackStatus(filename: item.lastPathComponent){
+                                Text("\(secondsToHoursMinutesSeconds(seconds: status.position))")
+                            }
+                        }
                     }
                     
                 }
@@ -38,7 +45,11 @@ struct DownloadListView: View {
                              onDismiss: { },
                              content: {
                 if let path = dlListVM.videoFilePath{
-                    VideoPlayerView(url: path, seekTime: 0,ep: nil,isOffline: true)
+                    VideoPlayerView(url: path,
+                                    seekTime: dlListVM.playbackPosition ?? 0,
+                                    ep: nil,
+                                    isOffline: true,
+                                    filename: dlListVM.fileName)
                 }
             })
 #endif
@@ -46,7 +57,11 @@ struct DownloadListView: View {
             .sheet(isPresented:$dlListVM.presentVideoView ) {
                 if let path = dlListVM.videoFilePath{
                     ZStack(alignment: .topLeading){
-                        VideoPlayerView(url: path, seekTime: 0,ep: nil,isOffline: true)
+                        VideoPlayerView(url: path,
+                                        seekTime: dlListVM.playbackPosition ?? 0,
+                                        ep: nil,
+                                        isOffline: true,
+                                        filename: dlListVM.fileName)
                             .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
                         //TODO: better close button for macOS
                         Button(action: {
@@ -72,6 +87,7 @@ struct DownloadListView: View {
         if let deleteItem = offsets.map({ dlListVM.fileList[$0] }).first {
             print("delete:\(deleteItem.lastPathComponent)")
             downloadManager.deleteFile(fileName: deleteItem.lastPathComponent)
+            offlinePBM.deletePlayBackStatus(filename: deleteItem.lastPathComponent)
         }
     }
     
@@ -79,6 +95,22 @@ struct DownloadListView: View {
         downloadManager.getDownloadList { list in
             //print(list)
             dlListVM.setFileList(list: list)
+        }
+    }
+    
+    func secondsToHoursMinutesSeconds(seconds: Double) -> String {
+        let (hr,  minf) = modf(seconds / 3600)
+        let (min, secf) = modf(60 * minf)
+        return "\(formatDoubleToString(number: hr)):\(formatDoubleToString(number: min)):\(formatDoubleToString(number:60 * secf))"
+    }
+    
+    func formatDoubleToString(number:Double) -> String{
+        if number > 0 && number < 10{
+            return "0\(Int(number))"
+        }else if number > 10{
+            return "\(Int(number))"
+        }else{
+            return "00"
         }
     }
 }
