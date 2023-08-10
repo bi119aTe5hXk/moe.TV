@@ -15,7 +15,7 @@ TestFlight: TBD
 
 ## Support platform
 - iOS 15.0 and later
-- macOS (Native & Catalyst) 12.0 and later
+- macOS (Native & Catalyst) 13.0 and later
 - tvOS 16.0 and later
 
 ## Support Service
