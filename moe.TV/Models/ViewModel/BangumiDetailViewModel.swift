@@ -14,6 +14,8 @@ class BangumiDetailViewModel : ObservableObject {
     @Published var seek:Double = 0.0
     @Published var ep:EpisodeDetailModel?
     
+    @Published var bgmDetailItem:BangumiDetailModel?
+    
     func setSelectedEP(ep:EpisodeDetailModel){
         DispatchQueue.main.async {
             self.ep = ep
@@ -51,6 +53,19 @@ class BangumiDetailViewModel : ObservableObject {
             self.seek = time
         }
     }
+    func getBGMDetail(id:String){
+        print("getBGMDetail:\(id)")
+        getBangumiDetail(id: id) { result, data in
+            if !result{
+                return
+            }
+            if let bgmItem = data as? BangumiDetailModel{
+                DispatchQueue.main.async {
+                    self.bgmDetailItem = bgmItem
+                }
+            }
+        }
+    }
     
     
     func checkVideoSource(){
@@ -59,8 +74,8 @@ class BangumiDetailViewModel : ObservableObject {
                 print("more than one source")
                 self.showSourceSelectAlert()
             }else{
-                self.setVideoURL(url: fixPathNotCompete(path: ep.video_files![0].url ?? "").addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!)
-                
+                self.setVideoURL(url: fixPathNotCompete(path: ep.video_files![0].url ?? "")
+                    .addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!)
             }
             checkLastWatchPosition()
         }

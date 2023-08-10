@@ -10,7 +10,6 @@ import SwiftUI
 
 struct MainView: View {
     @ObservedObject var loginVM: LoginViewModel
-    @ObservedObject var myBangumiVM: MyBangumiViewModel
     
     @EnvironmentObject var networkMonitor: NetworkMonitor
     @State private var showNetworkAlert = false

@@ -26,6 +26,11 @@ class DownloadListViewModel: ObservableObject{
         }
         self.presentVideoView.toggle()
     }
+    func closePlayer(){
+        DispatchQueue.main.async {
+            self.presentVideoView = false
+        }
+    }
     
     
 }

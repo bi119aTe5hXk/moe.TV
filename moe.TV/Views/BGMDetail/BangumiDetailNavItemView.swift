@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BangumiDetailNavItemView: View {
-    @State var item:BangumiDetailModel
+    @Binding var item:BangumiDetailModel?
 #if !os(tvOS)
     var body: some View {
         Menu {
@@ -21,9 +21,11 @@ struct BangumiDetailNavItemView: View {
         }
     }
     private  func openBangumi(){
-        if let bgm_id = item.bgm_id{
-            let urlString = "https://bgm.tv/subject/\(String(bgm_id))"
-            openURLInApp(urlString: urlString)
+        if let i = item{
+            if let bgm_id = i.bgm_id{
+                let urlString = "https://bgm.tv/subject/\(String(bgm_id))"
+                openURLInApp(urlString: urlString)
+            }
         }
     }
 #endif

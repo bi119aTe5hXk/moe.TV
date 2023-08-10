@@ -9,27 +9,12 @@ import SwiftUI
 
 struct MyBangumiView: View {
     @ObservedObject var myBangumiVM: MyBangumiViewModel
-    @State private var selectedItem:MyBangumiItemModel? = nil
+    @State var selectedItem: MyBangumiItemModel?
     
     var body: some View {
-        NavigationView {
-            let _ = {
-                if myBangumiVM.myBGMList.count <= 0{
-                    print("init.getBGMList")
-                    Task.init(operation: {
-                        await getBGMList()
-                    })
-                }
-                if isBGMTVlogined() && myBangumiVM.bgmProfileIcon.isEmpty{
-                    fetchBGMProfileIcon()
-                }
-            }()
-            BangumiListView(animeArr: $myBangumiVM.myBGMList)
-                .refreshable {
-                    myBangumiVM.myBGMList = []
-                    print("pulled")
-                    await getBGMList()
-                }
+        NavigationSplitView {
+            BangumiListView(listVM: BangumiListViewModel(),selectedItem: $selectedItem)
+                
                 .navigationTitle("My Bangumi")
                 .toolbar(content: {
 #if os(macOS)
@@ -38,8 +23,9 @@ struct MyBangumiView: View {
                     Button(action: {
                         myBangumiVM.toggleSettingView()
                     }, label: {
-                        if isBGMTVlogined(){
-                            AsyncImage(url: URL(string: myBangumiVM.getBGMProfileIcon())) { image in
+                        //TODO: logo not show
+                        if !myBangumiVM.bgmProfileIcon.isEmpty{
+                            AsyncImage(url: URL(string: myBangumiVM.bgmProfileIcon)) { image in
                                 image.resizable()
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(.white)
@@ -52,8 +38,16 @@ struct MyBangumiView: View {
                         }
                     })
                 })
-            BangumiDetailView(bgmID: .constant(selectedItem?.id))
+            
+        } detail: {
+            BangumiDetailView(selectedItem: $selectedItem)
         }
+        .onAppear(){
+            if isBGMTVlogined() && myBangumiVM.bgmProfileIcon.isEmpty{
+                myBangumiVM.fetchBGMProfileIcon()
+            }
+        }
+        
         .sheet(isPresented: $myBangumiVM.presentSettingView, content: {
             HStack{
 #if !os(tvOS)
@@ -73,47 +67,8 @@ struct MyBangumiView: View {
 #endif
             Spacer()
         })
-
     }
-    func getBGMList() async {
-        getMyBangumiList { result, data in
-            if !result{
-                //TODO: login failed, cookie expired
-                print("login failed, cookie expired")
-                return
-            }
-            if let bgmList = data as? [MyBangumiItemModel]{
-                myBangumiVM.setBGMList(list: bgmList)
-#if os(tvOS)
-            let save = SaveHandler()
-            save.setTopShelf(array: myBangumiVM.getBGMList())
-#endif
-            }
-        }
-    }
-    
-    func fetchBGMProfileIcon(){
-        if isBGMTVlogined(){
-            getBGMTVUserInfo(completion: { result, data in
-                if result{
-                    if let d = data as? BGMTVUserInfoModel{
-                        let url = d.avatar?.large ?? ""
-                        myBangumiVM.setBGMProfileIcon(url: url)
-                    }else{
-                        print("bgm.tv user info invalid, should delete bgm.tv user info")
-                        logoutBGMTV()
-                    }
-                }else{
-                    print("bgm.tv oauth info invalid")
-                    //logoutBGMTV()
-                }
-            })
-        }
-    }
-    
-    
 }
-
 
 //struct MyBangumiView_Previews: PreviewProvider {
 //    static var previews: some View {

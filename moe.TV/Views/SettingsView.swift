@@ -130,9 +130,9 @@ struct SettingsView: View {
                                     logOutServer { result, data in
                                         
                                     }
-                                    myBangumiVM.myBGMList = []
+                                    //myBangumiVM.myBGMList = []
                                     //loginVM.toggleLoginView() //TODO: show login view after logout
-                                    myBangumiVM.toggleSettingView()
+                                    //myBangumiVM.toggleSettingView()
                                     exit(0) //TODO: logout without exit
                                 },
                                 secondaryButton: .cancel()

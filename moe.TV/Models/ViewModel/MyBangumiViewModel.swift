@@ -9,7 +9,6 @@ import Foundation
 
 class MyBangumiViewModel: ObservableObject{
     @Published var presentSettingView = false
-    @Published var myBGMList = [MyBangumiItemModel]()
     @Published var bgmProfileIcon = ""
     
     func setBGMProfileIcon(url:String){
@@ -17,21 +16,27 @@ class MyBangumiViewModel: ObservableObject{
             self.bgmProfileIcon = url
         }
     }
-    func getBGMProfileIcon() -> String{
-//        print("bgmtv profile url:\(self.bgmProfileIcon)")
-        return self.bgmProfileIcon
-    }
-    
-    func setBGMList(list:[MyBangumiItemModel]){
-        DispatchQueue.main.async {
-            self.myBGMList = list
-        }
-    }
-    func getBGMList() -> [MyBangumiItemModel]{
-        return self.myBGMList
-    }
     
     func toggleSettingView(){
         self.presentSettingView.toggle()
+    }
+    
+    func fetchBGMProfileIcon(){
+        if isBGMTVlogined(){
+            getBGMTVUserInfo(completion: { result, data in
+                if result{
+                    if let d = data as? BGMTVUserInfoModel{
+                        let url = d.avatar?.large ?? ""
+                        self.setBGMProfileIcon(url: url)
+                    }else{
+                        print("bgm.tv user info invalid, should delete bgm.tv user info")
+                        logoutBGMTV()
+                    }
+                }else{
+                    print("bgm.tv oauth info invalid")
+                    //logoutBGMTV()
+                }
+            })
+        }
     }
 }

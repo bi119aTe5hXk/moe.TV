@@ -15,8 +15,9 @@ struct moe_TVApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainView(loginVM: LoginViewModel(),
-                     myBangumiVM: MyBangumiViewModel())
+            MainView(loginVM: LoginViewModel())
+            
+                //for URI scheme
                 .sheet(isPresented: $showBGMDetailView, content: {
 #if !os(tvOS)
                     HStack{
@@ -28,7 +29,9 @@ struct moe_TVApp: App {
                         Spacer()
                     }
 #endif
-                    BangumiDetailView(bgmID:$bgmID)
+                    if let id = bgmID{
+                        BangumiDetailView(selectedItem: .constant(MyBangumiItemModel(id: id, type: 0, status: 0, eps: 0)), detailVM: BangumiDetailViewModel())
+                    }
                 })
                 .environmentObject(networkMonitor)
 #if !os(tvOS)

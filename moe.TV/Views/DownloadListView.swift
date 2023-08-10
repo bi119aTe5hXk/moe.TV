@@ -65,7 +65,7 @@ struct DownloadListView: View {
                             .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
                         //TODO: better close button for macOS
                         Button(action: {
-                            detailVM.closePlayer()
+                            dlListVM.closePlayer()
                         }, label: {
                             Image(systemName: "xmark")
                                 .resizable()
