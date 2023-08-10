@@ -55,6 +55,7 @@
 		86AD929A2A339285008461FF /* BangumiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AD92992A339285008461FF /* BangumiListView.swift */; };
 		86AD92A02A33A540008461FF /* BangumiCellStatusTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AD929F2A33A540008461FF /* BangumiCellStatusTextView.swift */; };
 		86B36A8A2A581B9D00824050 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B36A892A581B9D00824050 /* SettingsViewModel.swift */; };
+		86B8F0932A850A7000FD467A /* SettingsButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B8F0922A850A7000FD467A /* SettingsButtonView.swift */; };
 		86BAC66B2A38BE52001C064F /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */; };
 		86E83E6E2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E83E6D2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift */; };
 /* End PBXBuildFile section */
@@ -131,6 +132,7 @@
 		86AD92992A339285008461FF /* BangumiListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BangumiListView.swift; sourceTree = "<group>"; };
 		86AD929F2A33A540008461FF /* BangumiCellStatusTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiCellStatusTextView.swift; sourceTree = "<group>"; };
 		86B36A892A581B9D00824050 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		86B8F0922A850A7000FD467A /* SettingsButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButtonView.swift; sourceTree = "<group>"; };
 		86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		86E83E6D2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailCoverTextView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -283,6 +285,7 @@
 				47E7802C2A39C19000827D03 /* SettingsView.swift */,
 				86A968F72A7FC46500E9BD59 /* DownloadListView.swift */,
 				8627A92B2A34293100A5FCAC /* MyBangumiView.swift */,
+				86B8F0922A850A7000FD467A /* SettingsButtonView.swift */,
 				86E83E6F2A695D9800E3EB04 /* BGMMaster */,
 				86E83E702A695DBE00E3EB04 /* BGMDetail */,
 			);
@@ -440,6 +443,7 @@
 				86A9C3E82A3306BC00FD0B44 /* MainView.swift in Sources */,
 				86624A0D2A68250B00F61BAF /* BangumiDetailNavTitleView.swift in Sources */,
 				86AD92922A337729008461FF /* MyBangumiItemModel.swift in Sources */,
+				86B8F0932A850A7000FD467A /* SettingsButtonView.swift in Sources */,
 				8627A9372A343DBC00A5FCAC /* SaveHandler.swift in Sources */,
 				86BAC66B2A38BE52001C064F /* VideoPlayerView.swift in Sources */,
 				86A968FA2A7FCD4900E9BD59 /* DownloadManager.swift in Sources */,

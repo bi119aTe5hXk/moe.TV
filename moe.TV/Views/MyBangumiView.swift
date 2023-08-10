@@ -10,6 +10,7 @@ import SwiftUI
 struct MyBangumiView: View {
     @ObservedObject var myBangumiVM: MyBangumiViewModel
     @State var selectedItem: MyBangumiItemModel?
+    @State var profileIconURL:String?
     
     var body: some View {
         NavigationSplitView {
@@ -23,19 +24,7 @@ struct MyBangumiView: View {
                     Button(action: {
                         myBangumiVM.toggleSettingView()
                     }, label: {
-                        //TODO: logo not show
-                        if !myBangumiVM.bgmProfileIcon.isEmpty{
-                            AsyncImage(url: URL(string: myBangumiVM.bgmProfileIcon)) { image in
-                                image.resizable()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(.white)
-                                    .clipShape(Circle())
-                            } placeholder: {
-                                ProgressView()
-                            }
-                        }else{
-                            Image(systemName: "gear")
-                        }
+                        SettingsButtonView(profileIconURL: $profileIconURL)
                     })
                 })
             
@@ -43,8 +32,10 @@ struct MyBangumiView: View {
             BangumiDetailView(selectedItem: $selectedItem)
         }
         .onAppear(){
-            if isBGMTVlogined() && myBangumiVM.bgmProfileIcon.isEmpty{
-                myBangumiVM.fetchBGMProfileIcon()
+            if isBGMTVlogined(){
+                if (profileIconURL ?? "").isEmpty{
+                    fetchBGMProfileIcon()
+                }
             }
         }
         
@@ -67,6 +58,31 @@ struct MyBangumiView: View {
 #endif
             Spacer()
         })
+    }
+    
+    
+    func fetchBGMProfileIcon(){
+        if isBGMTVlogined(){
+            getBGMTVUserInfo(completion: { result, data in
+                if result{
+                    if let d = data as? BGMTVUserInfoModel{
+                        let url = d.avatar?.large ?? ""
+                        if !url.isEmpty{
+//                            print("set profile icon url:\(url)")
+                            self.profileIconURL = url
+                        }else{
+                            print("profile icon url is empty")
+                        }
+                    }else{
+                        print("bgm.tv user info invalid, should delete bgm.tv user info")
+                        logoutBGMTV()
+                    }
+                }else{
+                    print("bgm.tv oauth info invalid")
+                    //logoutBGMTV()
+                }
+            })
+        }
     }
 }
 
