@@ -94,7 +94,7 @@ struct SettingsView: View {
                     
                 }
                 
-                Section(header: Text("Download"),footer: Text("Cached Video may also backup to iCloud. If you don't want moe.TV to take all your iCloud space, turn off backup moe.TV data at system Settings app.")) {
+                Section(header: Text("Download")) {
                     Button {
                         self.showDownloadList.toggle()
                     } label: {

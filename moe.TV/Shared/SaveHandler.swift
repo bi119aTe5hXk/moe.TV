@@ -90,7 +90,7 @@ class SaveHandler {
         
     func getSaveFilePath(key:String) -> URL?{
         do {
-            let documentsDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let documentsDirectory = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             return documentsDirectory.appendingPathComponent("\(key).plist")
         }catch{
             print(error)
@@ -100,12 +100,10 @@ class SaveHandler {
     
 #if os(tvOS)
     //For tvOS TopShelf
+    private let UD_SUITE_NAME = "group.moetv"
+    private let UD_TOPSHELF_ARR = "topShelfArr"
     
-    private let kTopShelfArr = "topShelfArr"
     func setTopShelf(array:[MyBangumiItemModel]){
-        if array.isEmpty{
-            return
-        }
         var encodeArr = [Any]()
         array.forEach { item in
             if let encoded = try? PropertyListEncoder().encode(item) {
@@ -113,11 +111,12 @@ class SaveHandler {
             }
         }
         print("saved \(encodeArr.count) items")
-        self.saveToPList(key: kTopShelfArr, data: encodeArr)
+        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(encodeArr, forKey: UD_TOPSHELF_ARR)
+        UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
     }
     
     func getTopShelf() -> [MyBangumiItemModel]?{
-        let arr = self.readArrayFromPList(key: kTopShelfArr)
+        let arr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.array(forKey: UD_TOPSHELF_ARR)
         var decodeArr = [MyBangumiItemModel]()
         arr?.forEach({ item in
             if let data = item as? Data,
