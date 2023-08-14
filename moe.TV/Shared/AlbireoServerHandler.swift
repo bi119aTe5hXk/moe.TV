@@ -29,21 +29,21 @@ func saveAlbireoCookies(response: HTTPURLResponse) {
 
 //return true if have cookie result
 func loadAlbireoCookies() -> Bool {
-    guard let cookieArray = saveHandler.getAlbireoCookie()
-    else {
-        //print("albireo cookie is empty")
+    if let cookieArray = saveHandler.getAlbireoCookie(){
+        for cookieProperties in cookieArray {
+            if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any]) {
+                HTTPCookieStorage.shared.setCookie(cookie)
+            }
+        }
+        print("albireo cookie loaded")
+        return true
+    }else {
+        print("albireo cookie is nil")
         return false
     }
-    for cookieProperties in cookieArray {
-        if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any]) {
-            HTTPCookieStorage.shared.setCookie(cookie)
-        }
-    }
-    print("albireo cookie loaded")
-    return true
 }
 func clearCookie(){
-    saveHandler.setAlbireoCookie(array: nil)
+    saveHandler.setAlbireoCookie(array: [])
     print("albireo cookie cleared")
 }
 
@@ -112,7 +112,7 @@ private func getServer(urlString:String,
 }
 
 // MARK: - Albireo Server APIs
-func loginServer(server:String,
+func loginAlbireoServer(server:String,
                  username: String,
                  password: String,
                  completion: @escaping (Bool, String) -> Void) {
@@ -148,7 +148,7 @@ func loginServer(server:String,
 }
 
 
-func logOutServer(completion: @escaping (Bool, String) -> Void) {
+func logoutAlbireoServer(completion: @escaping (Bool, String) -> Void) {
     //TODO: logout via API, get method will save cookie couse logout failed
 //    var urlstr = getAlbireoServer()
 //    urlstr.append("/api/user/logout")

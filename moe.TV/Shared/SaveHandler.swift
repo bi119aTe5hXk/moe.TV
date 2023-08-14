@@ -15,7 +15,13 @@ class SaveHandler {
         keyStore.synchronize()
     }
     func getAlbireoCookie() -> Array<Any>?{
-        return keyStore.array(forKey: kCookie) ?? nil
+        keyStore.synchronize()
+        if let arr = keyStore.array(forKey: kCookie){
+            if arr.count > 0{
+                return arr
+            }
+        }
+        return nil
     }
     
     private let kServerAddr = "kServerAddr"
@@ -24,6 +30,7 @@ class SaveHandler {
         keyStore.synchronize()
     }
     func getAlbireoServerAddr() -> String {
+        keyStore.synchronize()
         return keyStore.string(forKey: kServerAddr) ?? ""
     }
     
@@ -33,6 +40,7 @@ class SaveHandler {
         keyStore.synchronize()
     }
     func getBGMTVAccessToken() -> String {
+        keyStore.synchronize()
         return keyStore.string(forKey: kBGMTVAccessToken) ?? ""
     }
     
@@ -42,6 +50,7 @@ class SaveHandler {
         keyStore.synchronize()
     }
     func getBGMTVRefreshToken() -> String {
+        keyStore.synchronize()
         return keyStore.string(forKey: kBGMTVRefreshToken) ?? ""
     }
     
@@ -51,6 +60,7 @@ class SaveHandler {
         keyStore.synchronize()
     }
     func getBGMTVExpireTime() -> Int {
+        keyStore.synchronize()
         return Int(keyStore.longLong(forKey: kBGMTVExpireTime))
     }
     

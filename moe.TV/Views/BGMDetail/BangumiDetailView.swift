@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BangumiDetailView: View {
     @Binding var selectedItem:MyBangumiItemModel?
-    @ObservedObject var detailVM : BangumiDetailViewModel = BangumiDetailViewModel()
+    @ObservedObject var detailVM = BangumiDetailViewModel()
     
     var body: some View {
         //Text(selectedItem?.id ?? "EMPTY")

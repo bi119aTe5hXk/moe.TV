@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct MyBangumiView: View {
-    @ObservedObject var myBangumiVM: MyBangumiViewModel
     @State var selectedItem: MyBangumiItemModel?
     @State var profileIconURL:String?
     
+    @ObservedObject var settingsVM = SettingsViewModel()
+    
     var body: some View {
+        
         NavigationSplitView {
-            BangumiListView(listVM: BangumiListViewModel(),selectedItem: $selectedItem)
+            BangumiListView(selectedItem: $selectedItem)
                 
                 .navigationTitle("My Bangumi")
                 .toolbar(content: {
@@ -22,7 +24,7 @@ struct MyBangumiView: View {
                     Spacer()
 #endif
                     Button(action: {
-                        myBangumiVM.toggleSettingView()
+                        settingsVM.showSettingView()
                     }, label: {
                         SettingsButtonView(profileIconURL: $profileIconURL)
                     })
@@ -31,7 +33,9 @@ struct MyBangumiView: View {
         } detail: {
             BangumiDetailView(selectedItem: $selectedItem)
         }
+        
         .onAppear(){
+            //check bgm.tv login status
             if isBGMTVlogined(){
                 if (profileIconURL ?? "").isEmpty{
                     fetchBGMProfileIcon()
@@ -39,20 +43,18 @@ struct MyBangumiView: View {
             }
         }
         
-        .sheet(isPresented: $myBangumiVM.presentSettingView, content: {
+        .sheet(isPresented: $settingsVM.presentSettingView, content: {
             HStack{
 #if !os(tvOS)
                 Button(action: {
-                    myBangumiVM.toggleSettingView()
+                    settingsVM.dismissSettingView()
                 }, label: {
                     Text("Close")
                 }).padding(20)
                 Spacer()
 #endif
             }
-            SettingsView(loginVM: LoginViewModel(),
-                         myBangumiVM: myBangumiVM,
-                         settingsVM: SettingsViewModel())
+            SettingsView(settingsVM: settingsVM)
 #if os(macOS)
         .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
 #endif

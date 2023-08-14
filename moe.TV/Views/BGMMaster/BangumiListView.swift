@@ -8,44 +8,39 @@
 import SwiftUI
 
 struct BangumiListView: View {
-    @State var listVM: BangumiListViewModel
+    @State var listVM = BangumiListViewModel()
     @Binding var selectedItem: MyBangumiItemModel?
     @State private var searchText = ""
     
     var body: some View {
-//        List{
-//            ForEach(bangumiFiltered, id: \.self) { item in
-//                NavigationLink(value: item) {
-//                    BangumiCellView(bangumiItem: item)
-//                }
-////                NavigationLink(destination: BangumiDetailView(bgmID: .constant(item.id)),
-////                               tag: item.id,
-////                               selection:$selectedID){
-////                    BangumiCellView(bangumiItem: item)
-////                }
-//            }
-//        }
-//        .navigationDestination(for: MyBangumiItemModel.self) { item in
-//            BangumiDetailView(bgmID: item.id)
-//        }
-        List(bangumiFiltered, selection: $selectedItem){ item in
-            NavigationLink(value: item) {
-                BangumiCellView(bangumiItem: item)
+        //TODO: update view after first login
+        if listVM.isLoading{
+            VStack{
+                ProgressView()
+                Text("Loading...")
             }
-        }
-        
-        
-        .refreshable {
-            print("pulled")
-            listVM.getBGMList()
-        }
-        .onAppear(){
-            if listVM.myBGMList.count <= 0{
+        }else{
+            List(bangumiFiltered, selection: $selectedItem){ item in
+                NavigationLink(value: item) {
+                    BangumiCellView(bangumiItem: item)
+                }
+            }
+            .refreshable {
+                print("pulled")
                 listVM.getBGMList()
             }
-        }
+            .onChange(of: listVM.myBGMList, perform: { newValue in
+                listVM.updateMyBGMList(list: newValue)
+            })
+            .onAppear(){
+                if listVM.myBGMList.count <= 0{
+                    print("BangumiListView.onAppear.getBGMList")
+                    listVM.getBGMList()
+                }
+            }
             //        .listStyle(.sidebar)
-        .searchable(text: $searchText)
+            .searchable(text: $searchText)
+        }
            
     }
     

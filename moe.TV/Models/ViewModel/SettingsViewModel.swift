@@ -8,6 +8,8 @@
 import Foundation
 
 class SettingsViewModel: ObservableObject{
+    @Published var presentSettingView = false
+    
     @Published var presentLogoutAlbireoAlert = false
     @Published var presentLogoutBGMTVAlert = false
     
@@ -17,6 +19,14 @@ class SettingsViewModel: ObservableObject{
     @Published var bgmNickname = ""
     @Published var bgmID:Int = 0
     @Published var bgmSign = ""
+    
+    
+    func showSettingView(){
+        self.presentSettingView = true
+    }
+    func dismissSettingView(){
+        self.presentSettingView = false
+    }
     
     func showLogoutAlbireoAlert(){
         self.presentLogoutAlbireoAlert = true

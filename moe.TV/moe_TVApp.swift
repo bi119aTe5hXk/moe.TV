@@ -15,7 +15,7 @@ struct moe_TVApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainView(loginVM: LoginViewModel())
+            MainView()
             
                 //for URI scheme
                 .sheet(isPresented: $showBGMDetailView, content: {

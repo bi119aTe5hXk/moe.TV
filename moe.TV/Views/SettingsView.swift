@@ -11,9 +11,10 @@ struct SettingsView: View {
     @State private var syncWithBGMTV = isBGMTVlogined()
     @State private var showDownloadList = false
     
-    @ObservedObject var loginVM: LoginViewModel
-    @ObservedObject var myBangumiVM: MyBangumiViewModel
-    @ObservedObject var settingsVM: SettingsViewModel
+//    @Binding var listVM:BangumiListViewModel
+//    @Binding var loginVM:LoginViewModel
+//    @Binding var myBGMVM:MyBangumiViewModel
+    @ObservedObject var settingsVM:SettingsViewModel
     
     var body: some View {
         VStack{
@@ -127,11 +128,13 @@ struct SettingsView: View {
                             Alert(
                                 title: Text("Are you sure you want to logout and exit app?"),
                                 primaryButton: .destructive(Text("Logout")) {
-                                    logOutServer { result, data in
-                                        
+                                    logoutAlbireoServer { result, data in
+
                                     }
-                                    //myBangumiVM.myBGMList = []
-                                    //loginVM.toggleLoginView() //TODO: show login view after logout
+                                    //listVM.myBGMList = []
+                                    settingsVM.dismissSettingView()
+//                                    loginVM.presentLoginView = true //TODO: show login view after logout
+//                                    loginVM.isLoginSuccessd = false
                                     //myBangumiVM.toggleSettingView()
                                     exit(0) //TODO: logout without exit
                                 },

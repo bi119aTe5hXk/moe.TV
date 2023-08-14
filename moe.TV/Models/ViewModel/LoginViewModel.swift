@@ -21,13 +21,20 @@ class LoginViewModel: ObservableObject {
     @Published var showError = false
     @Published var presentLoginView = false
     
+    @Published var isLoginSuccessd = false
+    
     private var disposables = [AnyCancellable]()
     
     func showLoginView(){
+        print("showLoginView")
         self.presentLoginView = true
     }
+    
     func dismissLoginView(){
+//        DispatchQueue.main.async {
+            print("dismiss login view")
         self.presentLoginView = false
+//        }
     }
     func toggleErrorView(){
         self.showError = true
@@ -52,12 +59,15 @@ class LoginViewModel: ObservableObject {
         
         $isLoginButtonTapped.sink(receiveValue: { isTapped in
                         if isTapped == true {
-                            loginServer(server:self.server,
+                            loginAlbireoServer(server:self.server,
                                       username: self.username,
                                       password: self.password)
                             { result, data in
                                 if result {
-                                    self.dismissLoginView()
+                                    //self.dismissLoginView()
+                                    DispatchQueue.main.async {
+                                        self.isLoginSuccessd = true
+                                    }
                                     print("logined")
                                 }else{
                                     self.toggleErrorView()

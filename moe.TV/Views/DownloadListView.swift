@@ -7,9 +7,9 @@
 
 import SwiftUI
 struct DownloadListView: View {
-    @EnvironmentObject var downloadManager: DownloadManager
-    @EnvironmentObject var offlinePBM: OfflinePlaybackManager
-    @ObservedObject var dlListVM: DownloadListViewModel
+    @EnvironmentObject var downloadManager:DownloadManager
+    @EnvironmentObject var offlinePBM:OfflinePlaybackManager
+    @ObservedObject var dlListVM:DownloadListViewModel
     
     var body: some View {
         List{
