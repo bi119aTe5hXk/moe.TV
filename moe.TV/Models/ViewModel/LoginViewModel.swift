@@ -48,11 +48,11 @@ class LoginViewModel: ObservableObject {
         }).store(in: &disposables)
         
         $username.sink(receiveValue: {
-            self.isValidUsername = $0.isAlphanumeric && !$0.isEmpty ? true : false
+            self.isValidUsername = !$0.isEmpty ? true : false
         }).store(in: &disposables)
         
         $password.sink(receiveValue: {
-            self.isValidPassword = $0.isAlphanumeric && !$0.isEmpty ? true : false
+            self.isValidPassword = !$0.isEmpty ? true : false
         }).store(in: &disposables)
         
         

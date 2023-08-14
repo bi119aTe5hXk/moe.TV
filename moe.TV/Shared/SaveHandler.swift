@@ -7,7 +7,7 @@
 
 import Foundation
 class SaveHandler {
-    private var keyStore = NSUbiquitousKeyValueStore()
+    private var keyStore = NSUbiquitousKeyValueStore()//TODO: support for non-iCloud account/devices
     
     private let kCookie = "kCookie"
     func setAlbireoCookie(array: Array<Any>?){
