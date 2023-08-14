@@ -132,7 +132,6 @@ struct SettingsView: View {
 
                                     }
                                     //listVM.myBGMList = []
-                                    settingsVM.dismissSettingView()
 //                                    loginVM.presentLoginView = true //TODO: show login view after logout
 //                                    loginVM.isLoginSuccessd = false
                                     //myBangumiVM.toggleSettingView()

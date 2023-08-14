@@ -282,8 +282,8 @@
 				86A9C3E72A3306BC00FD0B44 /* MainView.swift */,
 				86B9A80F2A8A777D002A9C94 /* OfflineView.swift */,
 				8627A92F2A343CDA00A5FCAC /* LoginView.swift */,
-				86B8F0922A850A7000FD467A /* SettingsButtonView.swift */,
 				47E7802C2A39C19000827D03 /* SettingsView.swift */,
+				86B8F0922A850A7000FD467A /* SettingsButtonView.swift */,
 				86A968F72A7FC46500E9BD59 /* DownloadListView.swift */,
 				8627A92B2A34293100A5FCAC /* MyBangumiView.swift */,
 				86E83E6F2A695D9800E3EB04 /* BGMMaster */,
@@ -502,7 +502,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 202306162220;
-				DEVELOPMENT_TEAM = HR66SGQEZ4;
+				DEVELOPMENT_TEAM = 26E2Z7VDS4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = topShelf/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = topShelf;
@@ -516,7 +516,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV.topshelf";
+				PRODUCT_BUNDLE_IDENTIFIER = net.bi119aTe5hXk.moetv.topshelf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
@@ -537,7 +537,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 202306162220;
-				DEVELOPMENT_TEAM = HR66SGQEZ4;
+				DEVELOPMENT_TEAM = 26E2Z7VDS4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = topShelf/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = topShelf;
@@ -551,7 +551,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bi119aTe5hXk.moe-TV.topshelf";
+				PRODUCT_BUNDLE_IDENTIFIER = net.bi119aTe5hXk.moetv.topshelf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;

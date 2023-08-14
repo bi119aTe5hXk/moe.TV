@@ -8,20 +8,20 @@
 import SwiftUI
 
 struct SettingsButtonView: View {
-    @Binding var profileIconURL:String?
+//    @State var profileIconURL:String
     var body: some View {
-        if let iconURL = profileIconURL{
-            AsyncImage(url: URL(string: iconURL)) { image in
-                image.resizable()
-                    .frame(width: 30, height: 30)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
-            } placeholder: {
-                ProgressView()
-            }
-        }else{
+//        if !profileIconURL.isEmpty{
+//            AsyncImage(url: URL(string: profileIconURL)) { image in
+//                image.resizable()
+//                    .frame(width: 30, height: 30)
+//                    .foregroundColor(.white)
+//                    .clipShape(Circle())
+//            } placeholder: {
+//                ProgressView()
+//            }
+//        }else{
             Image(systemName: "gear")
-        }
+//        }
     }
 }
 
