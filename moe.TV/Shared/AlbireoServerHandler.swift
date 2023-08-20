@@ -319,8 +319,8 @@ func getEpisodeDetail(ep_id: String,
 
 func sentEPWatchProgress(ep_id: String,
                          bangumi_id:String,
-                         last_watch_position:Double?,
-                         percentage:Double?,
+                         last_watch_position:Double,
+                         percentage:Double,
                          is_finished:Bool,
                          completion: @escaping (Bool, Any?) -> Void){
     var urlstr = getAlbireoServer()
@@ -328,8 +328,8 @@ func sentEPWatchProgress(ep_id: String,
     urlstr.append(ep_id)
     if loadAlbireoCookies(){
     let postdata = ["bangumi_id": bangumi_id,
-                    "last_watch_position": last_watch_position ?? 0,
-                    "percentage": percentage ?? 0,
+                    "last_watch_position": last_watch_position,
+                    "percentage": percentage,
                     "is_finished":is_finished] as [String: Any]
         
         postServer(urlString: urlstr, postdata: postdata) { result, data in

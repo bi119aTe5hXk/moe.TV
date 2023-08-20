@@ -25,7 +25,10 @@ class PlayerViewModel: ObservableObject {
                              filename:String?) {
         let currentItem = player.currentItem;
         let currentTime = CMTimeGetSeconds(currentItem!.currentTime())
-        let percent = CMTimeGetSeconds(currentItem!.currentTime()) / CMTimeGetSeconds(currentItem!.duration)
+        var percent = CMTimeGetSeconds(currentItem!.currentTime()) / CMTimeGetSeconds(currentItem!.duration)
+        if percent.isNaN{
+            percent = 0
+        }
         print("logprogress:\(currentTime),\(percent)")
         
         var isFinished = false
