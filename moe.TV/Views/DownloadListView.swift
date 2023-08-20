@@ -14,15 +14,15 @@ struct DownloadListView: View {
     var body: some View {
         List{
             if dlListVM.fileList.count > 0{
-                ForEach(dlListVM.fileList, id: \.self){ item in
+                ForEach(dlListVM.fileList.indices, id: \.self){ i in
                     Button {
-                        let playerItem = downloadManager.getVideoFileAsset(filename: item.lastPathComponent)
-                        dlListVM.showVideoView(path: playerItem!,filename: item.lastPathComponent)
+                        let playerItem = downloadManager.getVideoFileAsset(filename: dlListVM.fileList[i].lastPathComponent)
+                        dlListVM.showVideoView(path: playerItem!,filename: dlListVM.fileList[i].lastPathComponent)
                     } label: {
                         HStack{
-                            Text(item.lastPathComponent)
+                            Text(dlListVM.fileList[i].lastPathComponent)
                             Spacer()
-                            if let status = offlinePBM.getPlayBackStatus(filename: item.lastPathComponent){
+                            if let status = offlinePBM.getPlayBackStatus(filename: dlListVM.fileList[i].lastPathComponent){
                                 Text("\(secondsToHoursMinutesSeconds(seconds: status.position))")
                             }
                         }
@@ -94,7 +94,9 @@ struct DownloadListView: View {
     func getDownloadList(){
         downloadManager.getDownloadList { list in
             //print(list)
-            dlListVM.setFileList(list: list)
+            dlListVM.setFileList(list: list.sorted(by: { i, j in
+                i.lastPathComponent < j.lastPathComponent
+            }))
         }
     }
     
