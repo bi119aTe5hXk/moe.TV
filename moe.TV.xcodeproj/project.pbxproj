@@ -14,6 +14,7 @@
 		47E7802B2A397ED900827D03 /* EPCellProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E7802A2A397ED900827D03 /* EPCellProgressView.swift */; };
 		47E7802D2A39C19000827D03 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E7802C2A39C19000827D03 /* SettingsView.swift */; };
 		86112E862A3C73F60034AD97 /* BGMTVServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86112E852A3C73F60034AD97 /* BGMTVServerHandler.swift */; };
+		8622C61C2A9261B70099DC78 /* ProgressAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8622C61B2A9261B70099DC78 /* ProgressAlertView.swift */; };
 		8627A92C2A34293100A5FCAC /* MyBangumiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A92B2A34293100A5FCAC /* MyBangumiView.swift */; };
 		8627A9302A343CDA00A5FCAC /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A92F2A343CDA00A5FCAC /* LoginView.swift */; };
 		8627A9322A343D6500A5FCAC /* AlbireoServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */; };
@@ -91,6 +92,7 @@
 		47E7802A2A397ED900827D03 /* EPCellProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPCellProgressView.swift; sourceTree = "<group>"; };
 		47E7802C2A39C19000827D03 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		86112E852A3C73F60034AD97 /* BGMTVServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BGMTVServerHandler.swift; sourceTree = "<group>"; };
+		8622C61B2A9261B70099DC78 /* ProgressAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressAlertView.swift; sourceTree = "<group>"; };
 		8627A92B2A34293100A5FCAC /* MyBangumiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBangumiView.swift; sourceTree = "<group>"; };
 		8627A92F2A343CDA00A5FCAC /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbireoServerHandler.swift; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 				86E83E6D2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift */,
 				86436D4C2A38AE4900E6936F /* EPCellView.swift */,
 				47E7802A2A397ED900827D03 /* EPCellProgressView.swift */,
+				8622C61B2A9261B70099DC78 /* ProgressAlertView.swift */,
 				86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */,
 			);
 			path = BGMDetail;
@@ -449,6 +452,7 @@
 				86A968FA2A7FCD4900E9BD59 /* DownloadManager.swift in Sources */,
 				86112E862A3C73F60034AD97 /* BGMTVServerHandler.swift in Sources */,
 				8627A9322A343D6500A5FCAC /* AlbireoServerHandler.swift in Sources */,
+				8622C61C2A9261B70099DC78 /* ProgressAlertView.swift in Sources */,
 				47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */,
 				8698B3702A8327EF0093A0A5 /* BangumiListViewModel.swift in Sources */,
 				86AD92A02A33A540008461FF /* BangumiCellStatusTextView.swift in Sources */,

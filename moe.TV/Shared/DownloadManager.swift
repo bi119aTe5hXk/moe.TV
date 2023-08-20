@@ -9,11 +9,13 @@ import Foundation
 
 final class DownloadManager: ObservableObject {
     @Published var isDownloading = false
-    let videoFolder = "videos"
+    @Published var downloadProgress:Double = 0.0
+    private let videoFolder = "videos"
+    private var observation: NSKeyValueObservation?
     
     func getVideoPath(write:Bool) -> URL?{
         do {
-            let vPath = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask,appropriateFor: nil,create: write).appendingPathComponent(videoFolder)
+            let vPath = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask,appropriateFor: nil,create: write).appendingPathComponent(videoFolder)
 //            print(vPath)
             if !FileManager.default.fileExists(atPath: vPath.path) {
                 print("create video folder")
@@ -30,7 +32,7 @@ final class DownloadManager: ObservableObject {
         }
     }
     
-    func downloadFile(urlString:String,savedAs:String) {
+    func downloadFile(urlString:String, savedAs:String) {
         print("start download url:\(urlString)")
         DispatchQueue.main.async {
             self.isDownloading = true
@@ -62,7 +64,7 @@ final class DownloadManager: ObservableObject {
                 }
                 DispatchQueue.main.async {
                     do {
-                        let destinationUrl = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent(self.videoFolder).appendingPathComponent(savedAs)
+                        let destinationUrl = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent(self.videoFolder).appendingPathComponent(savedAs)
                         try data.write(to: destinationUrl, options: Data.WritingOptions.atomic)
 
                         DispatchQueue.main.async {
@@ -75,6 +77,12 @@ final class DownloadManager: ObservableObject {
                         }
                     }
                 }
+            }
+        }
+        observation = dataTask.progress.observe(\.fractionCompleted) { progress, _ in
+          print("fractionCompleted:\(progress.fractionCompleted)")
+            DispatchQueue.main.async {
+                self.downloadProgress = progress.fractionCompleted
             }
         }
         dataTask.resume()
@@ -120,7 +128,7 @@ final class DownloadManager: ObservableObject {
 
     func getVideoFileAsset(filename:String) -> URL? {
         do{
-            let vPath = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask,appropriateFor: nil,create: true).appendingPathComponent(videoFolder)
+            let vPath = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask,appropriateFor: nil,create: true).appendingPathComponent(videoFolder)
             let destinationUrl = vPath.appendingPathComponent(filename)
             if (FileManager().fileExists(atPath: destinationUrl.path)) {
                 return destinationUrl

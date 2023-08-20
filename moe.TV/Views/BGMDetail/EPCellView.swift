@@ -83,12 +83,18 @@ struct EPCellView: View {
 #else
             Button("Download", action: startDwonload)
 #endif
-        }.background(Color.clear)
-            .padding(10)
+        }
+        .background(Color.clear)
+        .padding(10)
         
-            .alert("Already downloaded",isPresented: self.$showVideoFileExisitAlert) {
+        .alert("Already downloaded, if you want to replace the file, please delete it in download manager.",isPresented: self.$showVideoFileExisitAlert) {
                 
             }
+        //TODO: show downloading list
+        .sheet(isPresented: $downloadManager.isDownloading){
+            ProgressAlertView(progress: $downloadManager.downloadProgress)
+            
+        }
     }
     func startDwonload(){
         getEpisodeDetail(ep_id: epItem.id) { result, data in
@@ -101,7 +107,7 @@ struct EPCellView: View {
                                 downloadManager.downloadFile(urlString: fileURL,savedAs: filename)
                                 offlinePBM.setPlayBackStatus(item: OfflineVideoItem(epID: epDetail.id, bgm_eps_id: epDetail.bgm_eps_id,  filename: filename, position: epDetail.watch_progress?.last_watch_position ?? 0, isFinished: false))
                             }else{
-                                print("video file exists")
+                                print("Video file exists")
                                 self.showVideoFileExisitAlert.toggle()
                             }
                         }else{
@@ -126,8 +132,8 @@ struct EPCellView: View {
 #endif
 }
 
-struct EPCellView_Previews: PreviewProvider {
-    static var previews: some View {
-        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: testURL.appending("/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0"), status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVM: BangumiDetailViewModel())
-    }
-}
+//struct EPCellView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: testURL.appending("/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0"), status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVM: BangumiDetailViewModel())
+//    }
+//}
