@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		47222CE52B3F267500085EBD /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47222CE42B3F267500085EBD /* DebugView.swift */; };
+		47222CE72B3F291200085EBD /* DebugViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47222CE62B3F291200085EBD /* DebugViewModel.swift */; };
 		47CC30782A371784001D3F8C /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC30772A371784001D3F8C /* LoginViewModel.swift */; };
 		47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */; };
 		47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */; };
@@ -86,6 +88,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		47222CE42B3F267500085EBD /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
+		47222CE62B3F291200085EBD /* DebugViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewModel.swift; sourceTree = "<group>"; };
 		47CC30772A371784001D3F8C /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiCellUnreadView.swift; sourceTree = "<group>"; };
 		47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailModel.swift; sourceTree = "<group>"; };
@@ -185,6 +189,7 @@
 				862C25A22A545899006827E6 /* BangumiDetailViewModel.swift */,
 				862C25A42A5458D3006827E6 /* PlayerViewModel.swift */,
 				86B36A892A581B9D00824050 /* SettingsViewModel.swift */,
+				47222CE62B3F291200085EBD /* DebugViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -285,6 +290,7 @@
 				86B9A80F2A8A777D002A9C94 /* OfflineView.swift */,
 				8627A92F2A343CDA00A5FCAC /* LoginView.swift */,
 				47E7802C2A39C19000827D03 /* SettingsView.swift */,
+				47222CE42B3F267500085EBD /* DebugView.swift */,
 				86B8F0922A850A7000FD467A /* SettingsButtonView.swift */,
 				86A968F72A7FC46500E9BD59 /* DownloadListView.swift */,
 				8627A92B2A34293100A5FCAC /* MyBangumiView.swift */,
@@ -442,6 +448,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47222CE72B3F291200085EBD /* DebugViewModel.swift in Sources */,
 				86E83E6E2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift in Sources */,
 				86A9C3E82A3306BC00FD0B44 /* MainView.swift in Sources */,
 				86624A0D2A68250B00F61BAF /* BangumiDetailNavTitleView.swift in Sources */,
@@ -479,6 +486,7 @@
 				86AD92982A338D9C008461FF /* BangumiDetailView.swift in Sources */,
 				86AD92902A33750F008461FF /* BangumiCellView.swift in Sources */,
 				47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */,
+				47222CE52B3F267500085EBD /* DebugView.swift in Sources */,
 				47E7802D2A39C19000827D03 /* SettingsView.swift in Sources */,
 				86624A0F2A6825F400F61BAF /* BangumiDetailNavItemView.swift in Sources */,
 				862C25AA2A54710C006827E6 /* BGMTVUserInfoModel.swift in Sources */,
@@ -710,7 +718,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe_TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202308150149;
+				CURRENT_PROJECT_VERSION = 202312300003;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "moe.TV/Support\\ Files/Preview\\ Content Assets.xcassets";
 				DEVELOPMENT_TEAM = 26E2Z7VDS4;
@@ -766,7 +774,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe_TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202308150149;
+				CURRENT_PROJECT_VERSION = 202312300003;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "moe.TV/Support\\ Files/Preview\\ Content Assets.xcassets";
 				DEVELOPMENT_TEAM = 26E2Z7VDS4;

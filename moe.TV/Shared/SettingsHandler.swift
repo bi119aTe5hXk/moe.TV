@@ -22,36 +22,33 @@ class SettingsHandler {
         ud = UserDefaults.init(suiteName: UD_SUITE_NAME) ?? UserDefaults.standard
         
         
+        //check if iCloud logined
         if FileManager.default.ubiquityIdentityToken != nil {
-            print("iCloud Available")
+            print("iCloud Available, using NSUbiquitousKeyValueStore")
             ub = NSUbiquitousKeyValueStore.init()
             isiCloudAvailable = true
+//            addListenerToNSUbiquitousKeyValueStore()
+            
         } else {
-            print("iCloud Unavailable")
+            print("iCloud Unavailable, using UserDefaults")
             isiCloudAvailable = false
-        }
-        
-        ud.register(defaults: [kCookie:[]])
-        ud.register(defaults: [kServerAddr:""])
-        ud.register(defaults: [kBGMTVAccessToken:""])
-        ud.register(defaults: [kBGMTVRefreshToken:""])
-        ud.register(defaults: [kBGMTVExpireTime:""])
-        if isiCloudAvailable{
-            addListenerToNSUbiquitousKeyValueStore()
+            
+            ud.register(defaults: [kCookie:[]])
+            ud.register(defaults: [kServerAddr:""])
+            ud.register(defaults: [kBGMTVAccessToken:""])
+            ud.register(defaults: [kBGMTVRefreshToken:""])
+            ud.register(defaults: [kBGMTVExpireTime:""])
         }
     }
    
     
     //Cookies
-    func setAlbireoCookie(array: [[HTTPCookiePropertyKey : Any]]?){
+    func setAlbireoCookie(array: [Any]?){
         if let arr = array{
-            if arr.count <= 0{
-                print("cookie array empty")
-                return
-            }
-            ud.setValue(arr, forKey: kCookie)
-            if isiCloudAvailable == true{
+            if isiCloudAvailable{
                 ub.set(arr, forKey: kCookie)
+            }else{
+                ud.setValue(arr, forKey: kCookie)
             }
             sync()
         }else{
@@ -59,139 +56,163 @@ class SettingsHandler {
         }
     }
     func getAlbireoCookie() -> Array<Any>?{
-        if let arr = ud.array(forKey: kCookie){
-            if arr.count > 0{
-                return arr
-            }
-            print("getAlbireoCookie arr=0")
-            return nil
+        var arr = Array<Any>()
+        if isiCloudAvailable{
+            arr = ub.array(forKey: kCookie) ?? []
+        }else{
+            arr = ud.array(forKey: kCookie) ?? []
         }
+        if arr.count > 0{
+            return arr
+        }
+        print("getAlbireoCookie arr=\(arr)")
         return nil
     }
     //Server Address
     func setAlbireoServerAddr(serverInfo:String){
-        ud.setValue(serverInfo, forKey: kServerAddr)
         if isiCloudAvailable{
             ub.set(serverInfo, forKey: kServerAddr)
+        }else{
+            ud.setValue(serverInfo, forKey: kServerAddr)
         }
         sync()
     }
     func getAlbireoServerAddr() -> String {
-        return ud.string(forKey: kServerAddr) ?? ""
+        if isiCloudAvailable{
+            return ub.string(forKey: kServerAddr) ?? ""
+        }else{
+            return ud.string(forKey: kServerAddr) ?? ""
+        }
     }
     
     //BGMTV Access Token
     func setBGMTVAccessToken(token:String){
-        ud.setValue(token, forKey: kBGMTVAccessToken)
         if isiCloudAvailable{
             ub.set(token, forKey: kBGMTVAccessToken)
+        }else{
+            ud.setValue(token, forKey: kBGMTVAccessToken)
         }
         sync()
     }
     func getBGMTVAccessToken() -> String {
-        return ud.string(forKey: kBGMTVAccessToken) ?? ""
+        if isiCloudAvailable{
+            return ub.string(forKey: kBGMTVAccessToken) ?? ""
+        }else{
+            return ud.string(forKey: kBGMTVAccessToken) ?? ""
+        }
     }
     
     //BGMTV Refresh Token
     func setBGMTVRefreshToken(token:String){
-        ud.setValue(token, forKey: kBGMTVRefreshToken)
         if isiCloudAvailable{
             ub.set(token, forKey: kBGMTVRefreshToken)
+        }else{
+            ud.setValue(token, forKey: kBGMTVRefreshToken)
         }
         sync()
     }
     func getBGMTVRefreshToken() -> String {
-        return ud.string(forKey: kBGMTVRefreshToken) ?? ""
+        if isiCloudAvailable{
+            return ub.string(forKey: kBGMTVRefreshToken) ?? ""
+        }else{
+            return ud.string(forKey: kBGMTVRefreshToken) ?? ""
+        }
     }
     
     //BGMTV Expire Time
     func setBGMTVExpireTime(time:Int){
-        ud.setValue(time, forKey: kBGMTVExpireTime)
         if isiCloudAvailable{
-            ub.set(time, forKey: kBGMTVExpireTime)
+            ub.set(Int64(time), forKey: kBGMTVExpireTime)
+        }else{
+            ud.setValue(time, forKey: kBGMTVExpireTime)
         }
         sync()
     }
     func getBGMTVExpireTime() -> Int {
-        return ud.integer(forKey: kBGMTVExpireTime)
+        if isiCloudAvailable{
+            return Int(ub.longLong(forKey: kBGMTVExpireTime))
+        }else{
+            return ud.integer(forKey: kBGMTVExpireTime)
+        }
     }
     
     // MARK: - iCloud Support
-    private func sync(){
-        ud.synchronize()
+    func sync(){
         if isiCloudAvailable{
             ub.synchronize()
+        }else{
+            ud.synchronize()
         }
     }
     
-    //Add a listener to NSUbiquitousKeyValueStore for sync Settings to iCloud
-    func addListenerToNSUbiquitousKeyValueStore() {
-        NotificationCenter.default.addObserver(self,
-            selector: #selector(ubiquitousKeyValueStoreDidChange(_:)),
-            name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
-            object: NSUbiquitousKeyValueStore.default)
-        if NSUbiquitousKeyValueStore.default.synchronize() == false {
-            fatalError("This app was not built with the proper entitlement requests.")
-        }
-    }
-    
-    @objc
-    func ubiquitousKeyValueStoreDidChange(_ notification: Notification) {
-        
-        guard let userInfo = notification.userInfo else { return }
-        // Get the reason for the notification (initial download, external change or quota violation change).
-        guard let reasonForChange = userInfo[NSUbiquitousKeyValueStoreChangeReasonKey] as? Int else { return }
-        
-        // Check if any of the keys we care about were updated, and if so use the new value stored under that key.
-        guard let keys =
-            userInfo[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] else { return }
-        guard keys.contains(kCookie) ||
-        keys.contains(kServerAddr) ||
-        keys.contains(kBGMTVExpireTime) ||
-        keys.contains(kBGMTVAccessToken) ||
-        keys.contains(kBGMTVRefreshToken)
-        else {
-            print("keys not found in iCloud")
-            return
-        }
-        
-        if reasonForChange == NSUbiquitousKeyValueStoreAccountChange{
-            // User changed account, so fall back to use UserDefaults
-        }
-        
-        //overwrite settings
-        let possibleCookieFromiCloud = ub.array(forKey: kCookie)
-        if let cookies = possibleCookieFromiCloud as? [[HTTPCookiePropertyKey : Any]]{
-            ud.set(cookies, forKey: kCookie)
-        }
-        
-        let possibleServerAddressFromiCloud = ub.string(forKey: kServerAddr)
-        if let addr = possibleServerAddressFromiCloud{
-            if addr.lengthOfBytes(using: .utf8) > 0{
-                ud.set(addr, forKey: kServerAddr)
-            }
-        }
-        
-        let possibleBGMAccessTokenFromiCloud = ub.string(forKey: kBGMTVAccessToken)
-        if let token = possibleBGMAccessTokenFromiCloud{
-            if token.lengthOfBytes(using: .utf8) > 0{
-                ud.set(token, forKey: kBGMTVAccessToken)
-            }
-        }
-        
-        let possibleBGMRefreshTokenFromiCloud = ub.string(forKey: kBGMTVRefreshToken)
-        if let token = possibleBGMRefreshTokenFromiCloud{
-            if token.lengthOfBytes(using: .utf8) > 0{
-                ud.set(token, forKey: kBGMTVRefreshToken)
-            }
-        }
-        
-        let possibleBGMExpireTimeFromiCloud = ub.string(forKey: kBGMTVExpireTime)
-        if let time = possibleBGMExpireTimeFromiCloud{
-            ud.set(time, forKey: kBGMTVExpireTime)
-        }
-        
-    }
+//    //Add a listener to NSUbiquitousKeyValueStore for sync Settings to iCloud
+//    func addListenerToNSUbiquitousKeyValueStore() {
+//        NotificationCenter.default.addObserver(self,
+//            selector: #selector(ubiquitousKeyValueStoreDidChange(_:)),
+//            name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
+//            object: NSUbiquitousKeyValueStore.default)
+//        if NSUbiquitousKeyValueStore.default.synchronize() == false {
+//            fatalError("This app was not built with the proper entitlement requests.")
+//        }
+//    }
+//    
+//    @objc
+//    func ubiquitousKeyValueStoreDidChange(_ notification: Notification) {
+//        
+//        guard let userInfo = notification.userInfo else { return }
+//        // Get the reason for the notification (initial download, external change or quota violation change).
+//        guard let reasonForChange = userInfo[NSUbiquitousKeyValueStoreChangeReasonKey] as? Int else { return }
+//        
+//        // Check if any of the keys we care about were updated, and if so use the new value stored under that key.
+//        guard let keys =
+//            userInfo[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] else { return }
+//        guard keys.contains(kCookie) ||
+//        keys.contains(kServerAddr) ||
+//        keys.contains(kBGMTVExpireTime) ||
+//        keys.contains(kBGMTVAccessToken) ||
+//        keys.contains(kBGMTVRefreshToken)
+//        else {
+//            print("keys not found in iCloud")
+//            return
+//        }
+//        
+//        if reasonForChange == NSUbiquitousKeyValueStoreAccountChange{
+//            // User changed account, so fall back to use UserDefaults
+//        }
+//        
+//        //overwrite settings
+//        let possibleCookieFromiCloud = ub.array(forKey: kCookie)
+//        if let cookies = possibleCookieFromiCloud as? [[HTTPCookiePropertyKey : Any]]{
+//            ud.set(cookies, forKey: kCookie)
+//        }
+//        
+//        let possibleServerAddressFromiCloud = ub.string(forKey: kServerAddr)
+//        if let addr = possibleServerAddressFromiCloud{
+//            if addr.lengthOfBytes(using: .utf8) > 0{
+//                ud.set(addr, forKey: kServerAddr)
+//            }
+//        }
+//        
+//        let possibleBGMAccessTokenFromiCloud = ub.string(forKey: kBGMTVAccessToken)
+//        if let token = possibleBGMAccessTokenFromiCloud{
+//            if token.lengthOfBytes(using: .utf8) > 0{
+//                ud.set(token, forKey: kBGMTVAccessToken)
+//            }
+//        }
+//        
+//        let possibleBGMRefreshTokenFromiCloud = ub.string(forKey: kBGMTVRefreshToken)
+//        if let token = possibleBGMRefreshTokenFromiCloud{
+//            if token.lengthOfBytes(using: .utf8) > 0{
+//                ud.set(token, forKey: kBGMTVRefreshToken)
+//            }
+//        }
+//        
+//        let possibleBGMExpireTimeFromiCloud = ub.string(forKey: kBGMTVExpireTime)
+//        if let time = possibleBGMExpireTimeFromiCloud{
+//            ud.set(time, forKey: kBGMTVExpireTime)
+//        }
+//        
+//    }
     
     // MARK: - Plist handler
     func saveToPList(key:String, data:Any) {

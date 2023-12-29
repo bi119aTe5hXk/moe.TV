@@ -13,7 +13,7 @@ class ContentProvider: TVTopShelfContentProvider {
         // Fetch content and call completionHandler
         print("topshelf init.")
         
-        let save = SaveHandler()
+        let save = SettingsHandler()
         if let j = save.getTopShelf(){
             var tvTSItems = [] as Array<TVTopShelfItem>
             j.forEach { bgmItem in

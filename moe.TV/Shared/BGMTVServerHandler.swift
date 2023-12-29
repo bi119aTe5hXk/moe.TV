@@ -15,7 +15,15 @@ private let jsonDecoder = JSONDecoder()
 private let baseBGMTVAPIURL = "https://api.bgm.tv"
 
 func isBGMTVlogined() -> Bool {
-    return !settingsHandler.getBGMTVAccessToken().isEmpty
+    let token = settingsHandler.getBGMTVAccessToken()
+    if token.isEmpty{
+        //print("BGMTVAccessToken is empty")
+        return false
+    }else{
+        //print("BGMTVAccessToken:\(token)")
+        return true
+    }
+    
 }
 func logoutBGMTV(){
     settingsHandler.setBGMTVAccessToken(token: "")
