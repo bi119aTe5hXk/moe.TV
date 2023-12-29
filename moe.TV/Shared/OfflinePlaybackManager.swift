@@ -60,11 +60,11 @@ class OfflinePlaybackManager: ObservableObject {
     
     
     // MARK: - UD Handler
-    private let saveHandler = SaveHandler()
+    private let settingsHandler = SettingsHandler()
     private let kOfflinePlaybackStatus = "offlinePlaybackStatus"
     
     private func getSaveStatusList() -> [OfflineVideoItem]?{
-        let arr = saveHandler.readArrayFromPList(key: kOfflinePlaybackStatus)
+        let arr = settingsHandler.readArrayFromPList(key: kOfflinePlaybackStatus)
         var decodeArr = [OfflineVideoItem]()
         arr?.forEach({ item in
             if let data = item as? Data,
@@ -92,7 +92,7 @@ class OfflinePlaybackManager: ObservableObject {
             }
         }
         print("saved(\(encodeArr.count))items:\(encodeArr)")
-        saveHandler.saveToPList(key: kOfflinePlaybackStatus, data: encodeArr)
+        settingsHandler.saveToPList(key: kOfflinePlaybackStatus, data: encodeArr)
         
     }
 }

@@ -15,7 +15,7 @@ struct LoginView: View {
         }else{
             HStack{
                 Spacer()
-                    .padding(10)
+                    
                 VStack{
                     Spacer()
                     Text("Login to Albireo Server")
@@ -51,7 +51,6 @@ struct LoginView: View {
                     OfflineView().padding(10)
                 }
                 Spacer()
-                    .padding(10)
             }
         }
     }

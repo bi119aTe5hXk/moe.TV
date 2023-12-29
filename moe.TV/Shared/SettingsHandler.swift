@@ -7,169 +7,189 @@
 
 import Foundation
 class SettingsHandler {
-    //private var keyStore = NSUbiquitousKeyValueStore()//TODO: support for non-iCloud account/devices
-    private var settingList = [String: Any]()
+    private let UD_SUITE_NAME = "group.moetv"
+    private let kCookie = "kCookie"
+    private let kServerAddr = "kServerAddr"
+    private let kBGMTVAccessToken = "kBGMTVAccessToken"
+    private let kBGMTVRefreshToken = "kBGMTVRefreshToken"
+    private let kBGMTVExpireTime = "kBGMTVExpireTime"
+    
+    private var ud = UserDefaults()
+    private var ub = NSUbiquitousKeyValueStore()
+    private var isiCloudAvailable = false
     
     func registerSettings(){
-        addListenerToNSUbiquitousKeyValueStore()
+        ud = UserDefaults.init(suiteName: UD_SUITE_NAME) ?? UserDefaults.standard
+        
+        
+        if FileManager.default.ubiquityIdentityToken != nil {
+            print("iCloud Available")
+            ub = NSUbiquitousKeyValueStore.init()
+            isiCloudAvailable = true
+        } else {
+            print("iCloud Unavailable")
+            isiCloudAvailable = false
+        }
+        
+        ud.register(defaults: [kCookie:[]])
+        ud.register(defaults: [kServerAddr:""])
+        ud.register(defaults: [kBGMTVAccessToken:""])
+        ud.register(defaults: [kBGMTVRefreshToken:""])
+        ud.register(defaults: [kBGMTVExpireTime:""])
+        if isiCloudAvailable{
+            addListenerToNSUbiquitousKeyValueStore()
+        }
     }
+   
     
     //Cookies
-    private let kCookie = "kCookie"
-    func setAlbireoCookie(array: [Any]?){
-        saveValue(value: array, key: kCookie)
+    func setAlbireoCookie(array: [[HTTPCookiePropertyKey : Any]]?){
+        if let arr = array{
+            if arr.count <= 0{
+                print("cookie array empty")
+                return
+            }
+            ud.setValue(arr, forKey: kCookie)
+            if isiCloudAvailable == true{
+                ub.set(arr, forKey: kCookie)
+            }
+            sync()
+        }else{
+            print("cookie array nil")
+        }
     }
     func getAlbireoCookie() -> Array<Any>?{
-        if let arr = getArrayValue(key: kCookie){
+        if let arr = ud.array(forKey: kCookie){
             if arr.count > 0{
                 return arr
             }
+            print("getAlbireoCookie arr=0")
+            return nil
         }
         return nil
     }
-    
     //Server Address
-    private let kServerAddr = "kServerAddr"
     func setAlbireoServerAddr(serverInfo:String){
-        saveValue(value: serverInfo, key: kServerAddr)
+        ud.setValue(serverInfo, forKey: kServerAddr)
+        if isiCloudAvailable{
+            ub.set(serverInfo, forKey: kServerAddr)
+        }
+        sync()
     }
     func getAlbireoServerAddr() -> String {
-        return getStringValue(key: kServerAddr) ?? ""
+        return ud.string(forKey: kServerAddr) ?? ""
     }
     
     //BGMTV Access Token
-    private let kBGMTVAccessToken = "kBGMTVAccessToken"
     func setBGMTVAccessToken(token:String){
-        saveValue(value: token, key: kBGMTVAccessToken)
+        ud.setValue(token, forKey: kBGMTVAccessToken)
+        if isiCloudAvailable{
+            ub.set(token, forKey: kBGMTVAccessToken)
+        }
+        sync()
     }
     func getBGMTVAccessToken() -> String {
-        return getStringValue(key: kBGMTVAccessToken) ?? ""
+        return ud.string(forKey: kBGMTVAccessToken) ?? ""
     }
     
     //BGMTV Refresh Token
-    private let kBGMTVRefreshToken = "kBGMTVRefreshToken"
     func setBGMTVRefreshToken(token:String){
-        saveValue(value: token, key: kBGMTVRefreshToken)
+        ud.setValue(token, forKey: kBGMTVRefreshToken)
+        if isiCloudAvailable{
+            ub.set(token, forKey: kBGMTVRefreshToken)
+        }
+        sync()
     }
     func getBGMTVRefreshToken() -> String {
-        return getStringValue(key: kBGMTVRefreshToken) ?? ""
+        return ud.string(forKey: kBGMTVRefreshToken) ?? ""
     }
     
     //BGMTV Expire Time
-    private let kBGMTVExpireTime = "kBGMTVExpireTime"
     func setBGMTVExpireTime(time:Int){
-        saveValue(value: time, key: kBGMTVExpireTime)
+        ud.setValue(time, forKey: kBGMTVExpireTime)
+        if isiCloudAvailable{
+            ub.set(time, forKey: kBGMTVExpireTime)
+        }
+        sync()
     }
     func getBGMTVExpireTime() -> Int {
-        return getIntValue(key: kBGMTVExpireTime) ?? 0
+        return ud.integer(forKey: kBGMTVExpireTime)
     }
     
     // MARK: - iCloud Support
-    func saveValue(value:Any?, key:String){
-        UserDefaults.standard.set(value, forKey: key)
-        NSUbiquitousKeyValueStore.default.set(value, forKey: key)
-        NSUbiquitousKeyValueStore.default.synchronize()
+    private func sync(){
+        ud.synchronize()
+        if isiCloudAvailable{
+            ub.synchronize()
+        }
     }
-    private func getArrayValue(key:String) -> [Any]?{
-        return UserDefaults.standard.array(forKey: key)
-    }
-    private func getStringValue(key:String) -> String?{
-        return UserDefaults.standard.string(forKey: key)
-    }
-    private func getIntValue(key:String) -> Int?{
-        return UserDefaults.standard.integer(forKey: key)
-    }
-    
     
     //Add a listener to NSUbiquitousKeyValueStore for sync Settings to iCloud
     func addListenerToNSUbiquitousKeyValueStore() {
-        /** Listen for key-value store changes from iCloud.
-            This notification is posted when the value of one or more keys in the local
-            key-value store changed due to incoming data pushed from iCloud.
-        */
         NotificationCenter.default.addObserver(self,
             selector: #selector(ubiquitousKeyValueStoreDidChange(_:)),
             name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
             object: NSUbiquitousKeyValueStore.default)
-        /** Note: By passing the default key-value store object as "object" it tells iCloud that
-            this is the object whose notifications you want to receive.
-        */
-        // Get any KVStore change since last launch.
-        
-        /** This will spark the notification "NSUbiquitousKeyValueStoreDidChangeExternallyNotification",
-            to ourselves to listen for iCloud KVStore changes.
-        
-            It is important to only do this step *after* registering for notifications,
-            this prevents a notification arriving before code is ready to respond to it.
-        */
         if NSUbiquitousKeyValueStore.default.synchronize() == false {
             fatalError("This app was not built with the proper entitlement requests.")
         }
     }
-    /** This notification is sent only upon a change received from iCloud; it is not sent when your app
-        sets a value. So this is called when the key-value store in the cloud has changed externally.
-         The old  value is replaced with the new one. Additionally, NSUserDefaults is updated as well.
-    */
+    
     @objc
     func ubiquitousKeyValueStoreDidChange(_ notification: Notification) {
-        /** We get more information from the notification, by using:
-            NSUbiquitousKeyValueStoreChangeReasonKey or NSUbiquitousKeyValueStoreChangedKeysKey
-            constants on the notification's useInfo.
-         */
+        
         guard let userInfo = notification.userInfo else { return }
         // Get the reason for the notification (initial download, external change or quota violation change).
         guard let reasonForChange = userInfo[NSUbiquitousKeyValueStoreChangeReasonKey] as? Int else { return }
-        /** Reasons can be:
-            NSUbiquitousKeyValueStoreServerChange:
-            Value(s) were changed externally from other users/devices.
-            Get the changes and update the corresponding keys locally.
-         
-            NSUbiquitousKeyValueStoreInitialSyncChange:
-            Initial downloads happen the first time a device is connected to an iCloud account,
-            and when a user switches their primary iCloud account.
-            Get the changes and update the corresponding keys locally.
-
-            Do the merge with our local user defaults.
-            But for this sample we have only one value, so a merge is not necessary here.
-
-            Note: If you receive "NSUbiquitousKeyValueStoreInitialSyncChange" as the reason,
-            you can decide to "merge" your local values with the server values.
-
-            NSUbiquitousKeyValueStoreQuotaViolationChange:
-            Your app’s key-value store has exceeded its space quota on the iCloud server of 1mb.
-
-            NSUbiquitousKeyValueStoreAccountChange:
-            The user has changed the primary iCloud account.
-            The keys and values in the local key-value store have been replaced with those from the new account,
-            regardless of the relative timestamps.
-         */
-        
-        
         
         // Check if any of the keys we care about were updated, and if so use the new value stored under that key.
         guard let keys =
             userInfo[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] else { return }
-        guard 
-            keys.contains(kCookie) ||
-            keys.contains(kServerAddr) ||
-            keys.contains(kBGMTVAccessToken) ||
-            keys.contains(kBGMTVRefreshToken) ||
-            keys.contains(kBGMTVExpireTime)
+        guard keys.contains(kCookie) ||
+        keys.contains(kServerAddr) ||
+        keys.contains(kBGMTVExpireTime) ||
+        keys.contains(kBGMTVAccessToken) ||
+        keys.contains(kBGMTVRefreshToken)
         else {
-            print("keys notfound")
+            print("keys not found in iCloud")
             return
         }
         
         if reasonForChange == NSUbiquitousKeyValueStoreAccountChange{
             // User changed account, so fall back to use UserDefaults
-            
         }
         
-        /** Replace the local value with the value from the cloud, but *only* if it's a value we know how to interpret.
-            It is important to validate any value that comes in through iCloud, because it could have been generated
-            by a different version of your app.
-         */
-//        let possibleKVFromiCloud = NSUbiquitousKeyValueStore.default.
+        //overwrite settings
+        let possibleCookieFromiCloud = ub.array(forKey: kCookie)
+        if let cookies = possibleCookieFromiCloud as? [[HTTPCookiePropertyKey : Any]]{
+            ud.set(cookies, forKey: kCookie)
+        }
+        
+        let possibleServerAddressFromiCloud = ub.string(forKey: kServerAddr)
+        if let addr = possibleServerAddressFromiCloud{
+            if addr.lengthOfBytes(using: .utf8) > 0{
+                ud.set(addr, forKey: kServerAddr)
+            }
+        }
+        
+        let possibleBGMAccessTokenFromiCloud = ub.string(forKey: kBGMTVAccessToken)
+        if let token = possibleBGMAccessTokenFromiCloud{
+            if token.lengthOfBytes(using: .utf8) > 0{
+                ud.set(token, forKey: kBGMTVAccessToken)
+            }
+        }
+        
+        let possibleBGMRefreshTokenFromiCloud = ub.string(forKey: kBGMTVRefreshToken)
+        if let token = possibleBGMRefreshTokenFromiCloud{
+            if token.lengthOfBytes(using: .utf8) > 0{
+                ud.set(token, forKey: kBGMTVRefreshToken)
+            }
+        }
+        
+        let possibleBGMExpireTimeFromiCloud = ub.string(forKey: kBGMTVExpireTime)
+        if let time = possibleBGMExpireTimeFromiCloud{
+            ud.set(time, forKey: kBGMTVExpireTime)
+        }
         
     }
     
@@ -209,7 +229,6 @@ class SettingsHandler {
     }
     // MARK: - tvOS TopShelf handler
 #if os(tvOS)
-    private let UD_SUITE_NAME = "group.moetv"
     private let UD_TOPSHELF_ARR = "topShelfArr"
     
     func setTopShelf(array:[MyBangumiItemModel]){
@@ -220,12 +239,12 @@ class SettingsHandler {
             }
         }
         print("saved \(encodeArr.count) items")
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.set(encodeArr, forKey: UD_TOPSHELF_ARR)
-        UserDefaults.init(suiteName: UD_SUITE_NAME)?.synchronize()
+        ud.set(encodeArr, forKey: UD_TOPSHELF_ARR)
+        ud.synchronize()
     }
     
     func getTopShelf() -> [MyBangumiItemModel]?{
-        let arr = UserDefaults.init(suiteName: UD_SUITE_NAME)!.array(forKey: UD_TOPSHELF_ARR)
+        let arr = ud.array(forKey: UD_TOPSHELF_ARR)
         var decodeArr = [MyBangumiItemModel]()
         arr?.forEach({ item in
             if let data = item as? Data,

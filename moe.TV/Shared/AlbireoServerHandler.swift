@@ -9,7 +9,7 @@
 import Foundation
 
 private var serverAddr = ""
-private let saveHandler:SaveHandler = SaveHandler()
+private let settingsHandler:SettingsHandler = SettingsHandler()
 private let jsonDecoder = JSONDecoder()
 let userAgent = "bi119aTe5hXk/moe.TV/1.0 (Apple Multi-platform) (https://github.com/bi119aTe5hXk/moe.TV)"
 
@@ -23,13 +23,14 @@ func saveAlbireoCookies(response: HTTPURLResponse) {
     for cookie in cookies {
         cookieArray.append(cookie.properties!)
     }
-    saveHandler.setAlbireoCookie(array: cookieArray)
+    settingsHandler.setAlbireoCookie(array: cookieArray)
     print("albireo cookie saved")
 }
 
 //return true if have cookie result
 func loadAlbireoCookies() -> Bool {
-    if let cookieArray = saveHandler.getAlbireoCookie(){
+    settingsHandler.registerSettings()
+    if let cookieArray = settingsHandler.getAlbireoCookie(){
         for cookieProperties in cookieArray {
             if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any]) {
                 HTTPCookieStorage.shared.setCookie(cookie)
@@ -38,12 +39,12 @@ func loadAlbireoCookies() -> Bool {
         print("albireo cookie loaded")
         return true
     }else {
-        print("albireo cookie is nil")
+        //print("albireo cookie is nil")
         return false
     }
 }
 func clearCookie(){
-    saveHandler.setAlbireoCookie(array: [])
+    settingsHandler.setAlbireoCookie(array: [])
     print("albireo cookie cleared")
 }
 
@@ -55,11 +56,11 @@ func isAlbireoLoginValid(completion: @escaping (Bool) -> Void){
 
 
 func getAlbireoServer() -> String{
-    serverAddr = saveHandler.getAlbireoServerAddr()
+    serverAddr = settingsHandler.getAlbireoServerAddr()
     return serverAddr
 }
 func fixPathNotCompete(path:String) -> String{
-    return "\(saveHandler.getAlbireoServerAddr())\(path)"
+    return "\(settingsHandler.getAlbireoServerAddr())\(path)"
 }
 
 private func postServer(urlString:String,
@@ -116,7 +117,7 @@ func loginAlbireoServer(server:String,
                  username: String,
                  password: String,
                  completion: @escaping (Bool, String) -> Void) {
-    saveHandler.setAlbireoServerAddr(serverInfo: server)
+    settingsHandler.setAlbireoServerAddr(serverInfo: server)
     var urlstr = getAlbireoServer()
     urlstr.append("/api/user/login")
 

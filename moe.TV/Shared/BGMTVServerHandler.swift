@@ -9,18 +9,18 @@ import Foundation
 #if !os(tvOS)
 import SafariServices
 #endif
-private let saveHandler:SaveHandler = SaveHandler()
+private let settingsHandler:SettingsHandler = SettingsHandler()
 private let jsonDecoder = JSONDecoder()
 
 private let baseBGMTVAPIURL = "https://api.bgm.tv"
 
 func isBGMTVlogined() -> Bool {
-    return !saveHandler.getBGMTVAccessToken().isEmpty
+    return !settingsHandler.getBGMTVAccessToken().isEmpty
 }
 func logoutBGMTV(){
-    saveHandler.setBGMTVAccessToken(token: "")
-    saveHandler.setBGMTVRefreshToken(token: "")
-    saveHandler.setBGMTVExpireTime(time: 0)
+    settingsHandler.setBGMTVAccessToken(token: "")
+    settingsHandler.setBGMTVRefreshToken(token: "")
+    settingsHandler.setBGMTVExpireTime(time: 0)
     print("bgm.tv auth cleared")
 }
 
@@ -33,7 +33,7 @@ private func patchServer(urlString:String,
         var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
-        request.setValue("Bearer \(saveHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(settingsHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
@@ -57,7 +57,7 @@ private func putServer(urlString:String,
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
-        request.setValue("Bearer \(saveHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(settingsHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
@@ -79,7 +79,7 @@ private func getServer(urlString:String,
     var request = URLRequest(url: url)
     request.httpMethod = "GET"
     request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-    request.setValue("Bearer \(saveHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
+    request.setValue("Bearer \(settingsHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
 
     URLSession.shared.dataTask(with: request){(data, response, error) in
         if let err = error {
@@ -165,7 +165,7 @@ func getBGMTVAccessToken(code:String){
 
 func refreshBGMTVToken(){
     let urlString = "https://bgm.tv/oauth/access_token"
-    let refreshToken = saveHandler.getBGMTVRefreshToken()
+    let refreshToken = settingsHandler.getBGMTVRefreshToken()
     let postdata = ["grant_type":"refresh_token",
                     "client_id":"\(bgmAppID)",
                     "client_secret":"\(bgmAppSecret)",
@@ -198,14 +198,14 @@ func refreshBGMTVToken(){
 func saveBGMLoginInfo(accessToken:String, refreshToken:String, expireIn:Int){
     let ts = Int(Date().timeIntervalSince1970) + expireIn
     
-    saveHandler.setBGMTVAccessToken(token: accessToken)
-    saveHandler.setBGMTVRefreshToken(token: refreshToken)
-    saveHandler.setBGMTVExpireTime(time: ts)
+    settingsHandler.setBGMTVAccessToken(token: accessToken)
+    settingsHandler.setBGMTVRefreshToken(token: refreshToken)
+    settingsHandler.setBGMTVExpireTime(time: ts)
     print("bgm.tv oauth token saved")
 }
 
 func isBGMAccessTokenExpired() -> Bool{
-    let ts = saveHandler.getBGMTVExpireTime()
+    let ts = settingsHandler.getBGMTVExpireTime()
     let now = Int(Date().timeIntervalSince1970)
     
     if now >= ts{
