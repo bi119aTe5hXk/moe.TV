@@ -23,7 +23,7 @@ struct DebugView: View {
             }
             List{
                 Section(header: Text("iCloud") ) {
-                    Toggle("iCloud Enabled", isOn:$iCloudEnabled )
+                    Toggle("iCloud Available", isOn:$iCloudEnabled )
                         .disabled(true)
                     
                 }

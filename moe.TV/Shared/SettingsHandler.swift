@@ -18,14 +18,15 @@ class SettingsHandler {
     private var ub = NSUbiquitousKeyValueStore()
     private var isiCloudAvailable = false
     
+    //TODO: test with non-iCloud devices
+    
     func registerSettings(){
         ud = UserDefaults.init(suiteName: UD_SUITE_NAME) ?? UserDefaults.standard
-        
         
         //check if iCloud logined
         if FileManager.default.ubiquityIdentityToken != nil {
             print("iCloud Available, using NSUbiquitousKeyValueStore")
-            ub = NSUbiquitousKeyValueStore.init()
+            ub = NSUbiquitousKeyValueStore.default
             isiCloudAvailable = true
 //            addListenerToNSUbiquitousKeyValueStore()
             
@@ -45,6 +46,9 @@ class SettingsHandler {
     //Cookies
     func setAlbireoCookie(array: [Any]?){
         if let arr = array{
+            if arr.count <= 0 {
+                print("saving empty array as cookie.")
+            }
             if isiCloudAvailable{
                 ub.set(arr, forKey: kCookie)
             }else{
@@ -65,7 +69,7 @@ class SettingsHandler {
         if arr.count > 0{
             return arr
         }
-        print("getAlbireoCookie arr=\(arr)")
+        print("getAlbireoCookie arr.count=\(arr.count), arr=\(arr)")
         return nil
     }
     //Server Address
@@ -84,6 +88,8 @@ class SettingsHandler {
             return ud.string(forKey: kServerAddr) ?? ""
         }
     }
+    
+    //TODO: Sync BGM login status failed. noreason
     
     //BGMTV Access Token
     func setBGMTVAccessToken(token:String){

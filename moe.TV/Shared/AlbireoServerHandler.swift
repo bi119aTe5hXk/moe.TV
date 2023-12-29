@@ -23,8 +23,13 @@ func saveAlbireoCookies(response: HTTPURLResponse) {
     for cookie in cookies {
         cookieArray.append(cookie.properties!)
     }
-    settingsHandler.setAlbireoCookie(array: cookieArray)
-    print("albireo cookie saved")
+    if cookieArray.count > 0{
+        settingsHandler.setAlbireoCookie(array: cookieArray)
+        print("albireo cookie saved")
+    }else{
+        print("albireo cookie is empty, skip")
+    }
+    
 }
 
 //return true if have cookie result
