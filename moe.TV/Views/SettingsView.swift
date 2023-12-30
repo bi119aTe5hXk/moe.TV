@@ -126,7 +126,7 @@ struct SettingsView: View {
                         }
                     }
                     
-                    Section(header: Text("Sign out")) {
+                    Section(header: Text("Sign out"),footer: Text("Version:\(settingsVM.getAppVersion()), Build:\(settingsVM.getBuildVersion())")) {
                         Button(action: {
                             settingsVM.showLogoutAlbireoAlert()
                         }, label: {

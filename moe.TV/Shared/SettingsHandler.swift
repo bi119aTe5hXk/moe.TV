@@ -17,8 +17,6 @@ class SettingsHandler {
     private var ud = UserDefaults()
     private var ub = NSUbiquitousKeyValueStore()
     
-    //TODO: test with non-iCloud devices
-    
     func registerSettings(){
         ud = UserDefaults.init(suiteName: UD_SUITE_NAME) ?? UserDefaults.standard
         ub = NSUbiquitousKeyValueStore.default
@@ -56,8 +54,6 @@ class SettingsHandler {
     func getAlbireoServerAddr() -> String {
         return ub.string(forKey: kServerAddr) ?? ""
     }
-    
-    //TODO: Sync BGM login status failed. noreason
     
     //BGMTV Access Token
     func setBGMTVAccessToken(token:String){

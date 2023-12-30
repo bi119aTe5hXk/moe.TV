@@ -12,7 +12,6 @@ struct BangumiListView: View {
     @Binding var selectedItem: MyBangumiItemModel?
     
     var body: some View {
-        //TODO: update view after first login
 //        if listVM.myBGMList.count <= 0{
 //            VStack{
 //                ProgressView()

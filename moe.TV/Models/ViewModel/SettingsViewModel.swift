@@ -38,4 +38,19 @@ class SettingsViewModel: ObservableObject{
             self.isBGMUserInfoReady = true
         }
     }
+    
+    func getAppVersion() -> String{
+        if let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String{
+            return v
+        }else{
+            return "UNKNOWN_VERSION"
+        }
+    }
+    func getBuildVersion() -> String {
+        if let v = Bundle.main.infoDictionary?["CFBundleVersion"] as? String{
+            return v
+        }else{
+            return "UNKNOWN_BUILD"
+        }
+    }
 }
