@@ -16,30 +16,14 @@ class SettingsHandler {
     
     private var ud = UserDefaults()
     private var ub = NSUbiquitousKeyValueStore()
-    private var isiCloudAvailable = false
     
     //TODO: test with non-iCloud devices
     
     func registerSettings(){
         ud = UserDefaults.init(suiteName: UD_SUITE_NAME) ?? UserDefaults.standard
-        
-        //check if iCloud logined
-        if FileManager.default.ubiquityIdentityToken != nil {
-            print("iCloud Available, using NSUbiquitousKeyValueStore")
-            ub = NSUbiquitousKeyValueStore.default
-            isiCloudAvailable = true
-//            addListenerToNSUbiquitousKeyValueStore()
-            
-        } else {
-            print("iCloud Unavailable, using UserDefaults")
-            isiCloudAvailable = false
-            
-            ud.register(defaults: [kCookie:[]])
-            ud.register(defaults: [kServerAddr:""])
-            ud.register(defaults: [kBGMTVAccessToken:""])
-            ud.register(defaults: [kBGMTVRefreshToken:""])
-            ud.register(defaults: [kBGMTVExpireTime:""])
-        }
+        ub = NSUbiquitousKeyValueStore.default
+           
+        sync()
     }
    
     
@@ -49,11 +33,7 @@ class SettingsHandler {
             if arr.count <= 0 {
                 print("saving empty array as cookie.")
             }
-            if isiCloudAvailable{
-                ub.set(arr, forKey: kCookie)
-            }else{
-                ud.setValue(arr, forKey: kCookie)
-            }
+            ub.set(arr, forKey: kCookie)
             sync()
         }else{
             print("cookie array nil")
@@ -61,11 +41,7 @@ class SettingsHandler {
     }
     func getAlbireoCookie() -> Array<Any>?{
         var arr = Array<Any>()
-        if isiCloudAvailable{
-            arr = ub.array(forKey: kCookie) ?? []
-        }else{
-            arr = ud.array(forKey: kCookie) ?? []
-        }
+        arr = ub.array(forKey: kCookie) ?? []
         if arr.count > 0{
             return arr
         }
@@ -74,81 +50,45 @@ class SettingsHandler {
     }
     //Server Address
     func setAlbireoServerAddr(serverInfo:String){
-        if isiCloudAvailable{
-            ub.set(serverInfo, forKey: kServerAddr)
-        }else{
-            ud.setValue(serverInfo, forKey: kServerAddr)
-        }
+        ub.set(serverInfo, forKey: kServerAddr)
         sync()
     }
     func getAlbireoServerAddr() -> String {
-        if isiCloudAvailable{
-            return ub.string(forKey: kServerAddr) ?? ""
-        }else{
-            return ud.string(forKey: kServerAddr) ?? ""
-        }
+        return ub.string(forKey: kServerAddr) ?? ""
     }
     
     //TODO: Sync BGM login status failed. noreason
     
     //BGMTV Access Token
     func setBGMTVAccessToken(token:String){
-        if isiCloudAvailable{
-            ub.set(token, forKey: kBGMTVAccessToken)
-        }else{
-            ud.setValue(token, forKey: kBGMTVAccessToken)
-        }
+        ub.set(token, forKey: kBGMTVAccessToken)
         sync()
     }
     func getBGMTVAccessToken() -> String {
-        if isiCloudAvailable{
-            return ub.string(forKey: kBGMTVAccessToken) ?? ""
-        }else{
-            return ud.string(forKey: kBGMTVAccessToken) ?? ""
-        }
+        return ub.string(forKey: kBGMTVAccessToken) ?? ""
     }
     
     //BGMTV Refresh Token
     func setBGMTVRefreshToken(token:String){
-        if isiCloudAvailable{
-            ub.set(token, forKey: kBGMTVRefreshToken)
-        }else{
-            ud.setValue(token, forKey: kBGMTVRefreshToken)
-        }
+        ub.set(token, forKey: kBGMTVRefreshToken)
         sync()
     }
     func getBGMTVRefreshToken() -> String {
-        if isiCloudAvailable{
-            return ub.string(forKey: kBGMTVRefreshToken) ?? ""
-        }else{
-            return ud.string(forKey: kBGMTVRefreshToken) ?? ""
-        }
+        return ub.string(forKey: kBGMTVRefreshToken) ?? ""
     }
     
     //BGMTV Expire Time
     func setBGMTVExpireTime(time:Int){
-        if isiCloudAvailable{
-            ub.set(Int64(time), forKey: kBGMTVExpireTime)
-        }else{
-            ud.setValue(time, forKey: kBGMTVExpireTime)
-        }
+        ub.set(Int64(time), forKey: kBGMTVExpireTime)
         sync()
     }
     func getBGMTVExpireTime() -> Int {
-        if isiCloudAvailable{
-            return Int(ub.longLong(forKey: kBGMTVExpireTime))
-        }else{
-            return ud.integer(forKey: kBGMTVExpireTime)
-        }
+        return Int(ub.longLong(forKey: kBGMTVExpireTime))
     }
     
     // MARK: - iCloud Support
     func sync(){
-        if isiCloudAvailable{
-            ub.synchronize()
-        }else{
-            ud.synchronize()
-        }
+        ub.synchronize()
     }
     
 //    //Add a listener to NSUbiquitousKeyValueStore for sync Settings to iCloud
@@ -259,6 +199,7 @@ class SettingsHandler {
     private let UD_TOPSHELF_ARR = "topShelfArr"
     
     func setTopShelf(array:[MyBangumiItemModel]){
+        registerSettings()
         var encodeArr = [Any]()
         array.forEach { item in
             if let encoded = try? PropertyListEncoder().encode(item) {
@@ -271,6 +212,7 @@ class SettingsHandler {
     }
     
     func getTopShelf() -> [MyBangumiItemModel]?{
+        registerSettings()
         let arr = ud.array(forKey: UD_TOPSHELF_ARR)
         var decodeArr = [MyBangumiItemModel]()
         arr?.forEach({ item in

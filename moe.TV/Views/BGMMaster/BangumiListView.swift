@@ -13,10 +13,14 @@ struct BangumiListView: View {
     
     var body: some View {
         //TODO: update view after first login
-//        if listVM.isLoading{
+//        if listVM.myBGMList.count <= 0{
 //            VStack{
 //                ProgressView()
 //                Text("Loading...")
+//            }
+//            .onAppear(){
+//                print("onAppear.getBGMList")
+//                listVM.getBGMList()
 //            }
 //        }else{
             List(listVM.bangumiFiltered, selection: $selectedItem){ item in
@@ -35,9 +39,9 @@ struct BangumiListView: View {
                 }
             }
             .searchable(text: $listVM.searchText)
-        }
+//        }
            
-//    }
+    }
     
     
 }

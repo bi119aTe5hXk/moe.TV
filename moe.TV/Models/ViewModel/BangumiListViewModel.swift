@@ -37,22 +37,33 @@ class BangumiListViewModel: ObservableObject{
                 return
             }
             if let bgmList = data as? [MyBangumiItemModel]{
-                self.updateMyBGMList(list: bgmList)
+                if bgmList.count <= 0 {
+                    print("bgmList.count <= 0, ignore")
+                    return
+                }else{
+                    print("loaded \(bgmList.count) items from bgmList")
+                    self.updateMyBGMList(list: bgmList)
 #if os(tvOS)
-                let save = SaveHandler()
-                save.setTopShelf(array: bgmList)
+                    let save = SettingsHandler()
+                    save.setTopShelf(array: bgmList)
 #endif
+                }
             }
         }
     }
     
     //TODO: search all bangumi via albireo API
     var bangumiFiltered: [MyBangumiItemModel] {
-        let searchResult = self.myBGMList.filter {
-            ($0.name ?? "").localizedStandardContains(self.searchText) || (($0.name_cn ?? "").localizedStandardContains(self.searchText))
+        if self.myBGMList.count > 0 && !self.isLoading{
+            let searchResult = self.myBGMList.filter {
+                ($0.name ?? "").localizedStandardContains(self.searchText) || (($0.name_cn ?? "").localizedStandardContains(self.searchText))
+            }
+            print("animeArr:\(self.myBGMList.count),filtered:\(searchResult.count)")
+            return self.searchText.isEmpty ? self.myBGMList : searchResult
+        }else{
+            print("self.myBGMList.count <= 0")
+            return []
         }
-        print("animeArr:\(self.myBGMList.count),filtered:\(searchResult.count)")
-        return self.searchText.isEmpty ? self.myBGMList : searchResult
     }
     
     
