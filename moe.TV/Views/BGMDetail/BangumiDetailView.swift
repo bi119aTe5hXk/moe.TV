@@ -43,7 +43,7 @@ struct BangumiDetailView: View {
                         Spacer()
                         BangumiDetailNavTitleView(item: $detailVM.bgmDetailItem)
                         Spacer()
-                        BangumiDetailNavItemView(item: $detailVM.bgmDetailItem)
+                        BangumiDetailNavItemView(bgmItem: $detailVM.bgmDetailItem)
                     }
                 }
             }
@@ -111,13 +111,7 @@ struct BangumiDetailView: View {
             
         }
         
-        
     }
-
-                
-        
-    
-    
     
 }
 

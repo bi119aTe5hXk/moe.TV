@@ -124,8 +124,6 @@ final class DownloadManager: ObservableObject {
         }
     }
 
-    
-
     func getVideoFileAsset(filename:String) -> URL? {
         do{
             let vPath = try FileManager.default.url(for: .cachesDirectory, in: .userDomainMask,appropriateFor: nil,create: true).appendingPathComponent(videoFolder)
@@ -139,5 +137,45 @@ final class DownloadManager: ObservableObject {
             print(error)
         }
         return nil
+    }
+    
+    //TODO: Download all EPs
+    func downloadAllEPs(bgmItem:BangumiDetailModel){
+        var epIDList = Array<String>()
+        if let eps = bgmItem.episodes{
+            for ep in eps {
+                epIDList.append(ep.id)
+            }
+        }
+        
+        print(epIDList)
+        
+        if epIDList.count > 0{
+            for epID in epIDList {
+                getEpisodeDetail(ep_id: epID) { result, data in
+                    if result{
+                        if let epDetail = data as? EpisodeDetailModel{
+                            if let url = epDetail.video_files![0].url{ //TODO: support multiple video source
+                                let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
+                                if let filename = epDetail.video_files![0].file_path{
+                                    if !self.checkFileExists(fileName: filename){
+                                        self.downloadFile(urlString: fileURL,savedAs: filename)
+                                        //                                        offlinePBM.setPlayBackStatus(item: OfflineVideoItem(epID: epDetail.id, bgm_eps_id: epDetail.bgm_eps_id,  filename: filename, position: epDetail.watch_progress?.last_watch_position ?? 0, isFinished: false))
+                                    }else{
+                                        print("Video file exists")
+                                    }
+                                }else{
+                                    print("filename is missing")
+                                }
+                            }else{
+                                print("url is missing")
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            print("epIDList.count <= 0")
+        }
     }
 }

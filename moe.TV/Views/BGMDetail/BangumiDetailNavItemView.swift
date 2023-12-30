@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct BangumiDetailNavItemView: View {
-    @Binding var item:BangumiDetailModel?
+    @Binding var bgmItem:BangumiDetailModel?
 #if !os(tvOS)
     var body: some View {
         Menu {
             //TODO:  download status
-            Button("Download All", action: startDwonloadAll).disabled(true)
+            Button("Download All", action: startDwonloadAll)
             Button("Show in bgm.tv", action: openBangumi)
 
         } label: {
@@ -21,7 +21,7 @@ struct BangumiDetailNavItemView: View {
         }
     }
     private  func openBangumi(){
-        if let i = item{
+        if let i = bgmItem{
             if let bgm_id = i.bgm_id{
                 let urlString = "https://bgm.tv/subject/\(String(bgm_id))"
                 openURLInApp(urlString: urlString)
@@ -31,11 +31,14 @@ struct BangumiDetailNavItemView: View {
 #endif
 #if os(tvOS)
     var body: some View {
-        Button("Download All", action: startDwonloadAll).disabled(true)
+        Button("Download All", action: startDwonloadAll)
     }
 #endif
     private func startDwonloadAll(){
-        //TODO: Download all EPs
+        if let item = bgmItem {
+            let m = DownloadManager()
+            m.downloadAllEPs(bgmItem: item)
+        }
     }
 }
 
