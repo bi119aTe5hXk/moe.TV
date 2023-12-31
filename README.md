@@ -2,7 +2,7 @@
 Watch bangumi on Apple devices
 
 # App
-TestFlight: TBD
+TestFlight: [https://testflight.apple.com/join/3v0FALsY](https://testflight.apple.com/join/3v0FALsY)
 
 ## Features
 - Sync with iCloud (No need to log in multiple times)
