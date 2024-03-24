@@ -33,6 +33,8 @@
 		8658C6912A50839100357761 /* OpenURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8658C6902A50839100357761 /* OpenURL.swift */; };
 		86624A0D2A68250B00F61BAF /* BangumiDetailNavTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86624A0C2A68250B00F61BAF /* BangumiDetailNavTitleView.swift */; };
 		86624A0F2A6825F400F61BAF /* BangumiDetailNavItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86624A0E2A6825F400F61BAF /* BangumiDetailNavItemView.swift */; };
+		86629CBC2BB007FF00EF1EE8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 86629CBB2BB007FF00EF1EE8 /* PrivacyInfo.xcprivacy */; };
+		86629CBD2BB007FF00EF1EE8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 86629CBB2BB007FF00EF1EE8 /* PrivacyInfo.xcprivacy */; };
 		866727F02A39C775009E0104 /* TVServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 866727EF2A39C775009E0104 /* TVServices.framework */; platformFilters = (tvos, ); };
 		866727F32A39C776009E0104 /* ContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866727F22A39C776009E0104 /* ContentProvider.swift */; };
 		866727F72A39C776009E0104 /* topShelf.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 866727EE2A39C775009E0104 /* topShelf.appex */; platformFilters = (tvos, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -113,6 +115,7 @@
 		8658C6902A50839100357761 /* OpenURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenURL.swift; sourceTree = "<group>"; };
 		86624A0C2A68250B00F61BAF /* BangumiDetailNavTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailNavTitleView.swift; sourceTree = "<group>"; };
 		86624A0E2A6825F400F61BAF /* BangumiDetailNavItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailNavItemView.swift; sourceTree = "<group>"; };
+		86629CBB2BB007FF00EF1EE8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = "moe.TV/Support Files/PrivacyInfo.xcprivacy"; sourceTree = "<group>"; };
 		866727EE2A39C775009E0104 /* topShelf.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = topShelf.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		866727EF2A39C775009E0104 /* TVServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVServices.framework; path = Library/Frameworks/TVServices.framework; sourceTree = DEVELOPER_DIR; };
 		866727F22A39C776009E0104 /* ContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentProvider.swift; sourceTree = "<group>"; };
@@ -243,6 +246,7 @@
 		86A9C3D92A3306BC00FD0B44 = {
 			isa = PBXGroup;
 			children = (
+				86629CBB2BB007FF00EF1EE8 /* PrivacyInfo.xcprivacy */,
 				86A9C3E92A3306BE00FD0B44 /* Assets.xcassets */,
 				86AD92942A337DCA008461FF /* moe-TV-Info.plist */,
 				86A9C3E42A3306BC00FD0B44 /* moe.TV */,
@@ -415,6 +419,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86629CBD2BB007FF00EF1EE8 /* PrivacyInfo.xcprivacy in Resources */,
 				866728052A39E64D009E0104 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -423,6 +428,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86629CBC2BB007FF00EF1EE8 /* PrivacyInfo.xcprivacy in Resources */,
 				86A9C3EE2A3306BE00FD0B44 /* Preview Assets.xcassets in Resources */,
 				86A9C3EA2A3306BE00FD0B44 /* Assets.xcassets in Resources */,
 			);
