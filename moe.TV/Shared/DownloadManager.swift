@@ -139,7 +139,6 @@ final class DownloadManager: ObservableObject {
         return nil
     }
     
-    //TODO: Download all EPs
     func downloadAllEPs(bgmItem:BangumiDetailModel){
         var epIDList = Array<String>()
         if let eps = bgmItem.episodes{

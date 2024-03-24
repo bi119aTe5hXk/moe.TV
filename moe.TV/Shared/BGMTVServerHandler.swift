@@ -189,7 +189,8 @@ func refreshBGMTVToken(){
                                          refreshToken: r.refresh_token!,
                                          expireIn: r.expires_in!)
                     }else{
-                        print("refresh bgm.tv token error -1 \(r)")
+                        print("refresh bgm.tv token error -1, logout")
+                        logoutBGMTV()
                     }
                 }else{
                     print("json decode error -1")

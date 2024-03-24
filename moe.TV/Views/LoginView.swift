@@ -19,6 +19,7 @@ struct LoginView: View {
                 VStack{
                     Spacer()
                     Text("Login to Albireo Server")
+                        .lineLimit(2)
                         .fontWeight(.bold)
                         .font(.title)
                         .padding(50)
