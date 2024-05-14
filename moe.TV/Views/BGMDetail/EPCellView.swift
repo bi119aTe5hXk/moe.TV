@@ -71,6 +71,7 @@ struct EPCellView: View {
 #if !os(tvOS)
             Menu {
                 //TODO:  download status
+                //TODO:  download unwatch
                 Button("Download", action: startDwonload)
                 Button("Show in bgm.tv", action: openBangumi)
             } label: {

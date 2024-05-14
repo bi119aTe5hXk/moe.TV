@@ -8,6 +8,7 @@
 import Foundation
 struct AlbireoUserInfoData: Codable{
     let data:AlbireoUserInfo?
+    let message:String?
 }
 struct AlbireoUserInfo: Codable{
     let name:String?

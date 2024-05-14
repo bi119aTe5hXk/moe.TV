@@ -40,15 +40,15 @@ struct SettingsView: View {
                                     getBGMUserInfo()
                                 }
                             }
-                            .onChange(of: syncWithBGMTV) { value in
-                                if value {
+                            .onChange(of: syncWithBGMTV, initial: true, { old, new in
+                                if new {
                                     if !isBGMTVlogined(){
                                         startBGMTVLogin()
                                     }
                                 }else{
                                     settingsVM.showLogoutBGMTVAlert()
                                 }
-                            }
+                            })
                             .alert(isPresented: $settingsVM.presentLogoutBGMTVAlert) {
                                 Alert(
                                     title: Text("Are you sure you want to logout from bgm.tv?"),

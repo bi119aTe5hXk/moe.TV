@@ -25,7 +25,7 @@ struct BangumiDetailView: View {
                     .padding(10)
             }
         }
-        .onChange(of: selectedItem, perform: { newValue in
+        .onChange(of: selectedItem, initial: true, { oldValue, newValue in
             if let item = newValue{
                 print("onchange")
                 detailVM.getBGMDetail(id: item.id)

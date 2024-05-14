@@ -37,12 +37,30 @@ struct BangumiListView: View {
                     listVM.getBGMList()
                 }
             }
-            .searchable(text: $listVM.searchText)
+        
+            //.searchable(text: $listVM.searchText)
+            .modifier(OptionalSearchableViewModifier(isSearchable: listVM.myBGMList.count >= 2, searchString: $listVM.searchText))
+        
 //        }
            
     }
     
     
+}
+
+struct OptionalSearchableViewModifier: ViewModifier{
+    let isSearchable: Bool
+    @Binding var searchString: String
+    
+    func body(content: Content) -> some View {
+        switch isSearchable{
+        case true:
+            content
+                .searchable(text: $searchString, prompt: "Search")
+        case false:
+            content
+        }
+    }
 }
 
 //struct BangumiListView_Previews: PreviewProvider {

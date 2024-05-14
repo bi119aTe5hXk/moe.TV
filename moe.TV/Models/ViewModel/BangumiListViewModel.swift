@@ -23,38 +23,50 @@ class BangumiListViewModel: ObservableObject{
     }
     
     func getBGMList() {
-        self.isLoading = true
-        print("BangumiListViewModel.getBGMList")
-        
-        getMyBangumiList { result, data in
-//            self.isLoading = false
-            if !result{
-                //TODO: login failed, cookie expired
-                print("login failed, cookie expired")
-                DispatchQueue.main.async {
-                    self.isLoading = false
+        isAlbireoLoginValid { result in
+            if result{
+                print("testpoint:\(result)")
+                self.isLoading = true
+                print("BangumiListViewModel.getBGMList")
+                getMyBangumiList { result, data in
+        //            self.isLoading = false
+                    if !result{
+                        //TODO: login failed, cookie expired
+                        print("login failed, cookie expired")
+                        DispatchQueue.main.async {
+                            self.isLoading = false
+                        }
+                        return
+                    }
+                    if let bgmList = data as? [MyBangumiItemModel]{
+                        if bgmList.count <= 0 {
+                            print("bgmList.count <= 0, ignore")
+                            return
+                        }else{
+                            print("loaded \(bgmList.count) items from bgmList")
+                            self.updateMyBGMList(list: bgmList)
+        #if os(tvOS)
+                            let save = SettingsHandler()
+                            save.setTopShelf(array: bgmList)
+        #endif
+                        }
+                    }
                 }
-                return
-            }
-            if let bgmList = data as? [MyBangumiItemModel]{
-                if bgmList.count <= 0 {
-                    print("bgmList.count <= 0, ignore")
-                    return
-                }else{
-                    print("loaded \(bgmList.count) items from bgmList")
-                    self.updateMyBGMList(list: bgmList)
-#if os(tvOS)
-                    let save = SettingsHandler()
-                    save.setTopShelf(array: bgmList)
-#endif
+            }else{
+                print("Albireo login info error. Cookie expired?")
+                logoutAlbireoServer { result, str in
+                    exit(0);
                 }
             }
         }
+        
     }
     
     //TODO: search all bangumi via albireo API
     var bangumiFiltered: [MyBangumiItemModel] {
-        if self.myBGMList.count > 0 && !self.isLoading{
+        if self.myBGMList.count > 0 
+            && !self.isLoading
+        {
             let searchResult = self.myBGMList.filter {
                 ($0.name ?? "").localizedStandardContains(self.searchText) || (($0.name_cn ?? "").localizedStandardContains(self.searchText))
             }

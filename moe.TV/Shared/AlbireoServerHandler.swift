@@ -187,15 +187,27 @@ func getAlbireoUserInfo(completion: @escaping (Bool, Any?) -> Void){
     if loadAlbireoCookies(){
         getServer(urlString: urlstr) { result, data in
             if result{
-                do {
-                    if let userInfo = try jsonDecoder.decode(AlbireoUserInfoData?.self, from: data as! Data){
-                        completion(true, userInfo)
-                    }else{
-                        completion(false, data as! String)
+                let d = data as! Data
+//                print("d:\(String(data: d, encoding: .utf8))")
+                if !d.isEmpty{
+                    do {
+                        if let userInfo = try jsonDecoder.decode(AlbireoUserInfoData?.self, from: d){
+                            if let msg = userInfo.message{
+                                completion(false, msg)
+                            }else{
+                                print(userInfo)
+                                completion(true, userInfo)
+                            }
+                        }else{
+                            completion(false, data as! String)
+                        }
+                    }catch{
+                        completion(false, "there is a problem with json decode")
                     }
-                }catch{
-                    completion(false, "there is a problem with json decode")
+                }else{
+                    completion(false, "userInfo data is empty!")
                 }
+            
             }else{
                 completion(false, data as! String)
             }
