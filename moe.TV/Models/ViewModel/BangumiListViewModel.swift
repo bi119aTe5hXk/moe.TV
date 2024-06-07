@@ -25,7 +25,6 @@ class BangumiListViewModel: ObservableObject{
     func getBGMList() {
         isAlbireoLoginValid { result in
             if result{
-                print("testpoint:\(result)")
                 self.isLoading = true
                 print("BangumiListViewModel.getBGMList")
                 getMyBangumiList { result, data in
@@ -53,10 +52,12 @@ class BangumiListViewModel: ObservableObject{
                     }
                 }
             }else{
+                //TODO: Show cookie expired alert
                 print("Albireo login info error. Cookie expired?")
                 logoutAlbireoServer { result, str in
                     exit(0);
                 }
+                exit(0);
             }
         }
         

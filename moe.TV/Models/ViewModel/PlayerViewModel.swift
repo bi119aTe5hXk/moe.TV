@@ -39,17 +39,19 @@ class PlayerViewModel: ObservableObject {
         
         if !isOffline{
             if let theEP = ep {
-                if let subject_id = theEP.bangumi?.bgm_id{
-                    if let episode_id = theEP.bgm_eps_id{
-                        updateBGMSBEPwatched(subject_id: subject_id,
-                                             episode_id: episode_id) { result, data in
-                            print(data)
+                if isFinished{
+                    if let subject_id = theEP.bangumi?.bgm_id{
+                        if let episode_id = theEP.bgm_eps_id{
+                            updateBGMSBEPwatched(subject_id: subject_id,
+                                                 episode_id: episode_id) { result, data in
+                                print(data)
+                            }
+                        }else{
+                            print("ep.bgm_eps_id is missing")
                         }
                     }else{
-                        print("ep.bgm_eps_id is missing")
+                        print("ep.bangumi.bgm_id is missing")
                     }
-                }else{
-                    print("ep.bangumi.bgm_id is missing")
                 }
                 
                 
