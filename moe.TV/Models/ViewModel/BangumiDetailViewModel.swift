@@ -19,6 +19,7 @@ class BangumiDetailViewModel : ObservableObject {
     func setSelectedEP(ep:EpisodeDetailModel){
         DispatchQueue.main.async {
             self.ep = ep
+            self.checkVideoSource()
         }
     }
     func setVideoURL(url:String){

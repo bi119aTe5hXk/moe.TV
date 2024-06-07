@@ -22,7 +22,6 @@ struct EPCellView: View {
                         if result{
                             if let epDetail = data as? EpisodeDetailModel{
                                 detailVM.setSelectedEP(ep: epDetail)
-                                detailVM.checkVideoSource()
                             }
                         }else{
                             print(data as Any)
