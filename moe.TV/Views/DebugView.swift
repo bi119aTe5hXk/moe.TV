@@ -11,6 +11,7 @@ struct DebugView: View {
     
     @State private var iCloudEnabled = (FileManager.default.ubiquityIdentityToken != nil)
     @State private var syncWithBGMTV = isBGMTVlogined()
+    @State private var albireoCookiesArray:Array<String> = []
     @ObservedObject var debugVM:DebugViewModel
     
     var body: some View {
@@ -33,7 +34,11 @@ struct DebugView: View {
                         Spacer()
                         Text(getAlbireoServer())
                     }
+                    ForEach(albireoCookiesArray, id: \.self) { string in
+                        Text(string)
+                    }
                 }
+                
                 Section(header: Text("BGM.TV") ) {
                     Toggle("BGM.TV Logined", isOn:$syncWithBGMTV )
                         .disabled(true)
@@ -59,6 +64,11 @@ struct DebugView: View {
                     }
 
                 }
+            }
+        }
+        .onAppear(){
+            getAllCookies { arr in
+                albireoCookiesArray = arr
             }
         }
     }

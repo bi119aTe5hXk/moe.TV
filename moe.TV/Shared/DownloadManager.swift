@@ -8,6 +8,7 @@
 import Foundation
 
 final class DownloadManager: ObservableObject {
+    @Published var isAllDownloadFailed = false
     @Published var isDownloading = false
     @Published var downloadProgress:Double = 0.0
     private let videoFolder = "videos"
@@ -149,6 +150,8 @@ final class DownloadManager: ObservableObject {
         
         print(epIDList)
         
+        var hasDownloaded = false;
+        
         if epIDList.count > 0{
             for epID in epIDList {
                 getEpisodeDetail(ep_id: epID) { result, data in
@@ -159,6 +162,7 @@ final class DownloadManager: ObservableObject {
                                     let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
                                     if let filename = epDetail.video_files![0].file_path{
                                         if !self.checkFileExists(fileName: filename){
+                                            hasDownloaded = true
                                             self.downloadFile(urlString: fileURL,savedAs: filename)
                                             //                                        offlinePBM.setPlayBackStatus(item: OfflineVideoItem(epID: epDetail.id, bgm_eps_id: epDetail.bgm_eps_id,  filename: filename, position: epDetail.watch_progress?.last_watch_position ?? 0, isFinished: false))
                                         }else{
@@ -179,6 +183,11 @@ final class DownloadManager: ObservableObject {
             }
         }else{
             print("epIDList.count <= 0")
+        }
+        
+        if !hasDownloaded{
+            print("all failed")
+            self.isAllDownloadFailed.toggle()
         }
     }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BangumiDetailNavItemView: View {
+    @State var downloadManager:DownloadManager
     @Binding var bgmItem:BangumiDetailModel?
 #if !os(tvOS)
     var body: some View {
@@ -19,6 +20,10 @@ struct BangumiDetailNavItemView: View {
         } label: {
             Image(systemName: "ellipsis")
         }
+        
+        .alert("All video download failed.",isPresented: $downloadManager.isAllDownloadFailed) {
+                
+            }
     }
     private  func openBangumi(){
         if let i = bgmItem{
@@ -36,8 +41,7 @@ struct BangumiDetailNavItemView: View {
 #endif
     private func startDwonloadAll(){
         if let item = bgmItem {
-            let m = DownloadManager()
-            m.downloadAllEPs(bgmItem: item)
+            downloadManager.downloadAllEPs(bgmItem: item)
         }
     }
 }

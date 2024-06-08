@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct moe_TVApp: App {
+    
+    
     @State var showBGMDetailView:Bool = false
     @State var bgmID:String?
     @StateObject var networkMonitor = NetworkMonitor()

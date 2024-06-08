@@ -41,12 +41,14 @@ struct SettingsView: View {
                                 }
                             }
                             .onChange(of: syncWithBGMTV, initial: true, { old, new in
-                                if new {
-                                    if !isBGMTVlogined(){
-                                        startBGMTVLogin()
+                                if syncWithBGMTV{
+                                    if new {
+                                        if !isBGMTVlogined(){
+                                            startBGMTVLogin()
+                                        }
+                                    }else{
+                                        settingsVM.showLogoutBGMTVAlert()
                                     }
-                                }else{
-                                    settingsVM.showLogoutBGMTVAlert()
                                 }
                             })
                             .alert(isPresented: $settingsVM.presentLogoutBGMTVAlert) {

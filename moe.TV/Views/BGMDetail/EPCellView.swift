@@ -7,9 +7,14 @@
 
 import SwiftUI
 import CachedAsyncImage
+
+
+
 struct EPCellView: View {
+    @State var isEmptyEP:Bool = false
     @State var epItem:BGMEpisode
     @State var showVideoFileExisitAlert = false
+    @State var showNotDownloadableAlert = false
     @ObservedObject var detailVM : BangumiDetailViewModel
     @EnvironmentObject var downloadManager: DownloadManager
     @EnvironmentObject var offlinePBM:OfflinePlaybackManager
@@ -66,8 +71,17 @@ struct EPCellView: View {
                                     
                                     
                                 },error: { error, retry in
-                                    // Create any view for error (optional).
-                                    Text("No Picture")
+                                    HStack{
+                                        ExecuteCode {
+                                            DispatchQueue.main.async {
+                                                self.isEmptyEP = true
+                                            }
+                                        }
+                                        
+                                        // Create any view for error (optional).
+                                        Text("No Picture")
+                                    }
+                                    
                                 }
                             )
                             
@@ -120,7 +134,7 @@ struct EPCellView: View {
             Menu {
                 //TODO:  download status
                 //TODO:  download unwatch
-                Button("Download", action: startDwonload)
+                Button("Download", action: startDwonload).disabled(self.isEmptyEP)
                 Button("Show in bgm.tv", action: openBangumi)
             } label: {
                 Image(systemName: "ellipsis.circle")
@@ -139,6 +153,10 @@ struct EPCellView: View {
         .alert("Already downloaded, if you want to replace the file, please delete it in download manager.",isPresented: self.$showVideoFileExisitAlert) {
                 
             }
+        .alert("No video file.",isPresented: self.$showNotDownloadableAlert) {
+                
+            }
+        
         //TODO: show downloading list
         .sheet(isPresented: $downloadManager.isDownloading){
             ProgressAlertView(progress: $downloadManager.downloadProgress)
@@ -163,11 +181,13 @@ struct EPCellView: View {
                             }else{
                                 print("filename is missing")
                             }
+                            
                         }else{
-                            print("epDetail.video_files is Empty!")
+                            print("url is missing")
                         }
                     }else{
-                        print("url is missing")
+                        print("epDetail.video_files is Empty!")
+                        self.showNotDownloadableAlert.toggle()
                     }
                 }
             }else{
@@ -183,6 +203,16 @@ struct EPCellView: View {
         }
     }
 #endif
+}
+
+struct ExecuteCode : View {
+    init( _ codeToExec: () -> () ) {
+        codeToExec()
+    }
+    
+    var body: some View {
+        EmptyView()
+    }
 }
 
 struct EPCellView_Previews: PreviewProvider {

@@ -48,6 +48,19 @@ func loadAlbireoCookies() -> Bool {
         return false
     }
 }
+func getAllCookies(completion: @escaping (Array<String>) -> Void){
+    if let cookieArray = settingsHandler.getAlbireoCookie(){
+        var newArr:Array<String> = []
+        for cookieProperties in cookieArray {
+            if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any]) {
+                print("\(cookie)")
+                newArr.append("\(cookie)")
+            }
+        }
+        
+        completion(newArr)
+    }
+}
 func clearCookie(){
     settingsHandler.setAlbireoCookie(array: [])
     print("albireo cookie cleared")
