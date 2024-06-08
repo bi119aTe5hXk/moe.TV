@@ -59,7 +59,16 @@ struct BangumiDetailView: View {
                                 ep: detailVM.ep!,
                                 isOffline: false)
             }else{
+                Spacer()
                 Text("Error: Video URL is empty")
+                Spacer()
+                Button(action: {
+                    detailVM.closePlayer()
+                }, label: {
+                    Text("Close")
+                })
+                Spacer()
+            
             }
         })
 #endif
@@ -86,6 +95,15 @@ struct BangumiDetailView: View {
                 
             }else{
                 Text("Error: Video URL is empty")
+                Button(action: {
+                    detailVM.closePlayer()
+                }, label: {
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .renderingMode(.template)
+                        .frame(width: 15, height: 15)
+                        .foregroundColor(.white)
+                }).buttonStyle(.plain)
             }
         }
 #endif

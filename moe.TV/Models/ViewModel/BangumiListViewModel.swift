@@ -55,9 +55,9 @@ class BangumiListViewModel: ObservableObject{
                 //TODO: Show cookie expired alert
                 print("Albireo login info error. Cookie expired?")
                 logoutAlbireoServer { result, str in
-                    exit(0);
+                    //exit(0);
                 }
-                exit(0);
+                //exit(0);
             }
         }
         

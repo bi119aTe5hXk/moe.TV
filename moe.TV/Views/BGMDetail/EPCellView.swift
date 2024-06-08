@@ -16,57 +16,106 @@ struct EPCellView: View {
     
     var body: some View {
         HStack{
-            GeometryReader { geo in
-                Button(action: {
-                    getEpisodeDetail(ep_id: epItem.id) { result, data in
-                        if result{
-                            if let epDetail = data as? EpisodeDetailModel{
-                                detailVM.setSelectedEP(ep: epDetail)
-                            }
-                        }else{
-                            print(data as Any)
+            Button(action: {
+                getEpisodeDetail(ep_id: epItem.id) { result, data in
+                    if result{
+                        if let epDetail = data as? EpisodeDetailModel{
+                            detailVM.setSelectedEP(ep: epDetail)
                         }
+                    }else{
+                        print(data as Any)
                     }
-                }, label: {
-                    ZStack{
-                        if let thumbnail = epItem.thumbnail{
-                            CachedAsyncImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
-                                image.resizable()
-                                    .scaledToFit()
-                                    .cornerRadius(10)
-                                Image(systemName: "play.circle.fill")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.gray)
-                                
-                            } placeholder:{
-                                ProgressView()
-                            }
-                        }
-                    }
+                }
+            }, label: {
+//                    GeometryReader { geo in
                         
+                        if let thumbnail = epItem.thumbnail{
+                            //                            CachedAsyncImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
+                            //                                image.resizable()
+                            //                                    .scaledToFit()
+                            //                                    .cornerRadius(10)
+                            //                                Image(systemName: "play.circle.fill")
+                            //                                    .font(.largeTitle)
+                            //                                    .foregroundColor(.gray)
+                            //
+                            //                            } placeholder:{
+                            //                                ProgressView()
+                            //                            }
+                            CachedAsyncImage(
+                                url: fixPathNotCompete(path: thumbnail),
+                                placeholder: { progress in
+                                    // Create any view for placeholder (optional).
+                                    ZStack {
+                                        
+                                        ProgressView() {
+                                            VStack {
+                                                Text("Loading...")
+                                                
+                                                Text("\(progress) %")
+                                            }
+                                        }
+                                    }
+                                },
+                                image: {
+                                    // Customize image.
+                                    Image(uiImage: $0)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .cornerRadius(10)
+                                        .frame(maxWidth: 300)
+                                    
+                                    
+                                },error: { error, retry in
+                                    // Create any view for error (optional).
+                                    Text("No Picture")
+                                }
+                            )
+                            
+//                            Image(systemName: "play.circle.fill")
+//                                .font(.largeTitle)
+//                                .foregroundColor(.gray)
+//                            .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
+//                        }
+                            
+                    }
                     
-                })
-                .buttonStyle(.plain)
-                .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
-            }
-            .frame(maxWidth: 400)
-            .padding(10)
-            
-            Text("\(epItem.episode_no ?? 0).")
-            if !((epItem.name ?? "").isEmpty){
-                Text("\(epItem.name ?? "")")
-                    .lineLimit(1)
-                    .background(Color.clear)
+                Spacer()
                 
-            }
-            
-            
-            Spacer()
+                VStack{
+                    HStack{
+                        Text("\(epItem.episode_no ?? 0). ")
+                        if !((epItem.name ?? "").isEmpty){
+                            Text("\(epItem.name ?? "")")
+                                .lineLimit(1)
+                                .background(Color.clear)
+                        }
+                    }
+                    if !((epItem.name_cn ?? "").isEmpty){
+                        Text("\(epItem.name_cn ?? "")")
+                            .lineLimit(1)
+                            .background(Color.clear)
+                    }
+                }
+                
+                
+                
+                Spacer()
 
-            EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)),
-                               color:.constant(epItem.watch_progress?.watch_status == 2 ? Color.green : Color.orange))
-                .frame(maxWidth: 100,maxHeight: 100)
-                .padding(10)
+                EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)),
+                                   color:.constant(epItem.watch_progress?.watch_status == 2 ? Color.green : Color.orange))
+                    .frame(maxWidth: 100,maxHeight: 100)
+                    .padding(10)
+                    
+                
+            })
+            .buttonStyle(.plain)
+            
+            
+//            .padding(10)
+            
+            
+            
+            
 #if !os(tvOS)
             Menu {
                 //TODO:  download status
@@ -100,18 +149,22 @@ struct EPCellView: View {
         getEpisodeDetail(ep_id: epItem.id) { result, data in
             if result{
                 if let epDetail = data as? EpisodeDetailModel{
-                    if let url = epDetail.video_files![0].url{ //TODO: support multiple video source
-                        let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
-                        if let filename = epDetail.video_files![0].file_path{
-                            if !downloadManager.checkFileExists(fileName: filename){
-                                downloadManager.downloadFile(urlString: fileURL,savedAs: filename)
-                                offlinePBM.setPlayBackStatus(item: OfflineVideoItem(epID: epDetail.id, bgm_eps_id: epDetail.bgm_eps_id,  filename: filename, position: epDetail.watch_progress?.last_watch_position ?? 0, isFinished: false))
+                    if let vFiles = epDetail.video_files {
+                        if let url = vFiles[0].url{ //TODO: support multiple video source
+                            let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
+                            if let filename = epDetail.video_files![0].file_path{
+                                if !downloadManager.checkFileExists(fileName: filename){
+                                    downloadManager.downloadFile(urlString: fileURL,savedAs: filename)
+                                    offlinePBM.setPlayBackStatus(item: OfflineVideoItem(epID: epDetail.id, bgm_eps_id: epDetail.bgm_eps_id,  filename: filename, position: epDetail.watch_progress?.last_watch_position ?? 0, isFinished: false))
+                                }else{
+                                    print("Video file exists")
+                                    self.showVideoFileExisitAlert.toggle()
+                                }
                             }else{
-                                print("Video file exists")
-                                self.showVideoFileExisitAlert.toggle()
+                                print("filename is missing")
                             }
                         }else{
-                            print("filename is missing")
+                            print("epDetail.video_files is Empty!")
                         }
                     }else{
                         print("url is missing")
@@ -132,8 +185,9 @@ struct EPCellView: View {
 #endif
 }
 
-//struct EPCellView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: testURL.appending("/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0"), status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVM: BangumiDetailViewModel())
-//    }
-//}
+struct EPCellView_Previews: PreviewProvider {
+    static var previews: some View {
+        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: testURL.appending("/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0"), status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVM: BangumiDetailViewModel())
+            .environmentObject(DownloadManager())
+    }
+}

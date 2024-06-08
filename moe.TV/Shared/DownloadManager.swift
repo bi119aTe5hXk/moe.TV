@@ -154,17 +154,21 @@ final class DownloadManager: ObservableObject {
                 getEpisodeDetail(ep_id: epID) { result, data in
                     if result{
                         if let epDetail = data as? EpisodeDetailModel{
-                            if let url = epDetail.video_files![0].url{ //TODO: support multiple video source
-                                let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
-                                if let filename = epDetail.video_files![0].file_path{
-                                    if !self.checkFileExists(fileName: filename){
-                                        self.downloadFile(urlString: fileURL,savedAs: filename)
-                                        //                                        offlinePBM.setPlayBackStatus(item: OfflineVideoItem(epID: epDetail.id, bgm_eps_id: epDetail.bgm_eps_id,  filename: filename, position: epDetail.watch_progress?.last_watch_position ?? 0, isFinished: false))
+                            if let vFiles = epDetail.video_files{
+                                if let url = vFiles[0].url{ //TODO: support multiple video source
+                                    let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
+                                    if let filename = epDetail.video_files![0].file_path{
+                                        if !self.checkFileExists(fileName: filename){
+                                            self.downloadFile(urlString: fileURL,savedAs: filename)
+                                            //                                        offlinePBM.setPlayBackStatus(item: OfflineVideoItem(epID: epDetail.id, bgm_eps_id: epDetail.bgm_eps_id,  filename: filename, position: epDetail.watch_progress?.last_watch_position ?? 0, isFinished: false))
+                                        }else{
+                                            print("Video file exists")
+                                        }
                                     }else{
-                                        print("Video file exists")
+                                        print("filename is missing")
                                     }
                                 }else{
-                                    print("filename is missing")
+                                    print("epDetail.video_files is empty!")
                                 }
                             }else{
                                 print("url is missing")

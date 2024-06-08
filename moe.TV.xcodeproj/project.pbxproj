@@ -12,7 +12,6 @@
 		47CC30782A371784001D3F8C /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC30772A371784001D3F8C /* LoginViewModel.swift */; };
 		47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */; };
 		47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */; };
-		47CC30802A393E3B001D3F8C /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 47CC307F2A393E3B001D3F8C /* CachedAsyncImage */; };
 		47E7802B2A397ED900827D03 /* EPCellProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E7802A2A397ED900827D03 /* EPCellProgressView.swift */; };
 		47E7802D2A39C19000827D03 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E7802C2A39C19000827D03 /* SettingsView.swift */; };
 		86112E862A3C73F60034AD97 /* BGMTVServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86112E852A3C73F60034AD97 /* BGMTVServerHandler.swift */; };
@@ -59,6 +58,7 @@
 		86AD929A2A339285008461FF /* BangumiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AD92992A339285008461FF /* BangumiListView.swift */; };
 		86AD92A02A33A540008461FF /* BangumiCellStatusTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AD929F2A33A540008461FF /* BangumiCellStatusTextView.swift */; };
 		86B36A8A2A581B9D00824050 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B36A892A581B9D00824050 /* SettingsViewModel.swift */; };
+		86B5CC172C148E02000FE82A /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 86B5CC162C148E02000FE82A /* CachedAsyncImage */; };
 		86B8F0932A850A7000FD467A /* SettingsButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B8F0922A850A7000FD467A /* SettingsButtonView.swift */; };
 		86B9A8102A8A777D002A9C94 /* OfflineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B9A80F2A8A777D002A9C94 /* OfflineView.swift */; };
 		86BAC66B2A38BE52001C064F /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */; };
@@ -159,7 +159,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47CC30802A393E3B001D3F8C /* CachedAsyncImage in Frameworks */,
+				86B5CC172C148E02000FE82A /* CachedAsyncImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,7 +368,7 @@
 			);
 			name = moe.TV;
 			packageProductDependencies = (
-				47CC307F2A393E3B001D3F8C /* CachedAsyncImage */,
+				86B5CC162C148E02000FE82A /* CachedAsyncImage */,
 			);
 			productName = moe.TV;
 			productReference = 86A9C3E22A3306BC00FD0B44 /* moe.TV.app */;
@@ -402,7 +402,7 @@
 			);
 			mainGroup = 86A9C3D92A3306BC00FD0B44;
 			packageReferences = (
-				47CC307E2A393E3B001D3F8C /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
+				86B5CC152C148E02000FE82A /* XCRemoteSwiftPackageReference "CachedAsyncImage" */,
 			);
 			productRefGroup = 86A9C3E32A3306BC00FD0B44 /* Products */;
 			projectDirPath = "";
@@ -724,7 +724,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe_TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202403241534;
+				CURRENT_PROJECT_VERSION = 202406072316;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "moe.TV/Support\\ Files/Preview\\ Content Assets.xcassets";
 				DEVELOPMENT_TEAM = 26E2Z7VDS4;
@@ -780,7 +780,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe_TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202403241534;
+				CURRENT_PROJECT_VERSION = 202406072316;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "moe.TV/Support\\ Files/Preview\\ Content Assets.xcassets";
 				DEVELOPMENT_TEAM = 26E2Z7VDS4;
@@ -858,20 +858,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		47CC307E2A393E3B001D3F8C /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */ = {
+		86B5CC152C148E02000FE82A /* XCRemoteSwiftPackageReference "CachedAsyncImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-cached-async-image";
+			repositoryURL = "https://github.com/bullinnyc/CachedAsyncImage";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
+				minimumVersion = 2.6.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		47CC307F2A393E3B001D3F8C /* CachedAsyncImage */ = {
+		86B5CC162C148E02000FE82A /* CachedAsyncImage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 47CC307E2A393E3B001D3F8C /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
+			package = 86B5CC152C148E02000FE82A /* XCRemoteSwiftPackageReference "CachedAsyncImage" */;
 			productName = CachedAsyncImage;
 		};
 /* End XCSwiftPackageProductDependency section */

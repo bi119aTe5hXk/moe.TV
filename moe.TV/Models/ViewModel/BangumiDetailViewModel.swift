@@ -74,11 +74,16 @@ class BangumiDetailViewModel : ObservableObject {
             if (ep.video_files ?? []).count > 1{
                 print("more than one source")
                 self.showSourceSelectAlert()
+                checkLastWatchPosition()
             }else{
-                self.setVideoURL(url: fixPathNotCompete(path: ep.video_files![0].url ?? "")
-                    .addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!)
+                if let vFile = ep.video_files{
+                    self.setVideoURL(url: fixPathNotCompete(path: vFile[0].url ?? "")
+                        .addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!)
+                    checkLastWatchPosition()
+                }else{
+                    print("ep.video_files is empty!")
+                }
             }
-            checkLastWatchPosition()
         }
     }
     func checkLastWatchPosition(){

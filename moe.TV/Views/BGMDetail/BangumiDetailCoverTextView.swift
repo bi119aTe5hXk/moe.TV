@@ -15,13 +15,36 @@ struct BangumiDetailCoverTextView: View {
                 Spacer()
                 if let coverURL = i.image{
                     GeometryReader { geo in
-                        CachedAsyncImage(url: URL(string: coverURL)){ image in
-                            image.resizable()
-                                .scaledToFit()
-                                .cornerRadius(10)
-                        } placeholder: {
-                            ProgressView()
-                        }
+//                        CachedAsyncImage(url: URL(string: coverURL)){ image in
+//                            image.resizable()
+//                                .scaledToFit()
+//                                .cornerRadius(10)
+//                        } placeholder: {
+//                            ProgressView()
+//                        }
+                        CachedAsyncImage(
+                            url: coverURL,
+                            placeholder: { progress in
+                                // Create any view for placeholder (optional).
+                                ZStack {
+                                    
+                                    ProgressView() {
+                                        VStack {
+                                            Text("Loading...")
+                                            
+                                            Text("\(progress) %")
+                                        }
+                                    }
+                                }
+                            },
+                            image: {
+                                // Customize image.
+                                Image(uiImage: $0)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .cornerRadius(10)
+                            }
+                        )
                         .frame(width: geo.size.width,
                                height: geo.size.height,
                                alignment: .center)
