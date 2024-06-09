@@ -34,64 +34,53 @@ struct EPCellView: View {
             }, label: {
 //                    GeometryReader { geo in
                         
-                        if let thumbnail = epItem.thumbnail{
-                            //                            CachedAsyncImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
-                            //                                image.resizable()
-                            //                                    .scaledToFit()
-                            //                                    .cornerRadius(10)
-                            //                                Image(systemName: "play.circle.fill")
-                            //                                    .font(.largeTitle)
-                            //                                    .foregroundColor(.gray)
-                            //
-                            //                            } placeholder:{
-                            //                                ProgressView()
-                            //                            }
-                            CachedAsyncImage(
-                                url: fixPathNotCompete(path: thumbnail),
-                                placeholder: { progress in
-                                    // Create any view for placeholder (optional).
-                                    ZStack {
+                if let thumbnail = epItem.thumbnail{
+                    CachedAsyncImage(
+                        url: fixPathNotCompete(path: thumbnail),
+                        placeholder: { progress in
+                            // Create any view for placeholder (optional).
+                            ZStack {
+                                
+                                ProgressView() {
+                                    VStack {
+                                        Text("Loading...")
                                         
-                                        ProgressView() {
-                                            VStack {
-                                                Text("Loading...")
-                                                
-                                                Text("\(progress) %")
-                                            }
-                                        }
+                                        Text("\(progress) %")
                                     }
-                                },
-                                image: {
-                                    // Customize image.
-                                    Image(uiImage: $0)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .cornerRadius(10)
-                                        .frame(maxWidth: 300)
-                                    
-                                    
-                                },error: { error, retry in
-                                    HStack{
-                                        ExecuteCode {
-                                            DispatchQueue.main.async {
-                                                self.isEmptyEP = true
-                                            }
-                                        }
-                                        
-                                        // Create any view for error (optional).
-                                        Text("No Picture")
-                                    }
-                                    
                                 }
-                            )
+                            }
+                        },
+                        image: {
+                            // Customize image.
+                            Image(uiImage: $0)
+                                .resizable()
+                                .scaledToFit()
+                                .cornerRadius(10)
+                                .frame(maxWidth: 300)
                             
-//                            Image(systemName: "play.circle.fill")
-//                                .font(.largeTitle)
-//                                .foregroundColor(.gray)
-//                            .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
-//                        }
                             
-                    }
+                        },error: { error, retry in
+                            HStack{
+                                ExecuteCode {
+                                    DispatchQueue.main.async {
+                                        self.isEmptyEP = true
+                                    }
+                                }
+                                
+                                // Create any view for error (optional).
+                                Text("No Picture")
+                            }
+                            
+                        }
+                    )
+                    
+                    //                            Image(systemName: "play.circle.fill")
+                    //                                .font(.largeTitle)
+                    //                                .foregroundColor(.gray)
+                    //                            .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
+                    //                        }
+                    
+                }
                     
                 Spacer()
                 
@@ -215,9 +204,9 @@ struct ExecuteCode : View {
     }
 }
 
-struct EPCellView_Previews: PreviewProvider {
-    static var previews: some View {
-        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: testURL.appending("/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0"), status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVM: BangumiDetailViewModel())
-            .environmentObject(DownloadManager())
-    }
-}
+//struct EPCellView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: testURL.appending("/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0"), status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVM: BangumiDetailViewModel())
+//            .environmentObject(DownloadManager())
+//    }
+//}

@@ -269,13 +269,13 @@ func updateBGMEPwatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
         }
     }
 }
-func updateBGMSBEPwatched(subject_id:Int,episode_id:Int,completion: @escaping (Bool, Any) -> Void){
+func updateBGMSBEPStatues(subject_id:Int,episode_id:Int,status:Int,completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         if isBGMAccessTokenExpired(){
             refreshBGMTVToken()
         }
         let urlstr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)/episodes"
-        patchServer(urlString: urlstr, postdata: ["episode_id":[episode_id],"type":2]) { result, data in
+        patchServer(urlString: urlstr, postdata: ["episode_id":[episode_id],"type":status]) { result, data in
             completion(result,data)
         }
     }

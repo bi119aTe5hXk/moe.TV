@@ -42,8 +42,9 @@ class PlayerViewModel: ObservableObject {
                 if isFinished{
                     if let subject_id = theEP.bangumi?.bgm_id{
                         if let episode_id = theEP.bgm_eps_id{
-                            updateBGMSBEPwatched(subject_id: subject_id,
-                                                 episode_id: episode_id) { result, data in
+                            updateBGMSBEPStatues(subject_id: subject_id,
+                                                 episode_id: episode_id,
+                                                 status: 2) { result, data in
                                 print(data)
                             }
                         }else{

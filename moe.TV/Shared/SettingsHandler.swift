@@ -38,6 +38,7 @@ class SettingsHandler {
         }
     }
     func getAlbireoCookie() -> Array<Any>?{
+        sync()
         var arr = Array<Any>()
         arr = ub.array(forKey: kCookie) ?? []
         if arr.count > 0{

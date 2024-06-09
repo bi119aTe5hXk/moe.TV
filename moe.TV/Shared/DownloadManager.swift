@@ -171,11 +171,12 @@ final class DownloadManager: ObservableObject {
                                     }else{
                                         print("filename is missing")
                                     }
+                                
                                 }else{
-                                    print("epDetail.video_files is empty!")
+                                    print("url is missing")
                                 }
                             }else{
-                                print("url is missing")
+                                print("epDetail.video_files is empty!")
                             }
                         }
                     }
@@ -187,7 +188,9 @@ final class DownloadManager: ObservableObject {
         
         if !hasDownloaded{
             print("all failed")
-            self.isAllDownloadFailed.toggle()
+            DispatchQueue.main.async {
+                self.isAllDownloadFailed.toggle() //TODO: show alert in same view
+            }
         }
     }
 }
