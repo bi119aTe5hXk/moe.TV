@@ -85,6 +85,7 @@ class SettingsHandler {
     
     // MARK: - iCloud Support
     func sync(){
+        ud.synchronize()
         ub.synchronize()
     }
     

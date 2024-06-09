@@ -33,51 +33,54 @@ struct EPCellView: View {
                 }
             }, label: {
 //                    GeometryReader { geo in
-                        
-                if let thumbnail = epItem.thumbnail{
-                    CachedAsyncImage(
-                        url: fixPathNotCompete(path: thumbnail),
-                        placeholder: { progress in
-                            // Create any view for placeholder (optional).
-                            ZStack {
-                                
-                                ProgressView() {
-                                    VStack {
-                                        Text("Loading...")
-                                        
-                                        Text("\(progress) %")
+                ZStack{
+                    if let thumbnail = epItem.thumbnail{
+                        CachedAsyncImage(
+                            url: fixPathNotCompete(path: thumbnail),
+                            placeholder: { progress in
+                                // Create any view for placeholder (optional).
+                                ZStack {
+                                    
+                                    ProgressView() {
+                                        VStack {
+                                            Text("Loading...")
+                                            
+                                            Text("\(progress) %")
+                                        }
                                     }
                                 }
-                            }
-                        },
-                        image: {
-                            // Customize image.
-                            Image(uiImage: $0)
-                                .resizable()
-                                .scaledToFit()
-                                .cornerRadius(10)
-                                .frame(maxWidth: 300)
-                            
-                            
-                        },error: { error, retry in
-                            HStack{
-                                ExecuteCode {
-                                    DispatchQueue.main.async {
-                                        self.isEmptyEP = true
+                            },
+                            image: {
+                                // Customize image.
+                                Image(uiImage: $0)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .cornerRadius(10)
+                                    .frame(maxWidth: 300)
+                                
+                                
+                            },error: { error, retry in
+                                HStack{
+                                    ExecuteCode {
+                                        DispatchQueue.main.async {
+                                            self.isEmptyEP = true
+                                        }
                                     }
+                                    
+                                    // Create any view for error (optional).
+                                    Text("No Picture")
                                 }
                                 
-                                // Create any view for error (optional).
-                                Text("No Picture")
                             }
-                            
+                        )
+                        //                                .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
+                        if !self.isEmptyEP{
+                            Image(systemName: "play.circle.fill")
+                                .font(.largeTitle)
+                                .foregroundColor(.gray)
+                            //                                    .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
                         }
-                    )
-                    
-                    //                            Image(systemName: "play.circle.fill")
-                    //                                .font(.largeTitle)
-                    //                                .foregroundColor(.gray)
-                    //                            .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
+                    }
                     //                        }
                     
                 }
@@ -192,16 +195,6 @@ struct EPCellView: View {
         }
     }
 #endif
-}
-
-struct ExecuteCode : View {
-    init( _ codeToExec: () -> () ) {
-        codeToExec()
-    }
-    
-    var body: some View {
-        EmptyView()
-    }
 }
 
 //struct EPCellView_Previews: PreviewProvider {

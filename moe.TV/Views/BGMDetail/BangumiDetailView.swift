@@ -15,6 +15,7 @@ struct BangumiDetailView: View {
         //Text(selectedItem?.id ?? "EMPTY")
         ScrollView{
             BangumiDetailCoverTextView(item: $detailVM.bgmDetailItem)
+                .frame(minHeight: 300,maxHeight: 600)
             
             Divider()
             
@@ -25,12 +26,13 @@ struct BangumiDetailView: View {
                     .padding(10)
             }
         }
-        .onChange(of: selectedItem, initial: true, { oldValue, newValue in
+        
+        .onChange(of: selectedItem, initial: true) { newValue in
             if let item = newValue{
                 print("BangumiDetailView onchange")
                 detailVM.getBGMDetail(id: item.id)
             }
-        })
+          }
         .refreshable {
             if let item = selectedItem{
                 detailVM.getBGMDetail(id: item.id)
@@ -72,41 +74,41 @@ struct BangumiDetailView: View {
             }
         })
 #endif
-//#if os(macOS)
-//        .sheet(isPresented:$detailVM.presentVideoView ) {
-//            if let url = URL(string: detailVM.videoURL){
-//                ZStack(alignment: .topLeading){
-//                    VideoPlayerView(url: url,
-//                                    seekTime: detailVM.seek,
-//                                    ep: detailVM.ep!,
-//                                    isOffline: false)
-//                    .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
-//                    //TODO: better close button for macOS
-//                    Button(action: {
-//                        detailVM.closePlayer()
-//                    }, label: {
-//                        Image(systemName: "xmark")
-//                            .resizable()
-//                            .renderingMode(.template)
-//                            .frame(width: 15, height: 15)
-//                            .foregroundColor(.white)
-//                    }).buttonStyle(.plain)
-//                }
-//                
-//            }else{
-//                Text("Error: Video URL is empty")
-//                Button(action: {
-//                    detailVM.closePlayer()
-//                }, label: {
-//                    Image(systemName: "xmark")
-//                        .resizable()
-//                        .renderingMode(.template)
-//                        .frame(width: 15, height: 15)
-//                        .foregroundColor(.white)
-//                }).buttonStyle(.plain)
-//            }
-//        }
-//#endif
+#if os(macOS)
+        .sheet(isPresented:$detailVM.presentVideoView ) {
+            if let url = URL(string: detailVM.videoURL){
+                ZStack(alignment: .topLeading){
+                    VideoPlayerView(url: url,
+                                    seekTime: detailVM.seek,
+                                    ep: detailVM.ep!,
+                                    isOffline: false)
+                    .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
+                    //TODO: better close button for macOS
+                    Button(action: {
+                        detailVM.closePlayer()
+                    }, label: {
+                        Image(systemName: "xmark")
+                            .resizable()
+                            .renderingMode(.template)
+                            .frame(width: 15, height: 15)
+                            .foregroundColor(.white)
+                    }).buttonStyle(.plain)
+                }
+                
+            }else{
+                Text("Error: Video URL is empty")
+                Button(action: {
+                    detailVM.closePlayer()
+                }, label: {
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .renderingMode(.template)
+                        .frame(width: 15, height: 15)
+                        .foregroundColor(.white)
+                }).buttonStyle(.plain)
+            }
+        }
+#endif
         .alert("Please select a source:",isPresented: $detailVM.presentSourceSelectAlert) {
             if let ep = detailVM.ep{
                 ForEach(ep.video_files
@@ -114,7 +116,6 @@ struct BangumiDetailView: View {
                     Button(item.file_name ?? "unknow source"){
                         if let urlstr = item.url{
                             detailVM.showVideoView(url: fixPathNotCompete(path: urlstr).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!, seekTime: detailVM.seek)
-                            //detailVM.showVideoView(url: fixPathNotCompete(path: item.url ?? "").addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!)
                         }else{
                             print("item.url is empty!")
                         }

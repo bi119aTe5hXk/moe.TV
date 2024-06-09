@@ -12,6 +12,7 @@ class BangumiListViewModel: ObservableObject{
     @Published var myBGMList = [MyBangumiItemModel]()
     @Published var isLoading = false
     @Published var searchText = ""
+    @Published var showLogoutAlert = false
     
     func updateMyBGMList(list:[MyBangumiItemModel]){
         print("setting \(list.count) objects")
@@ -52,12 +53,8 @@ class BangumiListViewModel: ObservableObject{
                     }
                 }
             }else{
-                //TODO: Show cookie expired alert
                 print("Albireo login info error. Cookie expired?")
-                logoutAlbireoServer { result, str in
-                    //exit(0);
-                }
-                //exit(0);
+                self.showLogoutAlert.toggle()
             }
         }
         

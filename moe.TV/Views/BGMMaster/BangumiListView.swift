@@ -42,6 +42,19 @@ struct BangumiListView: View {
             .modifier(OptionalSearchableViewModifier(isSearchable: listVM.myBGMList.count >= 2, searchString: $listVM.searchText))
         
 //        }
+        
+            .alert("Albireo cookies may expired. Logout?",isPresented: $listVM.showLogoutAlert) {
+                Button("Yes, logout & exit") {
+                    logoutAlbireoServer { result, str in
+                        exit(0);
+                    }
+                    exit(0);
+                }
+                Button("No, Stay login"){
+                    listVM.showLogoutAlert.toggle()
+                }
+                
+            }
            
     }
     
