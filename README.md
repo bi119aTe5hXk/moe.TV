@@ -14,7 +14,7 @@ TestFlight: [https://testflight.apple.com/join/3v0FALsY](https://testflight.appl
 - Yes, SwiftUI
 
 ## Support platform
-- iOS 15.0 and later
+- iOS 16.0 and later
 - macOS (Native & Catalyst) 13.0 and later
 - tvOS 16.0 and later
 
