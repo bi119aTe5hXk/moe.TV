@@ -11,7 +11,7 @@ struct LoginView: View {
     @ObservedObject var loginVM = LoginViewModel()
     var body: some View {
         if loadAlbireoCookies() || loginVM.isLoginSuccessd{
-            MyBangumiView()
+            MainListView()
         }else{
             HStack{
                 Spacer()

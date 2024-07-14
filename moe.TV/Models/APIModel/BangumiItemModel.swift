@@ -6,11 +6,11 @@
 //
 import Foundation
 
-struct MyBangumiList: Codable{
-    var data:[MyBangumiItemModel]?
+struct BangumiList: Codable{
+    var data:[BangumiItemModel]?
 }
 
-struct MyBangumiItemModel: Codable, Hashable, Identifiable{
+struct BangumiItemModel: Codable, Hashable, Identifiable{
     let id:String
     var bgm_id:Int? //the id of this bangumi in bgm.tv
     var name:String? //the original name (usually the original language) of the bangumi

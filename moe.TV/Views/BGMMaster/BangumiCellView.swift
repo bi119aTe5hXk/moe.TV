@@ -9,7 +9,7 @@ import SwiftUI
 import CachedAsyncImage
 
 struct BangumiCellView: View {
-    @State var bangumiItem: MyBangumiItemModel
+    @State var bangumiItem: BangumiItemModel
     
     var body: some View {
 //        HStack{

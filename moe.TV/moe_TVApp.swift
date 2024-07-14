@@ -32,7 +32,7 @@ struct moe_TVApp: App {
                     }
 #endif
                     if let id = bgmID{
-                        BangumiDetailView(selectedItem: .constant(MyBangumiItemModel(id: id, type: 0, status: 0, eps: 0)), detailVM: BangumiDetailViewModel())
+                        BangumiDetailView(selectedItem: .constant(BangumiItemModel(id: id, type: 0, status: 0, eps: 0)), detailVM: BangumiDetailViewModel())
                     }
                 })
                 .environmentObject(networkMonitor)

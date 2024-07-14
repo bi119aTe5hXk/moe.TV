@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BangumiDetailView: View {
-    @Binding var selectedItem:MyBangumiItemModel?
+    @Binding var selectedItem:BangumiItemModel?
     @ObservedObject var detailVM = BangumiDetailViewModel()
     
     var body: some View {

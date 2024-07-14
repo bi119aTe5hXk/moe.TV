@@ -9,25 +9,25 @@ import Foundation
 
 
 class BangumiListViewModel: ObservableObject{
-    @Published var myBGMList = [MyBangumiItemModel]()
+    @Published var bgmList = [BangumiItemModel]()
     @Published var isLoading = false
     @Published var searchText = ""
     @Published var showLogoutAlert = false
     
-    func updateMyBGMList(list:[MyBangumiItemModel]){
+    func updateBGMList(list:[BangumiItemModel]){
         print("setting \(list.count) objects")
         
         DispatchQueue.main.async {
             self.isLoading = false
-            self.myBGMList = list
+            self.bgmList = list
         }
     }
     
-    func getBGMList() {
+    func getMyBGMList() {
         isAlbireoLoginValid { result in
             if result{
                 self.isLoading = true
-                print("BangumiListViewModel.getBGMList")
+                print("BangumiListViewModel.getMyBGMList")
                 getMyBangumiList { result, data in
         //            self.isLoading = false
                     if !result{
@@ -38,16 +38,16 @@ class BangumiListViewModel: ObservableObject{
                         }
                         return
                     }
-                    if let bgmList = data as? [MyBangumiItemModel]{
-                        if bgmList.count <= 0 {
+                    if let list = data as? [BangumiItemModel]{
+                        if list.count <= 0 {
                             print("bgmList.count <= 0, ignore")
                             return
                         }else{
-                            print("loaded \(bgmList.count) items from bgmList")
-                            self.updateMyBGMList(list: bgmList)
+                            print("loaded \(list.count) items from bgmList")
+                            self.updateBGMList(list: list)
         #if os(tvOS)
                             let save = SettingsHandler()
-                            save.setTopShelf(array: bgmList)
+                            save.setTopShelf(array: list)
         #endif
                         }
                     }
@@ -57,21 +57,51 @@ class BangumiListViewModel: ObservableObject{
                 self.showLogoutAlert.toggle()
             }
         }
-        
+    }
+    func getOnAirBGMList() {
+        isAlbireoLoginValid { result in
+            if result{
+                self.isLoading = true
+                print("BangumiListViewModel.getOnAirBGMList")
+                getOnAirList { result, data in
+        //            self.isLoading = false
+                    if !result{
+                        //TODO: login failed, cookie expired
+                        print("login failed, cookie expired")
+                        DispatchQueue.main.async {
+                            self.isLoading = false
+                        }
+                        return
+                    }
+                    if let list = data as? [BangumiItemModel]{
+                        if list.count <= 0 {
+                            print("bgmList.count <= 0, ignore")
+                            return
+                        }else{
+                            print("loaded \(list.count) items from bgmList")
+                            self.updateBGMList(list: list)
+                        }
+                    }
+                }
+            }else{
+                print("Albireo login info error. Cookie expired?")
+                self.showLogoutAlert.toggle()
+            }
+        }
     }
     
     //TODO: search all bangumi via albireo API
-    var bangumiFiltered: [MyBangumiItemModel] {
-        if self.myBGMList.count > 0 
+    var bangumiFiltered: [BangumiItemModel] {
+        if self.bgmList.count > 0
             && !self.isLoading
         {
-            let searchResult = self.myBGMList.filter {
+            let searchResult = self.bgmList.filter {
                 ($0.name ?? "").localizedStandardContains(self.searchText) || (($0.name_cn ?? "").localizedStandardContains(self.searchText))
             }
-            print("animeArr:\(self.myBGMList.count),filtered:\(searchResult.count)")
-            return self.searchText.isEmpty ? self.myBGMList : searchResult
+            print("animeArr:\(self.bgmList.count),filtered:\(searchResult.count)")
+            return self.searchText.isEmpty ? self.bgmList : searchResult
         }else{
-            print("self.myBGMList.count <= 0")
+            print("self.bgmList.count <= 0")
             return []
         }
     }

@@ -196,7 +196,7 @@ class SettingsHandler {
 #if os(tvOS)
     private let UD_TOPSHELF_ARR = "topShelfArr"
     
-    func setTopShelf(array:[MyBangumiItemModel]){
+    func setTopShelf(array:[BangumiItemModel]){
         registerSettings()
         var encodeArr = [Any]()
         array.forEach { item in
@@ -209,13 +209,13 @@ class SettingsHandler {
         ud.synchronize()
     }
     
-    func getTopShelf() -> [MyBangumiItemModel]?{
+    func getTopShelf() -> [BangumiItemModel]?{
         registerSettings()
         let arr = ud.array(forKey: UD_TOPSHELF_ARR)
-        var decodeArr = [MyBangumiItemModel]()
+        var decodeArr = [BangumiItemModel]()
         arr?.forEach({ item in
             if let data = item as? Data,
-               let decodeData = try? PropertyListDecoder().decode(MyBangumiItemModel.self, from: data) {
+               let decodeData = try? PropertyListDecoder().decode(BangumiItemModel.self, from: data) {
                 decodeArr.append(decodeData)
                     }
         })

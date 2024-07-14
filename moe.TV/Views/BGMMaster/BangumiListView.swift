@@ -9,7 +9,8 @@ import SwiftUI
 
 struct BangumiListView: View {
     @ObservedObject var listVM = BangumiListViewModel()
-    @Binding var selectedItem: MyBangumiItemModel?
+    @Binding var selectedItem: BangumiItemModel?
+    @Binding var selectedFunc: FuncViewModel?
     
     var body: some View {
 //        if listVM.myBGMList.count <= 0{
@@ -29,17 +30,21 @@ struct BangumiListView: View {
             }
             .refreshable {
                 print("refreshable.getBGMList")
-                listVM.getBGMList()
+                getBGMList()
             }
-            .onAppear(){
-                if listVM.myBGMList.count <= 0{
-                    print("onAppear.getBGMList")
-                    listVM.getBGMList()
-                }
+//            .onAppear(){
+//                if listVM.bgmList.count <= 0{
+//                    print("onAppear.getBGMList")
+//                    getBGMList()
+//                }
+//            }
+            .onChange(of: selectedFunc, initial: true) { newValue in
+                print("onChange.getBGMList")
+                getBGMList()
             }
         
             //.searchable(text: $listVM.searchText)
-            .modifier(OptionalSearchableViewModifier(isSearchable: listVM.myBGMList.count >= 2, searchString: $listVM.searchText))
+            .modifier(OptionalSearchableViewModifier(isSearchable: listVM.bgmList.count >= 2, searchString: $listVM.searchText))
         
 //        }
         
@@ -55,11 +60,37 @@ struct BangumiListView: View {
                 }
                 
             }
+            //.navigationTitle(" \( selectedFunc?.localizedName ) ")
            
     }
     
-    
+    func getBGMList(){
+        switch selectedFunc {
+        case .mybangumi:
+            print("getBGMList.mybangumi")
+            listVM.getMyBGMList()
+            return
+        case .onair:
+            print("getBGMList.onair")
+            listVM.getOnAirBGMList()
+            return
+        case .allbangumi:
+            print("getBGMList.allbangumi")
+            //TODO: All bangumi list
+            listVM.bgmList = []
+            return
+        case .search:
+            print("getBGMList.search")
+            listVM.bgmList = []
+            return
+        case nil:
+            print("getBGMList.nil")
+            return
+        }
+    }
 }
+
+
 
 struct OptionalSearchableViewModifier: ViewModifier{
     let isSearchable: Bool

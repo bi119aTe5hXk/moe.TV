@@ -238,8 +238,8 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
         getServer(urlString: urlstr) { result, data in
             if result{
                 do {
-                    if let myBGMList = try jsonDecoder.decode(MyBangumiList?.self, from: data as! Data){
-                        completion(true, myBGMList.data)
+                    if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
+                        completion(true, list.data)
                     }else{
                         completion(false, data as! String)
                     }
@@ -254,51 +254,58 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
     }
 }
 
-//func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
-//    var urlstr = getAlbireoServer()
-//    urlstr.append("/api/home/on_air")
-//    if loadCookies(){
-//        getServer(urlString: urlstr) { result, data in
-//            if result{
-//                if let JSON = data as? [String: Any] {
-//                    let jdata = JSON["data"] as Any
-//                    //print(data)
-//                    completion(true, jdata)
-//                }
-//            }else{
-//                completion(false, data as! String)
-//            }
-//        }
-//    }
-//}
+func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
+    var urlstr = getAlbireoServer()
+    urlstr.append("/api/home/on_air")
+    if loadAlbireoCookies(){
+        getServer(urlString: urlstr) { result, data in
+            if result{
+                do {
+                    if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
+                        completion(true, list.data)
+                    }else{
+                        completion(false, data as! String)
+                    }
+                }catch{
+                    completion(false, "there is a problem with json decode")
+                }
+                
+            }else{
+                completion(false, data as! String)
+            }
+        }
+    }
+}
 
-//func getAllBangumiList(page: Int,
-//                       name: String,
-//                       completion: @escaping (Bool, Any?) -> Void) {
-//    var urlstr = getAlbireoServer()
-//    urlstr.append("/api/home/bangumi?page=")
-//    urlstr.append(String(page))
-//    urlstr.append("&count=12&sort_field=air_date&sort_order=desc&name=")
-//    urlstr.append(name)
-//    urlstr.append("&type=-1")
-//    if loadCookies(){
-//
-//        getServer(urlString: urlstr) { result, data in
-//            if result{
-//                let dic = data as! [String: Any]
-//                print("result_count:",dic["total"] as Any)
-//
-//                if let JSON = data as? [String: Any] {
-//                    let jdata = JSON["data"] as Any
-//                    //print(data)
-//                    completion(true, jdata)
-//                }
-//            }else{
-//                completion(false, data as! String)
-//            }
-//        }
-//    }
-//}
+func getAllBangumiList(page: Int,
+                       name: String,
+                       completion: @escaping (Bool, Any?) -> Void) {
+    var urlstr = getAlbireoServer()
+    urlstr.append("/api/home/bangumi?page=")
+    urlstr.append(String(page))
+    urlstr.append("&count=12&sort_field=air_date&sort_order=desc&name=")
+    urlstr.append(name)
+    urlstr.append("&type=-1")
+    if loadAlbireoCookies(){
+        getServer(urlString: urlstr) { result, data in
+            if result{
+                do {
+                    //Use OnAir model for temp
+                    if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
+                        completion(true, list.data)
+                    }else{
+                        completion(false, data as! String)
+                    }
+                }catch{
+                    completion(false, "there is a problem with json decode")
+                }
+                
+            }else{
+                completion(false, data as! String)
+            }
+        }
+    }
+}
 func getBangumiDetail(id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getAlbireoServer()

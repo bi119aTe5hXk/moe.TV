@@ -1,0 +1,303 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@" : {
+
+    },
+    "%@ %%" : {
+
+    },
+    "%lld" : {
+
+    },
+    "%lld. " : {
+
+    },
+    "AccessToken" : {
+
+    },
+    "Albireo" : {
+
+    },
+    "Albireo cookies may expired. Logout?" : {
+
+    },
+    "All video download failed." : {
+
+    },
+    "AllBangumi" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Bangumi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべて"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有番组"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有番組"
+          }
+        }
+      }
+    },
+    "Already downloaded, if you want to replace the file, please delete it in download manager." : {
+
+    },
+    "Are you sure you want to logout and exit app?" : {
+
+    },
+    "Are you sure you want to logout from bgm.tv?" : {
+
+    },
+    "Bgm.tv" : {
+
+    },
+    "BGM.TV" : {
+
+    },
+    "BGM.TV Logined" : {
+
+    },
+    "Bgm.tv setting on tvOS is not supported. But you can use iOS or macOS device to setup and will do sync with bgm.tv on tvOS." : {
+
+    },
+    "Close" : {
+
+    },
+    "Continue from last position?" : {
+
+    },
+    "Debug" : {
+
+    },
+    "Download" : {
+
+    },
+    "Download All" : {
+
+    },
+    "Downloading...%lld%%" : {
+
+    },
+    "Error: Video URL is empty" : {
+
+    },
+    "ExpireTime" : {
+
+    },
+    "Finished" : {
+
+    },
+    "iCloud" : {
+
+    },
+    "iCloud Available" : {
+
+    },
+    "ID: %@" : {
+
+    },
+    "Loading..." : {
+
+    },
+    "Login" : {
+
+    },
+    "Login to Albireo Server" : {
+
+    },
+    "Logout" : {
+
+    },
+    "Logout & Exit" : {
+
+    },
+    "moeTV" : {
+
+    },
+    "MyBangumi" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Bangumi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "お気に入り"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我的追番"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我的追番"
+          }
+        }
+      }
+    },
+    "Nickname: %@" : {
+
+    },
+    "No Internet" : {
+
+    },
+    "No Picture" : {
+
+    },
+    "No video cached." : {
+
+    },
+    "No video file." : {
+
+    },
+    "No, start from beginning" : {
+
+    },
+    "No, Stay login" : {
+
+    },
+    "OK" : {
+
+    },
+    "OnAir" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上映中"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "推荐"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "推薦"
+          }
+        }
+      }
+    },
+    "Online service is not available." : {
+
+    },
+    "Open download manager" : {
+
+    },
+    "Password" : {
+
+    },
+    "Pending" : {
+
+    },
+    "Please select a source:" : {
+
+    },
+    "Re-Sync with iCloud" : {
+
+    },
+    "RefreshToken" : {
+
+    },
+    "Search" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "検索"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檢索"
+          }
+        }
+      }
+    },
+    "Server URL" : {
+
+    },
+    "Server URL or Username / Password error." : {
+
+    },
+    "Settings" : {
+
+    },
+    "Show download list" : {
+
+    },
+    "Show in bgm.tv" : {
+
+    },
+    "Sign out" : {
+
+    },
+    "Sign: %@" : {
+
+    },
+    "Sync status with bgm.tv" : {
+
+    },
+    "UNKNOWN" : {
+
+    },
+    "Username" : {
+
+    },
+    "Username: %@" : {
+
+    },
+    "Version:%@, Build:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Version:%1$@, Build:%2$@"
+          }
+        }
+      }
+    },
+    "Yes" : {
+
+    },
+    "Yes, logout & exit" : {
+
+    }
+  },
+  "version" : "1.0"
+}

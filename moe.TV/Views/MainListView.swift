@@ -7,18 +7,19 @@
 
 import SwiftUI
 
-struct MyBangumiView: View {
-    @State var selectedItem: MyBangumiItemModel?
+struct MainListView: View {
+    @State var selectedItem: BangumiItemModel?
+    @State var destination:FuncViewModel?
     
 //    @ObservedObject var settingsVM = SettingsViewModel()
     @State var presentSettingView = false
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
     
     var body: some View {
         
-        NavigationSplitView {
-            BangumiListView(selectedItem: $selectedItem)
-                
-                .navigationTitle("My Bangumi")
+        NavigationSplitView(columnVisibility: $columnVisibility) {
+            SidebarView(selectedDestination: $destination)
+            
                 .toolbar(content: {
 #if os(macOS)
                     Spacer()
@@ -29,10 +30,17 @@ struct MyBangumiView: View {
                         SettingsButtonView()//(profileIconURL: settingsVM.avatar_url)
                     })
                 })
+                .navigationTitle("moeTV")
             
+        } content: {
+            if let dest = destination {
+                BangumiListView(selectedItem: $selectedItem, selectedFunc: $destination)
+                    .navigationTitle(dest.localizedName)
+            }
         } detail: {
             BangumiDetailView(selectedItem: $selectedItem)
         }
+        .navigationSplitViewStyle(.balanced)
         
 //        .onAppear(){
 //            //check bgm.tv login status
@@ -60,7 +68,10 @@ struct MyBangumiView: View {
 #endif
             Spacer()
         })
+        
+        
     }
+    
     
     
 //    func fetchBGMProfileIcon(){
