@@ -19,6 +19,8 @@ struct MainListView: View {
         
         NavigationSplitView(columnVisibility: $columnVisibility) {
             SidebarView(selectedDestination: $destination)
+                .background(Color.clear)
+                .listStyle(SidebarListStyle())
             
                 .toolbar(content: {
 #if os(macOS)
@@ -42,14 +44,6 @@ struct MainListView: View {
         }
         .navigationSplitViewStyle(.balanced)
         
-//        .onAppear(){
-//            //check bgm.tv login status
-//            if isBGMTVlogined(){
-//                if (settingsVM.avatar_url).isEmpty{
-//                    fetchBGMProfileIcon()
-//                }
-//            }
-//        }
         
         .sheet(isPresented: self.$presentSettingView, content: {
             HStack{

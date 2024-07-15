@@ -13,6 +13,7 @@ struct SidebarView: View {
     var body: some View {
         List(destinations, selection: $selectedDestination) { dest in
             NavigationLink(dest.localizedName, value: dest)
+               
         }
     }
 }

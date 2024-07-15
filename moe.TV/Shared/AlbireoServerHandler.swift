@@ -283,8 +283,11 @@ func getAllBangumiList(page: Int,
     var urlstr = getAlbireoServer()
     urlstr.append("/api/home/bangumi?page=")
     urlstr.append(String(page))
-    urlstr.append("&count=12&sort_field=air_date&sort_order=desc&name=")
-    urlstr.append(name)
+    urlstr.append("&count=-1&sort_field=air_date&sort_order=desc")
+    if name.lengthOfBytes(using: .utf8) > 0{
+        urlstr.append("&name=")
+        urlstr.append(name)
+    }
     urlstr.append("&type=-1")
     if loadAlbireoCookies(){
         getServer(urlString: urlstr) { result, data in

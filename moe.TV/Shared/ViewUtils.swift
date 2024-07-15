@@ -22,6 +22,18 @@ extension View {
       onChange(of: value, perform: action)
     }
 #endif
+#if os(macOS)
+    if #available(macOS 14.0, *) {
+      onChange(of: value, initial: initial) {
+        action($1)
+      }
+    } else if initial {
+      onAppear { action(value) }
+        .onChange(of: value, perform: action)
+    } else {
+      onChange(of: value, perform: action)
+    }
+#endif
 #if os(tvOS)
       if #available(tvOS 17.0, *) {
         onChange(of: value, initial: initial) {
@@ -46,3 +58,15 @@ struct ExecuteCode : View {
         EmptyView()
     }
 }
+
+#if os(macOS)
+
+typealias UIImage = NSImage
+
+extension Image {
+  init(uiImage: UIImage) {
+        self.init(nsImage: uiImage)
+    }
+}
+
+#endif

@@ -13,16 +13,9 @@ struct BangumiListView: View {
     @Binding var selectedFunc: FuncViewModel?
     
     var body: some View {
-//        if listVM.myBGMList.count <= 0{
-//            VStack{
-//                ProgressView()
-//                Text("Loading...")
-//            }
-//            .onAppear(){
-//                print("onAppear.getBGMList")
-//                listVM.getBGMList()
-//            }
-//        }else{
+        if listVM.isLoading{
+            ProgressView()
+        }
             List(listVM.bangumiFiltered, selection: $selectedItem){ item in
                 NavigationLink(value: item) {
                     BangumiCellView(bangumiItem: item)
@@ -38,13 +31,13 @@ struct BangumiListView: View {
 //                    getBGMList()
 //                }
 //            }
-            .onChange(of: selectedFunc, initial: true) { newValue in
+            .onChange(of: selectedFunc, initial: true) {  newValue in
                 print("onChange.getBGMList")
                 getBGMList()
             }
         
             //.searchable(text: $listVM.searchText)
-            .modifier(OptionalSearchableViewModifier(isSearchable: listVM.bgmList.count >= 2, searchString: $listVM.searchText))
+            .modifier(OptionalSearchableViewModifier(isSearchable: listVM.isSearchable(selectedFunc: selectedFunc), searchString: $listVM.searchText))
         
 //        }
         
@@ -65,28 +58,8 @@ struct BangumiListView: View {
     }
     
     func getBGMList(){
-        switch selectedFunc {
-        case .mybangumi:
-            print("getBGMList.mybangumi")
-            listVM.getMyBGMList()
-            return
-        case .onair:
-            print("getBGMList.onair")
-            listVM.getOnAirBGMList()
-            return
-        case .allbangumi:
-            print("getBGMList.allbangumi")
-            //TODO: All bangumi list
-            listVM.bgmList = []
-            return
-        case .search:
-            print("getBGMList.search")
-            listVM.bgmList = []
-            return
-        case nil:
-            print("getBGMList.nil")
-            return
-        }
+        listVM.getBGMList(funcType: selectedFunc, searchKeyword: "")
+        
     }
 }
 
