@@ -20,8 +20,9 @@ struct MainListView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             SidebarView(selectedDestination: $destination)
                 .background(Color.clear)
+#if os(macOS)
                 .listStyle(SidebarListStyle())
-            
+#endif
                 .toolbar(content: {
 #if os(macOS)
                     Spacer()
