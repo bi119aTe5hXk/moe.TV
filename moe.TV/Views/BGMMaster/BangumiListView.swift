@@ -37,7 +37,11 @@ struct BangumiListView: View {
             }
         
             //.searchable(text: $listVM.searchText)
-            .modifier(OptionalSearchableViewModifier(isSearchable: listVM.isSearchable(selectedFunc: selectedFunc), searchString: $listVM.searchText))
+            .modifier(OptionalSearchableViewModifier(
+                isSearchable: listVM.isSearchable(selectedFunc: selectedFunc),
+                selectedFunc: selectedFunc,
+                listVM: listVM,
+                searchString: $listVM.searchText))
         
 //        }
         
@@ -67,13 +71,24 @@ struct BangumiListView: View {
 
 struct OptionalSearchableViewModifier: ViewModifier{
     let isSearchable: Bool
+    let selectedFunc: FuncViewModel?
+    let listVM: BangumiListViewModel
     @Binding var searchString: String
     
     func body(content: Content) -> some View {
         switch isSearchable{
         case true:
-            content
-                .searchable(text: $searchString, prompt: "Search")
+            if selectedFunc == .search{
+                content
+                    .searchable(text: $searchString, prompt: "Search")
+                    .onSubmit(of: .search) {
+                            //print(searchString)
+                            listVM.getBGMList(funcType: selectedFunc, searchKeyword: searchString)
+                        }
+            }else{
+                content
+                    .searchable(text: $searchString, prompt: "Search")
+            }
         case false:
             content
         }

@@ -47,7 +47,10 @@ class BangumiListViewModel: ObservableObject{
                         //TODO: Search
                         DispatchQueue.main.async {
                             self.isLoading = false
-                            self.bgmList = []
+                            //self.bgmList = []
+                        }
+                        getAllBangumiList(page: 1, name: searchKeyword) { result, data in
+                            self.resultHandler(result: result, data: data, saveTopShelf: false)
                         }
                         return
                     case .allbangumi:
@@ -101,11 +104,9 @@ class BangumiListViewModel: ObservableObject{
         return false
     }
     
-    //TODO: search all bangumi via albireo API
     var bangumiFiltered: [BangumiItemModel] {
         
-        if self.bgmList.count > 0
-            && !self.isLoading
+        if self.bgmList.count > 0 && !self.isLoading
         {
             let searchResult = self.bgmList.filter {
                 ($0.name ?? "").localizedStandardContains(self.searchText) || (($0.name_cn ?? "").localizedStandardContains(self.searchText))
