@@ -44,7 +44,6 @@ class BangumiListViewModel: ObservableObject{
                         }
                         return
                     case .search:
-                        //TODO: Search
                         DispatchQueue.main.async {
                             self.isLoading = false
                             //self.bgmList = []

@@ -17,7 +17,14 @@
 
     },
     "Abandoned" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "放棄"
+          }
+        }
+      }
     },
     "AccessToken" : {
 
@@ -26,10 +33,24 @@
 
     },
     "Albireo cookies may expired. Logout?" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireo の Cookie が期限切れになっている可能性があります。ログアウトしますか?"
+          }
+        }
+      }
     },
     "All video download failed." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのビデオのダウンロードに失敗しました。"
+          }
+        }
+      }
     },
     "AllBangumi" : {
       "extractionState" : "manual",
@@ -61,13 +82,34 @@
       }
     },
     "Already downloaded, if you want to replace the file, please delete it in download manager." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すでにダウンロードされています。ファイルを置き換える場合は、ダウンロード マネージャーで削​​除してください。"
+          }
+        }
+      }
     },
     "Are you sure you want to logout and exit app?" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ログアウトしてアプリを終了してもよろしいですか?"
+          }
+        }
+      }
     },
     "Are you sure you want to logout from bgm.tv?" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bgm.tvからログアウトしてもよろしいですか?"
+          }
+        }
+      }
     },
     "Bgm.tv" : {
 
@@ -79,43 +121,123 @@
 
     },
     "Bgm.tv setting on tvOS is not supported. But you can use iOS or macOS device to setup and will do sync with bgm.tv on tvOS." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS 上の bgm.tv 設定はサポートされていません。ただし、iOS または macOS デバイスを使用して設定し、tvOS 上の bgm.tv と同期することができます。"
+          }
+        }
+      }
     },
     "Cancel" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンセル"
+          }
+        }
+      }
     },
     "Change favorite status" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状態変更"
+          }
+        }
+      }
     },
     "Close" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "閉じる"
+          }
+        }
+      }
     },
     "Continue from last position?" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前回の位置から再生？"
+          }
+        }
+      }
     },
     "Debug" : {
 
     },
-    "Download" : {
+    "Debug menu" : {
 
+    },
+    "Download" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダウンロード"
+          }
+        }
+      }
     },
     "Download All" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてをダウンロード"
+          }
+        }
+      }
     },
     "Downloading...%lld%%" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダウンロード中...%lld%%"
+          }
+        }
+      }
     },
     "Error: Video URL is empty" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラー：無効なビデオリンク"
+          }
+        }
+      }
     },
     "ExpireTime" : {
 
     },
     "Favorite changed" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状態変更完了"
+          }
+        }
+      }
     },
     "Finished" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成"
+          }
+        }
+      }
     },
     "iCloud" : {
 
@@ -127,19 +249,54 @@
 
     },
     "Loading..." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ロード中..."
+          }
+        }
+      }
     },
     "Login" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ログイン"
+          }
+        }
+      }
     },
     "Login to Albireo Server" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireoサーバーにログイン"
+          }
+        }
+      }
     },
     "Logout" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ログアウト"
+          }
+        }
+      }
     },
     "Logout & Exit" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ログアウト＆終了"
+          }
+        }
+      }
     },
     "moe.TV" : {
 
@@ -174,28 +331,84 @@
       }
     },
     "Nickname: %@" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ニックネーム: %@"
+          }
+        }
+      }
     },
     "No Internet" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "インターネットアクセスできません"
+          }
+        }
+      }
     },
     "No Picture" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像なし"
+          }
+        }
+      }
     },
     "No Record" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記録なし"
+          }
+        }
+      }
     },
     "No video cached." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャッシュしたビデオはありません。"
+          }
+        }
+      }
     },
     "No video file." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ビデオファイルはありません。"
+          }
+        }
+      }
     },
     "No, start from beginning" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "いいえ、最初から再生"
+          }
+        }
+      }
     },
     "No, Stay login" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "いいえ、そのままログインにして"
+          }
+        }
+      }
     },
     "OK" : {
 
@@ -224,22 +437,64 @@
       }
     },
     "Online service is not available." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オンラインサービスはご利用いただけません。"
+          }
+        }
+      }
     },
     "Open download manager" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダウンロードマネージャーを開く"
+          }
+        }
+      }
     },
     "Password" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "パスワード"
+          }
+        }
+      }
     },
     "Pause" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "放置"
+          }
+        }
+      }
     },
     "Pending" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保留中"
+          }
+        }
+      }
     },
     "Please select a source:" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ビデオソースを選んでください："
+          }
+        }
+      }
     },
     "Re-Sync with iCloud" : {
 
@@ -274,37 +529,110 @@
       }
     },
     "Server URL" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サーバーリンク"
+          }
+        }
+      }
     },
     "Server URL or Username / Password error." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サーバーリンクまたはユーザ名／パスワードエラー"
+          }
+        }
+      }
     },
     "Settings" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
+        }
+      }
     },
     "Show download list" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダウンロードリスト"
+          }
+        }
+      }
     },
     "Show in bgm.tv" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bgm.tvで開く"
+          }
+        }
+      }
     },
     "Sign out" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ログアウト"
+          }
+        }
+      }
     },
     "Sign: %@" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サイン: %@"
+          }
+        }
+      }
     },
     "Sync status with bgm.tv" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bgm.tvと同期"
+          }
+        }
+      }
+    },
+    "UNKNOW_STATUS" : {
 
     },
     "UNKNOWN" : {
 
     },
     "Username" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ユーザ名"
+          }
+        }
+      }
     },
     "Username: %@" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ユーザ名: %@"
+          }
+        }
+      }
     },
     "Version:%@, Build:%@" : {
       "localizations" : {
@@ -317,19 +645,54 @@
       }
     },
     "Watched" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "視聴済み"
+          }
+        }
+      }
     },
     "Watching" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "視聴中"
+          }
+        }
+      }
     },
     "Wish" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "欲しい"
+          }
+        }
+      }
     },
     "Yes" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "はい"
+          }
+        }
+      }
     },
     "Yes, logout & exit" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "はい、ログアウト＆終了"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

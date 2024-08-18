@@ -35,7 +35,7 @@ struct BGMStatusTextView: View {
 
     }
     
-    func statusText(status:Int) -> String {
+    func statusText(status:Int) -> LocalizedStringKey {
         switch status {
         case 1:
             return "Wish"
