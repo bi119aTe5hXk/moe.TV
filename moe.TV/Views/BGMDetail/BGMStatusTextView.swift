@@ -13,19 +13,26 @@ struct BGMStatusTextView: View {
     
     var body: some View {
 //        Text("\(status)")
+
         if let s = status{
             Text(statusText(status: s))
                 .padding(8)
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(statusColor(status: s), lineWidth:1))
                 .foregroundStyle(statusColor(status: s))
                 .bold()
+#if !os(tvOS)
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(statusColor(status: s), lineWidth:1))
+#endif
+                
         }else{
             Text("No Record")
                 .padding(8)
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color(UIColor.systemFill), lineWidth:1))
-                .foregroundStyle(Color(UIColor.systemFill))
+                .foregroundStyle(Color(UIColor.label))
                 .bold()
+#if !os(tvOS)
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color(UIColor.label), lineWidth:1))
+#endif
         }
+
     }
     
     func statusText(status:Int) -> String {

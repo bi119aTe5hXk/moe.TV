@@ -33,7 +33,7 @@ struct MainListView: View {
                         SettingsButtonView()//(profileIconURL: settingsVM.avatar_url)
                     })
                 })
-                .navigationTitle("moeTV")
+                .navigationTitle("moe.TV")
             
         } content: {
             if let dest = destination {

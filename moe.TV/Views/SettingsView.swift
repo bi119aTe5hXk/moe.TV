@@ -124,7 +124,7 @@ struct SettingsView: View {
                         NavigationLink{
                             DebugView(debugVM: DebugViewModel())
                         }label: {
-                            Text("Debug")
+                            Text("Debug menu")
                         }
                     }
                     
