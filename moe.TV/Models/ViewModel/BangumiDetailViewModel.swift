@@ -15,6 +15,9 @@ class BangumiDetailViewModel : ObservableObject {
     @Published var ep:EpisodeDetailModel?
     @Published var bgmDetailItem:BangumiDetailModel?
     
+    @Published var favorite_status:Int?
+    
+    
     
     //1
     func setSelectedEP(ep:EpisodeDetailModel){
@@ -88,8 +91,11 @@ class BangumiDetailViewModel : ObservableObject {
     }
     
     
-    func getBGMDetail(id:String){
+    func getBGMDetail(id:String,favStatus:Int?){
         print("getBGMDetail:\(id)")
+        
+        self.updateFavStatus(status: favStatus)
+        
         getBangumiDetail(id: id) { result, data in
             if !result{
                 return
@@ -102,5 +108,9 @@ class BangumiDetailViewModel : ObservableObject {
         }
     }
     
+    func updateFavStatus(status: Int?) {
+        //print("update fav status: \(status)")
+        self.favorite_status = status
+    }
     
 }

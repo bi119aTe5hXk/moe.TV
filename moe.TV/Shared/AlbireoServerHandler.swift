@@ -387,4 +387,26 @@ func sentEPWatchProgress(ep_id: String,
     }
 }
 
+func changeAlbireoFavStatus(bangumi_id:String,
+                     status:Int,
+                     completion: @escaping (Bool, Any?) -> Void){
+    var urlstr = getAlbireoServer()
+    urlstr.append("/api/watch/favorite/bangumi/")
+    urlstr.append(bangumi_id)
+    if loadAlbireoCookies(){
+    let postdata = ["status": status] as [String: Any]
+        
+        postServer(urlString: urlstr, postdata: postdata) { result, data in
+            if result{
+                if let d = data as? Data{
+                    let s = String(data: d, encoding: .utf8)
+                    completion(true, s)
+                }
+            }else{
+                completion(false, data as! String)
+            }
+        }
+        
+    }
+}
 

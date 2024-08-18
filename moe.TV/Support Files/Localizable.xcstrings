@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "%@" : {
 
     },
@@ -11,6 +14,9 @@
 
     },
     "%lld. " : {
+
+    },
+    "Abandoned" : {
 
     },
     "AccessToken" : {
@@ -75,6 +81,9 @@
     "Bgm.tv setting on tvOS is not supported. But you can use iOS or macOS device to setup and will do sync with bgm.tv on tvOS." : {
 
     },
+    "Change favorite status" : {
+
+    },
     "Close" : {
 
     },
@@ -97,6 +106,9 @@
 
     },
     "ExpireTime" : {
+
+    },
+    "Favorite changed" : {
 
     },
     "Finished" : {
@@ -167,6 +179,9 @@
     "No Picture" : {
 
     },
+    "No Record" : {
+
+    },
     "No video cached." : {
 
     },
@@ -212,6 +227,9 @@
 
     },
     "Password" : {
+
+    },
+    "Pause" : {
 
     },
     "Pending" : {
@@ -291,6 +309,15 @@
           }
         }
       }
+    },
+    "Watched" : {
+
+    },
+    "Watching" : {
+
+    },
+    "Wish" : {
+
     },
     "Yes" : {
 

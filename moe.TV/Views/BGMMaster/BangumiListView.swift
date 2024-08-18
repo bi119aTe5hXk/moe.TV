@@ -83,7 +83,11 @@ struct OptionalSearchableViewModifier: ViewModifier{
                     .searchable(text: $searchString, prompt: "Search")
                     .onSubmit(of: .search) {
                             //print(searchString)
-                            listVM.getBGMList(funcType: selectedFunc, searchKeyword: searchString)
+                            if searchString.lengthOfBytes(using: .utf8) > 0{
+                                listVM.getBGMList(funcType: selectedFunc, searchKeyword: searchString)
+                            }else{
+                                listVM.bgmList = []
+                            }
                         }
             }else{
                 content

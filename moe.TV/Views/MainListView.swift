@@ -42,6 +42,7 @@ struct MainListView: View {
             }
         } detail: {
             BangumiDetailView(selectedItem: $selectedItem)
+            
         }
         .navigationSplitViewStyle(.balanced)
         

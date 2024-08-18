@@ -12,9 +12,9 @@ struct BangumiDetailView: View {
     @ObservedObject var detailVM = BangumiDetailViewModel()
     
     var body: some View {
-        //Text(selectedItem?.id ?? "EMPTY")
+        //Text("favorite_status:\(selectedItem?.favorite_status)")
         ScrollView{
-            BangumiDetailCoverTextView(item: $detailVM.bgmDetailItem)
+            BangumiDetailCoverTextView(item: $detailVM.bgmDetailItem, favorite_status: $detailVM.favorite_status)
                 .frame(minHeight: 300,maxHeight: 600)
             
             Divider()
@@ -30,12 +30,12 @@ struct BangumiDetailView: View {
         .onChange(of: selectedItem, initial: true) { newValue in
             if let item = newValue{
                 print("BangumiDetailView onchange")
-                detailVM.getBGMDetail(id: item.id)
+                detailVM.getBGMDetail(id: item.id, favStatus: item.favorite_status)
             }
           }
         .refreshable {
             if let item = selectedItem{
-                detailVM.getBGMDetail(id: item.id)
+                detailVM.getBGMDetail(id: item.id, favStatus: item.favorite_status)
             }
         }
         .toolbar(content:{
