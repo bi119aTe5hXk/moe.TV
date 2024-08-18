@@ -42,7 +42,7 @@ class PlayerViewModel: ObservableObject {
                 if isFinished{
                     if let subject_id = theEP.bangumi?.bgm_id{
                         if let episode_id = theEP.bgm_eps_id{
-                            updateBGMSBEPStatues(subject_id: subject_id,
+                            setBGMSBEPStatues(subject_id: subject_id,
                                                  episode_id: episode_id,
                                                  status: 2) { result, data in
                                 print(data)
@@ -57,7 +57,7 @@ class PlayerViewModel: ObservableObject {
                 
                 
                 if let bangumi_id = theEP.bangumi_id{
-                    sentEPWatchProgress(ep_id: theEP.id,
+                    sentAlbireoEPWatchProgress(ep_id: theEP.id,
                                         bangumi_id: bangumi_id,
                                         last_watch_position: currentTime,
                                         percentage: percent,

@@ -154,7 +154,7 @@ final class DownloadManager: ObservableObject {
         
         if epIDList.count > 0{
             for epID in epIDList {
-                getEpisodeDetail(ep_id: epID) { result, data in
+                getAlbireoEPDetail(ep_id: epID) { result, data in
                     if result{
                         if let epDetail = data as? EpisodeDetailModel{
                             if let vFiles = epDetail.video_files{

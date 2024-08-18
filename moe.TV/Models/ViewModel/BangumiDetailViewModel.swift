@@ -96,7 +96,7 @@ class BangumiDetailViewModel : ObservableObject {
         
         self.updateFavStatus(status: favStatus)
         
-        getBangumiDetail(id: id) { result, data in
+        getAlbireoBangumiDetail(id: id) { result, data in
             if !result{
                 return
             }

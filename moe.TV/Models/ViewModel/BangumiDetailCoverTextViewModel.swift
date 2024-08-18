@@ -13,13 +13,24 @@ class BangumiDetailCoverTextViewModel: ObservableObject {
     func toggleChangeFavStatusAlert() {
         self.presentFavStatusSelecter.toggle()
     }
-    func changeFavStatus(bgmid:String, status:Int) {
+    func changeFavStatus(idstr:String, bgmid:Int?, status:Int) {
         print("changing fav status to \(status)")
-        changeAlbireoFavStatus(bangumi_id: bgmid, status: status, completion: { isSuccess, result in
+        changeAlbireoFavStatus(bangumi_id: idstr, status: status, completion: { isSuccess, result in
             if isSuccess {
                 print(result as Any)
                 self.presentFavChangeResultDone.toggle()
             }
         })
+        
+        if let bgmid = bgmid{
+            setBGMCollectionStatus(subject_id: bgmid, status: status) { isSuccess, result in
+                if isSuccess {
+                    print(result as Any)
+                    //self.presentFavChangeResultDone.toggle()
+                }
+            }
+        }
+        
+        
     }
 }

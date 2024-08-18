@@ -72,11 +72,14 @@ struct BangumiDetailCoverTextView: View {
                     })
                     
                     .alert("Change favorite status",isPresented: $dctVM.presentFavStatusSelecter) {
-                        Button("Wish"){dctVM.changeFavStatus(bgmid: i.id, status: 1)}
-                        Button("Watched"){dctVM.changeFavStatus(bgmid: i.id, status: 2)}
-                        Button("Watching"){dctVM.changeFavStatus(bgmid: i.id, status: 3)}
-                        Button("Pause"){dctVM.changeFavStatus(bgmid: i.id, status: 4)}
-                        Button("Abandoned"){dctVM.changeFavStatus(bgmid: i.id, status: 5)}
+                        Button("Wish"){dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 1)}
+                        Button("Watched"){dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 2)}
+                        Button("Watching"){dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 3)}
+                        Button("Pause"){dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 4)}
+                        Button("Abandoned"){dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 5)}
+                        Button("Cancel"){
+                            dctVM.presentFavStatusSelecter.toggle()
+                        }
                     }
                     .alert("Favorite changed",isPresented: $dctVM.presentFavChangeResultDone){
                         

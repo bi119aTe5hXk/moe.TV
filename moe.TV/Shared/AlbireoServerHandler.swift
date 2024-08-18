@@ -231,7 +231,7 @@ func getAlbireoUserInfo(completion: @escaping (Bool, Any?) -> Void){
 }
 
 
-func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
+func getAlbireoMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getAlbireoServer()
     urlstr.append("/api/home/my_bangumi?status=3")
     if loadAlbireoCookies(){
@@ -254,7 +254,7 @@ func getMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
     }
 }
 
-func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
+func getAlbireoOnAirList(completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getAlbireoServer()
     urlstr.append("/api/home/on_air")
     if loadAlbireoCookies(){
@@ -277,7 +277,7 @@ func getOnAirList(completion: @escaping (Bool, Any?) -> Void) {
     }
 }
 
-func getAllBangumiList(page: Int,
+func getAlbireoAllBangumiList(page: Int,
                        name: String,
                        completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getAlbireoServer()
@@ -309,7 +309,7 @@ func getAllBangumiList(page: Int,
         }
     }
 }
-func getBangumiDetail(id: String,
+func getAlbireoBangumiDetail(id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getAlbireoServer()
     urlstr.append("/api/home/bangumi/")
@@ -332,7 +332,7 @@ func getBangumiDetail(id: String,
         }
     }
 }
-func getEpisodeDetail(ep_id: String,
+func getAlbireoEPDetail(ep_id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
     var urlstr = getAlbireoServer()
     urlstr.append("/api/home/episode/")
@@ -358,7 +358,7 @@ func getEpisodeDetail(ep_id: String,
     }
 }
 
-func sentEPWatchProgress(ep_id: String,
+func sentAlbireoEPWatchProgress(ep_id: String,
                          bangumi_id:String,
                          last_watch_position:Double,
                          percentage:Double,

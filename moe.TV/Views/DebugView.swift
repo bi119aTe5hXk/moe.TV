@@ -58,6 +58,11 @@ struct DebugView: View {
                         Text("\(debugVM.getBGMExpireTime())")
                     }
                     Button {
+                        refreshBGMTVToken()
+                    } label: {
+                        Text("Refresh BGM Access Token")
+                    }
+                    Button {
                         debugVM.reSyncBGM()
                     } label: {
                         Text("Re-Sync with iCloud")

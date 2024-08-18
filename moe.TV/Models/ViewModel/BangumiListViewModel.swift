@@ -33,13 +33,13 @@ class BangumiListViewModel: ObservableObject{
                     switch type {
                     case .mybangumi:
                         print("BangumiListViewModel.getMyBGMList")
-                        getMyBangumiList { result, data in
+                        getAlbireoMyBangumiList { result, data in
                             self.resultHandler(result: result, data: data, saveTopShelf: true)
                         }
                         return
                     case .onair:
                         print("BangumiListViewModel.getOnAirBGMList")
-                        getOnAirList { result, data in
+                        getAlbireoOnAirList { result, data in
                             self.resultHandler(result: result, data: data, saveTopShelf: false)
                         }
                         return
@@ -49,12 +49,12 @@ class BangumiListViewModel: ObservableObject{
                             self.isLoading = false
                             //self.bgmList = []
                         }
-                        getAllBangumiList(page: 1, name: searchKeyword) { result, data in
+                        getAlbireoAllBangumiList(page: 1, name: searchKeyword) { result, data in
                             self.resultHandler(result: result, data: data, saveTopShelf: false)
                         }
                         return
                     case .allbangumi:
-                        getAllBangumiList(page: 1, name: "") { result, data in
+                        getAlbireoAllBangumiList(page: 1, name: "") { result, data in
                             self.resultHandler(result: result, data: data, saveTopShelf: false)
                         }
                         return

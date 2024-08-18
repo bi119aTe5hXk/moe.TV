@@ -22,8 +22,8 @@ struct BGMStatusTextView: View {
         }else{
             Text("No Record")
                 .padding(8)
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(.black, lineWidth:1))
-                .foregroundStyle(.black)
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color(UIColor.systemFill), lineWidth:1))
+                .foregroundStyle(Color(UIColor.systemFill))
                 .bold()
         }
     }

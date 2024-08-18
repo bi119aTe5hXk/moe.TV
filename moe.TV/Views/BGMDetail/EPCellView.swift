@@ -22,7 +22,7 @@ struct EPCellView: View {
     var body: some View {
         HStack{
             Button(action: {
-                getEpisodeDetail(ep_id: epItem.id) { result, data in
+                getAlbireoEPDetail(ep_id: epItem.id) { result, data in
                     if result{
                         if let epDetail = data as? EpisodeDetailModel{
                             detailVM.setSelectedEP(ep: epDetail)
@@ -156,7 +156,7 @@ struct EPCellView: View {
         }
     }
     func startDwonload(){
-        getEpisodeDetail(ep_id: epItem.id) { result, data in
+        getAlbireoEPDetail(ep_id: epItem.id) { result, data in
             if result{
                 if let epDetail = data as? EpisodeDetailModel{
                     if let vFiles = epDetail.video_files {

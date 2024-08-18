@@ -257,7 +257,20 @@ func isBGMAccessTokenExpired() -> Bool{
 
 
 // MARK: - bgm.tv APIs
-func updateBGMEPwatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
+func setBGMCollectionStatus(subject_id:Int, status:Int, completion: @escaping (Bool, Any) -> Void){
+    if isBGMTVlogined(){
+        if isBGMAccessTokenExpired(){
+            refreshBGMTVToken()
+        }
+        let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)"
+        postServer(urlString: urlStr,
+                  postdata: ["type":status]) { result, data in
+            completion(result,data)
+        }
+    }
+}
+
+func setBGMEPWatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         if isBGMAccessTokenExpired(){
             refreshBGMTVToken()
@@ -269,7 +282,7 @@ func updateBGMEPwatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
         }
     }
 }
-func updateBGMSBEPStatues(subject_id:Int,episode_id:Int,status:Int,completion: @escaping (Bool, Any) -> Void){
+func setBGMSBEPStatues(subject_id:Int,episode_id:Int,status:Int,completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         if isBGMAccessTokenExpired(){
             refreshBGMTVToken()
@@ -280,6 +293,8 @@ func updateBGMSBEPStatues(subject_id:Int,episode_id:Int,status:Int,completion: @
         }
     }
 }
+
+
 
 func getBGMTVUserInfo(completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
