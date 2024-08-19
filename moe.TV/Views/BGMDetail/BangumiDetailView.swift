@@ -125,7 +125,7 @@ struct BangumiDetailView: View {
         }
         .alert("Continue from last position?",isPresented: $detailVM.presentContinuePlayAlert) {
             Button("Yes") {
-                detailVM.checkVideoSource(ep: detailVM.ep!, seekTime: detailVM.ep!.watch_progress!.last_watch_position!)
+                detailVM.checkVideoSource(ep: detailVM.ep!, seekTime: (detailVM.ep!.watch_progress!.last_watch_position! - 5))
             }
             Button("No, start from beginning"){
                 detailVM.checkVideoSource(ep: detailVM.ep!, seekTime: 0)
