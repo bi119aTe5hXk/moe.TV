@@ -23,6 +23,18 @@
             "state" : "translated",
             "value" : "放棄"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "抛弃"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拋棄"
+          }
         }
       }
     },
@@ -39,6 +51,18 @@
             "state" : "translated",
             "value" : "Albireo の Cookie が期限切れになっている可能性があります。ログアウトしますか?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireo的cookie似乎无效了，登出吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireo的cookie似乎無效了，註銷嗎？"
+          }
         }
       }
     },
@@ -48,6 +72,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "すべてのビデオのダウンロードに失敗しました。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有视频下载失败"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有影片下載失敗"
           }
         }
       }
@@ -88,6 +124,18 @@
             "state" : "translated",
             "value" : "すでにダウンロードされています。ファイルを置き換える場合は、ダウンロード マネージャーで削​​除してください。"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已下载，如果需要覆盖该视频，请在下载管理里删除旧视频"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已下載，如果想覆蓋文件，請在下載管理裡刪除舊影片"
+          }
         }
       }
     },
@@ -98,6 +146,18 @@
             "state" : "translated",
             "value" : "ログアウトしてアプリを終了してもよろしいですか?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要登出及关闭吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確定要登出並退出嗎？"
+          }
         }
       }
     },
@@ -107,6 +167,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "bgm.tvからログアウトしてもよろしいですか?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要登出bgm.tv？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確定要登出bgm.tv嗎？"
           }
         }
       }
@@ -127,6 +199,18 @@
             "state" : "translated",
             "value" : "tvOS 上の bgm.tv 設定はサポートされていません。ただし、iOS または macOS デバイスを使用して設定し、tvOS 上の bgm.tv と同期することができます。"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS上不支持bgm.tv设置。您可以在iOS/macOS上登录bgm.tv后，通过云端将登录信息同步到tvOS上"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS上不支持bgm.tv相關設定。您可以在iOS/macOS上登入後通過雲端同步帳戶信息到tvOS"
+          }
         }
       }
     },
@@ -136,6 +220,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "キャンセル"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
           }
         }
       }
@@ -147,6 +243,18 @@
             "state" : "translated",
             "value" : "状態変更"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改收藏状态"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改收藏狀態"
+          }
         }
       }
     },
@@ -157,6 +265,18 @@
             "state" : "translated",
             "value" : "閉じる"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關閉"
+          }
         }
       }
     },
@@ -166,6 +286,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "前回の位置から再生？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从上次播放进度开始播放？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從上次播放進度開始播放？"
           }
         }
       }
@@ -183,6 +315,18 @@
             "state" : "translated",
             "value" : "ダウンロード"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下載"
+          }
         }
       }
     },
@@ -192,6 +336,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "すべてをダウンロード"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载全部"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下載全部"
           }
         }
       }
@@ -203,6 +359,18 @@
             "state" : "translated",
             "value" : "ダウンロード中...%lld%%"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载中...%lld%%"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下載中...%lld%%"
+          }
         }
       }
     },
@@ -212,6 +380,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "エラー：無効なビデオリンク"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "错误：视频链接为空"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "錯誤：影片連結不存在"
           }
         }
       }
@@ -226,6 +406,18 @@
             "state" : "translated",
             "value" : "状態変更完了"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收藏状态修改完成"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改收藏狀體成功"
+          }
         }
       }
     },
@@ -235,6 +427,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已完成"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已完成"
           }
         }
       }
@@ -255,6 +459,18 @@
             "state" : "translated",
             "value" : "ロード中..."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加载中..."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "讀取中..."
+          }
         }
       }
     },
@@ -264,6 +480,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ログイン"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登入"
           }
         }
       }
@@ -275,6 +503,18 @@
             "state" : "translated",
             "value" : "Albireoサーバーにログイン"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录Albireo服务"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登入Albireo服務"
+          }
         }
       }
     },
@@ -285,6 +525,18 @@
             "state" : "translated",
             "value" : "ログアウト"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登出"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登出"
+          }
         }
       }
     },
@@ -294,6 +546,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ログアウト＆終了"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "注销并退出"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登出並退出"
           }
         }
       }
@@ -337,6 +601,18 @@
             "state" : "translated",
             "value" : "ニックネーム: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "昵称: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暱稱: %@"
+          }
         }
       }
     },
@@ -346,6 +622,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "インターネットアクセスできません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无网络"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無網路"
           }
         }
       }
@@ -357,6 +645,18 @@
             "state" : "translated",
             "value" : "画像なし"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无图像"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無圖像"
+          }
         }
       }
     },
@@ -366,6 +666,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "記録なし"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无记录"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無紀錄"
           }
         }
       }
@@ -377,6 +689,18 @@
             "state" : "translated",
             "value" : "キャッシュしたビデオはありません。"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无缓存视频"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無緩存影片"
+          }
         }
       }
     },
@@ -386,6 +710,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ビデオファイルはありません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无视频文件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無影片"
           }
         }
       }
@@ -397,6 +733,18 @@
             "state" : "translated",
             "value" : "いいえ、最初から再生"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从最初开始播放"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從最初開始播放"
+          }
         }
       }
     },
@@ -406,6 +754,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "いいえ、そのままログインにして"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不，保持登入状态"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不，保持登入狀態"
           }
         }
       }
@@ -443,6 +803,18 @@
             "state" : "translated",
             "value" : "オンラインサービスはご利用いただけません。"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在线服务不可用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在線服務不可用"
+          }
         }
       }
     },
@@ -452,6 +824,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ダウンロードマネージャーを開く"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开下载管理"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開下載管理"
           }
         }
       }
@@ -463,6 +847,18 @@
             "state" : "translated",
             "value" : "パスワード"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "密码"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "密碼"
+          }
         }
       }
     },
@@ -473,18 +869,23 @@
             "state" : "translated",
             "value" : "放置"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搁置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "擱置"
+          }
         }
       }
     },
     "Pending" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保留中"
-          }
-        }
-      }
+
     },
     "Please select a source:" : {
       "localizations" : {
@@ -492,6 +893,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ビデオソースを選んでください："
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请选择片源："
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請選擇片源："
           }
         }
       }
@@ -535,6 +948,18 @@
             "state" : "translated",
             "value" : "サーバーリンク"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务器链接"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "伺服器地址"
+          }
         }
       }
     },
@@ -545,12 +970,36 @@
             "state" : "translated",
             "value" : "サーバーリンクまたはユーザ名／パスワードエラー"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服务器URL或用户名密码错误"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "伺服器地址或用戶名密碼錯誤"
+          }
         }
       }
     },
     "Settings" : {
       "localizations" : {
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "設定"
@@ -565,6 +1014,18 @@
             "state" : "translated",
             "value" : "ダウンロードリスト"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看下载列表"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看下載列表"
+          }
         }
       }
     },
@@ -574,6 +1035,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "bgm.tvで開く"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在bgm.tv查看"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在bgm.tv裡查看"
           }
         }
       }
@@ -585,6 +1058,18 @@
             "state" : "translated",
             "value" : "ログアウト"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登出"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登出"
+          }
         }
       }
     },
@@ -595,18 +1080,23 @@
             "state" : "translated",
             "value" : "サイン: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "签名: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登出: %@"
+          }
         }
       }
     },
     "Sync status with bgm.tv" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "bgm.tvと同期"
-          }
-        }
-      }
+
     },
     "UNKNOW_STATUS" : {
 
@@ -621,6 +1111,18 @@
             "state" : "translated",
             "value" : "ユーザ名"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户名"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用戶名"
+          }
         }
       }
     },
@@ -630,6 +1132,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ユーザ名: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户名: %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用戶名: %@"
           }
         }
       }
@@ -651,6 +1165,18 @@
             "state" : "translated",
             "value" : "視聴済み"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "看过"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "看過"
+          }
         }
       }
     },
@@ -661,6 +1187,18 @@
             "state" : "translated",
             "value" : "視聴中"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在看"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在看"
+          }
         }
       }
     },
@@ -669,7 +1207,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "欲しい"
+            "value" : "見たい"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "想看"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "想看"
           }
         }
       }
@@ -681,6 +1231,18 @@
             "state" : "translated",
             "value" : "はい"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是"
+          }
         }
       }
     },
@@ -690,6 +1252,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "はい、ログアウト＆終了"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是的，登出并退出"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是的，登出並退出"
           }
         }
       }
