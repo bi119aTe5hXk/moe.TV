@@ -66,6 +66,28 @@
         }
       }
     },
+    "Albireo favorite status has changed" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireoの記録を変更しました"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireo收藏状态修改完成"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireo收藏狀態已修改"
+          }
+        }
+      }
+    },
     "All video download failed." : {
       "localizations" : {
         "ja" : {
@@ -188,6 +210,28 @@
     },
     "BGM.TV" : {
 
+    },
+    "Bgm.tv favorite status has changed" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bgm.tvの記録を変更しました"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bgm.tv收藏状态修改完成"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bgm.tv收藏狀態已修改"
+          }
+        }
+      }
     },
     "BGM.TV Logined" : {
 
@@ -398,28 +442,6 @@
     },
     "ExpireTime" : {
 
-    },
-    "Favorite changed" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "状態変更完了"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "收藏状态修改完成"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "修改收藏狀體成功"
-          }
-        }
-      }
     },
     "Finished" : {
       "localizations" : {

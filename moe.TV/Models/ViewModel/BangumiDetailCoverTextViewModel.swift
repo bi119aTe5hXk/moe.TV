@@ -8,8 +8,9 @@
 import Foundation
 class BangumiDetailCoverTextViewModel: ObservableObject {
     @Published var presentFavStatusSelecter = false
-    @Published var presentFavChangeResultDone = false
-    
+    @Published var presentAlbireoFavChangeResultDone = false
+	@Published var presentBGMFavChangeResultDone = false
+
     func toggleChangeFavStatusAlert() {
         self.presentFavStatusSelecter.toggle()
     }
@@ -18,7 +19,7 @@ class BangumiDetailCoverTextViewModel: ObservableObject {
         changeAlbireoFavStatus(bangumi_id: idstr, status: status, completion: { isSuccess, result in
             if isSuccess {
                 print(result as Any)
-                self.presentFavChangeResultDone.toggle()
+                self.presentAlbireoFavChangeResultDone.toggle()
             }
         })
         
@@ -26,7 +27,7 @@ class BangumiDetailCoverTextViewModel: ObservableObject {
             setBGMCollectionStatus(subject_id: bgmid, status: status) { isSuccess, result in
                 if isSuccess {
                     print(result as Any)
-                    //self.presentFavChangeResultDone.toggle()
+                    self.presentBGMFavChangeResultDone.toggle()
                 }
             }
         }

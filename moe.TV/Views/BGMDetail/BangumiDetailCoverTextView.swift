@@ -81,10 +81,15 @@ struct BangumiDetailCoverTextView: View {
                             dctVM.presentFavStatusSelecter.toggle()
                         }
                     }
-                    .alert("Favorite changed",isPresented: $dctVM.presentFavChangeResultDone){
-                        
-                    }
-                    
+					.alert(
+						"Albireo favorite status has changed",
+						isPresented: $dctVM.presentAlbireoFavChangeResultDone
+					){ }
+					.alert(
+						"Bgm.tv favorite status has changed",
+						isPresented: $dctVM.presentBGMFavChangeResultDone
+					){ }
+
                     
                     
                     
