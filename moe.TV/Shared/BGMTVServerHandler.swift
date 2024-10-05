@@ -263,7 +263,7 @@ func setBGMCollectionStatus(subject_id:Int, status:Int, completion: @escaping (B
             refreshBGMTVToken()
         }
         let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)"
-        postServer(urlString: urlStr,
+		patchServer(urlString: urlStr,
                   postdata: ["type":status]) { result, data in
             completion(result,data)
         }
