@@ -90,6 +90,35 @@ class PlayerViewModel: ObservableObject {
             }
         }
     }
-    
+
+	func setMatadata(ep:EpisodeDetailModel?) -> [AVMetadataItem] {
+		var metadata: [AVMetadataItem] = []
+		guard let ep else { return metadata }
+
+		if let name = ep.name {
+			metadata.append(createMetadataItem(for: .commonIdentifierTitle, value: name))
+		}
+		if let summary = ep.summary {
+			metadata.append(createMetadataItem(for: .commonIdentifierDescription, value: summary))
+		}
+		if let imageURL = ep.thumbnail {
+			metadata.append(createMetadataItem(for: .commonIdentifierArtwork, value: imageURL))
+		}
+		if let subtitle = ep.name_cn {
+			metadata.append(createMetadataItem(for: .iTunesMetadataTrackSubTitle,value: subtitle))
+		}
+
+		return metadata
+	}
+
+	private func createMetadataItem(for identifier: AVMetadataIdentifier,
+									value: Any) -> AVMetadataItem {
+		let item = AVMutableMetadataItem()
+		item.identifier = identifier
+		item.value = value as? NSCopying & NSObjectProtocol
+			// Specify "und" to indicate an undefined language.
+		item.extendedLanguageTag = "und"
+		return item.copy() as! AVMetadataItem
+	}
 }
 

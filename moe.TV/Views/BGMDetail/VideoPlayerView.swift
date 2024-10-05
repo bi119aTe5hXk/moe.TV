@@ -14,7 +14,9 @@ import Combine
 import UIKit
 struct VideoPlayerViewiOS:UIViewControllerRepresentable{
     let player: AVPlayer
-//    let ep:EpisodeDetailModel?
+	let playerVM:PlayerViewModel
+    let ep:EpisodeDetailModel?
+
 	func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerViewiOS>) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         let audioSession = AVAudioSession.sharedInstance()
@@ -35,7 +37,9 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
         controller.modalPresentationStyle = .automatic
         controller.showsPlaybackControls = true
         controller.allowsPictureInPicturePlayback = true
-        
+
+		let metadata = playerVM.setMatadata(ep: ep)
+		controller.player?.currentItem?.externalMetadata = metadata
 //        controller.title = ep.name
         
         if AVPictureInPictureController.isPictureInPictureSupported() {
@@ -91,9 +95,10 @@ struct VideoPlayerView: View {
     var body: some View {
         ZStack {
             if let avPlayer = playerVM.avPlayer {
+
 #if os(iOS) || os(tvOS)
                 let playerObserver = PlayerItemObserver(player: avPlayer)
-                VideoPlayerViewiOS(player: avPlayer)
+				VideoPlayerViewiOS(player: avPlayer, playerVM: playerVM, ep: ep)
                     .onReceive(playerObserver.$currentStatus) { status in
                         switch status{
                         case nil:

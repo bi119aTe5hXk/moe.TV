@@ -36,11 +36,11 @@ struct MainListView: View {
                     })
                 })
                 .navigationTitle("moe.TV")
-
+#if !os(tvOS)
 			if horizontalSizeClass == .regular {
 				let _ = {columnVisibility = .automatic}
 			}
-
+#endif
         } content: {
             if let dest = destination {
                 BangumiListView(selectedItem: $selectedItem, selectedFunc: $destination)
@@ -50,9 +50,13 @@ struct MainListView: View {
             BangumiDetailView(selectedItem: $selectedItem)
             
         }
+#if !os(tvOS)
 		.navigationSplitViewStyle(.automatic)
-        
-        
+#endif
+#if os(tvOS)
+		.navigationSplitViewStyle(.balanced)
+#endif
+
         .sheet(isPresented: self.$presentSettingView, content: {
             HStack{
 #if !os(tvOS)
