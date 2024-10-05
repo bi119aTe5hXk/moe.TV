@@ -48,19 +48,19 @@
       "localizations" : {
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Albireo の Cookie が期限切れになっている可能性があります。ログアウトしますか?"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Albireo的cookie似乎无效了，登出吗？"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Albireo的cookie似乎無效了，註銷嗎？"
           }
         }

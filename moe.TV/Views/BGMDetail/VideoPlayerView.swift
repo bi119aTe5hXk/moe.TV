@@ -15,7 +15,7 @@ import UIKit
 struct VideoPlayerViewiOS:UIViewControllerRepresentable{
     let player: AVPlayer
 //    let ep:EpisodeDetailModel?
-    func makeUIViewController(context: Context) -> AVPlayerViewController {
+	func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerViewiOS>) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         let audioSession = AVAudioSession.sharedInstance()
             do {
@@ -49,8 +49,8 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
         
         return controller
     }
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
-        
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayerViewiOS>) {
+		uiViewController.player = player
     }
 }
 #endif
@@ -111,7 +111,10 @@ struct VideoPlayerView: View {
                         case .some(_):
                             print("unknown player status")
                         }
+
                     }
+					.persistentSystemOverlays(.hidden)
+
 #else
                 let playerObserver = PlayerItemObserver(player: avPlayer)
                 VideoPlayer(player: avPlayer)
