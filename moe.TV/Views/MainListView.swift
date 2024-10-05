@@ -14,7 +14,9 @@ struct MainListView: View {
 //    @ObservedObject var settingsVM = SettingsViewModel()
     @State var presentSettingView = false
     @State private var columnVisibility = NavigationSplitViewVisibility.all
-    
+
+	@Environment(\.horizontalSizeClass) var horizontalSizeClass
+
     var body: some View {
         
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -34,7 +36,11 @@ struct MainListView: View {
                     })
                 })
                 .navigationTitle("moe.TV")
-            
+
+			if horizontalSizeClass == .regular {
+				let _ = {columnVisibility = .automatic}
+			}
+
         } content: {
             if let dest = destination {
                 BangumiListView(selectedItem: $selectedItem, selectedFunc: $destination)
@@ -44,7 +50,7 @@ struct MainListView: View {
             BangumiDetailView(selectedItem: $selectedItem)
             
         }
-        .navigationSplitViewStyle(.balanced)
+		.navigationSplitViewStyle(.automatic)
         
         
         .sheet(isPresented: self.$presentSettingView, content: {
