@@ -4,6 +4,7 @@
 //
 //  Created by bi119aTe5hXk on 2024/10/08.
 //
+#if os(iOS)
 import UIKit
 
 class OrientationController {
@@ -31,3 +32,4 @@ class OrientationController {
 		topController.setNeedsUpdateOfSupportedInterfaceOrientations()
 	}
 }
+#endif

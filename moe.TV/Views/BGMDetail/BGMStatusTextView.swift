@@ -26,9 +26,11 @@ struct BGMStatusTextView: View {
         }else{
             Text("No Record")
                 .padding(8)
+#if !os(macOS)
                 .foregroundStyle(Color(UIColor.label))
+#endif
                 .bold()
-#if !os(tvOS)
+#if os(iOS)
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color(UIColor.label), lineWidth:1))
 #endif
         }

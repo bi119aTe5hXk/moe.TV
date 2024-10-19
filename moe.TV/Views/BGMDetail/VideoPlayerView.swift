@@ -190,10 +190,12 @@ struct VideoPlayerView: View {
 
 		.edgesIgnoringSafeArea(.all)
 		.onAppear {
+#if os(iOS)
 			if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback(){
 				OrientationController.shared.unlockOrientation()
 				OrientationController.shared.currentOrientation = .landscapeRight
 			}
+#endif
             playerVM.loadFromUrl(url: url)
             if let player = playerVM.avPlayer{
                 if seekTime != 0{
@@ -222,7 +224,7 @@ struct VideoPlayerView: View {
                                                  isOffline: isOffline,
                                                  filename: filename)
                 }
-
+#if os(iOS)
 				if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback(){
 //					OrientationController.shared.unlockOrientation()
 //					OrientationController.shared.currentOrientation = .portrait
@@ -232,6 +234,7 @@ struct VideoPlayerView: View {
 
 					}
 				}
+#endif
             }
 
         }

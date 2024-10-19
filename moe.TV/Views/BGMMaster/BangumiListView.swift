@@ -34,10 +34,12 @@ struct BangumiListView: View {
 //                    print("onAppear.getBGMList")
 //                    getBGMList()
 //                }
+#if os(iOS)
 				if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback(){
 					OrientationController.shared.unlockOrientation()
 					OrientationController.shared.currentOrientation = .portrait
 				}
+#endif
             }
             .onChange(of: selectedFunc, initial: true) {  newValue in
 				if oldValue != newValue {

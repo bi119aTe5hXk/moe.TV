@@ -99,6 +99,7 @@ struct SettingsView: View {
                     }
 
 					Section(header: Text("Preferences")) {
+#if os(iOS)
 						if UIDevice.current.userInterfaceIdiom == .phone{
 							Toggle("Landscape in playback (iPhone only)", isOn: $landscapePlayback)
 								.onAppear(){
@@ -108,6 +109,7 @@ struct SettingsView: View {
 									settingsVM.settingsHandler.setLandscapePlayback(isEnabled: value)
 								})
 						}
+#endif
 						Picker(
 							"Default playbck rate",
 							selection: $settingsVM.playbackRate

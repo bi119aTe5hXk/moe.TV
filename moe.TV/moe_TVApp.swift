@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct moe_TVApp: App {
-#if !os(macOS)
+#if os(iOS)
 	@UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 #endif
     @State var showBGMDetailView:Bool = false

@@ -4,7 +4,7 @@
 //
 //  Created by bi119aTe5hXk on 2024/10/08.
 //
-
+#if os(iOS)
 import UIKit
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -30,3 +30,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 }
+#endif
