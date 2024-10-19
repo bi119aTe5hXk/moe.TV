@@ -16,6 +16,21 @@
     "%lld. " : {
 
     },
+    "0.5x" : {
+
+    },
+    "1.5x" : {
+
+    },
+    "1.25x" : {
+
+    },
+    "1x" : {
+
+    },
+    "2x" : {
+
+    },
     "Abandoned" : {
       "localizations" : {
         "ja" : {
@@ -352,6 +367,9 @@
     "Debug menu" : {
 
     },
+    "Default playbck rate" : {
+
+    },
     "Download" : {
       "localizations" : {
         "ja" : {
@@ -472,6 +490,9 @@
 
     },
     "ID: %@" : {
+
+    },
+    "Landscape in playback (iPhone only)" : {
 
     },
     "Loading..." : {
@@ -930,6 +951,9 @@
           }
         }
       }
+    },
+    "Preferences" : {
+
     },
     "Re-Sync with iCloud" : {
 

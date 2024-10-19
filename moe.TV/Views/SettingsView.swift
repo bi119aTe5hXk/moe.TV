@@ -10,7 +10,8 @@ import SwiftUI
 struct SettingsView: View {
     @State private var syncWithBGMTV = isBGMTVlogined()
     @State private var showDownloadList = false
-    
+	@State private var landscapePlayback = false
+
 //    @Binding var listVM:BangumiListViewModel
 //    @Binding var loginVM:LoginViewModel
 //    @Binding var myBGMVM:MyBangumiViewModel
@@ -96,7 +97,38 @@ struct SettingsView: View {
                         }
                         
                     }
-                    
+
+					Section(header: Text("Preferences")) {
+						if UIDevice.current.userInterfaceIdiom == .phone{
+							Toggle("Landscape in playback (iPhone only)", isOn: $landscapePlayback)
+								.onAppear(){
+									self.landscapePlayback = settingsVM.settingsHandler.getLandscapePlayback()
+								}
+								.onChange(of: landscapePlayback, initial: false, perform: { value in
+									settingsVM.settingsHandler.setLandscapePlayback(isEnabled: value)
+								})
+						}
+						Picker(
+							"Default playbck rate",
+							selection: $settingsVM.playbackRate
+						) {
+							Text("0.5x").tag(0.5)
+							Text("1x").tag(1.0)
+							Text("1.25x").tag(1.25)
+							Text("1.5x").tag(1.5)
+							Text("2x").tag(2.0)
+						}
+						.onAppear(){
+							self.settingsVM.playbackRate = settingsVM.settingsHandler.getPlaybackRate()
+							if settingsVM.playbackRate == 0.0{
+								self.settingsVM.playbackRate = 1.0
+							}
+						}
+						.onChange(of: settingsVM.playbackRate, initial: false, perform: { value in
+							settingsVM.settingsHandler.setPlaybackRate(rate: value)
+						})
+					}
+
                     Section(header: Text("Download")) {
                         Button {
                             self.showDownloadList.toggle()

@@ -10,7 +10,6 @@ import SwiftUI
 struct BangumiDetailView: View {
     @Binding var selectedItem:BangumiItemModel?
     @ObservedObject var detailVM = BangumiDetailViewModel()
-    
     var body: some View {
         //Text("favorite_status:\(selectedItem?.favorite_status)")
         ScrollView{

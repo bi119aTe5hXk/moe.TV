@@ -11,7 +11,11 @@ struct BangumiListView: View {
     @ObservedObject var listVM = BangumiListViewModel()
     @Binding var selectedItem: BangumiItemModel?
     @Binding var selectedFunc: FuncViewModel?
-    
+
+	@State private var oldValue: FuncViewModel?
+
+	private let settingsHandler = SettingsHandler()
+
     var body: some View {
         if listVM.isLoading{
             ProgressView()
@@ -25,15 +29,22 @@ struct BangumiListView: View {
                 print("refreshable.getBGMList")
                 getBGMList()
             }
-//            .onAppear(){
+            .onAppear(){
 //                if listVM.bgmList.count <= 0{
 //                    print("onAppear.getBGMList")
 //                    getBGMList()
 //                }
-//            }
+				if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback(){
+					OrientationController.shared.unlockOrientation()
+					OrientationController.shared.currentOrientation = .portrait
+				}
+            }
             .onChange(of: selectedFunc, initial: true) {  newValue in
-                print("onChange.getBGMList")
-                getBGMList()
+				if oldValue != newValue {
+					print("onChange.getBGMList")
+					oldValue = newValue
+					getBGMList()
+				}
             }
         
             //.searchable(text: $listVM.searchText)

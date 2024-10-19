@@ -17,6 +17,8 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 	let playerVM:PlayerViewModel
     let ep:EpisodeDetailModel?
 
+	private let settingsHandler = SettingsHandler()
+
 	func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerViewiOS>) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         let audioSession = AVAudioSession.sharedInstance()
@@ -38,9 +40,23 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
         controller.showsPlaybackControls = true
         controller.allowsPictureInPicturePlayback = true
 
+
+		//TODO: fix playback rate not display correctly
+		//set playback rate
+		let rate = Float(settingsHandler.getPlaybackRate())
+		print("rate: \(rate)")
+		controller.player?.rate = rate
+		let avRate = AVPlaybackSpeed(rate: rate, localizedName: "\(Float(settingsHandler.getPlaybackRate()))x")
+		controller.selectSpeed(avRate)
+
+		setPlayerRate(player: controller.player!, rate: rate)
+
+		print(
+			"selectedrate: \(String(describing: controller.selectedSpeed?.rate))"
+		)
+
 		let metadata = playerVM.setMatadata(ep: ep)
 		controller.player?.currentItem?.externalMetadata = metadata
-//        controller.title = ep.name
         
         if AVPictureInPictureController.isPictureInPictureSupported() {
 //            pipController = AVPictureInPictureController(playerLayer: playerLayer)!
@@ -49,13 +65,38 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
         }else{
             print("nopip")
         }
-        
-        
+
+//		if UIDevice.current.userInterfaceIdiom == .phone{
+//			print("try set landscape")
+//			let value = UIInterfaceOrientation.landscapeLeft.rawValue
+//			UIDevice.current.setValue(value, forKey: "orientation")
+//		}
+		controller.player?.play()
+
+
         return controller
     }
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayerViewiOS>) {
 		uiViewController.player = player
     }
+
+	func setPlayerRate(player: AVPlayer, rate: Float) {
+			// AVFoundation wants us to do most things on the main queue.
+		DispatchQueue.main.async {
+			if (rate == player.rate) {
+				return
+			}
+			if (rate > 2.0 || rate < -2.0) {
+				let playerItem = player.currentItem
+				player.replaceCurrentItem(with: nil)
+				player.replaceCurrentItem(with: playerItem)
+				player.rate = rate
+			} else {
+					// No problems "out of the box" with rates in the range [-2.0,2.0].
+				player.rate = rate
+			}
+		}
+	}
 }
 #endif
 //TODO: PiP macOS support
@@ -91,7 +132,9 @@ struct VideoPlayerView: View {
     var isOffline:Bool
     var filename:String?
     @StateObject private var playerVM = PlayerViewModel()
-    
+
+	private let settingsHandler = SettingsHandler()
+
     var body: some View {
         ZStack {
             if let avPlayer = playerVM.avPlayer {
@@ -143,10 +186,16 @@ struct VideoPlayerView: View {
                     }
 #endif
             }
-        }.onAppear {
+        }
+
+		.edgesIgnoringSafeArea(.all)
+		.onAppear {
+			if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback(){
+				OrientationController.shared.unlockOrientation()
+				OrientationController.shared.currentOrientation = .landscapeRight
+			}
             playerVM.loadFromUrl(url: url)
             if let player = playerVM.avPlayer{
-                
                 if seekTime != 0{
                     print("seekto:\(seekTime)")
                     player.seek(to: CMTime(seconds: seekTime,
@@ -156,10 +205,15 @@ struct VideoPlayerView: View {
                 }else{
                     print("seek0")
                 }
-                player.play()
+
+//				print("playbackrate:\(Float(settingsHandler.getPlaybackRate()))")
+//				player.rate = Float(settingsHandler.getPlaybackRate())
+//				player.playImmediately(atRate: Float(settingsHandler.getPlaybackRate()))
+//				player.play()
             }
             
-        }.onDisappear{
+        }
+		.onDisappear{
             Task{
                 if let player = playerVM.avPlayer{
                     player.pause()
@@ -168,12 +222,25 @@ struct VideoPlayerView: View {
                                                  isOffline: isOffline,
                                                  filename: filename)
                 }
+
+				if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback(){
+//					OrientationController.shared.unlockOrientation()
+//					OrientationController.shared.currentOrientation = .portrait
+					if let w = SceneDelegate().window {
+						OrientationController.shared.lockOrientation(to: .portrait,
+																	 onWindow: w)
+
+					}
+				}
             }
-        }.edgesIgnoringSafeArea(.all)
+
+        }
+
+
     }
-    
-    
 }
+
+
 
 //struct VideoPlayerView_Previews: PreviewProvider {
 //    static var previews: some View {

@@ -13,8 +13,11 @@ class SettingsHandler {
     private let kBGMTVAccessToken = "kBGMTVAccessToken"
     private let kBGMTVRefreshToken = "kBGMTVRefreshToken"
     private let kBGMTVExpireTime = "kBGMTVExpireTime"
-    
-    private var ud = UserDefaults()
+
+	private let kLandscapePlayback = "kLandscapePlayback"
+	private let kPlaybackRate = "kPlaybackRate"
+
+    private var ud = UserDefaults() //for tvOS
     private var ub = NSUbiquitousKeyValueStore()
     
     func registerSettings(){
@@ -82,7 +85,27 @@ class SettingsHandler {
     func getBGMTVExpireTime() -> Int {
         return Int(ub.longLong(forKey: kBGMTVExpireTime))
     }
-    
+
+	//Landscape playback
+	func setLandscapePlayback(isEnabled: Bool){
+		ub.set(isEnabled, forKey: kLandscapePlayback)
+		sync()
+	}
+	func getLandscapePlayback() -> Bool{
+		return ub.bool(forKey: kLandscapePlayback)
+	}
+
+	//Playback Rate
+	func setPlaybackRate(rate:Double) {
+		ub.set(rate, forKey: kPlaybackRate)
+	}
+	func getPlaybackRate() -> Double {
+		if ub.double(forKey: kPlaybackRate) == 0.0 {
+			return 1.0
+		}else {
+			return ub.double(forKey: kPlaybackRate)
+		}
+	}
     // MARK: - iCloud Support
     func sync(){
         ud.synchronize()

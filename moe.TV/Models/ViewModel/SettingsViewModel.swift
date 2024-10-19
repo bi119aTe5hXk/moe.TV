@@ -17,7 +17,11 @@ class SettingsViewModel: ObservableObject{
     @Published var bgmNickname = ""
     @Published var bgmID:Int = 0
     @Published var bgmSign = ""
-    
+
+	@Published var settingsHandler = SettingsHandler()
+
+	@Published var playbackRate:Double = 1.0
+
     func showLogoutAlbireoAlert(){
         self.presentLogoutAlbireoAlert = true
     }
