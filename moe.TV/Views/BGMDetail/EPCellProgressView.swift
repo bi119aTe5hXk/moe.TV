@@ -28,6 +28,9 @@ struct EPCellProgressView: View {
                 .font(.system(size: 15))
                 .bold()
         }
+		.onAppear() {
+			print("EPCellProgressView: progress: \(progress)")
+		}
     }
 }
 

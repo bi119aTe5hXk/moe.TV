@@ -20,6 +20,7 @@ struct BangumiDetailModel:Identifiable, Hashable, Codable{
     var status:Int //status of a bangumi, can be 0 (pending), 1 (on air), 2 (finished)
     var air_weekday:Int? //Which day of a week this bangumi is on air.
     var eps:Int //how many episodes the bangumi has
+	var favorite_status:Int? //current favorite status of the bangumi, this field can be one of the following value: 1 (WISH), 2 (WATCHED), 3 (WATCHING), 4 (PAUSE), 5 (ABANDONED)
     var episodes:[BGMEpisode]? //episode list of the bangumi
 }
 

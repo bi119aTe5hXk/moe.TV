@@ -118,7 +118,7 @@ class SettingsHandler {
 				encodeArr.append(encoded)
 			}
 		}
-		print("saved \(encodeArr.count) items")
+		print("saved \(encodeArr.count) items to history")
 		ub.set(encodeArr, forKey: kPlaybackHistory)
 		sync()
 	}
@@ -132,7 +132,7 @@ class SettingsHandler {
 					decodeArr.append(decodeData)
 				}
 			})
-			print("read \(decodeArr.count) items")
+			print("read \(decodeArr.count) items from history")
 			if decodeArr.isEmpty{
 				return []
 			}

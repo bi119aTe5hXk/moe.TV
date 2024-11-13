@@ -91,11 +91,9 @@ class BangumiDetailViewModel : ObservableObject {
     }
     
     
-    func getBGMDetail(id:String,favStatus:Int?){
+    func getBGMDetail(id:String){
         print("getBGMDetail:\(id)")
-        
-        self.updateFavStatus(status: favStatus)
-        
+		self.bgmDetailItem = nil
         getAlbireoBangumiDetail(id: id) { result, data in
             if !result{
                 return
@@ -103,14 +101,14 @@ class BangumiDetailViewModel : ObservableObject {
             if let bgmItem = data as? BangumiDetailModel{
                 DispatchQueue.main.async {
                     self.bgmDetailItem = bgmItem
+
+					if let favStatus = bgmItem.favorite_status{
+						self.favorite_status = favStatus
+					}
                 }
             }
         }
     }
-    
-    func updateFavStatus(status: Int?) {
-        //print("update fav status: \(status)")
-        self.favorite_status = status
-    }
+
     
 }

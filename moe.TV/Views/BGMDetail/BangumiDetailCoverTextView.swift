@@ -11,7 +11,9 @@ struct BangumiDetailCoverTextView: View {
     @Binding var item:BangumiDetailModel?
     @Binding var favorite_status:Int?
     @ObservedObject var dctVM = BangumiDetailCoverTextViewModel()
-    
+
+	var detailVM:BangumiDetailViewModel
+
     var body: some View {
         HStack{
             Spacer()
@@ -65,6 +67,7 @@ struct BangumiDetailCoverTextView: View {
                 
                 VStack{
                     Button(action: {
+						dctVM.setDetailVM(dVM: detailVM)
                         dctVM.toggleChangeFavStatusAlert()
                     }, label: {
                         BGMStatusTextView(status: $favorite_status)
@@ -72,11 +75,21 @@ struct BangumiDetailCoverTextView: View {
                     })
                     
                     .alert("Change favorite status",isPresented: $dctVM.presentFavStatusSelecter) {
-                        Button("Wish"){dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 1)}
-                        Button("Watched"){dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 2)}
-                        Button("Watching"){dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 3)}
-                        Button("Pause"){dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 4)}
-                        Button("Abandoned"){dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 5)}
+						Button("Wish"){
+							dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 1)
+						}
+						Button("Watched"){
+							dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 2)
+						}
+						Button("Watching"){
+							dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 3)
+						}
+						Button("Pause"){
+							dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 4)
+						}
+						Button("Abandoned"){
+							dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 5)
+						}
                         Button("Cancel"){
                             dctVM.presentFavStatusSelecter.toggle()
                         }
@@ -115,6 +128,20 @@ struct BangumiDetailCoverTextView: View {
 
 struct BangumiDetailCoverTextView_Previews: PreviewProvider {
     static var previews: some View {
-        BangumiDetailCoverTextView(item: .constant( BangumiDetailModel(id: "3032ab99-06a1-4ea9-9df1-c98ab8bfb972", summary: "这是“闪光”与“黑衣剑士”在被如此称呼之前的故事——某一天，偶然戴上NERvGear的结城明日奈，原本是与网络游戏无缘的初中三年级少女。游戏管理员告知。", image: "https://lain.bgm.tv/r/400/pic/cover/l/63/24/315375_1ivNC.jpg", type: 2, status: 2, eps: 1)),favorite_status: .constant(3))
+		BangumiDetailCoverTextView(
+			item: 
+					.constant(
+						BangumiDetailModel(
+							id: "3032ab99-06a1-4ea9-9df1-c98ab8bfb972",
+							summary: "这是“闪光”与“黑衣剑士”在被如此称呼之前的故事——某一天，偶然戴上NERvGear的结城明日奈，原本是与网络游戏无缘的初中三年级少女。游戏管理员告知。",
+							image: "https://lain.bgm.tv/r/400/pic/cover/l/63/24/315375_1ivNC.jpg",
+							type: 2,
+							status: 2,
+							eps: 1
+						)
+					),
+			favorite_status: .constant(3),
+			detailVM: BangumiDetailViewModel()
+		)
     }
 }

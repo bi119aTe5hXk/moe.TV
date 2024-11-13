@@ -128,11 +128,13 @@ class PlayerItemObserver {
 struct VideoPlayerView: View {
     var url:URL
     var seekTime:Double
-	var bgmItem:BangumiItemModel?
+	@Binding var bgmItem:BangumiItemModel?
     var ep:EpisodeDetailModel?
     var isOffline:Bool
     var filename:String?
     @StateObject private var playerVM = PlayerViewModel()
+	var detailVM:BangumiDetailViewModel?
+
 
 	private let settingsHandler = SettingsHandler()
 
@@ -231,18 +233,24 @@ struct VideoPlayerView: View {
                                                  isOffline: isOffline,
                                                  filename: filename)
                 }
-#if os(iOS)
-				if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback(){
-//					OrientationController.shared.unlockOrientation()
-//					OrientationController.shared.currentOrientation = .portrait
-					if let w = SceneDelegate().window {
-						OrientationController.shared.lockOrientation(to: .portrait,
-																	 onWindow: w)
 
-					}
-				}
-#endif
             }
+#if os(iOS)
+			if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback(){
+					//					OrientationController.shared.unlockOrientation()
+					//					OrientationController.shared.currentOrientation = .portrait
+				if let w = SceneDelegate().window {
+					OrientationController.shared.lockOrientation(to: .portrait,
+																 onWindow: w)
+
+				}
+			}
+#endif
+			if let dVM = detailVM{
+				if let item = bgmItem{
+					dVM.getBGMDetail(id: item.id)
+				}
+			}
 
         }
 

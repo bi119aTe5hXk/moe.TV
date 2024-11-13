@@ -13,7 +13,11 @@ struct BangumiDetailView: View {
     var body: some View {
         //Text("favorite_status:\(selectedItem?.favorite_status)")
         ScrollView{
-            BangumiDetailCoverTextView(item: $detailVM.bgmDetailItem, favorite_status: $detailVM.favorite_status)
+			BangumiDetailCoverTextView(
+				item: $detailVM.bgmDetailItem,
+				favorite_status: $detailVM.favorite_status,
+				detailVM: detailVM
+			)
                 .frame(minHeight: 300,maxHeight: 600)
             
             Divider()
@@ -27,21 +31,29 @@ struct BangumiDetailView: View {
         }
 		.onAppear(){
 			if let item = selectedItem{
-				print("BangumiDetailView onAppear")
-				detailVM.getBGMDetail(id: item.id, favStatus: item.favorite_status)
+				print(
+					"BangumiDetailView onAppear)"
+				)
+				detailVM.getBGMDetail(id: item.id)
 			}
 		}
         .onChange(of: selectedItem, initial: true) { newValue in
             if let item = newValue{
-                print("BangumiDetailView onchange")
-                detailVM.getBGMDetail(id: item.id, favStatus: item.favorite_status)
+				print(
+					"BangumiDetailView onchange)"
+				)
+                detailVM.getBGMDetail(id: item.id)
             }
           }
         .refreshable {
             if let item = selectedItem{
-                detailVM.getBGMDetail(id: item.id, favStatus: item.favorite_status)
+				print(
+					"BangumiDetailView refreshable)"
+				)
+                detailVM.getBGMDetail(id: item.id)
             }
         }
+		
         .toolbar(content:{
             if let _ = detailVM.bgmDetailItem{
                 ToolbarItem(placement: .principal) {
@@ -62,9 +74,10 @@ struct BangumiDetailView: View {
             if let url = URL(string: detailVM.videoURL){
                 VideoPlayerView(url: url,
                                 seekTime: detailVM.seek,
-								bgmItem: selectedItem,
+								bgmItem: $selectedItem,
                                 ep: detailVM.ep!,
-                                isOffline: false)
+                                isOffline: false,
+								detailVM: detailVM)
             }else{
                 Spacer()
                 Text("Error: Video URL is empty")
@@ -87,7 +100,8 @@ struct BangumiDetailView: View {
                                     seekTime: detailVM.seek,
 									bgmItem: selectedItem,
                                     ep: detailVM.ep!,
-                                    isOffline: false)
+									isOffline: false,
+									detailVM: detailVM)
                     .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
                     //TODO: better close button for macOS
                     Button(action: {
@@ -140,7 +154,6 @@ struct BangumiDetailView: View {
         }
         
     }
-    
 }
 
 //struct BangumiDetailView_Previews: PreviewProvider {

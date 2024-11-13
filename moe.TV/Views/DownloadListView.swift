@@ -47,9 +47,10 @@ struct DownloadListView: View {
                 if let path = dlListVM.videoFilePath{
                     VideoPlayerView(url: path,
                                     seekTime: dlListVM.playbackPosition ?? 0,
+									bgmItem: .constant(nil),
                                     ep: nil,
                                     isOffline: true,
-                                    filename: dlListVM.fileName)
+									filename: dlListVM.fileName)
                 }
             })
 #endif
@@ -59,6 +60,7 @@ struct DownloadListView: View {
                     ZStack(alignment: .topLeading){
                         VideoPlayerView(url: path,
                                         seekTime: dlListVM.playbackPosition ?? 0,
+										bgmItem: .constant(nil),
                                         ep: nil,
                                         isOffline: true,
                                         filename: dlListVM.fileName)
