@@ -16,8 +16,7 @@ func savePlaybackHistory(_ item: BangumiItemModel) {
 	let save = SettingsHandler()
 	var history = save.getPlaybackHistory()
 	history.removeAll(where: { $0.id == item.id })
-	history.append(item)
-	history.sort(by: { $0.id > $1.id })
+	history.insert(item, at: 0)
 	//print("Saved playback history: \(history)")
 	save.setPlaybackHistory(history: history)
 }
