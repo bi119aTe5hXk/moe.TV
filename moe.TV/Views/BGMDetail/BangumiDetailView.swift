@@ -25,7 +25,12 @@ struct BangumiDetailView: View {
                     .padding(10)
             }
         }
-        
+		.onAppear(){
+			if let item = selectedItem{
+				print("BangumiDetailView onAppear")
+				detailVM.getBGMDetail(id: item.id, favStatus: item.favorite_status)
+			}
+		}
         .onChange(of: selectedItem, initial: true) { newValue in
             if let item = newValue{
                 print("BangumiDetailView onchange")
@@ -57,6 +62,7 @@ struct BangumiDetailView: View {
             if let url = URL(string: detailVM.videoURL){
                 VideoPlayerView(url: url,
                                 seekTime: detailVM.seek,
+								bgmItem: selectedItem,
                                 ep: detailVM.ep!,
                                 isOffline: false)
             }else{
@@ -79,6 +85,7 @@ struct BangumiDetailView: View {
                 ZStack(alignment: .topLeading){
                     VideoPlayerView(url: url,
                                     seekTime: detailVM.seek,
+									bgmItem: selectedItem,
                                     ep: detailVM.ep!,
                                     isOffline: false)
                     .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)

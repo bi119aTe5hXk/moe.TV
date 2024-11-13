@@ -153,7 +153,16 @@ struct SettingsView: View {
                                 .environmentObject(OfflinePlaybackManager())
                         })
                     }
-                    
+
+					Section(header: Text("Playback History")){
+						Button{
+							settingsVM.settingsHandler
+								.setPlaybackHistory(history: [])
+						}label: {
+							Text("Clear playback history")
+						}
+					}
+
                     Section(header: Text("Debug")) {
                         NavigationLink{
                             DebugView(debugVM: DebugViewModel())

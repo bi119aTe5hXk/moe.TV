@@ -43,6 +43,10 @@ class BangumiListViewModel: ObservableObject{
                             self.resultHandler(result: result, data: data, saveTopShelf: false)
                         }
                         return
+					case .history:
+						print("BangumiListViewModel.getHistoryBGMList")
+						self.resultHandler(result: true, data: readPlaybackHistory(), saveTopShelf: false)
+						return
                     case .search:
                         DispatchQueue.main.async {
                             self.isLoading = false
@@ -78,6 +82,9 @@ class BangumiListViewModel: ObservableObject{
         if let list = data as? [BangumiItemModel]{
             if list.count <= 0 {
                 print("bgmList.count <= 0, ignore")
+				DispatchQueue.main.async {
+					self.isLoading = false
+				}
                 return
             }else{
                 print("loaded \(list.count) items from bgmList")
@@ -94,7 +101,7 @@ class BangumiListViewModel: ObservableObject{
     }
     
     func isSearchable(selectedFunc:FuncViewModel?) -> Bool{
-        if bgmList.count >= 2{
+        if bgmList.count >= 5{
             return true
         }
         if selectedFunc == .search{

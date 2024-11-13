@@ -17,6 +17,8 @@ class SettingsHandler {
 	private let kLandscapePlayback = "kLandscapePlayback"
 	private let kPlaybackRate = "kPlaybackRate"
 
+	private let kPlaybackHistory = "kPlaybackHistory"
+
     private var ud = UserDefaults() //for tvOS
     private var ub = NSUbiquitousKeyValueStore()
     
@@ -98,6 +100,7 @@ class SettingsHandler {
 	//Playback Rate
 	func setPlaybackRate(rate:Double) {
 		ub.set(rate, forKey: kPlaybackRate)
+		sync()
 	}
 	func getPlaybackRate() -> Double {
 		if ub.double(forKey: kPlaybackRate) == 0.0 {
@@ -106,6 +109,39 @@ class SettingsHandler {
 			return ub.double(forKey: kPlaybackRate)
 		}
 	}
+
+	//Playback History
+	func setPlaybackHistory(history:Array<BangumiItemModel>){
+		var encodeArr = [Any]()
+		history.forEach { item in
+			if let encoded = try? PropertyListEncoder().encode(item) {
+				encodeArr.append(encoded)
+			}
+		}
+		print("saved \(encodeArr.count) items")
+		ub.set(encodeArr, forKey: kPlaybackHistory)
+		sync()
+	}
+	func getPlaybackHistory() -> Array<BangumiItemModel>{
+		sync()
+		if let array = ub.array(forKey: kPlaybackHistory){
+			var decodeArr = [BangumiItemModel]()
+			array.forEach({ item in
+				if let data = item as? Data,
+				   let decodeData = try? PropertyListDecoder().decode(BangumiItemModel.self, from: data) {
+					decodeArr.append(decodeData)
+				}
+			})
+			print("read \(decodeArr.count) items")
+			if decodeArr.isEmpty{
+				return []
+			}
+			return decodeArr
+		}
+		print("getPlaybackHistory error: array is empty")
+		return []
+	}
+
     // MARK: - iCloud Support
     func sync(){
         ud.synchronize()

@@ -48,6 +48,7 @@
 		866728012A39C8C4009E0104 /* BangumiItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AD92912A337729008461FF /* BangumiItemModel.swift */; };
 		866728052A39E64D009E0104 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86A9C3E92A3306BE00FD0B44 /* Assets.xcassets */; };
 		866E2DAB2A3B19E400CFB2ED /* DONOTUPLOAD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866E2DAA2A3B19E400CFB2ED /* DONOTUPLOAD.swift */; };
+		866E4EB22CE3AC340077D38D /* PlaybackHistoryHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866E4EB12CE3AC270077D38D /* PlaybackHistoryHandler.swift */; };
 		867FCB062C43860F00F42564 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867FCB052C43860F00F42564 /* SidebarView.swift */; };
 		867FCB082C4387D300F42564 /* FuncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867FCB072C4387D300F42564 /* FuncViewModel.swift */; };
 		867FCB0C2C43A05100F42564 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 867FCB0B2C43A05100F42564 /* Localizable.xcstrings */; };
@@ -136,6 +137,7 @@
 		866727F42A39C776009E0104 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		866728042A39CC95009E0104 /* topShelf.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = topShelf.entitlements; sourceTree = "<group>"; };
 		866E2DAA2A3B19E400CFB2ED /* DONOTUPLOAD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DONOTUPLOAD.swift; sourceTree = "<group>"; };
+		866E4EB12CE3AC270077D38D /* PlaybackHistoryHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHistoryHandler.swift; sourceTree = "<group>"; };
 		867FCB052C43860F00F42564 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		867FCB072C4387D300F42564 /* FuncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuncViewModel.swift; sourceTree = "<group>"; };
 		867FCB0B2C43A05100F42564 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				86A968F92A7FCD4900E9BD59 /* DownloadManager.swift */,
 				864F0BD42A812BE700604B7F /* OfflinePlaybackManager.swift */,
 				8627A9362A343DBC00A5FCAC /* SettingsHandler.swift */,
+				866E4EB12CE3AC270077D38D /* PlaybackHistoryHandler.swift */,
 				8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */,
 				86112E852A3C73F60034AD97 /* BGMTVServerHandler.swift */,
 				8658C6902A50839100357761 /* OpenURL.swift */,
@@ -502,6 +505,7 @@
 				8622C61C2A9261B70099DC78 /* ProgressAlertView.swift in Sources */,
 				47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */,
 				8698B3702A8327EF0093A0A5 /* BangumiListViewModel.swift in Sources */,
+				866E4EB22CE3AC340077D38D /* PlaybackHistoryHandler.swift in Sources */,
 				86AD92A02A33A540008461FF /* BangumiCellStatusTextView.swift in Sources */,
 				8627A92C2A34293100A5FCAC /* MainListView.swift in Sources */,
 				86A968F82A7FC46500E9BD59 /* DownloadListView.swift in Sources */,

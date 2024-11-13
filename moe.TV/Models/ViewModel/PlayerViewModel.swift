@@ -20,6 +20,7 @@ class PlayerViewModel: ObservableObject {
     }
     
     func logPlaybackPosition(player:AVPlayer,
+							 bgmItem:BangumiItemModel?,
                              ep:EpisodeDetailModel?,
                              isOffline:Bool,
                              filename:String?) {
@@ -42,6 +43,7 @@ class PlayerViewModel: ObservableObject {
                 if isFinished{
                     if let subject_id = theEP.bangumi?.bgm_id{
                         if let episode_id = theEP.bgm_eps_id{
+							//save to BGM as watched
                             setBGMSBEPStatues(subject_id: subject_id,
                                                  episode_id: episode_id,
                                                  status: 2) { result, data in
@@ -57,6 +59,12 @@ class PlayerViewModel: ObservableObject {
                 
                 
                 if let bangumi_id = theEP.bangumi_id{
+					//save to playback history
+					if let item = bgmItem{
+						savePlaybackHistory(item)
+					}
+
+					//save watch progress to history
                     sentAlbireoEPWatchProgress(ep_id: theEP.id,
                                         bangumi_id: bangumi_id,
                                         last_watch_position: currentTime,

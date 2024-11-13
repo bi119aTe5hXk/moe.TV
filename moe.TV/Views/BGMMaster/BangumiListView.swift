@@ -30,10 +30,6 @@ struct BangumiListView: View {
                 getBGMList()
             }
             .onAppear(){
-//                if listVM.bgmList.count <= 0{
-//                    print("onAppear.getBGMList")
-//                    getBGMList()
-//                }
 #if os(iOS)
 				if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback(){
 					OrientationController.shared.unlockOrientation()

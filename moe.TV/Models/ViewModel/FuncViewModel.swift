@@ -14,7 +14,8 @@ enum FuncViewModel: Int, Hashable, CaseIterable, Identifiable, Codable{
     case onair
     case search
     case allbangumi
-    
+	case history
+
     var localizedName: LocalizedStringKey {
         switch self {
         case .mybangumi:
@@ -25,6 +26,8 @@ enum FuncViewModel: Int, Hashable, CaseIterable, Identifiable, Codable{
             return "OnAir"
         case .search:
              return "Search"
+		case .history:
+			return "History"
         }
     }
 }

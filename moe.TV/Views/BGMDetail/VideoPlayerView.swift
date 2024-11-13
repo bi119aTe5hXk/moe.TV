@@ -128,6 +128,7 @@ class PlayerItemObserver {
 struct VideoPlayerView: View {
     var url:URL
     var seekTime:Double
+	var bgmItem:BangumiItemModel?
     var ep:EpisodeDetailModel?
     var isOffline:Bool
     var filename:String?
@@ -151,6 +152,7 @@ struct VideoPlayerView: View {
                         case .paused:
                             print("paused")
                             playerVM.logPlaybackPosition(player: avPlayer,
+														 bgmItem: bgmItem,
                                                          ep: ep,
                                                          isOffline: isOffline,
                                                          filename: filename)
@@ -175,6 +177,7 @@ struct VideoPlayerView: View {
                         case .paused:
                             print("paused")
                             playerVM.logPlaybackPosition(player: avPlayer,
+														 bgmItem: bgmItem,
                                                          ep: ep,
                                                          isOffline: isOffline,
                                                          filename: filename)
@@ -198,6 +201,9 @@ struct VideoPlayerView: View {
 #endif
             playerVM.loadFromUrl(url: url)
             if let player = playerVM.avPlayer{
+				player.currentItem?.preferredForwardBufferDuration = TimeInterval(60)
+				player.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
+
                 if seekTime != 0{
                     print("seekto:\(seekTime)")
                     player.seek(to: CMTime(seconds: seekTime,
@@ -220,6 +226,7 @@ struct VideoPlayerView: View {
                 if let player = playerVM.avPlayer{
                     player.pause()
                     playerVM.logPlaybackPosition(player: player,
+												 bgmItem: bgmItem,
                                                  ep: ep,
                                                  isOffline: isOffline,
                                                  filename: filename)
