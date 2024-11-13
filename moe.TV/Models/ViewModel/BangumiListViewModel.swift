@@ -28,8 +28,9 @@ class BangumiListViewModel: ObservableObject{
         if let type = funcType{
             isAlbireoLoginValid { result in
                 if result{
-                    self.isLoading = true
-                    
+					DispatchQueue.main.async {
+						self.isLoading = true
+					}
                     switch type {
                     case .mybangumi:
                         print("BangumiListViewModel.getMyBGMList")

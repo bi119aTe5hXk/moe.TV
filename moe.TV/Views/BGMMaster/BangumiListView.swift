@@ -20,7 +20,7 @@ struct BangumiListView: View {
         if listVM.isLoading{
             ProgressView()
         }
-            List(listVM.bangumiFiltered, selection: $selectedItem){ item in
+		List(listVM.bangumiFiltered, id: \.self, selection: $selectedItem){ item in
                 NavigationLink(value: item) {
                     BangumiCellView(bangumiItem: item)
                 }
