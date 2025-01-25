@@ -98,7 +98,7 @@ struct BangumiDetailView: View {
                 ZStack(alignment: .topLeading){
                     VideoPlayerView(url: url,
                                     seekTime: detailVM.seek,
-									bgmItem: selectedItem,
+									bgmItem: $selectedItem,
                                     ep: detailVM.ep!,
 									isOffline: false,
 									detailVM: detailVM)
