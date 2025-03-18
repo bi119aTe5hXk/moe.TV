@@ -41,20 +41,6 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
         controller.allowsPictureInPicturePlayback = true
 
 
-		//TODO: fix playback rate not display correctly
-		//set playback rate
-		let rate = Float(settingsHandler.getPlaybackRate())
-		print("rate: \(rate)")
-		controller.player?.rate = rate
-		let avRate = AVPlaybackSpeed(rate: rate, localizedName: "\(Float(settingsHandler.getPlaybackRate()))x")
-		controller.selectSpeed(avRate)
-
-		setPlayerRate(player: controller.player!, rate: rate)
-
-		print(
-			"selectedrate: \(String(describing: controller.selectedSpeed?.rate))"
-		)
-
 		let metadata = playerVM.setMatadata(ep: ep)
 		controller.player?.currentItem?.externalMetadata = metadata
         
@@ -71,7 +57,14 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 //			let value = UIInterfaceOrientation.landscapeLeft.rawValue
 //			UIDevice.current.setValue(value, forKey: "orientation")
 //		}
-		controller.player?.play()
+
+		let rate = Float(settingsHandler.getPlaybackRate())
+//		print("rate: \(rate)")
+		if let thePlayer = controller.player {
+			thePlayer.playImmediately(atRate: rate )
+			thePlayer.defaultRate = rate
+		}
+
 
 
         return controller
@@ -80,23 +73,7 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 		uiViewController.player = player
     }
 
-	func setPlayerRate(player: AVPlayer, rate: Float) {
-			// AVFoundation wants us to do most things on the main queue.
-		DispatchQueue.main.async {
-			if (rate == player.rate) {
-				return
-			}
-			if (rate > 2.0 || rate < -2.0) {
-				let playerItem = player.currentItem
-				player.replaceCurrentItem(with: nil)
-				player.replaceCurrentItem(with: playerItem)
-				player.rate = rate
-			} else {
-					// No problems "out of the box" with rates in the range [-2.0,2.0].
-				player.rate = rate
-			}
-		}
-	}
+
 }
 #endif
 //TODO: PiP macOS support
@@ -216,10 +193,6 @@ struct VideoPlayerView: View {
                     print("seek0")
                 }
 
-//				print("playbackrate:\(Float(settingsHandler.getPlaybackRate()))")
-//				player.rate = Float(settingsHandler.getPlaybackRate())
-//				player.playImmediately(atRate: Float(settingsHandler.getPlaybackRate()))
-//				player.play()
             }
             
         }
