@@ -49,6 +49,12 @@ private func patchServer(urlString:String,
             if let err = error {
                 completion(false, err.localizedDescription)
             }
+			if let r = response as? HTTPURLResponse{
+				if r.statusCode < 200 || r.statusCode >= 300{
+					completion(false, "Server HTTP status code \(r.statusCode) error.")
+					return
+				}
+			}
             guard let data = data else{return}
             completion(true, String.init(data: data, encoding: .utf8) as Any)
         }.resume()
@@ -73,6 +79,12 @@ private func putServer(urlString:String,
             if let err = error {
                 completion(false, err.localizedDescription)
             }
+			if let r = response as? HTTPURLResponse{
+				if r.statusCode < 200 || r.statusCode >= 300{
+					completion(false, "Server HTTP status code \(r.statusCode) error.")
+					return
+				}
+			}
             guard let data = data else{return}
             completion(true, String.init(data: data, encoding: .utf8) as Any)
         }.resume()
@@ -94,6 +106,12 @@ private func getServer(urlString:String,
             completion(false, err.localizedDescription)
             return
         }
+		if let r = response as? HTTPURLResponse{
+			if r.statusCode < 200 || r.statusCode >= 300{
+				completion(false, "Server HTTP status code \(r.statusCode) error.")
+				return
+			}
+		}
         completion(true, data as Any)
     }.resume()
 }
@@ -122,6 +140,12 @@ private func postServer(urlString:String,
                 completion(false, err.localizedDescription)
                 return
             }
+			if let r = response as? HTTPURLResponse{
+				if r.statusCode < 200 || r.statusCode >= 300{
+					completion(false, "Server HTTP status code \(r.statusCode) error.")
+					return
+				}
+			}
             completion(true, data as Any)
         }.resume()
     }catch{

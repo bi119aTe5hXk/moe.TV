@@ -98,10 +98,15 @@ private func postServer(urlString:String,
                 completion(false, err.localizedDescription)
             }
             guard let data = data else{return}
-            
-            if let r = response as? HTTPURLResponse{
-                saveAlbireoCookies(response: r)
-            }
+
+			if let r = response as? HTTPURLResponse{
+				if r.statusCode < 200 || r.statusCode >= 300{
+					completion(false, "Server HTTP status code \(r.statusCode) error.")
+					return
+				}else{
+					saveAlbireoCookies(response: r)
+				}
+			}
             completion(true, data)
         }.resume()
     }catch{
@@ -122,9 +127,14 @@ private func getServer(urlString:String,
         if let err = error {
             completion(false, err.localizedDescription)
         }
-        if let r = response as? HTTPURLResponse{
-            saveAlbireoCookies(response: r)
-        }
+		if let r = response as? HTTPURLResponse{
+			if r.statusCode < 200 || r.statusCode >= 300{
+				completion(false, "Server HTTP status code \(r.statusCode) error.")
+				return
+			}else{
+				saveAlbireoCookies(response: r)
+			}
+		}
         guard let data = data else{return}
         completion(true, data)
     }.resume()
