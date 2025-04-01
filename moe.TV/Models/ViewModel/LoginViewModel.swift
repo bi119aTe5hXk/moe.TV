@@ -19,6 +19,7 @@ class LoginViewModel: ObservableObject {
     @Published var isValidPassword = false
     @Published var isLoginButtonTapped = false
     @Published var showError = false
+	@Published var errorMessage = "Server URL or Username / Password error."
     @Published var presentLoginView = false
     
     @Published var isLoginSuccessd = false
@@ -36,7 +37,10 @@ class LoginViewModel: ObservableObject {
         self.presentLoginView = false
 //        }
     }
-    func toggleErrorView(){
+    func toggleErrorView(msg: String?){
+		if let msg = msg {
+			self.errorMessage = msg
+		}
         self.showError = true
     }
     
@@ -70,7 +74,7 @@ class LoginViewModel: ObservableObject {
                                     }
                                     print("logined")
                                 }else{
-                                    self.toggleErrorView()
+									self.toggleErrorView(msg: data)
                                     print("login error")
                                 }
                             }

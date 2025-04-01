@@ -63,19 +63,19 @@
       "localizations" : {
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Albireo の Cookie が期限切れになっている可能性があります。ログアウトしますか?"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Albireo的cookie似乎无效了，登出吗？"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Albireo的cookie似乎無效了，註銷嗎？"
           }
         }
@@ -209,7 +209,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "确定要登出bgm.tv？"
+            "value" : "确定要登出bgm.tv吗？"
           }
         },
         "zh-Hant" : {
@@ -231,7 +231,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bgm.tvの記録を変更しました"
+            "value" : "bgm.tvの記録を変更しました"
           }
         },
         "zh-Hans" : {
@@ -361,6 +361,28 @@
         }
       }
     },
+    "Connect to Albireo Services" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireoにログイン"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "连接Albireo服务"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登入Albireo服務"
+          }
+        }
+      }
+    },
     "Continue from last position?" : {
       "localizations" : {
         "ja" : {
@@ -389,7 +411,7 @@
     "Debug menu" : {
 
     },
-    "Default playbck rate" : {
+    "Default playbck speed" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -524,6 +546,22 @@
         }
       }
     },
+    "Force landscape while playing (iPhone only)" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "强制横屏播放（仅iPhone）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "強制橫屏播放（僅iPhone）"
+          }
+        }
+      }
+    },
     "History" : {
       "localizations" : {
         "ja" : {
@@ -553,9 +591,6 @@
 
     },
     "ID: %@" : {
-
-    },
-    "Landscape in playback (iPhone only)" : {
 
     },
     "Loading..." : {
@@ -598,28 +633,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "登入"
-          }
-        }
-      }
-    },
-    "Login to Albireo Server" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Albireoサーバーにログイン"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "登录Albireo服务"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "登入Albireo服務"
           }
         }
       }
@@ -991,7 +1004,26 @@
       }
     },
     "Pending" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保留"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保留"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暫留"
+          }
+        }
+      }
     },
     "Playback History" : {
       "localizations" : {
@@ -1184,7 +1216,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "bgm.tvで開く"
+            "value" : "bgm.tvを開く"
           }
         },
         "zh-Hans" : {
@@ -1246,13 +1278,58 @@
       }
     },
     "Sync status with bgm.tv" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bgm.tvと同期する"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同步观看进度到bgm.tv"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同步收視進度到bam.tv"
+          }
+        }
+      }
     },
     "UNKNOW_STATUS" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不明"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知状态"
+          }
+        }
+      }
     },
     "UNKNOWN" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不明"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知"
+          }
+        }
+      }
     },
     "Username" : {
       "localizations" : {

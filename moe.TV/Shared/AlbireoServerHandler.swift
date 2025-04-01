@@ -144,7 +144,6 @@ func loginAlbireoServer(server:String,
     
     postServer(urlString: urlstr, postdata: postdata) { result, data in
         if result{
-            
             do{
                 if let JSON = try jsonDecoder.decode([String: String]?.self, from: data as! Data){
                     if let status = JSON["msg"] {
@@ -157,9 +156,10 @@ func loginAlbireoServer(server:String,
                     }
                 }
             }catch{
-                completion(false, "there is a problem with json decode")
+                completion(false, "Json decode error, is server down?")
             }
         }else{
+			print("result is false, data is \(data)")
             completion(false, data as! String)
         }
     }

@@ -18,7 +18,7 @@ struct LoginView: View {
                     
                 VStack{
                     Spacer()
-                    Text("Login to Albireo Server")
+                    Text("Connect to Albireo Services")
                         .lineLimit(2)
                         .fontWeight(.bold)
                         .font(.title)
@@ -32,6 +32,9 @@ struct LoginView: View {
                         .padding(10)
                     SecureField("Password", text: $loginVM.password)
                         .padding(10)
+						.onSubmit {
+							loginVM.isLoginButtonTapped = true
+						}
                     Spacer()
                     Button(action: {
                         loginVM.isLoginButtonTapped = true
@@ -44,7 +47,11 @@ struct LoginView: View {
                     .background(loginVM.isValidUsername && loginVM.isValidPassword && loginVM.isValidServer ? Color.blue : Color.gray)
                     .cornerRadius(10, antialiased: true)
                     .disabled(!loginVM.isValidUsername || !loginVM.isValidPassword || !loginVM.isValidServer)
-                    .alert("Server URL or Username / Password error.", isPresented: $loginVM.showError) {
+					
+					.alert(
+						loginVM.errorMessage,
+						isPresented: $loginVM.showError
+					) {
                         Button("OK", role: .cancel) { }
                     }
                     Spacer()

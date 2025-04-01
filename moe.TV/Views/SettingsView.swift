@@ -32,7 +32,9 @@ struct SettingsView: View {
 #if os(tvOS)
                         Text("Bgm.tv setting on tvOS is not supported. But you can use iOS or macOS device to setup and will do sync with bgm.tv on tvOS.")
 #endif
-                        Toggle("Sync status with bgm.tv", isOn: $syncWithBGMTV)
+						Toggle(isOn: $syncWithBGMTV){
+							Text("Sync status with bgm.tv")
+						}
 #if os(tvOS)
                             .disabled(true)
 #endif
@@ -101,7 +103,7 @@ struct SettingsView: View {
 					Section(header: Text("Preferences")) {
 #if os(iOS)
 						if UIDevice.current.userInterfaceIdiom == .phone{
-							Toggle("Landscape in playback (iPhone only)", isOn: $landscapePlayback)
+							Toggle("Force landscape while playing (iPhone only)", isOn: $landscapePlayback)
 								.onAppear(){
 									self.landscapePlayback = settingsVM.settingsHandler.getLandscapePlayback()
 								}
@@ -111,7 +113,7 @@ struct SettingsView: View {
 						}
 #endif
 						Picker(
-							"Default playbck rate",
+							"Default playbck speed",
 							selection: $settingsVM.playbackRate
 						) {
 							Text("0.5x").tag(0.5)
