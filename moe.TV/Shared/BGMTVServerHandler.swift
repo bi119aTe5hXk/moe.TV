@@ -21,12 +21,8 @@ func isBGMTVlogined() -> Bool {
         return false
     }else{
         //print("BGMTVAccessToken:\(token)")
-		if settingsHandler.getBGMTVUsername().isEmpty{
-			getBGMTVUserInfo(completion: { (_, _) in})
-		}
         return true
     }
-    
 }
 func logoutBGMTV(){
     settingsHandler.setBGMTVAccessToken(token: "")
@@ -120,23 +116,18 @@ private func getServer(urlString:String,
 }
 private func postServer(urlString:String,
                          postdata:Dictionary<String,Any>,
+						withAccessToken:Bool,
                        completion:@escaping (Bool, Any) -> Void) {
     do{
         print(urlString)
         guard let url = URL(string: urlString) else {return}
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
-//        var requestBodyComponents = URLComponents()
-//        postdata.forEach { (key: String, value: Any) in
-//            requestBodyComponents.queryItems?.append(URLQueryItem(name: key, value: value as? String))
-//        }
-//        request.httpBody = requestBodyComponents.query?.data(using: .utf8)
-//        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        
-        
-        
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+		if withAccessToken{
+			request.setValue("Bearer \(settingsHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
+		}
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
         URLSession.shared.dataTask(with: request){(data, response, error) in
             if let err = error {
@@ -174,7 +165,11 @@ func getBGMTVAccessToken(code:String){
                     "code":"\(code)",
                     "redirect_uri":"moetv%3A%2F%2Fbgmtv"] as [String:Any]
     
-    postServer(urlString: urlString, postdata: postdata) { result, data in
+	postServer(
+		urlString: urlString,
+		postdata: postdata,
+		withAccessToken: false
+	) { result, data in
         if result{
             do{
                 if let r = try jsonDecoder.decode(BGMTVOauthAccessTokenModel?.self, from: data as! Data){
@@ -207,7 +202,11 @@ func refreshBGMTVToken(){
                     "client_secret":"\(bgmAppSecret)",
                     "refresh_token":"\(refreshToken)",
                     "redirect_uri":"moetv%3A%2F%2Fbgmtv"] as [String:Any]
-    postServer(urlString: urlString, postdata: postdata) { result, data in
+	postServer(
+		urlString: urlString,
+		postdata: postdata,
+		withAccessToken: false
+	) { result, data in
         if result{
             do{
                 if let r = try jsonDecoder.decode(BGMTVOauthAccessTokenModel?.self, from: data as! Data){
@@ -302,7 +301,11 @@ func getBGMCollectionStatus(subject_id:Int, completion: @escaping (Bool, Any) ->
 		if isBGMAccessTokenExpired(){
 			refreshBGMTVToken()
 		}
+		if settingsHandler.getBGMTVUsername().isEmpty{
+			getBGMTVUserInfo(completion: { (_, _) in})
+		}
 		let urlStr = "\(baseBGMTVAPIURL)/v0/users/\(settingsHandler.getBGMTVUsername())/collections/\(subject_id)"
+		print(urlStr)
 		getServer(urlString: urlStr) { result, data in
 			if result{
 				do{
@@ -326,8 +329,11 @@ func setBGMCollectionStatus(subject_id:Int, status:Int, completion: @escaping (B
             refreshBGMTVToken()
         }
         let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)"
-		patchServer(urlString: urlStr,
-                  postdata: ["type":status]) { result, data in
+		postServer(
+urlString: urlStr,
+postdata: ["type":status],
+withAccessToken: true
+		) { result, data in
             completion(result,data)
         }
     }
@@ -369,7 +375,7 @@ func getBGMTVUserInfo(completion: @escaping (Bool, Any) -> Void){
             if result{
                 do {
                     if let u = try jsonDecoder.decode(BGMTVUserInfoModel?.self, from: data as! Data){
-						saveBGMLoginInfo(username: u.nickname ?? nil,
+						saveBGMLoginInfo(username: u.username ?? nil,
 										 accessToken: nil,
 										 refreshToken: nil,
 										 expireIn: nil)

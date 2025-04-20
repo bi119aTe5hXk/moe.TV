@@ -22,7 +22,7 @@ class BangumiDetailCoverTextViewModel: ObservableObject {
 		self.detailVM = dVM
 	}
 
-	
+
 
     func changeFavStatus(idstr:String, bgmid:Int?, status:Int) {
         print("changing fav status to \(status)")
@@ -35,16 +35,20 @@ class BangumiDetailCoverTextViewModel: ObservableObject {
             }
         })
         
-        if let bgmid = bgmid{
-            setBGMCollectionStatus(subject_id: bgmid, status: status) { isSuccess, result in
-                if isSuccess {
-                    print(result as Any)
+        if let bgm_id = bgmid{
+            setBGMCollectionStatus(subject_id: bgm_id, status: status) { isSuccess, result in
+				print(result as Any)
+				if isSuccess {
 					DispatchQueue.main.async {
 						self.presentBGMFavChangeResultDone.toggle()
 					}
-                }
+				}else{
+					print("setBGMCollectionStatus retrun false")
+				}
             }
-        }
+		}else{
+			print("bgmid not found")
+		}
 		if let item = bgmItem{
 			if let dVM = self.detailVM{
 				dVM.getBGMDetail(id: item.id)

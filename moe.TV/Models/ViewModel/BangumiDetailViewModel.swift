@@ -105,26 +105,27 @@ class BangumiDetailViewModel : ObservableObject {
 					if let favStatus = bgmItem.favorite_status{
 						self.albireo_favorite_status = favStatus
 					}
+					self.getBGMTVFAVStatus { isSuccessed, result in
+						DispatchQueue.main.async {
+							if !isSuccessed{
+								self.bgmtv_favorite_status = 0
+								return
+							}
+							self.bgmtv_favorite_status = result
+						}
+					}
                 }
             }
         }
-		getBGMTVFAVStatus { isSuccessed, result in
-			if !isSuccessed{
-				self.bgmtv_favorite_status = 0
-				return
-			}
-			DispatchQueue.main.async {
-				self.bgmtv_favorite_status = result
-			}
-		}
+
     }
 
 	func getBGMTVFAVStatus(completion: @escaping (Bool, Int) -> Void){
 		if let item = bgmDetailItem{
 			if let bgmid = item.bgm_id{
 				getBGMCollectionStatus(subject_id: bgmid) { isSuccess, result in
+					print("getBGMTVFAVStatus:\(result as Any)")
 					if isSuccess{
-						print(result as Any)
 						if let r = result as? BGMTVUserSubjectCollectionModel{
 							completion(true , r.type)
 						}else {
