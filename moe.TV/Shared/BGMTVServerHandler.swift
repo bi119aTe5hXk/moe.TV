@@ -305,7 +305,7 @@ func getBGMCollectionStatus(subject_id:Int, completion: @escaping (Bool, Any) ->
 			getBGMTVUserInfo(completion: { (_, _) in})
 		}
 		let urlStr = "\(baseBGMTVAPIURL)/v0/users/\(settingsHandler.getBGMTVUsername())/collections/\(subject_id)"
-		print(urlStr)
+		//print(urlStr)
 		getServer(urlString: urlStr) { result, data in
 			if result{
 				do{

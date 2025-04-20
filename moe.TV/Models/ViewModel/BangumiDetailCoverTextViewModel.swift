@@ -10,7 +10,6 @@ class BangumiDetailCoverTextViewModel: ObservableObject {
     @Published var presentFavStatusSelecter = false
     @Published var presentAlbireoFavChangeResultDone = false
 	@Published var presentBGMFavChangeResultDone = false
-
 	@Published var bgmItem:BangumiItemModel?
 	@Published var detailVM:BangumiDetailViewModel?
 
@@ -49,10 +48,10 @@ class BangumiDetailCoverTextViewModel: ObservableObject {
 		}else{
 			print("bgmid not found")
 		}
-		if let item = bgmItem{
-			if let dVM = self.detailVM{
-				dVM.getBGMDetail(id: item.id)
-			}
-		}
+//		if let item = bgmItem{
+//			if let dVM = self.detailVM{
+//				dVM.getBGMDetail(id: item.id)
+//			}
+//		}
     }
 }

@@ -136,10 +136,12 @@ action: {
 					"Albireo favorite status has changed",
 					isPresented: $dctVM.presentAlbireoFavChangeResultDone
 				){ }
-					.alert(
+				.alert(
 						"Bgm.tv favorite status has changed",
 						isPresented: $dctVM.presentBGMFavChangeResultDone
-					){ }
+				){ }
+
+
             }
     }.padding(10)
             

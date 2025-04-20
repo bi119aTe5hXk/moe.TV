@@ -104,6 +104,8 @@ class BangumiDetailViewModel : ObservableObject {
 
 					if let favStatus = bgmItem.favorite_status{
 						self.albireo_favorite_status = favStatus
+					}else{
+						self.albireo_favorite_status = 0
 					}
 					self.getBGMTVFAVStatus { isSuccessed, result in
 						DispatchQueue.main.async {
