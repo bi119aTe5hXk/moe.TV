@@ -103,6 +103,9 @@
         }
       }
     },
+    "Albireo Status" : {
+
+    },
     "All video download failed." : {
       "localizations" : {
         "ja" : {
@@ -272,6 +275,9 @@
           }
         }
       }
+    },
+    "Bgm.tv Status" : {
+
     },
     "Cancel" : {
       "localizations" : {

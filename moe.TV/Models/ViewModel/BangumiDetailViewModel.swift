@@ -15,9 +15,9 @@ class BangumiDetailViewModel : ObservableObject {
     @Published var ep:EpisodeDetailModel?
     @Published var bgmDetailItem:BangumiDetailModel?
     
-    @Published var favorite_status:Int?
-    
-    
+    @Published var albireo_favorite_status:Int?
+	@Published var bgmtv_favorite_status:Int?
+
     
     //1
     func setSelectedEP(ep:EpisodeDetailModel){
@@ -94,8 +94,8 @@ class BangumiDetailViewModel : ObservableObject {
     func getBGMDetail(id:String){
         print("getBGMDetail:\(id)")
 		self.bgmDetailItem = nil
-        getAlbireoBangumiDetail(id: id) { result, data in
-            if !result{
+        getAlbireoBangumiDetail(id: id) { isSuccessed, data in
+            if !isSuccessed{
                 return
             }
             if let bgmItem = data as? BangumiDetailModel{
@@ -103,12 +103,46 @@ class BangumiDetailViewModel : ObservableObject {
                     self.bgmDetailItem = bgmItem
 
 					if let favStatus = bgmItem.favorite_status{
-						self.favorite_status = favStatus
+						self.albireo_favorite_status = favStatus
 					}
                 }
             }
         }
+		getBGMTVFAVStatus { isSuccessed, result in
+			if !isSuccessed{
+				self.bgmtv_favorite_status = 0
+				return
+			}
+			DispatchQueue.main.async {
+				self.bgmtv_favorite_status = result
+			}
+		}
     }
+
+	func getBGMTVFAVStatus(completion: @escaping (Bool, Int) -> Void){
+		if let item = bgmDetailItem{
+			if let bgmid = item.bgm_id{
+				getBGMCollectionStatus(subject_id: bgmid) { isSuccess, result in
+					if isSuccess{
+						print(result as Any)
+						if let r = result as? BGMTVUserSubjectCollectionModel{
+							completion(true , r.type)
+						}else {
+							print("result is not BGMTVUserSubjectCollectionModel")
+							completion(false , 0)
+						}
+					} else {
+						print("getBGMCollectionStatus return not success")
+						completion(false , 0)
+					}
+				}
+			}else{
+				print("bgmid is nil")
+			}
+		}else{
+			print( "bgmItem is nil")
+		}
+	}
 
     
 }

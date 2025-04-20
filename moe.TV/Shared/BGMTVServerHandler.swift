@@ -21,6 +21,9 @@ func isBGMTVlogined() -> Bool {
         return false
     }else{
         //print("BGMTVAccessToken:\(token)")
+		if settingsHandler.getBGMTVUsername().isEmpty{
+			getBGMTVUserInfo(completion: { (_, _) in})
+		}
         return true
     }
     
@@ -176,7 +179,8 @@ func getBGMTVAccessToken(code:String){
             do{
                 if let r = try jsonDecoder.decode(BGMTVOauthAccessTokenModel?.self, from: data as! Data){
                     if let accesstoken = r.access_token{
-                        saveBGMLoginInfo(accessToken: accesstoken,
+						saveBGMLoginInfo(username: nil,
+										 accessToken: accesstoken,
                                          refreshToken: r.refresh_token!,
                                          expireIn: r.expires_in!)
                     }else{
@@ -209,7 +213,8 @@ func refreshBGMTVToken(){
                 if let r = try jsonDecoder.decode(BGMTVOauthAccessTokenModel?.self, from: data as! Data){
                     if let accesstoken = r.access_token{
 //                        print(r)
-                        saveBGMLoginInfo(accessToken: accesstoken,
+						saveBGMLoginInfo(username: nil,
+										 accessToken: accesstoken,
                                          refreshToken: r.refresh_token!,
                                          expireIn: r.expires_in!)
                     }else{
@@ -228,13 +233,24 @@ func refreshBGMTVToken(){
     }
 }
 
-func saveBGMLoginInfo(accessToken:String, refreshToken:String, expireIn:Int){
-    let ts = Int(Date().timeIntervalSince1970) + expireIn
-    
-    settingsHandler.setBGMTVAccessToken(token: accessToken)
-    settingsHandler.setBGMTVRefreshToken(token: refreshToken)
-    settingsHandler.setBGMTVExpireTime(time: ts)
-    print("bgm.tv oauth token saved")
+func saveBGMLoginInfo(username:String?, accessToken:String?, refreshToken:String?, expireIn:Int?){
+	if let username = username{
+		settingsHandler.setBGMTVUsername(username: username)
+		print("bgm.tv username saved")
+	}
+	if let accessToken = accessToken{
+		settingsHandler.setBGMTVAccessToken(token: accessToken)
+		print("bgm.tv accessToken saved")
+	}
+	if let refreshToken = refreshToken{
+		settingsHandler.setBGMTVRefreshToken(token: refreshToken)
+		print("bgm.tv refreshToken saved")
+	}
+	if let expireIn = expireIn{
+		let ts = Int(Date().timeIntervalSince1970) + expireIn
+		settingsHandler.setBGMTVExpireTime(time: ts)
+		print("bgm.tv ts saved")
+	}
 }
 
 func isBGMAccessTokenExpired() -> Bool{
@@ -281,6 +297,29 @@ func isBGMAccessTokenExpired() -> Bool{
 
 
 // MARK: - bgm.tv APIs
+func getBGMCollectionStatus(subject_id:Int, completion: @escaping (Bool, Any) -> Void){
+	if isBGMTVlogined(){
+		if isBGMAccessTokenExpired(){
+			refreshBGMTVToken()
+		}
+		let urlStr = "\(baseBGMTVAPIURL)/v0/users/\(settingsHandler.getBGMTVUsername())/collections/\(subject_id)"
+		getServer(urlString: urlStr) { result, data in
+			if result{
+				do{
+					if let collection = try jsonDecoder.decode(BGMTVUserSubjectCollectionModel?.self, from: data as! Data){
+						completion(true, collection)
+					}else {
+						completion(false, data as! String)
+					}
+				}catch{
+					completion(false, "there is a problem with json decode")
+				}
+			}else{
+				completion(false, data as! String)
+			}
+		}
+	}
+}
 func setBGMCollectionStatus(subject_id:Int, status:Int, completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         if isBGMAccessTokenExpired(){
@@ -330,6 +369,10 @@ func getBGMTVUserInfo(completion: @escaping (Bool, Any) -> Void){
             if result{
                 do {
                     if let u = try jsonDecoder.decode(BGMTVUserInfoModel?.self, from: data as! Data){
+						saveBGMLoginInfo(username: u.nickname ?? nil,
+										 accessToken: nil,
+										 refreshToken: nil,
+										 expireIn: nil)
                         completion(true, u)
                     }else{
                         completion(false, data as! String)

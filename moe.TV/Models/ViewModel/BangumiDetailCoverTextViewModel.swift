@@ -14,12 +14,16 @@ class BangumiDetailCoverTextViewModel: ObservableObject {
 	@Published var bgmItem:BangumiItemModel?
 	@Published var detailVM:BangumiDetailViewModel?
 
+
     func toggleChangeFavStatusAlert() {
         self.presentFavStatusSelecter.toggle()
     }
 	func setDetailVM(dVM:BangumiDetailViewModel){
 		self.detailVM = dVM
 	}
+
+	
+
     func changeFavStatus(idstr:String, bgmid:Int?, status:Int) {
         print("changing fav status to \(status)")
         changeAlbireoFavStatus(bangumi_id: idstr, status: status, completion: { isSuccess, result in

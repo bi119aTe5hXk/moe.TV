@@ -60,7 +60,16 @@ class SettingsHandler {
     func getAlbireoServerAddr() -> String {
         return ub.string(forKey: kServerAddr) ?? ""
     }
-    
+
+	//BGMTV Username
+	func setBGMTVUsername(username: String){
+		ub.set(username, forKey: "kBGMTVUsername")
+		sync()
+	}
+	func getBGMTVUsername() -> String {
+		return ub.string(forKey: "kBGMTVUsername") ?? ""
+	}
+
     //BGMTV Access Token
     func setBGMTVAccessToken(token:String){
         ub.set(token, forKey: kBGMTVAccessToken)

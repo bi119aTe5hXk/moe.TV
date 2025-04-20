@@ -15,7 +15,8 @@ struct BangumiDetailView: View {
         ScrollView{
 			BangumiDetailCoverTextView(
 				item: $detailVM.bgmDetailItem,
-				favorite_status: $detailVM.favorite_status,
+				albireo_favorite_status: $detailVM.albireo_favorite_status,
+				bgmtv_favorite_status: $detailVM.bgmtv_favorite_status,
 				detailVM: detailVM
 			)
                 .frame(minHeight: 300,maxHeight: 600)
