@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct EPCellProgressView: View {
+	@Binding var bgmWatchStatus: Int?
     @Binding var progress: CGFloat
     @Binding var color:Color
 
     var body: some View {
+		//TODO: Add watched status
         ZStack {
             Circle()
                 .stroke(lineWidth: 8.0)
@@ -24,9 +26,18 @@ struct EPCellProgressView: View {
                 .foregroundColor(color)
                 .rotationEffect(Angle(degrees: 270.0))
 
-            Text(String(format: "%.0f%%", min(progress, 1.0) * 100.0))
-                .font(.system(size: 15))
-                .bold()
+			VStack {
+				Text(String(format: "%.0f%%", min(progress, 1.0) * 100.0))
+					.font(.system(size: 15))
+					.bold()
+
+				if bgmWatchStatus == 2 {
+					Image(systemName: "checkmark")
+						.foregroundColor(.green)
+						.font(.system(size: 15))
+				}
+			}
+
         }
 		.onAppear() {
 			print("EPCellProgressView: progress: \(progress)")

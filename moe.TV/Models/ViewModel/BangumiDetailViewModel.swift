@@ -6,6 +6,12 @@
 //
 
 import Foundation
+
+struct NewEPItem:Decodable {
+	var ep:BGMEpisode
+	var bgmEP:BGMTVUserEpisodeCollectionModel?
+}
+
 class BangumiDetailViewModel : ObservableObject {
     @Published var presentVideoView = false
     @Published var presentContinuePlayAlert = false
@@ -13,12 +19,12 @@ class BangumiDetailViewModel : ObservableObject {
     @Published var videoURL:String = ""
     @Published var seek:Double = 0.0
     @Published var ep:EpisodeDetailModel?
-    @Published var bgmDetailItem:BangumiDetailModel?
-    
+    @Published var detailItem:BangumiDetailModel?
+//	@Published var bgmCollectionEpList:[BGMTVUserEpisodeCollectionModel]?
+	@Published var newEPList:[NewEPItem] = []
     @Published var albireo_favorite_status:Int?
 	@Published var bgmtv_favorite_status:Int?
 
-    
     //1
     func setSelectedEP(ep:EpisodeDetailModel){
         DispatchQueue.main.async {
@@ -93,20 +99,28 @@ class BangumiDetailViewModel : ObservableObject {
     
     func getBGMDetail(id:String){
         print("getBGMDetail:\(id)")
-		self.bgmDetailItem = nil
-        getAlbireoBangumiDetail(id: id) { isSuccessed, data in
+		self.detailItem = nil
+		self.newEPList = []
+        getAlbireoBangumiDetail(id: id) {
+ isSuccessed,
+ data in
             if !isSuccessed{
                 return
             }
             if let bgmItem = data as? BangumiDetailModel{
-                DispatchQueue.main.async {
-                    self.bgmDetailItem = bgmItem
-
+				DispatchQueue.main.async {
+					self.detailItem = bgmItem
+					
 					if let favStatus = bgmItem.favorite_status{
 						self.albireo_favorite_status = favStatus
 					}else{
 						self.albireo_favorite_status = 0
 					}
+
+				}
+
+				if isBGMTVlogined(){
+					//get fav status from bgm.tv
 					self.getBGMTVFAVStatus { isSuccessed, result in
 						DispatchQueue.main.async {
 							if !isSuccessed{
@@ -116,19 +130,35 @@ class BangumiDetailViewModel : ObservableObject {
 							self.bgmtv_favorite_status = result
 						}
 					}
-                }
+
+					//get EP list from bgm.tv
+					if let bgmID = bgmItem.bgm_id{
+						self.getBGMTVEPList(
+							bgmID: bgmID,
+							epList: bgmItem
+								.episodes ?? [])
+					}else{
+						print("bgm_id is empty")
+						self.showOnlyAlbireoEPs(eps: bgmItem.episodes ?? [])
+					}
+				}else{
+					//only albireo eps
+					self.showOnlyAlbireoEPs(eps: bgmItem.episodes ?? [])
+				}
+
+
             }
         }
 
     }
 
 	func getBGMTVFAVStatus(completion: @escaping (Bool, Int) -> Void){
-		if let item = bgmDetailItem{
+		if let item = detailItem{
 			if let bgmid = item.bgm_id{
-				getBGMCollectionStatus(subject_id: bgmid) { isSuccess, result in
+				getBGMCollectionStatus(subject_id: bgmid) { result, data in
 					print("getBGMTVFAVStatus:\(result as Any)")
-					if isSuccess{
-						if let r = result as? BGMTVUserSubjectCollectionModel{
+					if result{
+						if let r = data as? BGMTVUserSubjectCollectionModel{
 							completion(true , r.type)
 						}else {
 							print("result is not BGMTVUserSubjectCollectionModel")
@@ -147,5 +177,57 @@ class BangumiDetailViewModel : ObservableObject {
 		}
 	}
 
-    
+	func getBGMTVEPList(bgmID:Int,epList:[BGMEpisode]){
+		if bgmID == 0{
+			print("bgmID is 0")
+			return
+		}
+		getBGMCollectionEpisodeList(subject_id: bgmID) { result, data in
+			if result{
+				if let r = data as? BGMTVCollectionEpisodesModel{
+//					self.bgmCollectionEpList = r.data
+					DispatchQueue.main.async {
+						self.newEPList.removeAll()
+						self.newEPList = self
+							.combineEPList(
+								eps: epList,
+								bgmEPs: r.data ?? []
+							)
+					}
+				}else{
+					print( "data is not BGMTVCollectionEpisodesModel")
+					self.showOnlyAlbireoEPs(eps: epList)
+				}
+			}else{
+				print("getBGMCollectionEpisodeList failed")
+				self.showOnlyAlbireoEPs(eps: epList)
+			}
+		}
+	}
+
+	func combineEPList(eps:[BGMEpisode],
+					   bgmEPs:[BGMTVUserEpisodeCollectionModel]) -> [NewEPItem]{
+
+		var combinedArray:[NewEPItem] = []
+		for (index, ep) in eps.enumerated() {
+			if index >= bgmEPs.count {
+				combinedArray.append(NewEPItem(ep: ep, bgmEP: nil))
+			}else{
+				combinedArray.append(NewEPItem(ep: ep, bgmEP: bgmEPs[index]))
+			}
+		}
+		return combinedArray
+	}
+
+	func showOnlyAlbireoEPs(eps:[BGMEpisode]){
+		print("showOnlyAlbireoEPs")
+		self.newEPList.removeAll()
+		DispatchQueue.main.async {
+			self.newEPList = self.combineEPList(
+				eps: eps,
+				bgmEPs: []
+			)
+		}
+	}
+
 }

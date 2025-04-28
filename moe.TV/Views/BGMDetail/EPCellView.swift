@@ -12,7 +12,9 @@ import CachedAsyncImage
 
 struct EPCellView: View {
     @State var isEmptyEP:Bool = false
-    @State var epItem:BGMEpisode
+	@State var newEPItem:NewEPItem
+//    @State var epItem:BGMEpisode
+	//@State var bgmEPItem:BGMTVUserEpisodeCollectionModel?
     @State var showVideoFileExisitAlert = false
     @State var showNotDownloadableAlert = false
     @ObservedObject var detailVM : BangumiDetailViewModel
@@ -21,8 +23,10 @@ struct EPCellView: View {
     
     var body: some View {
         HStack{
-            Button(action: {
-                getAlbireoEPDetail(ep_id: epItem.id) { result, data in
+			//play button
+            Button(
+action: {
+				getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
                     if result{
                         if let epDetail = data as? EpisodeDetailModel{
                             detailVM.setSelectedEP(ep: epDetail)
@@ -31,10 +35,11 @@ struct EPCellView: View {
                         print(data as Any)
                     }
                 }
-            }, label: {
+            },
+ label: {
 //                    GeometryReader { geo in
                 ZStack{
-                    if let thumbnail = epItem.thumbnail{
+					if let thumbnail = newEPItem.ep.thumbnail{
                         CachedAsyncImage(
                             url: fixPathNotCompete(path: thumbnail),
                             placeholder: { progress in
@@ -89,15 +94,15 @@ struct EPCellView: View {
                 
                 VStack{
                     HStack{
-                        Text("\(epItem.episode_no ?? 0). ")
-                        if !((epItem.name ?? "").isEmpty){
-                            Text("\(epItem.name ?? "")")
+						Text("\(newEPItem.ep.episode_no ?? 0). ")
+                        if !((newEPItem.ep.name ?? "").isEmpty){
+                            Text("\(newEPItem.ep.name ?? "")")
                                 .lineLimit(1)
                                 .background(Color.clear)
                         }
                     }
-                    if !((epItem.name_cn ?? "").isEmpty){
-                        Text("\(epItem.name_cn ?? "")")
+                    if !((newEPItem.ep.name_cn ?? "").isEmpty){
+                        Text("\(newEPItem.ep.name_cn ?? "")")
                             .lineLimit(1)
                             .background(Color.clear)
                     }
@@ -107,8 +112,13 @@ struct EPCellView: View {
                 
                 Spacer()
 
-                EPCellProgressView(progress: .constant(CGFloat(epItem.watch_progress?.percentage ?? 0)),
-                                   color:.constant(epItem.watch_progress?.watch_status == 2 ? Color.green : Color.orange))
+	 EPCellProgressView(
+		bgmWatchStatus: .constant(
+			newEPItem.bgmEP?.type ?? 0
+		),
+								   progress: .constant(CGFloat(newEPItem.ep.watch_progress?.percentage ?? 0)),
+                                   color:.constant(newEPItem.ep.watch_progress?.watch_status == 2 ? Color.green : Color.orange)
+)
                     .frame(maxWidth: 100,maxHeight: 100)
                     .padding(10)
                     
@@ -156,7 +166,7 @@ struct EPCellView: View {
         }
     }
     func startDwonload(){
-        getAlbireoEPDetail(ep_id: epItem.id) { result, data in
+		getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
             if result{
                 if let epDetail = data as? EpisodeDetailModel{
                     if let vFiles = epDetail.video_files {
@@ -189,7 +199,7 @@ struct EPCellView: View {
     }
 #if !os(tvOS)
     func openBangumi(){
-        if let bgm_eps_id = epItem.bgm_eps_id{
+		if let bgm_eps_id = newEPItem.ep.bgm_eps_id{
             let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
             openURLInApp(urlString: urlString)
         }

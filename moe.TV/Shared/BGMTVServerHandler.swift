@@ -17,7 +17,7 @@ private let baseBGMTVAPIURL = "https://api.bgm.tv"
 func isBGMTVlogined() -> Bool {
     let token = settingsHandler.getBGMTVAccessToken()
     if token.isEmpty{
-        //print("BGMTVAccessToken is empty")
+        print("BGMTVAccessToken is empty")
         return false
     }else{
         //print("BGMTVAccessToken:\(token)")
@@ -323,16 +323,47 @@ func getBGMCollectionStatus(subject_id:Int, completion: @escaping (Bool, Any) ->
 		}
 	}
 }
+
+func getBGMCollectionEpisodeList(subject_id:Int, completion: @escaping (Bool, Any) -> Void){
+	if isBGMTVlogined(){
+		if isBGMAccessTokenExpired(){
+			refreshBGMTVToken()
+		}
+		let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)/episodes"
+		getServer(urlString: urlStr) { result, data in
+			//print("\(String.init(data: data as! Data, encoding: .utf8))")
+
+			if result{
+				do {
+					if let episodeList = try jsonDecoder.decode(BGMTVCollectionEpisodesModel?.self, from: data as! Data){
+						completion(true, episodeList)
+					}else{
+						print("getBGMCollectionEpisodeList inner failed: \(data as! String)")
+						completion(false, data as! String)
+					}
+				}catch{
+					print("getBGMCollectionEpisodeList json decode failed: \(error.localizedDescription)")
+					completion(false, "there is a problem with json decode")
+				}
+			}else{
+				print("getBGMCollectionEpisodeList outter failed: \(data as! String)")
+				completion(false, data as! String)
+			}
+		}
+
+
+
+	}
+}
 func setBGMCollectionStatus(subject_id:Int, status:Int, completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         if isBGMAccessTokenExpired(){
             refreshBGMTVToken()
         }
         let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)"
-		postServer(
-urlString: urlStr,
-postdata: ["type":status],
-withAccessToken: true
+		postServer(urlString: urlStr,
+				   postdata: ["type":status],
+				   withAccessToken: true
 		) { result, data in
             completion(result,data)
         }

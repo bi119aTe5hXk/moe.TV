@@ -7,29 +7,38 @@
 
 import SwiftUI
 
+
+
+
 struct BangumiDetailView: View {
-    @Binding var selectedItem:BangumiItemModel?
-    @ObservedObject var detailVM = BangumiDetailViewModel()
-    var body: some View {
-        //Text("favorite_status:\(selectedItem?.favorite_status)")
-        ScrollView{
+	@Binding var selectedItem:BangumiItemModel?
+	@ObservedObject var detailVM = BangumiDetailViewModel()
+
+	var body: some View {
+			//Text("favorite_status:\(selectedItem?.favorite_status)")
+		ScrollView{
 			BangumiDetailCoverTextView(
-				item: $detailVM.bgmDetailItem,
+				item: $detailVM.detailItem,
 				albireo_favorite_status: $detailVM.albireo_favorite_status,
 				bgmtv_favorite_status: $detailVM.bgmtv_favorite_status,
 				detailVM: detailVM
 			)
-                .frame(minHeight: 300,maxHeight: 600)
-            
-            Divider()
-            
-            ForEach(detailVM.bgmDetailItem?.episodes ?? []){ ep in
-                EPCellView(epItem: ep, detailVM: detailVM)
-                    .environmentObject(DownloadManager())
-                    .environmentObject(OfflinePlaybackManager())
-                    .padding(10)
-            }
-        }
+			.frame(minHeight: 300,maxHeight: 600)
+
+			Divider()
+			if !detailVM.newEPList.isEmpty{
+				ForEach(detailVM.newEPList, id: \.ep){ item in
+					EPCellView(newEPItem:item,detailVM:detailVM)
+						.environmentObject(DownloadManager())
+						.environmentObject(OfflinePlaybackManager())
+						.padding(10)
+				}
+			}else{
+//				Text("No EP")
+			}
+
+
+		}
 		.onAppear(){
 			if let item = selectedItem{
 				print(
@@ -56,13 +65,13 @@ struct BangumiDetailView: View {
         }
 		
         .toolbar(content:{
-            if let _ = detailVM.bgmDetailItem{
+            if let _ = detailVM.detailItem{
                 ToolbarItem(placement: .principal) {
                     HStack{
                         Spacer()
-                        BangumiDetailNavTitleView(item: $detailVM.bgmDetailItem)
+                        BangumiDetailNavTitleView(item: $detailVM.detailItem)
                         Spacer()
-                        BangumiDetailNavItemView(downloadManager: DownloadManager(), bgmItem: $detailVM.bgmDetailItem)
+                        BangumiDetailNavItemView(downloadManager: DownloadManager(), bgmItem: $detailVM.detailItem)
                     }
                 }
             }

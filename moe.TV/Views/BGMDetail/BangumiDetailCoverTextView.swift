@@ -76,21 +76,23 @@ action: {
 						HStack{
 							Spacer()
 							VStack{
-								Text("Albireo Status")
+								Text("Albireo")
 								BGMStatusTextView(status: $albireo_favorite_status)
 									.padding(10)
 							}
 							Spacer()
-							Divider()
-							Spacer()
-							VStack{
-								Text("Bgm.tv Status")
-								BGMStatusTextView(
-									status:$bgmtv_favorite_status
-								)
+							if isBGMTVlogined() {
+								Divider()
+								Spacer()
+								VStack{
+									Text("Bgm.tv")
+									BGMStatusTextView(
+										status:$bgmtv_favorite_status
+									)
 									.padding(10)
+								}
+								Spacer()
 							}
-							Spacer()
 						}
 
 
