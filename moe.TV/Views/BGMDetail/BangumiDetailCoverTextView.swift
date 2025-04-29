@@ -73,6 +73,53 @@ action: {
 						dctVM.toggleChangeFavStatusAlert()
 					},
  label: {
+#if os(iOS)
+	 if UIDevice.current.userInterfaceIdiom == .phone {
+		 VStack{
+			 Spacer()
+			 VStack{
+				 Text("Albireo")
+				 BGMStatusTextView(status: $albireo_favorite_status)
+					 .padding(10)
+			 }
+			 Spacer()
+			 if isBGMTVlogined() {
+				 Divider()
+				 Spacer()
+				 VStack{
+					 Text("Bgm.tv")
+					 BGMStatusTextView(
+						status:$bgmtv_favorite_status
+					 )
+					 .padding(10)
+				 }
+				 Spacer()
+			 }
+		 }
+	 }else{
+		 HStack{
+			 Spacer()
+			 VStack{
+				 Text("Albireo")
+				 BGMStatusTextView(status: $albireo_favorite_status)
+					 .padding(10)
+			 }
+			 Spacer()
+			 if isBGMTVlogined() {
+				 Divider()
+				 Spacer()
+				 VStack{
+					 Text("Bgm.tv")
+					 BGMStatusTextView(
+						status:$bgmtv_favorite_status
+					 )
+					 .padding(10)
+				 }
+				 Spacer()
+			 }
+		 }
+	 }
+#else
 						HStack{
 							Spacer()
 							VStack{
@@ -94,7 +141,7 @@ action: {
 								Spacer()
 							}
 						}
-
+#endif
 
 					})
 

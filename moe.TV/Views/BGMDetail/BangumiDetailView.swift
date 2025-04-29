@@ -65,16 +65,14 @@ struct BangumiDetailView: View {
         }
 		
         .toolbar(content:{
-            if let _ = detailVM.detailItem{
-                ToolbarItem(placement: .principal) {
-                    HStack{
-                        Spacer()
-                        BangumiDetailNavTitleView(item: $detailVM.detailItem)
-                        Spacer()
-                        BangumiDetailNavItemView(downloadManager: DownloadManager(), bgmItem: $detailVM.detailItem)
-                    }
-                }
-            }
+			ToolbarItem(placement: .principal) {
+				HStack{
+					Spacer()
+					BangumiDetailNavTitleView(item: $detailVM.detailItem)
+					Spacer()
+					BangumiDetailNavItemView(downloadManager: DownloadManager(), bgmItem: $detailVM.detailItem)
+				}
+			}
         })
         .padding(0)
 #if os(iOS) || os(tvOS)
