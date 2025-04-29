@@ -68,82 +68,40 @@ struct BangumiDetailCoverTextView: View {
 				VStack{
 
 					Button(
-action: {
+						action: {
 						dctVM.setDetailVM(dVM: detailVM)
 						dctVM.toggleChangeFavStatusAlert()
 					},
- label: {
+						label: {
 #if os(iOS)
-	 if UIDevice.current.userInterfaceIdiom == .phone {
-		 VStack{
-			 Spacer()
-			 VStack{
-				 Text("Albireo")
-				 BGMStatusTextView(status: $albireo_favorite_status)
-					 .padding(10)
-			 }
-			 Spacer()
-			 if isBGMTVlogined() {
-				 Divider()
-				 Spacer()
-				 VStack{
-					 Text("Bgm.tv")
-					 BGMStatusTextView(
-						status:$bgmtv_favorite_status
-					 )
-					 .padding(10)
-				 }
-				 Spacer()
-			 }
-		 }
-	 }else{
-		 HStack{
-			 Spacer()
-			 VStack{
-				 Text("Albireo")
-				 BGMStatusTextView(status: $albireo_favorite_status)
-					 .padding(10)
-			 }
-			 Spacer()
-			 if isBGMTVlogined() {
-				 Divider()
-				 Spacer()
-				 VStack{
-					 Text("Bgm.tv")
-					 BGMStatusTextView(
-						status:$bgmtv_favorite_status
-					 )
-					 .padding(10)
-				 }
-				 Spacer()
-			 }
-		 }
-	 }
-#else
-						HStack{
-							Spacer()
-							VStack{
-								Text("Albireo")
-								BGMStatusTextView(status: $albireo_favorite_status)
-									.padding(10)
-							}
-							Spacer()
-							if isBGMTVlogined() {
-								Divider()
-								Spacer()
+							if UIDevice.current.userInterfaceIdiom == .phone {
 								VStack{
-									Text("Bgm.tv")
-									BGMStatusTextView(
-										status:$bgmtv_favorite_status
+									Spacer()
+									FavoriteStatusView(
+										albireo_favorite_status: $albireo_favorite_status,
+										bgmtv_favorite_status: $bgmtv_favorite_status
 									)
-									.padding(10)
 								}
-								Spacer()
+							}else{
+								HStack{
+									Spacer()
+									FavoriteStatusView(
+										albireo_favorite_status: $albireo_favorite_status,
+										bgmtv_favorite_status: $bgmtv_favorite_status
+									)
+								}
 							}
-						}
+#else
+							HStack{
+								Spacer()
+								FavoriteStatusView(
+									albireo_favorite_status: $albireo_favorite_status,
+									bgmtv_favorite_status: $bgmtv_favorite_status
+								)
+							}
 #endif
-
-					})
+							
+						})
 
 
 					Divider()

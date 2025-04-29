@@ -71,6 +71,6 @@ struct BGMStatusTextView: View {
     }
 }
 
-#Preview {
-    BGMStatusTextView(status: .constant(1))
-}
+//#Preview {
+//    BGMStatusTextView(status: .constant(1))
+//}

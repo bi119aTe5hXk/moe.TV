@@ -21,8 +21,8 @@ public struct ProgressAlertView: View {
     }
 }
 
-public struct ProgressAlertView_Previews: PreviewProvider {
-    static public var previews: some View {
-        ProgressAlertView(progress: .constant(0.7))
-    }
-}
+//public struct ProgressAlertView_Previews: PreviewProvider {
+//    static public var previews: some View {
+//        ProgressAlertView(progress: .constant(0.7))
+//    }
+//}
