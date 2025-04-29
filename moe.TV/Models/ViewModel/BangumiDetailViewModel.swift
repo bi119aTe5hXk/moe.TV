@@ -101,16 +101,13 @@ class BangumiDetailViewModel : ObservableObject {
         print("getBGMDetail:\(id)")
 		self.detailItem = nil
 		self.newEPList = []
-        getAlbireoBangumiDetail(id: id) {
- isSuccessed,
- data in
+        getAlbireoBangumiDetail(id: id) { isSuccessed, data in
             if !isSuccessed{
                 return
             }
             if let bgmItem = data as? BangumiDetailModel{
+				self.detailItem = bgmItem
 				DispatchQueue.main.async {
-					self.detailItem = bgmItem
-					
 					if let favStatus = bgmItem.favorite_status{
 						self.albireo_favorite_status = favStatus
 					}else{
@@ -170,10 +167,12 @@ class BangumiDetailViewModel : ObservableObject {
 					}
 				}
 			}else{
-				print("bgmid is nil")
+				print("bgm_id is nil")
+				completion(false , 0)
 			}
 		}else{
-			print( "bgmItem is nil")
+			print( "detailItem is nil")
+			completion(false , 0)
 		}
 	}
 
