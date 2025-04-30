@@ -158,10 +158,19 @@ struct SettingsView: View {
 
 					Section(header: Text("Playback History")){
 						Button{
-							settingsVM.settingsHandler
-								.setPlaybackHistory(history: [])
+							settingsVM.presentClearHistoryAlert.toggle()
 						}label: {
 							Text("Clear playback history")
+						}
+						.alert( isPresented: $settingsVM.presentClearHistoryAlert) {
+							Alert(
+								title: Text("Are you sure to delete all playback history?"),
+								primaryButton: .destructive(Text("Yes")){
+									settingsVM.settingsHandler
+										.setPlaybackHistory(history: [])
+								},
+								secondaryButton: .cancel()
+							)
 						}
 					}
 

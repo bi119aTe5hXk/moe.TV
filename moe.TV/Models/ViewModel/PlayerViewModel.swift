@@ -23,7 +23,8 @@ class PlayerViewModel: ObservableObject {
 							 bgmItem:BangumiItemModel?,
                              ep:EpisodeDetailModel?,
                              isOffline:Bool,
-                             filename:String?) {
+                             filename:String?,
+							 isBGMTVWatched:Bool) {
         let currentItem = player.currentItem;
         let currentTime = CMTimeGetSeconds(currentItem!.currentTime())
         var percent = CMTimeGetSeconds(currentItem!.currentTime()) / CMTimeGetSeconds(currentItem!.duration)
@@ -40,7 +41,7 @@ class PlayerViewModel: ObservableObject {
         
         if !isOffline{
             if let theEP = ep {
-                if isFinished{
+				if isFinished && !isBGMTVWatched{
                     if let subject_id = theEP.bangumi?.bgm_id{
                         if let episode_id = theEP.bgm_eps_id{
 							//save to BGM as watched

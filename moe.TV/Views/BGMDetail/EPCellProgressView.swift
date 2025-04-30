@@ -13,7 +13,6 @@ struct EPCellProgressView: View {
     @Binding var color:Color
 
     var body: some View {
-		//TODO: Add watched status
         ZStack {
             Circle()
                 .stroke(lineWidth: 8.0)

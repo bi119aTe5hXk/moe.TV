@@ -317,6 +317,9 @@
         }
       }
     },
+    "Clear Image Cache" : {
+
+    },
     "Clear playback history" : {
       "localizations" : {
         "ja" : {
@@ -561,6 +564,9 @@
           }
         }
       }
+    },
+    "Functions" : {
+
     },
     "History" : {
       "localizations" : {

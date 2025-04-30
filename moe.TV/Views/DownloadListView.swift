@@ -50,7 +50,8 @@ struct DownloadListView: View {
 									bgmItem: .constant(nil),
                                     ep: nil,
                                     isOffline: true,
-									filename: dlListVM.fileName)
+									filename: dlListVM.fileName,
+									isBGMTVWatched: false)
                 }
             })
 #endif

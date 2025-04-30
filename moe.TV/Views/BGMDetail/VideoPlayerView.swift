@@ -43,7 +43,8 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 
 		let metadata = playerVM.setMatadata(ep: ep)
 		controller.player?.currentItem?.externalMetadata = metadata
-        
+		controller.player?.currentItem?.preferredForwardBufferDuration = TimeInterval(60.0)
+
         if AVPictureInPictureController.isPictureInPictureSupported() {
 //            pipController = AVPictureInPictureController(playerLayer: playerLayer)!
             print("canpip")
@@ -63,6 +64,7 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 		if let thePlayer = controller.player {
 			thePlayer.playImmediately(atRate: rate )
 			thePlayer.defaultRate = rate
+			thePlayer.currentItem?.preferredForwardBufferDuration = TimeInterval(60.0)
 		}
 
 
@@ -82,8 +84,8 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 //    typealias NSViewControllerType = NSViewController
 //    let player: AVPlayer
 //    func makeNSViewController(context: Context) -> NSViewController {
-//
-//        return nil
+//		let controller = AVPlayerViewController()
+//        return controller
 //    }
 //
 //    func updateNSViewController(_ nsViewController: NSViewController, context: Context) {
@@ -112,6 +114,7 @@ struct VideoPlayerView: View {
     @StateObject private var playerVM = PlayerViewModel()
 	var detailVM:BangumiDetailViewModel?
 
+	var isBGMTVWatched:Bool
 
 	private let settingsHandler = SettingsHandler()
 
@@ -134,7 +137,8 @@ struct VideoPlayerView: View {
 														 bgmItem: bgmItem,
                                                          ep: ep,
                                                          isOffline: isOffline,
-                                                         filename: filename)
+                                                         filename: filename,
+														 isBGMTVWatched: isBGMTVWatched)
                         case .playing:
                             print("playing")
                         case .some(_):
@@ -159,7 +163,8 @@ struct VideoPlayerView: View {
 														 bgmItem: bgmItem,
                                                          ep: ep,
                                                          isOffline: isOffline,
-                                                         filename: filename)
+														 filename: filename,
+														 isBGMTVWatched: isBGMTVWatched)
                         case .playing:
                             print("playing")
                         case .some(_):
@@ -198,14 +203,17 @@ struct VideoPlayerView: View {
         }
 		.onDisappear{
             Task{
-                if let player = playerVM.avPlayer{
-                    player.pause()
-                    playerVM.logPlaybackPosition(player: player,
-												 bgmItem: bgmItem,
-                                                 ep: ep,
-                                                 isOffline: isOffline,
-                                                 filename: filename)
-                }
+				if let player = playerVM.avPlayer{
+					player.pause()
+					playerVM.logPlaybackPosition(
+						player: player,
+						bgmItem: bgmItem,
+						ep: ep,
+						isOffline: isOffline,
+						filename: filename,
+						isBGMTVWatched: isBGMTVWatched
+					)
+				}
 
             }
 #if os(iOS)

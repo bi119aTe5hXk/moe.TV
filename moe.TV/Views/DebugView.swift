@@ -6,9 +6,9 @@
 //
 
 import SwiftUI
-
+import CachedAsyncImage
 struct DebugView: View {
-    
+	@ImageCache private var imageCache
     @State private var iCloudEnabled = (FileManager.default.ubiquityIdentityToken != nil)
     @State private var syncWithBGMTV = isBGMTVlogined()
     @State private var albireoCookiesArray:Array<String> = []
@@ -67,8 +67,15 @@ struct DebugView: View {
                     } label: {
                         Text("Re-Sync with iCloud")
                     }
-
                 }
+
+				Section(header: Text("Functions")) {
+					Button{
+						imageCache.removeCache()
+					}label: {
+						Text("Clear Image Cache")
+					}
+				}
             }
         }
         .onAppear(){

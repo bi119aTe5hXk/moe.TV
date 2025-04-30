@@ -47,8 +47,7 @@ struct MainListView: View {
                     .navigationTitle(dest.localizedName)
             }
         } detail: {
-            BangumiDetailView(selectedItem: $selectedItem)
-            
+			BangumiDetailView(selectedItem: $selectedItem)
         }
 #if !os(tvOS)
 		.navigationSplitViewStyle(.automatic)

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CachedAsyncImage
 
 struct NewEPItem:Decodable {
 	var ep:BGMEpisode
@@ -24,6 +25,13 @@ class BangumiDetailViewModel : ObservableObject {
 	@Published var newEPList:[NewEPItem] = []
     @Published var albireo_favorite_status:Int?
 	@Published var bgmtv_favorite_status:Int?
+
+	init(){
+		ImageCache().wrappedValue.setCacheLimit(
+			countLimit: 1000, // 1000 items
+			totalCostLimit: 1024 * 1024 * 200 // 200 MB
+		)
+	}
 
     //1
     func setSelectedEP(ep:EpisodeDetailModel){
@@ -227,6 +235,13 @@ class BangumiDetailViewModel : ObservableObject {
 				bgmEPs: []
 			)
 		}
+	}
+
+	func isBGMEPWatched() -> Bool{
+		if self.bgmtv_favorite_status == 2{
+			return true
+		}
+		return false
 	}
 
 }

@@ -10,7 +10,8 @@ import Foundation
 class SettingsViewModel: ObservableObject{
     @Published var presentLogoutAlbireoAlert = false
     @Published var presentLogoutBGMTVAlert = false
-    
+	@Published var presentClearHistoryAlert = false
+
     @Published var isBGMUserInfoReady = false
     @Published var avatar_url = ""
     @Published var bgmUsername = ""

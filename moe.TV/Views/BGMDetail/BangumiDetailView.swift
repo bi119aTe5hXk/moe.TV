@@ -7,9 +7,6 @@
 
 import SwiftUI
 
-
-
-
 struct BangumiDetailView: View {
 	@Binding var selectedItem:BangumiItemModel?
 	@ObservedObject var detailVM = BangumiDetailViewModel()
@@ -34,7 +31,9 @@ struct BangumiDetailView: View {
 						.padding(10)
 				}
 			}else{
-//				Text("No EP")
+				if selectedItem != nil{
+					ProgressView()
+				}
 			}
 
 
@@ -80,12 +79,14 @@ struct BangumiDetailView: View {
                          onDismiss: { },
                          content: {
             if let url = URL(string: detailVM.videoURL){
+
                 VideoPlayerView(url: url,
                                 seekTime: detailVM.seek,
 								bgmItem: $selectedItem,
                                 ep: detailVM.ep!,
                                 isOffline: false,
-								detailVM: detailVM)
+								detailVM: detailVM,
+								isBGMTVWatched: detailVM.isBGMEPWatched())
             }else{
                 Spacer()
                 Text("Error: Video URL is empty")
@@ -109,7 +110,8 @@ struct BangumiDetailView: View {
 									bgmItem: $selectedItem,
                                     ep: detailVM.ep!,
 									isOffline: false,
-									detailVM: detailVM)
+									detailVM: detailVM,
+									isBGMTVWatched: detailVM.isBGMEPWatched())
                     .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
                     //TODO: better close button for macOS
                     Button(action: {
