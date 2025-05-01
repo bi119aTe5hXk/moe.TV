@@ -325,6 +325,7 @@ func getAlbireoBangumiDetail(id: String,
     urlstr.append("/api/home/bangumi/")
     urlstr.append(id)
     if loadAlbireoCookies(){
+		print(urlstr)
         getServer(urlString: urlstr) { result, data in
             if result{
                 do {

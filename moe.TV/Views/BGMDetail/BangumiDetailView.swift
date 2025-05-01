@@ -25,10 +25,17 @@ struct BangumiDetailView: View {
 			Divider()
 			if !detailVM.newEPList.isEmpty{
 				ForEach(detailVM.newEPList, id: \.ep){ item in
-					EPCellView(newEPItem:item,detailVM:detailVM)
-						.environmentObject(DownloadManager())
-						.environmentObject(OfflinePlaybackManager())
-						.padding(10)
+					if let n = item.ep.name{
+						if !n.isEmpty{
+							EPCellView(newEPItem:item,detailVM:detailVM)
+								.environmentObject(DownloadManager())
+								.environmentObject(OfflinePlaybackManager())
+								.padding(10)
+						}else{
+//							Text("\(item.ep.episode_no ?? 0). Pending")
+//								.padding(5)
+						}
+					}
 				}
 			}else{
 				if selectedItem != nil{

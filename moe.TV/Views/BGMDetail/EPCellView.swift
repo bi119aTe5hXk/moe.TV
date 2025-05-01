@@ -39,6 +39,7 @@ action: {
  label: {
 //                    GeometryReader { geo in
                 ZStack{
+
 					if let thumbnail = newEPItem.ep.thumbnail{
                         CachedAsyncImage(
                             url: fixPathNotCompete(path: thumbnail),

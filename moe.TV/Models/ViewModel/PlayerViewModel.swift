@@ -16,6 +16,7 @@ class PlayerViewModel: ObservableObject {
     let offlinePBM = OfflinePlaybackManager()
 
     func loadFromUrl(url: URL) {
+		print("\(url)")
         avPlayer = AVPlayer(url: url)
     }
     
@@ -44,7 +45,7 @@ class PlayerViewModel: ObservableObject {
 				if isFinished && !isBGMTVWatched{
                     if let subject_id = theEP.bangumi?.bgm_id{
                         if let episode_id = theEP.bgm_eps_id{
-							//save to BGM as watched
+							print("save to BGM.TV as watched")
                             setBGMSBEPStatues(subject_id: subject_id,
                                                  episode_id: episode_id,
                                                  status: 2) { result, data in
@@ -65,7 +66,7 @@ class PlayerViewModel: ObservableObject {
 						savePlaybackHistory(item)
 					}
 
-					//save watch progress to history
+					print("save progress to albireo")
                     sentAlbireoEPWatchProgress(ep_id: theEP.id,
                                         bangumi_id: bangumi_id,
                                         last_watch_position: currentTime,
@@ -81,8 +82,8 @@ class PlayerViewModel: ObservableObject {
                 if let episode_no  = theEP.episode_no{
                     if let eps = theEP.bangumi?.eps{
                         if episode_no == eps{
-                            print("should set the subject as watched")
-                            
+                            print("should set the subject/collection as watched")
+
                         }
                     }
                 }

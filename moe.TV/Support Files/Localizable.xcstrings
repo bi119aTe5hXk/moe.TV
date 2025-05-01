@@ -176,6 +176,9 @@
         }
       }
     },
+    "Are you sure to delete all playback history?" : {
+
+    },
     "Are you sure you want to logout and exit app?" : {
       "localizations" : {
         "ja" : {

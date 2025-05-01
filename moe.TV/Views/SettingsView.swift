@@ -131,6 +131,8 @@ struct SettingsView: View {
 						.onChange(of: settingsVM.playbackRate, initial: false, perform: { value in
 							settingsVM.settingsHandler.setPlaybackRate(rate: value)
 						})
+
+						//TODO: mark playing as want in bgm.tv options
 					}
 
                     Section(header: Text("Download")) {
