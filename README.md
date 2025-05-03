@@ -23,3 +23,15 @@ TestFlight: [https://testflight.apple.com/join/3v0FALsY](https://testflight.appl
 
 ## URL Schemes
 - moetv://detail?id=\<Bangumi ID\>
+
+## How to build
+1. ```git clone``` this project.
+2. Create a file name ```DONOTUPLOAD.swift``` under moe.TV folder.
+3. [Create a new app at bgm.tv](https://bgm.tv/dev/app).
+4. Edit the file ```DONOTUPLOAD.swift``` with:
+```
+let bgmAppID = "<Your AppID from bgm.tv>"
+let bgmAppSecret = "<Your AppSecret from bgm.tv>"
+let testURL = "<Your Albreo server URL, optional>"
+```
+5. Open Xcode, build & run.
