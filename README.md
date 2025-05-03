@@ -1,28 +1,27 @@
 # moe.TV
 Watch bangumi on Apple devices
 
-# App
-TestFlight: [https://testflight.apple.com/join/3v0FALsY](https://testflight.apple.com/join/3v0FALsY)
+# TestFlight
+[https://testflight.apple.com/join/3v0FALsY](https://testflight.apple.com/join/3v0FALsY)
 
 ## Features
-- Sync with iCloud (No need to log in multiple times)
-- Support multiple platforms (iOS/macOS/tvOS)
-- Sync progress with bgm.tv
-- Picture in Picture
-- Save playing progress automatically
-- Cache video files locally (offline mode)
-- Yes, SwiftUI
+- Sync login info via iCloud (include Albireo setting & Bgm.tv login status).
+- Multiple platforms (iOS/iPadOS/macOS/tvOS/visionOS).
+- Sync with Bgm.tv.
+- Picture-in-Picture playback.
+- Sync playing progress (playback position) via cloud.
+- Cache video files (offline mode).
+- Playback history.
+- Custom default playback speed.
 
-## Support platform
-- iOS 16.0 and later
-- macOS (Native & Catalyst) 13.0 and later
-- tvOS 16.0 and later
+## Requirement
+- iOS/iPadOS 16.0 or later
+- macOS (Native & Catalyst) 13.0 or later
+- tvOS 16.0 or later
+- visionOS 1.0 or later
 
-## Support Service
-- [Albireo](https://github.com/lordfriend/Albireo) or the new [Mira project](https://github.com/irohalab/mira-docker)
-
-## URL Schemes
-- moetv://detail?id=\<Bangumi ID\>
+## Cloud service
+- [Albireo](https://github.com/lordfriend/Albireo) or the new [Mira project](https://github.com/irohalab/mira-docker).
 
 ## How to build
 1. ```git clone``` this project.
@@ -34,3 +33,6 @@ let bgmAppSecret = "<Your AppSecret from bgm.tv>"
 let testURL = "<Your Albreo server URL, optional>"
 ```
 4. Open Xcode, build & run.
+
+## URL Schemes
+- moetv://detail?id=\<Bangumi ID\>
