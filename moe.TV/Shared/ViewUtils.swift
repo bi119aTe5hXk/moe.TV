@@ -8,6 +8,20 @@
 import Foundation
 import SwiftUI
 
+extension String {
+	var isValidURL: Bool {
+		let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+		if let match = detector.firstMatch(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count)) {
+			return match.range.length == self.utf16.count
+		} else {
+			return false
+		}
+	}
+	var isAlphanumeric: Bool {
+		return !isEmpty && range(of: "[^a-zA-Z0-9]", options: .regularExpression) == nil
+	}
+}
+
 extension View {
   @ViewBuilder func onChange<V: Equatable>(of value: V, initial: Bool, perform action: @escaping (_ newValue: V) -> Void) -> some View {
 #if os(iOS)
