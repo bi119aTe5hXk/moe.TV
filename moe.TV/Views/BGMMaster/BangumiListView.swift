@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BangumiListView: View {
-    @ObservedObject var listVM = BangumiListViewModel()
+	@ObservedObject var listVC = BangumiListViewController()
     @Binding var selectedItem: BangumiItemModel?
     @Binding var selectedFunc: FuncViewModel?
 
@@ -17,10 +17,10 @@ struct BangumiListView: View {
 	private let settingsHandler = SettingsHandler()
 
     var body: some View {
-        if listVM.isLoading{
+        if listVC.isLoading{
             ProgressView()
         }
-		List(listVM.bangumiFiltered, id: \.self, selection: $selectedItem){ item in
+		List(listVC.bangumiFiltered, id: \.self, selection: $selectedItem){ item in
                 NavigationLink(value: item) {
                     BangumiCellView(bangumiItem: item)
                 }
@@ -45,16 +45,16 @@ struct BangumiListView: View {
 				}
             }
         
-            //.searchable(text: $listVM.searchText)
+            //.searchable(text: $listVC.searchText)
             .modifier(OptionalSearchableViewModifier(
-                isSearchable: listVM.isSearchable(selectedFunc: selectedFunc),
+                isSearchable: listVC.isSearchable(selectedFunc: selectedFunc),
                 selectedFunc: selectedFunc,
-                listVM: listVM,
-                searchString: $listVM.searchText))
+                listVC: listVC,
+                searchString: $listVC.searchText))
         
 //        }
         
-            .alert("Albireo cookies may expired. Logout?",isPresented: $listVM.showLogoutAlert) {
+            .alert("Albireo cookies may expired. Logout?",isPresented: $listVC.showLogoutAlert) {
                 Button("Yes, logout & exit") {
                     logoutAlbireoServer { result, str in
                         exit(0);
@@ -62,7 +62,7 @@ struct BangumiListView: View {
                     exit(0);
                 }
                 Button("No, Stay login"){
-                    listVM.showLogoutAlert.toggle()
+                    listVC.showLogoutAlert.toggle()
                 }
                 
             }
@@ -71,7 +71,7 @@ struct BangumiListView: View {
     }
     
     func getBGMList(){
-        listVM.getBGMList(funcType: selectedFunc, searchKeyword: "")
+        listVC.getBGMList(funcType: selectedFunc, searchKeyword: "")
         
     }
 }
@@ -81,7 +81,7 @@ struct BangumiListView: View {
 struct OptionalSearchableViewModifier: ViewModifier{
     let isSearchable: Bool
     let selectedFunc: FuncViewModel?
-    let listVM: BangumiListViewModel
+	let listVC: BangumiListViewController
     @Binding var searchString: String
     
     func body(content: Content) -> some View {
@@ -93,9 +93,9 @@ struct OptionalSearchableViewModifier: ViewModifier{
                     .onSubmit(of: .search) {
                             //print(searchString)
                             if searchString.lengthOfBytes(using: .utf8) > 0{
-                                listVM.getBGMList(funcType: selectedFunc, searchKeyword: searchString)
+                                listVC.getBGMList(funcType: selectedFunc, searchKeyword: searchString)
                             }else{
-                                listVM.bgmList = []
+                                listVC.bgmList = []
                             }
                         }
             }else{

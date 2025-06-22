@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct MainView: View {
-    @ObservedObject var loginVM = LoginViewModel()
+	@ObservedObject var loginVC = LoginViewController()
     @EnvironmentObject var networkMonitor: NetworkMonitor
     
     

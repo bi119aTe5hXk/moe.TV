@@ -7,6 +7,7 @@
 
 import Foundation
 class SettingsHandler {
+	// MARK: - Keys
     private let UD_SUITE_NAME = "group.moetv"
     private let kCookie = "kCookie"
     private let kServerAddr = "kServerAddr"
@@ -15,6 +16,7 @@ class SettingsHandler {
     private let kBGMTVExpireTime = "kBGMTVExpireTime"
 
 	private let kLandscapePlayback = "kLandscapePlayback"
+	private let kShowBgmtvWebWhilePlaying = "kShowBgmtvWebWhilePlaying"
 	private let kPlaybackRate = "kPlaybackRate"
 
 	private let kPlaybackHistory = "kPlaybackHistory"
@@ -29,7 +31,7 @@ class SettingsHandler {
         sync()
     }
    
-    
+    // MARK: - Albireo
     //Cookies
     func setAlbireoCookie(array: [Any]?){
         if let arr = array{
@@ -70,7 +72,8 @@ class SettingsHandler {
 		return ub.string(forKey: "kBGMTVUsername") ?? ""
 	}
 
-    //BGMTV Access Token
+    // MARK: - bgm.tv
+	//BGMTV Access Token
     func setBGMTVAccessToken(token:String){
         ub.set(token, forKey: kBGMTVAccessToken)
         sync()
@@ -97,6 +100,7 @@ class SettingsHandler {
         return Int(ub.longLong(forKey: kBGMTVExpireTime))
     }
 
+	// MARK: - Preferences
 	//Landscape playback
 	func setLandscapePlayback(isEnabled: Bool){
 		ub.set(isEnabled, forKey: kLandscapePlayback)
@@ -104,6 +108,15 @@ class SettingsHandler {
 	}
 	func getLandscapePlayback() -> Bool{
 		return ub.bool(forKey: kLandscapePlayback)
+	}
+
+	//Show BGM.tv while playing
+	func setShowBgmtvWebWhilePlaying(isEnabled: Bool){
+		ub.set(isEnabled, forKey: kShowBgmtvWebWhilePlaying)
+		sync()
+	}
+	func getShowBgmtvWebWhilePlaying() -> Bool{
+		return ub.bool(forKey: kShowBgmtvWebWhilePlaying)
 	}
 
 	//Playback Rate
@@ -119,7 +132,7 @@ class SettingsHandler {
 		}
 	}
 
-	//Playback History
+	// MARK: - Playback History
 	func setPlaybackHistory(history:Array<BangumiItemModel>){
 		var encodeArr = [Any]()
 		history.forEach { item in
@@ -156,75 +169,6 @@ class SettingsHandler {
         ud.synchronize()
         ub.synchronize()
     }
-    
-//    //Add a listener to NSUbiquitousKeyValueStore for sync Settings to iCloud
-//    func addListenerToNSUbiquitousKeyValueStore() {
-//        NotificationCenter.default.addObserver(self,
-//            selector: #selector(ubiquitousKeyValueStoreDidChange(_:)),
-//            name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
-//            object: NSUbiquitousKeyValueStore.default)
-//        if NSUbiquitousKeyValueStore.default.synchronize() == false {
-//            fatalError("This app was not built with the proper entitlement requests.")
-//        }
-//    }
-//    
-//    @objc
-//    func ubiquitousKeyValueStoreDidChange(_ notification: Notification) {
-//        
-//        guard let userInfo = notification.userInfo else { return }
-//        // Get the reason for the notification (initial download, external change or quota violation change).
-//        guard let reasonForChange = userInfo[NSUbiquitousKeyValueStoreChangeReasonKey] as? Int else { return }
-//        
-//        // Check if any of the keys we care about were updated, and if so use the new value stored under that key.
-//        guard let keys =
-//            userInfo[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] else { return }
-//        guard keys.contains(kCookie) ||
-//        keys.contains(kServerAddr) ||
-//        keys.contains(kBGMTVExpireTime) ||
-//        keys.contains(kBGMTVAccessToken) ||
-//        keys.contains(kBGMTVRefreshToken)
-//        else {
-//            print("keys not found in iCloud")
-//            return
-//        }
-//        
-//        if reasonForChange == NSUbiquitousKeyValueStoreAccountChange{
-//            // User changed account, so fall back to use UserDefaults
-//        }
-//        
-//        //overwrite settings
-//        let possibleCookieFromiCloud = ub.array(forKey: kCookie)
-//        if let cookies = possibleCookieFromiCloud as? [[HTTPCookiePropertyKey : Any]]{
-//            ud.set(cookies, forKey: kCookie)
-//        }
-//        
-//        let possibleServerAddressFromiCloud = ub.string(forKey: kServerAddr)
-//        if let addr = possibleServerAddressFromiCloud{
-//            if addr.lengthOfBytes(using: .utf8) > 0{
-//                ud.set(addr, forKey: kServerAddr)
-//            }
-//        }
-//        
-//        let possibleBGMAccessTokenFromiCloud = ub.string(forKey: kBGMTVAccessToken)
-//        if let token = possibleBGMAccessTokenFromiCloud{
-//            if token.lengthOfBytes(using: .utf8) > 0{
-//                ud.set(token, forKey: kBGMTVAccessToken)
-//            }
-//        }
-//        
-//        let possibleBGMRefreshTokenFromiCloud = ub.string(forKey: kBGMTVRefreshToken)
-//        if let token = possibleBGMRefreshTokenFromiCloud{
-//            if token.lengthOfBytes(using: .utf8) > 0{
-//                ud.set(token, forKey: kBGMTVRefreshToken)
-//            }
-//        }
-//        
-//        let possibleBGMExpireTimeFromiCloud = ub.string(forKey: kBGMTVExpireTime)
-//        if let time = possibleBGMExpireTimeFromiCloud{
-//            ud.set(time, forKey: kBGMTVExpireTime)
-//        }
-//        
-//    }
     
     // MARK: - Plist handler
     func saveToPList(key:String, data:Any) {

@@ -1,5 +1,5 @@
 //
-//  BangumiListViewModel.swift
+//  BangumiListViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2023/08/09.
@@ -8,7 +8,7 @@
 import Foundation
 
 
-class BangumiListViewModel: ObservableObject{
+class BangumiListViewController: ObservableObject{
     @Published var bgmList = [BangumiItemModel]()
     @Published var isLoading = false
     @Published var searchText = ""

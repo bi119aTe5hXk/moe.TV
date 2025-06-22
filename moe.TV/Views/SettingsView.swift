@@ -9,14 +9,15 @@ import SwiftUI
 
 struct SettingsView: View {
     @State private var syncWithBGMTV = isBGMTVlogined()
-    @State private var showDownloadList = false
-	@State private var landscapePlayback = false
+    @State private var showDownloadList: Bool = false
+	@State private var landscapePlayback: Bool = false
+	@State private var showBgmtvWebWhilePlaying: Bool = false
 
 //    @Binding var listVM:BangumiListViewModel
 //    @Binding var loginVM:LoginViewModel
 //    @Binding var myBGMVM:MyBangumiViewModel
-    @ObservedObject var settingsVM:SettingsViewModel
-    
+	@ObservedObject var settingsVC:SettingsViewController
+
     var body: some View {
         NavigationStack{
             VStack{
@@ -50,11 +51,11 @@ struct SettingsView: View {
                                             startBGMTVLogin()
                                         }
                                     }else{
-                                        settingsVM.showLogoutBGMTVAlert()
+                                        settingsVC.showLogoutBGMTVAlert()
                                     }
                                 }
                               }
-                            .alert(isPresented: $settingsVM.presentLogoutBGMTVAlert) {
+                            .alert(isPresented: $settingsVC.presentLogoutBGMTVAlert) {
                                 Alert(
                                     title: Text("Are you sure you want to logout from bgm.tv?"),
                                     primaryButton: .destructive(Text("Logout")) {
@@ -66,25 +67,25 @@ struct SettingsView: View {
                                     }
                                 )
                             }
-                        if settingsVM.isBGMUserInfoReady{
+                        if settingsVC.isBGMUserInfoReady{
                             HStack{
                                 VStack{
                                     HStack{
-                                        Text("Nickname: \(settingsVM.bgmNickname)")
+                                        Text("Nickname: \(settingsVC.bgmNickname)")
                                         Spacer()
                                     }
                                     HStack{
-                                        Text("Username: \(settingsVM.bgmUsername)")
+                                        Text("Username: \(settingsVC.bgmUsername)")
                                         Spacer()
                                     }
                                     HStack{
-                                        Text("ID: \(String(settingsVM.bgmID))")
+                                        Text("ID: \(String(settingsVC.bgmID))")
                                         Spacer()
                                     }
                                     
                                 }
                                 Spacer()
-                                AsyncImage(url: URL(string: settingsVM.avatar_url)) { image in
+                                AsyncImage(url: URL(string: settingsVC.avatar_url)) { image in
                                     image.resizable()
                                         .frame(width: 50, height: 50)
                                         .foregroundColor(.white)
@@ -93,7 +94,7 @@ struct SettingsView: View {
                                 }
                             }
                             HStack{
-                                Text("Sign: \(settingsVM.bgmSign)")
+                                Text("Sign: \(settingsVC.bgmSign)")
                                 Spacer()
                             }
                         }
@@ -105,16 +106,43 @@ struct SettingsView: View {
 						if UIDevice.current.userInterfaceIdiom == .phone{
 							Toggle("Force landscape while playing (iPhone only)", isOn: $landscapePlayback)
 								.onAppear(){
-									self.landscapePlayback = settingsVM.settingsHandler.getLandscapePlayback()
+									self.landscapePlayback = settingsVC.settingsHandler.getLandscapePlayback()
 								}
 								.onChange(of: landscapePlayback, initial: false, perform: { value in
-									settingsVM.settingsHandler.setLandscapePlayback(isEnabled: value)
+									settingsVC.settingsHandler.setLandscapePlayback(isEnabled: value)
+								})
+						}else{
+							Toggle("Show Bgm.tv while playing", isOn: $showBgmtvWebWhilePlaying)
+								.onAppear(){
+									self.showBgmtvWebWhilePlaying = settingsVC.settingsHandler
+										.getShowBgmtvWebWhilePlaying()
+								}
+								.onChange(of: showBgmtvWebWhilePlaying, initial: false, perform: { value in
+									settingsVC.settingsHandler
+										.setShowBgmtvWebWhilePlaying(
+											isEnabled: value
+										)
 								})
 						}
 #endif
+#if os(macOS)
+						Toggle("Show Bgm.tv while playing", isOn: $showBgmtvWebWhilePlaying)
+							.onAppear(){
+								self.showBgmtvWebWhilePlaying = settingsVC.settingsHandler
+									.getShowBgmtvWebWhilePlaying()
+							}
+							.onChange(of: showBgmtvWebWhilePlaying, initial: false, perform: { value in
+								settingsVC.settingsHandler
+									.setShowBgmtvWebWhilePlaying(
+										isEnabled: value
+									)
+							})
+#endif
+
+
 						Picker(
 							"Default playbck speed",
-							selection: $settingsVM.playbackRate
+							selection: $settingsVC.playbackRate
 						) {
 							Text("0.5x").tag(0.5)
 							Text("1x").tag(1.0)
@@ -123,14 +151,17 @@ struct SettingsView: View {
 							Text("2x").tag(2.0)
 						}
 						.onAppear(){
-							self.settingsVM.playbackRate = settingsVM.settingsHandler.getPlaybackRate()
-							if settingsVM.playbackRate == 0.0{
-								self.settingsVM.playbackRate = 1.0
+							self.settingsVC.playbackRate = settingsVC.settingsHandler.getPlaybackRate()
+							if settingsVC.playbackRate == 0.0{
+								self.settingsVC.playbackRate = 1.0
 							}
 						}
-						.onChange(of: settingsVM.playbackRate, initial: false, perform: { value in
-							settingsVM.settingsHandler.setPlaybackRate(rate: value)
+						.onChange(of: settingsVC.playbackRate, initial: false, perform: { value in
+							settingsVC.settingsHandler.setPlaybackRate(rate: value)
 						})
+
+						//TODO: mark playing as want in bgm.tv options
+						//TODO: hide not-onair items switch
 					}
 
                     Section(header: Text("Download")) {
@@ -139,7 +170,9 @@ struct SettingsView: View {
                         } label: {
                             Text("Open download manager")
                         }
-                        .sheet(isPresented: self.$showDownloadList, content: {
+                        .sheet(
+isPresented: self.$showDownloadList,
+ content: {
                             HStack{
 #if !os(tvOS)
                                 Button(action: {
@@ -149,8 +182,10 @@ struct SettingsView: View {
                                 }).padding(20)
                                 Spacer()
 #endif
-                            }
-                            DownloadListView( dlListVM: DownloadListViewModel())
+							}
+	 DownloadListView(
+		dlListVC: DownloadListViewController()
+	 )
                                 .environmentObject(DownloadManager())
                                 .environmentObject(OfflinePlaybackManager())
                         })
@@ -158,15 +193,15 @@ struct SettingsView: View {
 
 					Section(header: Text("Playback History")){
 						Button{
-							settingsVM.presentClearHistoryAlert.toggle()
+							settingsVC.presentClearHistoryAlert.toggle()
 						}label: {
 							Text("Clear playback history")
 						}
-						.alert( isPresented: $settingsVM.presentClearHistoryAlert) {
+						.alert( isPresented: $settingsVC.presentClearHistoryAlert) {
 							Alert(
 								title: Text("Are you sure to delete all playback history?"),
 								primaryButton: .destructive(Text("Yes")){
-									settingsVM.settingsHandler
+									settingsVC.settingsHandler
 										.setPlaybackHistory(history: [])
 								},
 								secondaryButton: .cancel()
@@ -176,20 +211,20 @@ struct SettingsView: View {
 
                     Section(header: Text("Debug")) {
                         NavigationLink{
-                            DebugView(debugVM: DebugViewModel())
+							DebugView(debugVC: DebugViewController())
                         }label: {
                             Text("Debug menu")
                         }
                     }
                     
-                    Section(header: Text("Sign out"),footer: Text("Version:\(settingsVM.getAppVersion()), Build:\(settingsVM.getBuildVersion())")) {
+                    Section(header: Text("Sign out"),footer: Text("Version:\(settingsVC.getAppVersion()), Build:\(settingsVC.getBuildVersion())")) {
                         Button(action: {
-                            settingsVM.showLogoutAlbireoAlert()
+                            settingsVC.showLogoutAlbireoAlert()
                         }, label: {
                             Text("Logout & Exit").foregroundColor(.red)
                         }).padding(10)
                         
-                            .alert(isPresented: $settingsVM.presentLogoutAlbireoAlert) {
+                            .alert(isPresented: $settingsVC.presentLogoutAlbireoAlert) {
                                 Alert(
                                     title: Text("Are you sure you want to logout and exit app?"),
                                     primaryButton: .destructive(Text("Logout")) {
@@ -217,15 +252,17 @@ struct SettingsView: View {
         getBGMTVUserInfo(completion: { result, data in
             if result{
                 if let d = data as? BGMTVUserInfoModel{
-                    settingsVM.setBGMInfo(avatar_url: d.avatar?.large ?? "",
+                    settingsVC.setBGMInfo(avatar_url: d.avatar?.large ?? "",
                                           bgmUsername: d.username ?? "",
                                           bgmNickname: d.nickname ?? "",
                                           bgmID: d.id ?? 0,
                                           bgmSign: d.sign ?? "")
-                    settingsVM.showBGMUserInfo()
+                    settingsVC.showBGMUserInfo()
                 }
             }else{
                 print("bgm.tv oauth info invalid")
+				logoutBGMTV()
+				syncWithBGMTV = false
             }
         })
     }

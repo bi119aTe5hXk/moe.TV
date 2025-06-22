@@ -28,15 +28,15 @@ struct OfflineView: View {
                 Spacer()
 #endif
             }
-            DownloadListView( dlListVM: DownloadListViewModel())
+			DownloadListView( dlListVC: DownloadListViewController())
                 .environmentObject(DownloadManager())
                 .environmentObject(OfflinePlaybackManager())
         })
     }
 }
 
-struct OfflineView_Previews: PreviewProvider {
-    static var previews: some View {
-        OfflineView()
-    }
-}
+//struct OfflineView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        OfflineView()
+//    }
+//}

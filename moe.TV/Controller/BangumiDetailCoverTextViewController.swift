@@ -1,24 +1,24 @@
 //
-//  BangumiDetailCoverTextViewModel.swift
+//  BangumiDetailCoverTextViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2024/08/18.
 //
 
 import Foundation
-class BangumiDetailCoverTextViewModel: ObservableObject {
+class BangumiDetailCoverTextViewController: ObservableObject {
     @Published var presentFavStatusSelecter = false
     @Published var presentAlbireoFavChangeResultDone = false
 	@Published var presentBGMFavChangeResultDone = false
 	@Published var bgmItem:BangumiItemModel?
-	@Published var detailVM:BangumiDetailViewModel?
+	@Published var detailVC:BangumiDetailViewController?
 
 
     func toggleChangeFavStatusAlert() {
         self.presentFavStatusSelecter.toggle()
     }
-	func setDetailVM(dVM:BangumiDetailViewModel){
-		self.detailVM = dVM
+	func setDetailVC(dVC:BangumiDetailViewController){
+		self.detailVC = dVC
 	}
 
 
@@ -49,7 +49,7 @@ class BangumiDetailCoverTextViewModel: ObservableObject {
 			print("bgmid not found")
 		}
 //		if let item = bgmItem{
-//			if let dVM = self.detailVM{
+//			if let dVM = self.detailVC{
 //				dVM.getBGMDetail(id: item.id)
 //			}
 //		}

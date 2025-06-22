@@ -9,20 +9,20 @@ import SwiftUI
 struct DownloadListView: View {
     @EnvironmentObject var downloadManager:DownloadManager
     @EnvironmentObject var offlinePBM:OfflinePlaybackManager
-    @ObservedObject var dlListVM:DownloadListViewModel
-    
+	@ObservedObject var dlListVC:DownloadListViewController
+
     var body: some View {
         List{
-            if dlListVM.fileList.count > 0{
-                ForEach(dlListVM.fileList.indices, id: \.self){ i in
+            if dlListVC.fileList.count > 0{
+                ForEach(dlListVC.fileList.indices, id: \.self){ i in
                     Button {
-                        let playerItem = downloadManager.getVideoFileAsset(filename: dlListVM.fileList[i].lastPathComponent)
-                        dlListVM.showVideoView(path: playerItem!,filename: dlListVM.fileList[i].lastPathComponent)
+                        let playerItem = downloadManager.getVideoFileAsset(filename: dlListVC.fileList[i].lastPathComponent)
+						dlListVC.showVideoView(path: playerItem!,filename: dlListVC.fileList[i].lastPathComponent)
                     } label: {
                         HStack{
-                            Text(dlListVM.fileList[i].lastPathComponent)
+                            Text(dlListVC.fileList[i].lastPathComponent)
                             Spacer()
-                            if let status = offlinePBM.getPlayBackStatus(filename: dlListVM.fileList[i].lastPathComponent){
+                            if let status = offlinePBM.getPlayBackStatus(filename: dlListVC.fileList[i].lastPathComponent){
                                 Text("\(secondsToHoursMinutesSeconds(seconds: status.position))")
                             }
                         }
@@ -41,34 +41,35 @@ struct DownloadListView: View {
         }
         
 #if os(iOS) || os(tvOS)
-            .fullScreenCover(isPresented:$dlListVM.presentVideoView,
+            .fullScreenCover(isPresented:$dlListVC.presentVideoView,
                              onDismiss: { },
                              content: {
-                if let path = dlListVM.videoFilePath{
+                if let path = dlListVC.videoFilePath{
                     VideoPlayerView(url: path,
-                                    seekTime: dlListVM.playbackPosition ?? 0,
+                                    seekTime: dlListVC.playbackPosition ?? 0,
 									bgmItem: .constant(nil),
                                     ep: nil,
                                     isOffline: true,
-									filename: dlListVM.fileName,
+									filename: dlListVC.fileName,
 									isBGMTVWatched: false)
                 }
             })
 #endif
 #if os(macOS)
-            .sheet(isPresented:$dlListVM.presentVideoView ) {
-                if let path = dlListVM.videoFilePath{
+            .sheet(isPresented:$dlListVC.presentVideoView ) {
+                if let path = dlListVC.videoFilePath{
                     ZStack(alignment: .topLeading){
                         VideoPlayerView(url: path,
-                                        seekTime: dlListVM.playbackPosition ?? 0,
+                                        seekTime: dlListVC.playbackPosition ?? 0,
 										bgmItem: .constant(nil),
                                         ep: nil,
                                         isOffline: true,
-                                        filename: dlListVM.fileName)
+										filename: dlListVC.fileName,
+										isBGMTVWatched: false)
                             .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
                         //TODO: better close button for macOS
                         Button(action: {
-                            dlListVM.closePlayer()
+                            dlListVC.closePlayer()
                         }, label: {
                             Image(systemName: "xmark")
                                 .resizable()
@@ -87,7 +88,7 @@ struct DownloadListView: View {
     }
     
     func delete(at offsets: IndexSet) {
-        if let deleteItem = offsets.map({ dlListVM.fileList[$0] }).first {
+        if let deleteItem = offsets.map({ dlListVC.fileList[$0] }).first {
             print("delete:\(deleteItem.lastPathComponent)")
             downloadManager.deleteFile(fileName: deleteItem.lastPathComponent)
             offlinePBM.deletePlayBackStatus(filename: deleteItem.lastPathComponent)
@@ -97,7 +98,7 @@ struct DownloadListView: View {
     func getDownloadList(){
         downloadManager.getDownloadList { list in
             //print(list)
-            dlListVM.setFileList(list: list.sorted(by: { i, j in
+            dlListVC.setFileList(list: list.sorted(by: { i, j in
                 i.lastPathComponent < j.lastPathComponent
             }))
         }

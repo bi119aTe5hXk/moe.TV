@@ -14,7 +14,7 @@ import Combine
 import UIKit
 struct VideoPlayerViewiOS:UIViewControllerRepresentable{
     let player: AVPlayer
-	let playerVM:PlayerViewModel
+	let playerVM:PlayerViewController
     let ep:EpisodeDetailModel?
 
 	private let settingsHandler = SettingsHandler()
@@ -111,70 +111,162 @@ struct VideoPlayerView: View {
     var ep:EpisodeDetailModel?
     var isOffline:Bool
     var filename:String?
-    @StateObject private var playerVM = PlayerViewModel()
-	var detailVM:BangumiDetailViewModel?
+	@StateObject private var playerVM = PlayerViewController()
+	var detailVC:BangumiDetailViewController?
 
 	var isBGMTVWatched:Bool
 
 	private let settingsHandler = SettingsHandler()
 
     var body: some View {
-        ZStack {
-            if let avPlayer = playerVM.avPlayer {
+		ZStack{
+			if let avPlayer = playerVM.avPlayer {
+#if os(iOS)
+				if settingsHandler
+					.getShowBgmtvWebWhilePlaying() &&
+					(detailVC != nil) &&
+					UIDevice.current.userInterfaceIdiom != .phone
+				{
+						//player with navbar & webview
+					GeometryReader { geometry in
+						NavigationView{
+							HStack{
+								ZStack {
+									let playerObserver = PlayerItemObserver(player: avPlayer)
+									VideoPlayerViewiOS(player: avPlayer, playerVM: playerVM, ep: ep)
+										.onReceive(playerObserver.$currentStatus) { status in
+											playerVM
+												.playerObserverHandler(
+													status: status,
+													bgmItem: bgmItem,
+													filename: filename,
+													ep: ep,
+													isOffline: isOffline,
+													isBGMTVWatched: isBGMTVWatched
+												)
+										}
+										.persistentSystemOverlays(.hidden)
+								}.frame(maxWidth: .infinity)
+								if let theEP = ep{
+									if UIDevice.current.userInterfaceIdiom == .pad {
 
-#if os(iOS) || os(tvOS)
-                let playerObserver = PlayerItemObserver(player: avPlayer)
-				VideoPlayerViewiOS(player: avPlayer, playerVM: playerVM, ep: ep)
-                    .onReceive(playerObserver.$currentStatus) { status in
-                        switch status{
-                        case nil:
-                            print("nothing is here")
-                        case .waitingToPlayAtSpecifiedRate:
-                            print("waiting")
-                        case .paused:
-                            print("paused")
-                            playerVM.logPlaybackPosition(player: avPlayer,
-														 bgmItem: bgmItem,
-                                                         ep: ep,
-                                                         isOffline: isOffline,
-                                                         filename: filename,
-														 isBGMTVWatched: isBGMTVWatched)
-                        case .playing:
-                            print("playing")
-                        case .some(_):
-                            print("unknown player status")
-                        }
+										if let bgm_eps_id = theEP.bgm_eps_id{
+											let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
 
-                    }
-					.persistentSystemOverlays(.hidden)
-
-#else
-                let playerObserver = PlayerItemObserver(player: avPlayer)
-                VideoPlayer(player: avPlayer)
-                    .onReceive(playerObserver.$currentStatus) { status in
-                        switch status{
-                        case nil:
-                            print("nothing is here")
-                        case .waitingToPlayAtSpecifiedRate:
-                            print("waiting")
-                        case .paused:
-                            print("paused")
-                            playerVM.logPlaybackPosition(player: avPlayer,
-														 bgmItem: bgmItem,
-                                                         ep: ep,
-                                                         isOffline: isOffline,
-														 filename: filename,
-														 isBGMTVWatched: isBGMTVWatched)
-                        case .playing:
-                            print("playing")
-                        case .some(_):
-                            print("unknown player status")
-                        }
-                    }
+											WebView(url: URL(string: urlString)!)
+												.ignoresSafeArea()
+												.navigationBarTitleDisplayMode(.inline)
+												.frame(width: geometry.size.width*0.2)
+												.navigationTitle(theEP.name ?? "")
+												//										.navigationSubtitle(theEP.name_cn ?? "")
+												.navigationBarItems(leading:
+																		Button(action: {
+													detailVC?.presentVideoView = false
+												}) {
+													Text("Close")
+												}
+												)
+										}
+									}
+								}
+							}
+						}
+					}
+				}else{
+						//full screen player
+					ZStack {
+						let playerObserver = PlayerItemObserver(player: avPlayer)
+						VideoPlayerViewiOS(player: avPlayer, playerVM: playerVM, ep: ep)
+							.onReceive(playerObserver.$currentStatus) { status in
+								playerVM
+									.playerObserverHandler(
+										status: status,
+										bgmItem: bgmItem,
+										filename: filename,
+										ep: ep,
+										isOffline: isOffline,
+										isBGMTVWatched: isBGMTVWatched
+									)
+							}
+							.persistentSystemOverlays(.hidden)
+					}
+				}
 #endif
-            }
-        }
+#if os(tvOS)
+					//full screen player
+				ZStack {
+					let playerObserver = PlayerItemObserver(player: avPlayer)
+					VideoPlayerViewiOS(player: avPlayer, playerVM: playerVM, ep: ep)
+						.onReceive(playerObserver.$currentStatus) { status in
+							playerVM
+								.playerObserverHandler(
+									status: status,
+									bgmItem: bgmItem,
+									filename: filename,
+									ep: ep,
+									isOffline: isOffline,
+									isBGMTVWatched: isBGMTVWatched
+								)
+						}
+						.persistentSystemOverlays(.hidden)
+				}
+#endif
+#if os(macOS)
+						//player with navbar & webview
+				GeometryReader { geometry in
+					NavigationView{
+						HStack{
+							ZStack {
+								let playerObserver = PlayerItemObserver(player: avPlayer)
+								VideoPlayer(player: avPlayer)
+									.onReceive(playerObserver.$currentStatus) { status in
+										playerVM
+											.playerObserverHandler(
+												status: status,
+												bgmItem: bgmItem,
+												filename: filename,
+												ep: ep,
+												isOffline: isOffline,
+												isBGMTVWatched: isBGMTVWatched
+											)
+									}
 
+									.navigationTitle(ep?.name ?? "")
+									
+									.toolbar{
+										ToolbarItem(placement: .automatic) {
+											Button(action: {
+												detailVC?.presentVideoView = false
+											}) {
+												Text("Close")
+											}
+										}
+									}
+							}.frame(maxWidth: .infinity)
+							if settingsHandler
+								.getShowBgmtvWebWhilePlaying() && (detailVC != nil){
+								if let theEP = ep{
+
+
+									if let bgm_eps_id = theEP.bgm_eps_id{
+										let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
+
+										WebView(url: URL(string: urlString)!)
+											.ignoresSafeArea()
+//											.navigationBarTitleDisplayMode(.inline)
+											.frame(width: geometry.size.width*0.2)
+
+									}
+								}
+
+							}
+
+						}
+					}
+				}
+#endif
+			}
+		}
 		.edgesIgnoringSafeArea(.all)
 		.onAppear {
 #if os(iOS)
@@ -227,7 +319,7 @@ struct VideoPlayerView: View {
 				}
 			}
 #endif
-			if let dVM = detailVM{
+			if let dVM = detailVC{
 				if let item = bgmItem{
 					dVM.getBGMDetail(id: item.id)
 				}
@@ -237,6 +329,7 @@ struct VideoPlayerView: View {
 
 
     }
+
 }
 
 

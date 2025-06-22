@@ -21,7 +21,9 @@ struct moe_TVApp: App {
             MainView()
             
                 //for URI scheme
-                .sheet(isPresented: $showBGMDetailView, content: {
+                .sheet(
+isPresented: $showBGMDetailView,
+ content: {
 #if !os(tvOS)
                     HStack{
                         Button(action: {
@@ -32,8 +34,14 @@ struct moe_TVApp: App {
                         Spacer()
                     }
 #endif
-                    if let id = bgmID{
-                        BangumiDetailView(selectedItem: .constant(BangumiItemModel(id: id, type: 0, status: 0, eps: 0)), detailVM: BangumiDetailViewModel())
+	 if let id = bgmID{
+		 BangumiDetailView(
+			selectedItem:
+					.constant(
+						BangumiItemModel(id: id, type: 0, status: 0, eps: 0)
+					),
+			detailVC: BangumiDetailViewController()
+		 )
                     }
                 })
                 .environmentObject(networkMonitor)

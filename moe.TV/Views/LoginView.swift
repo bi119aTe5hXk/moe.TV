@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct LoginView: View {
-    @ObservedObject var loginVM = LoginViewModel()
+	@ObservedObject var loginVC = LoginViewController()
     var body: some View {
-        if loadAlbireoCookies() || loginVM.isLoginSuccessd{
+        if loadAlbireoCookies() || loginVC.isLoginSuccessd{
             MainListView()
         }else{
             HStack{
@@ -26,31 +26,31 @@ struct LoginView: View {
                     
                     Spacer()
                     
-                    TextField("Server URL", text: $loginVM.server)
+                    TextField("Server URL", text: $loginVC.server)
                         .padding(10)
-                    TextField("Username", text: $loginVM.username)
+                    TextField("Username", text: $loginVC.username)
                         .padding(10)
-                    SecureField("Password", text: $loginVM.password)
+                    SecureField("Password", text: $loginVC.password)
                         .padding(10)
 						.onSubmit {
-							loginVM.isLoginButtonTapped = true
+							loginVC.isLoginButtonTapped = true
 						}
                     Spacer()
                     Button(action: {
-                        loginVM.isLoginButtonTapped = true
+                        loginVC.isLoginButtonTapped = true
                         
                     }, label: {
                         Text("Login")
                             .foregroundColor(.white)
                     })
                     .padding(10)
-                    .background(loginVM.isValidUsername && loginVM.isValidPassword && loginVM.isValidServer ? Color.blue : Color.gray)
+                    .background(loginVC.isValidUsername && loginVC.isValidPassword && loginVC.isValidServer ? Color.blue : Color.gray)
                     .cornerRadius(10, antialiased: true)
-                    .disabled(!loginVM.isValidUsername || !loginVM.isValidPassword || !loginVM.isValidServer)
+                    .disabled(!loginVC.isValidUsername || !loginVC.isValidPassword || !loginVC.isValidServer)
 					
 					.alert(
-						loginVM.errorMessage,
-						isPresented: $loginVM.showError
+						loginVC.errorMessage,
+						isPresented: $loginVC.showError
 					) {
                         Button("OK", role: .cancel) { }
                     }

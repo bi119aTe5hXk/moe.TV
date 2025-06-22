@@ -1,5 +1,5 @@
 //
-//  BangumiDetailViewModel.swift
+//  BangumiDetailViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2023/07/04.
@@ -13,7 +13,7 @@ struct NewEPItem:Decodable {
 	var bgmEP:BGMTVUserEpisodeCollectionModel?
 }
 
-class BangumiDetailViewModel : ObservableObject {
+class BangumiDetailViewController : ObservableObject {
     @Published var presentVideoView = false
     @Published var presentContinuePlayAlert = false
     @Published var presentSourceSelectAlert = false
@@ -33,7 +33,8 @@ class BangumiDetailViewModel : ObservableObject {
 		)
 	}
 
-    //1
+	// MARK: - Prepare Player
+    //1 get selected EP
     func setSelectedEP(ep:EpisodeDetailModel){
         DispatchQueue.main.async {
             self.ep = ep
@@ -41,7 +42,7 @@ class BangumiDetailViewModel : ObservableObject {
         }
     }
     
-    //2
+    //2 check last position
     func checkLastWatchPosition(ep:EpisodeDetailModel){
         if let watchProgress = ep.watch_progress{
             if watchProgress.percentage != 0 ||
@@ -60,7 +61,7 @@ class BangumiDetailViewModel : ObservableObject {
         }
     }
     
-    //3
+    //3 check video source (ask if more than one source)
     func checkVideoSource(ep:EpisodeDetailModel,seekTime:Double){
         self.seek = seekTime
         if (ep.video_files ?? []).count > 1{
@@ -85,7 +86,7 @@ class BangumiDetailViewModel : ObservableObject {
     
     
     
-    //4
+    //4 start playback
     func showVideoView(url:String, seekTime:Double) {
         DispatchQueue.main.async {
             self.seek = seekTime
@@ -104,7 +105,7 @@ class BangumiDetailViewModel : ObservableObject {
         }
     }
     
-    
+	// MARK: - Bangumi Detail
     func getBGMDetail(id:String){
         print("getBGMDetail:\(id)")
 		self.detailItem = nil

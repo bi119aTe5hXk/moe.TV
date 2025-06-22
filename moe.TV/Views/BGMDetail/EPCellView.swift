@@ -17,7 +17,7 @@ struct EPCellView: View {
 	//@State var bgmEPItem:BGMTVUserEpisodeCollectionModel?
     @State var showVideoFileExisitAlert = false
     @State var showNotDownloadableAlert = false
-    @ObservedObject var detailVM : BangumiDetailViewModel
+	@ObservedObject var detailVC : BangumiDetailViewController
     @EnvironmentObject var downloadManager: DownloadManager
     @EnvironmentObject var offlinePBM:OfflinePlaybackManager
     
@@ -29,7 +29,7 @@ action: {
 				getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
                     if result{
                         if let epDetail = data as? EpisodeDetailModel{
-                            detailVM.setSelectedEP(ep: epDetail)
+							detailVC.setSelectedEP(ep: epDetail)
                         }
                     }else{
                         print(data as Any)
@@ -39,6 +39,7 @@ action: {
  label: {
 //                    GeometryReader { geo in
                 ZStack{
+
 					if let thumbnail = newEPItem.ep.thumbnail{
                         CachedAsyncImage(
                             url: fixPathNotCompete(path: thumbnail),
@@ -209,7 +210,7 @@ action: {
 
 //struct EPCellView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: testURL.appending("/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0"), status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVM: BangumiDetailViewModel())
+//        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: testURL.appending("/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0"), status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVC: BangumiDetailViewModel())
 //            .environmentObject(DownloadManager())
 //    }
 //}

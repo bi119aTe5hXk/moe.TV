@@ -176,6 +176,28 @@
         }
       }
     },
+    "Are you sure to delete all playback history?" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "視聴履歴をすべて削除しますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要清空播放记录吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確定要清空播放歷史嗎？"
+          }
+        }
+      }
+    },
     "Are you sure you want to logout and exit app?" : {
       "localizations" : {
         "ja" : {
@@ -221,10 +243,24 @@
       }
     },
     "Bgm.tv" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bgm.tv"
+          }
+        }
+      }
     },
     "BGM.TV" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BGM.TV"
+          }
+        }
+      }
     },
     "Bgm.tv favorite status has changed" : {
       "localizations" : {
@@ -1195,6 +1231,28 @@
         }
       }
     },
+    "Show Bgm.tv while playing" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生する際、bgm.tvコミュニティを表示する"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在播放时显示bgm.tv讨论页面"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放時顯示bgm.tv討論頁"
+          }
+        }
+      }
+    },
     "Show download list" : {
       "localizations" : {
         "ja" : {
@@ -1315,7 +1373,7 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "不明"
           }
         },
@@ -1343,7 +1401,7 @@
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "不明"
           }
         },

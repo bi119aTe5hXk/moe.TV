@@ -1,5 +1,5 @@
 //
-//  LoginViewModel.swift
+//  LoginViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2023/06/12.
@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import AuthenticationServices
 
-class LoginViewModel: ObservableObject {
+class LoginViewController: ObservableObject {
     @Published var server = ""
     @Published var username = ""
     @Published var password = ""
@@ -81,19 +81,5 @@ class LoginViewModel: ObservableObject {
                         }
                     })
                     .store(in: &disposables)
-    }
-}
-
-extension String {
-    var isValidURL: Bool {
-        let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
-        if let match = detector.firstMatch(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count)) {
-            return match.range.length == self.utf16.count
-        } else {
-            return false
-        }
-    }
-    var isAlphanumeric: Bool {
-        return !isEmpty && range(of: "[^a-zA-Z0-9]", options: .regularExpression) == nil
     }
 }

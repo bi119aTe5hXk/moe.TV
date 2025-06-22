@@ -1,5 +1,5 @@
 //
-//  PlayerViewModel.swift
+//  PlayerViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2023/07/04.
@@ -11,14 +11,47 @@ import AVFoundation
 import MediaPlayer
 import Combine
 
-class PlayerViewModel: ObservableObject {
+class PlayerViewController: ObservableObject {
     @Published var avPlayer:AVPlayer?
     let offlinePBM = OfflinePlaybackManager()
 
     func loadFromUrl(url: URL) {
+		print("\(url)")
         avPlayer = AVPlayer(url: url)
     }
-    
+
+	func playerObserverHandler(
+		status:AVPlayer.TimeControlStatus?,
+		bgmItem:BangumiItemModel?,
+		filename:String?,
+		ep:EpisodeDetailModel?,
+		isOffline:Bool,
+		isBGMTVWatched:Bool
+	){
+		switch status{
+			case nil:
+				print("nothing is here")
+			case .waitingToPlayAtSpecifiedRate:
+				print("waiting")
+			case .paused:
+				print("paused")
+				if let player = avPlayer {
+					logPlaybackPosition(player: player,
+										bgmItem: bgmItem,
+										ep: ep,
+										isOffline: isOffline,
+										filename: filename,
+										isBGMTVWatched: isBGMTVWatched)
+				}
+			case .playing:
+				print("playing")
+			case .some(_):
+				print("unknown player status:\(String(describing: status))")
+			@unknown default:
+				print("unknown player status:\(String(describing: status))")
+		}
+	}
+
     func logPlaybackPosition(player:AVPlayer,
 							 bgmItem:BangumiItemModel?,
                              ep:EpisodeDetailModel?,
@@ -44,7 +77,7 @@ class PlayerViewModel: ObservableObject {
 				if isFinished && !isBGMTVWatched{
                     if let subject_id = theEP.bangumi?.bgm_id{
                         if let episode_id = theEP.bgm_eps_id{
-							//save to BGM as watched
+							print("save to BGM.TV as watched")
                             setBGMSBEPStatues(subject_id: subject_id,
                                                  episode_id: episode_id,
                                                  status: 2) { result, data in
@@ -65,7 +98,7 @@ class PlayerViewModel: ObservableObject {
 						savePlaybackHistory(item)
 					}
 
-					//save watch progress to history
+					print("save progress to albireo")
                     sentAlbireoEPWatchProgress(ep_id: theEP.id,
                                         bangumi_id: bangumi_id,
                                         last_watch_position: currentTime,
@@ -81,8 +114,8 @@ class PlayerViewModel: ObservableObject {
                 if let episode_no  = theEP.episode_no{
                     if let eps = theEP.bangumi?.eps{
                         if episode_no == eps{
-                            print("should set the subject as watched")
-                            
+                            print("should set the subject/collection as watched: episode_no:\(episode_no),eps:\(eps)")
+
                         }
                     }
                 }
@@ -111,7 +144,17 @@ class PlayerViewModel: ObservableObject {
 			metadata.append(createMetadataItem(for: .commonIdentifierDescription, value: summary))
 		}
 		if let imageURL = ep.thumbnail {
-			metadata.append(createMetadataItem(for: .commonIdentifierArtwork, value: imageURL))
+			let url = URL(string: imageURL)!
+			let rdata = try? Data(contentsOf: url)
+			metadata
+				.append(
+					createMetadataItem(
+						for: .commonIdentifierArtwork,
+						value: rdata ?? NSNull()
+					)
+				)
+
+
 		}
 		if let subtitle = ep.name_cn {
 			metadata.append(createMetadataItem(for: .iTunesMetadataTrackSubTitle,value: subtitle))
