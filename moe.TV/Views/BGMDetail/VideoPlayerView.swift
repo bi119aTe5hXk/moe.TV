@@ -123,7 +123,10 @@ struct VideoPlayerView: View {
 			if let avPlayer = playerVM.avPlayer {
 #if os(iOS)
 				if settingsHandler
-					.getShowBgmtvWebWhilePlaying() && (detailVC != nil){
+					.getShowBgmtvWebWhilePlaying() &&
+					(detailVC != nil) &&
+					UIDevice.current.userInterfaceIdiom != .phone
+				{
 						//player with navbar & webview
 					GeometryReader { geometry in
 						NavigationView{
