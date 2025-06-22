@@ -28,7 +28,7 @@ struct OfflineView: View {
                 Spacer()
 #endif
             }
-            DownloadListView( dlListVM: DownloadListViewModel())
+			DownloadListView( dlListVC: DownloadListViewController())
                 .environmentObject(DownloadManager())
                 .environmentObject(OfflinePlaybackManager())
         })

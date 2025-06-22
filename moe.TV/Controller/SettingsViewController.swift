@@ -1,5 +1,5 @@
 //
-//  SettingsViewModel.swift
+//  SettingsViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2023/07/07.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SettingsViewModel: ObservableObject{
+class SettingsViewController: ObservableObject{
     @Published var presentLogoutAlbireoAlert = false
     @Published var presentLogoutBGMTVAlert = false
 	@Published var presentClearHistoryAlert = false

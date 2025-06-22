@@ -1,5 +1,5 @@
 //
-//  BangumiDetailViewModel.swift
+//  BangumiDetailViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2023/07/04.
@@ -13,7 +13,7 @@ struct NewEPItem:Decodable {
 	var bgmEP:BGMTVUserEpisodeCollectionModel?
 }
 
-class BangumiDetailViewModel : ObservableObject {
+class BangumiDetailViewController : ObservableObject {
     @Published var presentVideoView = false
     @Published var presentContinuePlayAlert = false
     @Published var presentSourceSelectAlert = false

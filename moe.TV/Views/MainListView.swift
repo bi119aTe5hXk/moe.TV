@@ -67,7 +67,7 @@ struct MainListView: View {
                 Spacer()
 #endif
             }
-            SettingsView(settingsVM: SettingsViewModel())
+			SettingsView(settingsVC: SettingsViewController())
 #if os(macOS)
         .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
 #endif

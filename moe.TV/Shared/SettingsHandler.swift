@@ -16,6 +16,7 @@ class SettingsHandler {
     private let kBGMTVExpireTime = "kBGMTVExpireTime"
 
 	private let kLandscapePlayback = "kLandscapePlayback"
+	private let kShowBgmtvWebWhilePlaying = "kShowBgmtvWebWhilePlaying"
 	private let kPlaybackRate = "kPlaybackRate"
 
 	private let kPlaybackHistory = "kPlaybackHistory"
@@ -107,6 +108,15 @@ class SettingsHandler {
 	}
 	func getLandscapePlayback() -> Bool{
 		return ub.bool(forKey: kLandscapePlayback)
+	}
+
+	//Show BGM.tv while playing
+	func setShowBgmtvWebWhilePlaying(isEnabled: Bool){
+		ub.set(isEnabled, forKey: kShowBgmtvWebWhilePlaying)
+		sync()
+	}
+	func getShowBgmtvWebWhilePlaying() -> Bool{
+		return ub.bool(forKey: kShowBgmtvWebWhilePlaying)
 	}
 
 	//Playback Rate

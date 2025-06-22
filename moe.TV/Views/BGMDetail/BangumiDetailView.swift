@@ -9,25 +9,25 @@ import SwiftUI
 
 struct BangumiDetailView: View {
 	@Binding var selectedItem:BangumiItemModel?
-	@ObservedObject var detailVM = BangumiDetailViewModel()
+	@ObservedObject var detailVC = BangumiDetailViewController()
 
 	var body: some View {
 			//Text("favorite_status:\(selectedItem?.favorite_status)")
 		ScrollView{
 			BangumiDetailCoverTextView(
-				item: $detailVM.detailItem,
-				albireo_favorite_status: $detailVM.albireo_favorite_status,
-				bgmtv_favorite_status: $detailVM.bgmtv_favorite_status,
-				detailVM: detailVM
+				item: $detailVC.detailItem,
+				albireo_favorite_status: $detailVC.albireo_favorite_status,
+				bgmtv_favorite_status: $detailVC.bgmtv_favorite_status,
+				detailVC: detailVC
 			)
 			.frame(minHeight: 300,maxHeight: 600)
 
 			Divider()
-			if !detailVM.newEPList.isEmpty{
-				ForEach(detailVM.newEPList, id: \.ep){ item in
+			if !detailVC.newEPList.isEmpty{
+				ForEach(detailVC.newEPList, id: \.ep){ item in
 					if let n = item.ep.name{
 						if !n.isEmpty{
-							EPCellView(newEPItem:item,detailVM:detailVM)
+							EPCellView(newEPItem:item,detailVC:detailVC)
 								.environmentObject(DownloadManager())
 								.environmentObject(OfflinePlaybackManager())
 								.padding(10)
@@ -50,7 +50,7 @@ struct BangumiDetailView: View {
 				print(
 					"BangumiDetailView onAppear)"
 				)
-				detailVM.getBGMDetail(id: item.id)
+				detailVC.getBGMDetail(id: item.id)
 			}
 		}
         .onChange(of: selectedItem, initial: true) { newValue in
@@ -58,7 +58,7 @@ struct BangumiDetailView: View {
 				print(
 					"BangumiDetailView onchange)"
 				)
-                detailVM.getBGMDetail(id: item.id)
+                detailVC.getBGMDetail(id: item.id)
             }
           }
         .refreshable {
@@ -66,7 +66,7 @@ struct BangumiDetailView: View {
 				print(
 					"BangumiDetailView refreshable)"
 				)
-                detailVM.getBGMDetail(id: item.id)
+                detailVC.getBGMDetail(id: item.id)
             }
         }
 		
@@ -74,32 +74,32 @@ struct BangumiDetailView: View {
 			ToolbarItem(placement: .principal) {
 				HStack{
 					Spacer()
-					BangumiDetailNavTitleView(item: $detailVM.detailItem)
+					BangumiDetailNavTitleView(item: $detailVC.detailItem)
 					Spacer()
-					BangumiDetailNavItemView(downloadManager: DownloadManager(), bgmItem: $detailVM.detailItem)
+					BangumiDetailNavItemView(downloadManager: DownloadManager(), bgmItem: $detailVC.detailItem)
 				}
 			}
         })
         .padding(0)
 #if os(iOS) || os(tvOS)
-        .fullScreenCover(isPresented:$detailVM.presentVideoView,
+        .fullScreenCover(isPresented:$detailVC.presentVideoView,
                          onDismiss: { },
                          content: {
-            if let url = URL(string: detailVM.videoURL){
+            if let url = URL(string: detailVC.videoURL){
 
                 VideoPlayerView(url: url,
-                                seekTime: detailVM.seek,
+                                seekTime: detailVC.seek,
 								bgmItem: $selectedItem,
-                                ep: detailVM.ep!,
+                                ep: detailVC.ep!,
                                 isOffline: false,
-								detailVM: detailVM,
-								isBGMTVWatched: detailVM.isBGMEPWatched())
+								detailVC: detailVC,
+								isBGMTVWatched: detailVC.isBGMEPWatched())
             }else{
                 Spacer()
                 Text("Error: Video URL is empty")
                 Spacer()
                 Button(action: {
-                    detailVM.closePlayer()
+                    detailVC.closePlayer()
                 }, label: {
                     Text("Close")
                 })
@@ -109,20 +109,20 @@ struct BangumiDetailView: View {
         })
 #endif
 #if os(macOS)
-        .sheet(isPresented:$detailVM.presentVideoView ) {
-            if let url = URL(string: detailVM.videoURL){
+        .sheet(isPresented:$detailVC.presentVideoView ) {
+            if let url = URL(string: detailVC.videoURL){
                 ZStack(alignment: .topLeading){
                     VideoPlayerView(url: url,
-                                    seekTime: detailVM.seek,
+                                    seekTime: detailVC.seek,
 									bgmItem: $selectedItem,
-                                    ep: detailVM.ep!,
+                                    ep: detailVC.ep!,
 									isOffline: false,
-									detailVM: detailVM,
-									isBGMTVWatched: detailVM.isBGMEPWatched())
+									detailVC: detailVC,
+									isBGMTVWatched: detailVC.isBGMEPWatched())
                     .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
                     //TODO: better close button for macOS
                     Button(action: {
-                        detailVM.closePlayer()
+                        detailVC.closePlayer()
                     }, label: {
                         Image(systemName: "xmark")
                             .resizable()
@@ -135,7 +135,7 @@ struct BangumiDetailView: View {
             }else{
                 Text("Error: Video URL is empty")
                 Button(action: {
-                    detailVM.closePlayer()
+                    detailVC.closePlayer()
                 }, label: {
                     Image(systemName: "xmark")
                         .resizable()
@@ -146,13 +146,13 @@ struct BangumiDetailView: View {
             }
         }
 #endif
-        .alert("Please select a source:",isPresented: $detailVM.presentSourceSelectAlert) {
-            if let ep = detailVM.ep{
+        .alert("Please select a source:",isPresented: $detailVC.presentSourceSelectAlert) {
+            if let ep = detailVC.ep{
                 ForEach(ep.video_files
                         ?? [], id: \.self){ item in
                     Button(item.file_name ?? "unknow source"){
                         if let urlstr = item.url{
-                            detailVM.showVideoView(url: fixPathNotCompete(path: urlstr).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!, seekTime: detailVM.seek)
+                            detailVC.showVideoView(url: fixPathNotCompete(path: urlstr).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!, seekTime: detailVC.seek)
                         }else{
                             print("item.url is empty!")
                         }
@@ -160,12 +160,12 @@ struct BangumiDetailView: View {
                 }
             }
         }
-        .alert("Continue from last position?",isPresented: $detailVM.presentContinuePlayAlert) {
+        .alert("Continue from last position?",isPresented: $detailVC.presentContinuePlayAlert) {
             Button("Yes") {
-                detailVM.checkVideoSource(ep: detailVM.ep!, seekTime: (detailVM.ep!.watch_progress!.last_watch_position! - 5))
+                detailVC.checkVideoSource(ep: detailVC.ep!, seekTime: (detailVC.ep!.watch_progress!.last_watch_position! - 5))
             }
             Button("No, start from beginning"){
-                detailVM.checkVideoSource(ep: detailVM.ep!, seekTime: 0)
+                detailVC.checkVideoSource(ep: detailVC.ep!, seekTime: 0)
             }
             
         }

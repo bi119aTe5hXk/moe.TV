@@ -1,12 +1,12 @@
 //
-//  DownloadListViewModel.swift
+//  DownloadListViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2023/08/06.
 //
 
 import Foundation
-class DownloadListViewModel: ObservableObject{
+class DownloadListViewController: ObservableObject{
     @Published var fileList = [URL]()
     @Published var fileName = ""
     @Published var playbackPosition:Double?

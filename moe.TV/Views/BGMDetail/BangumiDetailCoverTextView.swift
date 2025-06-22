@@ -11,9 +11,9 @@ struct BangumiDetailCoverTextView: View {
     @Binding var item:BangumiDetailModel?
     @Binding var albireo_favorite_status:Int?
 	@Binding var bgmtv_favorite_status:Int?
-    @ObservedObject var dctVM = BangumiDetailCoverTextViewModel()
+	@ObservedObject var dctVC = BangumiDetailCoverTextViewController()
 
-	var detailVM:BangumiDetailViewModel
+	var detailVC:BangumiDetailViewController
 
     var body: some View {
         HStack{
@@ -69,8 +69,8 @@ struct BangumiDetailCoverTextView: View {
 
 					Button(
 						action: {
-						dctVM.setDetailVM(dVM: detailVM)
-						dctVM.toggleChangeFavStatusAlert()
+							dctVC.setDetailVC(dVC: detailVC)
+						dctVC.toggleChangeFavStatusAlert()
 					},
 						label: {
 #if os(iOS)
@@ -119,33 +119,33 @@ struct BangumiDetailCoverTextView: View {
 				}
 
 
-				.alert("Change favorite status",isPresented: $dctVM.presentFavStatusSelecter) {
+				.alert("Change favorite status",isPresented: $dctVC.presentFavStatusSelecter) {
 					Button("Wish"){
-						dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 1)
+						dctVC.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 1)
 					}
 					Button("Watched"){
-						dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 2)
+						dctVC.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 2)
 					}
 					Button("Watching"){
-						dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 3)
+						dctVC.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 3)
 					}
 					Button("Pause"){
-						dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 4)
+						dctVC.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 4)
 					}
 					Button("Abandoned"){
-						dctVM.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 5)
+						dctVC.changeFavStatus(idstr: i.id, bgmid: i.bgm_id, status: 5)
 					}
 					Button("Cancel"){
-						dctVM.presentFavStatusSelecter.toggle()
+						dctVC.presentFavStatusSelecter.toggle()
 					}
 				}
 				.alert(
 					"Albireo favorite status has changed",
-					isPresented: $dctVM.presentAlbireoFavChangeResultDone
+					isPresented: $dctVC.presentAlbireoFavChangeResultDone
 				){ }
 				.alert(
 						"Bgm.tv favorite status has changed",
-						isPresented: $dctVM.presentBGMFavChangeResultDone
+						isPresented: $dctVC.presentBGMFavChangeResultDone
 				){ }
 
 
@@ -171,7 +171,7 @@ struct BangumiDetailCoverTextView: View {
 //						)
 //					),
 //			favorite_status: .constant(3),
-//			detailVM: BangumiDetailViewModel()
+//			detailVC: BangumiDetailViewModel()
 //		)
 //    }
 //}

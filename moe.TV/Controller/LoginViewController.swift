@@ -1,5 +1,5 @@
 //
-//  LoginViewModel.swift
+//  LoginViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2023/06/12.
@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import AuthenticationServices
 
-class LoginViewModel: ObservableObject {
+class LoginViewController: ObservableObject {
     @Published var server = ""
     @Published var username = ""
     @Published var password = ""

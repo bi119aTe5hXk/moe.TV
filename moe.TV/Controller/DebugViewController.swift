@@ -1,5 +1,5 @@
 //
-//  DebugViewModel.swift
+//  DebugViewController.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2023/12/30.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DebugViewModel: ObservableObject {
+class DebugViewController: ObservableObject {
     let settings = SettingsHandler()
 	func getBGMTVUsername() -> String {
 		return settings.getBGMTVUsername()

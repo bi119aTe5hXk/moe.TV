@@ -12,8 +12,8 @@ struct DebugView: View {
     @State private var iCloudEnabled = (FileManager.default.ubiquityIdentityToken != nil)
     @State private var syncWithBGMTV = isBGMTVlogined()
     @State private var albireoCookiesArray:Array<String> = []
-    @ObservedObject var debugVM:DebugViewModel
-    
+    @ObservedObject var debugVC:DebugViewController
+
     var body: some View {
         VStack{
             HStack{
@@ -45,17 +45,17 @@ struct DebugView: View {
                     HStack{
                         Text("AccessToken")
                         Spacer()
-                        Text(debugVM.getBGMTVAccessToken())
+                        Text(debugVC.getBGMTVAccessToken())
                     }
                     HStack{
                         Text("RefreshToken")
                         Spacer()
-                        Text(debugVM.getBGMTVRefreshToken())
+                        Text(debugVC.getBGMTVRefreshToken())
                     }
                     HStack{
                         Text("ExpireTime")
                         Spacer()
-                        Text("\(debugVM.getBGMExpireTime())")
+                        Text("\(debugVC.getBGMExpireTime())")
                     }
                     Button {
                         refreshBGMTVToken()
@@ -63,7 +63,7 @@ struct DebugView: View {
                         Text("Refresh BGM Access Token")
                     }
                     Button {
-                        debugVM.reSyncBGM()
+						debugVC.reSyncBGM()
                     } label: {
                         Text("Re-Sync with iCloud")
                     }
