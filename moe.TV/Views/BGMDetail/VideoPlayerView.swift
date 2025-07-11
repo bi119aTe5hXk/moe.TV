@@ -157,8 +157,7 @@ struct VideoPlayerView: View {
 												.ignoresSafeArea()
 												.navigationBarTitleDisplayMode(.inline)
 												.frame(width: geometry.size.width*0.2)
-												.navigationTitle(theEP.name ?? "")
-												//										.navigationSubtitle(theEP.name_cn ?? "")
+												.navigationTitle("\(ep?.name ?? "") / \(ep?.name_cn ?? "")")
 												.navigationBarItems(leading:
 																		Button(action: {
 													detailVC?.presentVideoView = false
@@ -231,8 +230,8 @@ struct VideoPlayerView: View {
 											)
 									}
 
-									.navigationTitle(ep?.name ?? "")
-									
+									.navigationTitle("\(ep?.name ?? "") / \(ep?.name_cn ?? "")")
+
 									.toolbar{
 										ToolbarItem(placement: .automatic) {
 											Button(action: {

@@ -18,6 +18,7 @@ class SettingsHandler {
 	private let kLandscapePlayback = "kLandscapePlayback"
 	private let kShowBgmtvWebWhilePlaying = "kShowBgmtvWebWhilePlaying"
 	private let kPlaybackRate = "kPlaybackRate"
+	private let kSearchHistory = "kSearchHistory"
 
 	private let kPlaybackHistory = "kPlaybackHistory"
 
@@ -130,6 +131,15 @@ class SettingsHandler {
 		}else {
 			return ub.double(forKey: kPlaybackRate)
 		}
+	}
+
+	//Search history
+	func setSearchHistory(history:Array<String>){
+		ub.set(history, forKey: kSearchHistory)
+		sync()
+	}
+	func getSearchHistory() -> Array<String>{
+		return ub.array(forKey: kSearchHistory) as? Array<String> ?? []
 	}
 
 	// MARK: - Playback History
