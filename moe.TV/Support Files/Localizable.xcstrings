@@ -483,7 +483,26 @@
       }
     },
     "Delete" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除"
+          }
+        }
+      }
     },
     "Download" : {
       "localizations" : {
@@ -574,9 +593,6 @@
       }
     },
     "ExpireTime" : {
-
-    },
-    "Filtering..." : {
 
     },
     "Finished" : {
@@ -1180,6 +1196,12 @@
           }
         }
       }
+    },
+    "Search on Cloud" : {
+
+    },
+    "Search..." : {
+
     },
     "Server URL" : {
       "localizations" : {

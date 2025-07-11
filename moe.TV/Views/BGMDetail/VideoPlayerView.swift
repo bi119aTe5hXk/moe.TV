@@ -320,7 +320,9 @@ struct VideoPlayerView: View {
 #endif
 			if let dVM = detailVC{
 				if let item = bgmItem{
-					dVM.getBGMDetail(id: item.id)
+					dVM.getBGMDetail(id: item.id){ result in
+
+					}
 				}
 			}
 

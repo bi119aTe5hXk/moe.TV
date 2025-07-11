@@ -92,12 +92,35 @@ struct OptionalSearchableViewModifier: ViewModifier{
             if selectedFunc == .search{
 				//for search via API
                 content
-                    .searchable(text: $searchString, prompt: "Search")
+                    .searchable(text: $searchString, prompt: "Search on Cloud")
+					.searchSuggestions {
+						if searchString.isEmpty && searchHistory.count > 0{
+							Section("History") {
+								ForEach(searchHistory, id: \.self) { history in
+									Label(history, systemImage: "clock.arrow.circlepath")
+										.searchCompletion(history)
+										.swipeActions(edge: .trailing, allowsFullSwipe: true) {
+											Button(role: .destructive) {
+												searchHistory.removeAll { $0 == history }
+												settingsHandler.setSearchHistory(history: searchHistory)
+											} label: {
+												Text("Delete")
+											}
+										}
+								}
+							}
+						}
+					}
                     .onSubmit(of: .search) {
 						if searchString.lengthOfBytes(using: .utf8) > 0{
-								print(searchString)
-                                listVC.getBGMList(funcType: selectedFunc, searchKeyword: searchString)
-                            }else{
+							print(searchString)
+							if !searchHistory.contains(searchString) {
+								searchHistory.append(searchString)
+								settingsHandler.setSearchHistory(history: searchHistory)
+								print("saved:\(searchHistory)")
+							}
+							listVC.getBGMList(funcType: selectedFunc, searchKeyword: searchString)
+						}else{
                                 listVC.bgmList = []
                             }
                         }
@@ -105,7 +128,7 @@ struct OptionalSearchableViewModifier: ViewModifier{
             }else{
 				//for filtering items
                 content
-                    .searchable(text: $searchString, prompt: "Filtering...")
+                    .searchable(text: $searchString, prompt: "Search...")
 					.searchSuggestions {
 						if searchString.isEmpty && searchHistory.count > 0{
 							Section("History") {
