@@ -125,16 +125,16 @@ struct OptionalSearchableViewModifier: ViewModifier{
 						}
 					}
 
-//					.onSubmit {
-//						print("searchString:\(searchString)")
-//						if searchString.lengthOfBytes(using: .utf8) > 0{
-//							if !searchHistory.contains(searchString) {
-//								searchHistory.append(searchString)
-//								settingsHandler.setSearchHistory(history: searchHistory)
-//								print("saved:\(searchHistory)")
-//							}
-//						}
-//					}
+					.onSubmit(of: .search){
+						print("searchString:\(searchString)")
+						if searchString.lengthOfBytes(using: .utf8) > 0{
+							if !searchHistory.contains(searchString) {
+								searchHistory.append(searchString)
+								settingsHandler.setSearchHistory(history: searchHistory)
+								print("saved:\(searchHistory)")
+							}
+						}
+					}
             }
         case false:
             content

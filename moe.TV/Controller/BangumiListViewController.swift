@@ -14,7 +14,7 @@ class BangumiListViewController: ObservableObject{
     @Published var searchText = ""
     @Published var showLogoutAlert = false
 
-	private let settingsHandler = SettingsHandler()
+//	private let settingsHandler = SettingsHandler()
 
     private func updateBGMList(list:[BangumiItemModel]){
         print("setting \(list.count) objects")
@@ -114,20 +114,20 @@ class BangumiListViewController: ObservableObject{
     }
     
     var bangumiFiltered: [BangumiItemModel] {
-		var searchHistory = settingsHandler.getSearchHistory()
+//		var searchHistory = settingsHandler.getSearchHistory()
         if self.bgmList.count > 0 && !self.isLoading
         {
             let searchResult = self.bgmList.filter {
                 ($0.name ?? "").localizedStandardContains(self.searchText) || (($0.name_cn ?? "").localizedStandardContains(self.searchText))
             }
             print("animeArr:\(self.bgmList.count),filtered:\(searchResult.count)")
-			if searchResult.count > 0{
-				if !searchHistory.contains(self.searchText) {
-					searchHistory.append(self.searchText)
-					settingsHandler.setSearchHistory(history: searchHistory)
-					print("saved:\(searchHistory)")
-				}
-			}
+//			if searchResult.count > 0{
+//				if !searchHistory.contains(self.searchText) {
+//					searchHistory.append(self.searchText)
+//					settingsHandler.setSearchHistory(history: searchHistory)
+//					print("saved:\(searchHistory)")
+//				}
+//			}
             return self.searchText.isEmpty ? self.bgmList : searchResult
         }else{
             print("self.bgmList.count <= 0")
