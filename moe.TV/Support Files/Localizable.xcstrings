@@ -5,7 +5,7 @@
 
     },
     "%@" : {
-
+      "shouldTranslate" : false
     },
     "%@ / %@" : {
       "localizations" : {
@@ -15,31 +15,56 @@
             "value" : "%1$@ / %2$@"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "%@ %%" : {
-
+      "shouldTranslate" : false
     },
     "%lld" : {
-
+      "shouldTranslate" : false
     },
     "%lld. " : {
-
+      "shouldTranslate" : false
     },
     "0.5x" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0.5x"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "1.5x" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.5x"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "1.25x" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.25x"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "1x" : {
-
+      "shouldTranslate" : false
     },
     "2x" : {
-
+      "shouldTranslate" : false
     },
     "Abandoned" : {
       "localizations" : {
@@ -204,6 +229,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "確定要清空播放歷史嗎？"
+          }
+        }
+      }
+    },
+    "Are you sure to delete this keyword?" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このキーワードを削除しますか？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除此关键词吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確定要刪除該關鍵詞嗎？"
           }
         }
       }
@@ -619,6 +666,12 @@
     },
     "Force landscape while playing (iPhone only)" : {
       "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生の時強制横画面(iPhoneのみ)"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -634,7 +687,20 @@
       }
     },
     "Functions" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "機能"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "功能"
+          }
+        }
+      }
     },
     "History" : {
       "localizations" : {
@@ -1198,10 +1264,48 @@
       }
     },
     "Search on Cloud" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サーバで検索"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "云端搜索"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在雲端檢索"
+          }
+        }
+      }
     },
     "Search..." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "検索…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索..."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檢索..."
+          }
+        }
+      }
     },
     "Server URL" : {
       "localizations" : {
@@ -1509,7 +1613,8 @@
             "value" : "Version:%1$@, Build:%2$@"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "Watched" : {
       "localizations" : {

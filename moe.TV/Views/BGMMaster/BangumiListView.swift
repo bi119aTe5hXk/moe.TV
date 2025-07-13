@@ -82,7 +82,9 @@ struct OptionalSearchableViewModifier: ViewModifier{
     @Binding var searchString: String
 
 	private let settingsHandler = SettingsHandler()
-	
+
+	@State private var showDeleteKeywordAlert: Bool = false
+
 
     func body(content: Content) -> some View {
 		var searchHistory = settingsHandler.getSearchHistory()
@@ -95,6 +97,8 @@ struct OptionalSearchableViewModifier: ViewModifier{
                     .searchable(text: $searchString, prompt: "Search on Cloud")
 					.searchSuggestions {
 						if searchString.isEmpty && searchHistory.count > 0{
+
+#if !os(tvOS)
 							Section("History") {
 								ForEach(searchHistory, id: \.self) { history in
 									Label(history, systemImage: "clock.arrow.circlepath")
@@ -107,15 +111,44 @@ struct OptionalSearchableViewModifier: ViewModifier{
 												Text("Delete")
 											}
 										}
+
 								}
 							}
+#else
+							ForEach(searchHistory, id: \.self) { history in
+								Label(history, systemImage: "clock.arrow.circlepath")
+									.searchCompletion(history)
+
+								//TODO: delete keyword support on tvOS (longpress not work)
+									.focusable(true)
+									.highPriorityGesture(longPress)
+									.onLongPressGesture(minimumDuration: 0.5, pressing: { _ in }) {
+										print("press")
+										self.showDeleteKeywordAlert.toggle()
+									}
+//									.simultaneousGesture(
+//										LongPressGesture()
+//											.onEnded { _ in
+//										print("longpressed")
+//										self.showDeleteKeywordAlert.toggle()
+//									})
+
+							}
+							.alert(isPresented: $showDeleteKeywordAlert) {
+								Alert(title: Text("Delete"), message: Text("Are you sure to delete this keyword?"),
+									  primaryButton: .destructive(Text("Delete")) {
+									searchHistory.removeAll { $0 == searchString }
+									settingsHandler.setSearchHistory(history: searchHistory)
+								}, secondaryButton: .cancel())
+							}
+#endif
 						}
 					}
                     .onSubmit(of: .search) {
 						if searchString.lengthOfBytes(using: .utf8) > 0{
 							print(searchString)
 							if !searchHistory.contains(searchString) {
-								searchHistory.append(searchString)
+								searchHistory.insert(searchString, at: 0)
 								settingsHandler.setSearchHistory(history: searchHistory)
 								print("saved:\(searchHistory)")
 							}
@@ -131,10 +164,12 @@ struct OptionalSearchableViewModifier: ViewModifier{
                     .searchable(text: $searchString, prompt: "Search...")
 					.searchSuggestions {
 						if searchString.isEmpty && searchHistory.count > 0{
+
+#if !os(tvOS)
 							Section("History") {
-								ForEach(searchHistory, id: \.self) { history in
-									Label(history, systemImage: "clock.arrow.circlepath")
-										.searchCompletion(history)
+							ForEach(searchHistory, id: \.self) { history in
+								Label(history, systemImage: "clock.arrow.circlepath")
+									.searchCompletion(history)
 										.swipeActions(edge: .trailing, allowsFullSwipe: true) {
 											Button(role: .destructive) {
 												searchHistory.removeAll { $0 == history }
@@ -143,8 +178,37 @@ struct OptionalSearchableViewModifier: ViewModifier{
 												Text("Delete")
 											}
 										}
+
 								}
 							}
+#else
+							ForEach(searchHistory, id: \.self) { history in
+								Label(history, systemImage: "clock.arrow.circlepath")
+									.searchCompletion(history)
+
+									//TODO: delete keyword support on tvOS (longpress not work)
+									.focusable(true)
+									.highPriorityGesture(longPress)
+									.onLongPressGesture(minimumDuration: 0.5, pressing: { _ in }) {
+										print("press")
+										self.showDeleteKeywordAlert.toggle()
+									}
+//									.simultaneousGesture(
+//										LongPressGesture()
+//											.onEnded { _ in
+//										print("longpressed")
+//										self.showDeleteKeywordAlert.toggle()
+//									})
+
+							}
+							.alert(isPresented: $showDeleteKeywordAlert) {
+								Alert(title: Text("Delete"), message: Text("Are you sure to delete this keyword?"),
+									  primaryButton: .destructive(Text("Delete")) {
+									searchHistory.removeAll { $0 == searchString }
+									settingsHandler.setSearchHistory(history: searchHistory)
+								}, secondaryButton: .cancel())
+							}
+#endif
 						}
 					}
 
@@ -152,7 +216,8 @@ struct OptionalSearchableViewModifier: ViewModifier{
 						print("searchString:\(searchString)")
 						if searchString.lengthOfBytes(using: .utf8) > 0{
 							if !searchHistory.contains(searchString) {
-								searchHistory.append(searchString)
+								searchHistory.insert(searchString, at: 0)
+
 								settingsHandler.setSearchHistory(history: searchHistory)
 								print("saved:\(searchHistory)")
 							}
@@ -163,6 +228,13 @@ struct OptionalSearchableViewModifier: ViewModifier{
             content
         }
     }
+
+	var longPress: some Gesture {
+		LongPressGesture(minimumDuration: 0.5)
+			.onEnded { _ in
+				print("longpress")
+			}
+	}
 }
 
 //struct BangumiListView_Previews: PreviewProvider {

@@ -32,7 +32,7 @@ struct DebugView: View {
                     HStack{
                         Text("Server URL")
                         Spacer()
-                        Text(getAlbireoServer())
+                        Text(getAlbireoServer() ?? "")
                     }
                     ForEach(albireoCookiesArray, id: \.self) { string in
                         Text(string)

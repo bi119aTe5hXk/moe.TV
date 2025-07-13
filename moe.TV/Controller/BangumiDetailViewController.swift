@@ -204,7 +204,9 @@ class BangumiDetailViewController : ObservableObject {
 				}
 			}else{
 				print("getBGMCollectionEpisodeList failed")
-				self.showOnlyAlbireoEPs(eps: epList)
+				DispatchQueue.main.async {
+					self.showOnlyAlbireoEPs(eps: epList)
+				}
 			}
 		}
 	}

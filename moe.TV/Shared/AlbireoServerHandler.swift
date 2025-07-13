@@ -73,7 +73,7 @@ func isAlbireoLoginValid(completion: @escaping (Bool) -> Void){
 }
 
 
-func getAlbireoServer() -> String{
+func getAlbireoServer() -> String?{
     serverAddr = settingsHandler.getAlbireoServerAddr()
     return serverAddr
 }
@@ -146,34 +146,38 @@ func loginAlbireoServer(server:String,
                  password: String,
                  completion: @escaping (Bool, String) -> Void) {
     settingsHandler.setAlbireoServerAddr(serverInfo: server)
-    var urlstr = getAlbireoServer()
-    urlstr.append("/api/user/login")
+	if var urlstr = getAlbireoServer(){
 
-    let postdata = ["name": username, "password": password, "remmember": true] as [String : Any]
-    print(urlstr)
-    
-    postServer(urlString: urlstr, postdata: postdata) { result, data in
-        if result{
-            do{
-                if let JSON = try jsonDecoder.decode([String: String]?.self, from: data as! Data){
-                    if let status = JSON["msg"] {
-                        print(status)
-                        completion(true, status)
-                    }
-                    if let status = JSON["message"] {
-                        clearCookie()
-                        completion(false, status)
-                    }
-                }
-            }catch{
-                completion(false, "Json decode error, is server down?")
-            }
-        }else{
-			print("result is false, data is \(data)")
-            completion(false, data as! String)
-        }
-    }
-    
+		urlstr.append("/api/user/login")
+
+		let postdata = ["name": username, "password": password, "remmember": true] as [String : Any]
+		print(urlstr)
+
+		postServer(urlString: urlstr, postdata: postdata) { result, data in
+			if result{
+				do{
+					if let JSON = try jsonDecoder.decode([String: String]?.self, from: data as! Data){
+						if let status = JSON["msg"] {
+							print(status)
+							completion(true, status)
+						}
+						if let status = JSON["message"] {
+							clearCookie()
+							completion(false, status)
+						}
+					}
+				}catch{
+					completion(false, "Json decode error, is server down?")
+				}
+			}else{
+				print("result is false, data is \(data)")
+				completion(false, data as! String)
+			}
+		}
+	}else {
+		completion(false, "Can not get server address.")
+	}
+
 }
 
 
@@ -205,168 +209,186 @@ func logoutAlbireoServer(completion: @escaping (Bool, String) -> Void) {
 }
 
 func getAlbireoUserInfo(completion: @escaping (Bool, Any?) -> Void){
-    var urlstr = getAlbireoServer()
-    urlstr.append("/api/user/info")
-    if loadAlbireoCookies(){
-        getServer(urlString: urlstr) { result, data in
-            if result{
-                let d = data as! Data
-//                print("d:\(String(data: d, encoding: .utf8))")
-                if !d.isEmpty{
-                    do {
-                        if let userInfo = try jsonDecoder.decode(AlbireoUserInfoData?.self, from: d){
-                            if let msg = userInfo.message{
-                                completion(false, msg)
-                            }else{
-                                print(userInfo)
-                                completion(true, userInfo)
-                            }
-                        }else{
-                            completion(false, data as! String)
-                        }
-                    }catch{
-                        completion(false, "there is a problem with json decode")
-                    }
-                }else{
-                    completion(false, "userInfo data is empty!")
-                }
-            
-            }else{
-                completion(false, data as! String)
-            }
-        }
-    }else{
-        completion(false, "no cookies!")
-    }
+	if var urlstr = getAlbireoServer(){
+		urlstr.append("/api/user/info")
+		if loadAlbireoCookies(){
+			getServer(urlString: urlstr) { result, data in
+				if result{
+					let d = data as! Data
+						//                print("d:\(String(data: d, encoding: .utf8))")
+					if !d.isEmpty{
+						do {
+							if let userInfo = try jsonDecoder.decode(AlbireoUserInfoData?.self, from: d){
+								if let msg = userInfo.message{
+									completion(false, msg)
+								}else{
+									print(userInfo)
+									completion(true, userInfo)
+								}
+							}else{
+								completion(false, data as! String)
+							}
+						}catch{
+							completion(false, "there is a problem with json decode")
+						}
+					}else{
+						completion(false, "userInfo data is empty!")
+					}
+
+				}else{
+					completion(false, data as! String)
+				}
+			}
+		}else{
+			completion(false, "no cookies!")
+		}
+	}else{
+		completion(false, "Can not get server address.")
+	}
 }
 
 
 func getAlbireoMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = getAlbireoServer()
-    urlstr.append("/api/home/my_bangumi?status=3")
-    if loadAlbireoCookies(){
-        getServer(urlString: urlstr) { result, data in
-            if result{
-                do {
-                    if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
-                        completion(true, list.data)
-                    }else{
-                        completion(false, data as! String)
-                    }
-                }catch{
-                    completion(false, "there is a problem with json decode")
-                }
-                
-            }else{
-                completion(false, data as! String)
-            }
-        }
-    }
+	if var urlstr = getAlbireoServer(){
+		urlstr.append("/api/home/my_bangumi?status=3")
+		if loadAlbireoCookies(){
+			getServer(urlString: urlstr) { result, data in
+				if result{
+					do {
+						if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
+							completion(true, list.data)
+						}else{
+							completion(false, data as! String)
+						}
+					}catch{
+						completion(false, "there is a problem with json decode")
+					}
+
+				}else{
+					completion(false, data as! String)
+				}
+			}
+		}
+	}else{
+		completion(false, "Can not get server address.")
+	}
 }
 
 func getAlbireoOnAirList(completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = getAlbireoServer()
-    urlstr.append("/api/home/on_air")
-    if loadAlbireoCookies(){
-        getServer(urlString: urlstr) { result, data in
-            if result{
-                do {
-                    if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
-                        completion(true, list.data)
-                    }else{
-                        completion(false, data as! String)
-                    }
-                }catch{
-                    completion(false, "there is a problem with json decode")
-                }
-                
-            }else{
-                completion(false, data as! String)
-            }
-        }
-    }
+	if var urlstr = getAlbireoServer(){
+		urlstr.append("/api/home/on_air")
+		if loadAlbireoCookies(){
+			getServer(urlString: urlstr) { result, data in
+				if result{
+					do {
+						if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
+							completion(true, list.data)
+						}else{
+							completion(false, data as! String)
+						}
+					}catch{
+						completion(false, "there is a problem with json decode")
+					}
+
+				}else{
+					completion(false, data as! String)
+				}
+			}
+		}
+	}else{
+		completion(false, "Can not get server address.")
+	}
 }
 
 func getAlbireoAllBangumiList(page: Int,
                        name: String,
                        completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = getAlbireoServer()
-    urlstr.append("/api/home/bangumi?page=")
-    urlstr.append(String(page))
-    urlstr.append("&count=-1&sort_field=air_date&sort_order=desc")
-    if name.lengthOfBytes(using: .utf8) > 0{
-        urlstr.append("&name=")
-        urlstr.append(name)
-    }
-    urlstr.append("&type=-1")
-    if loadAlbireoCookies(){
-        getServer(urlString: urlstr) { result, data in
-            if result{
-                do {
-                    //Use OnAir model for temp
-                    if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
-                        completion(true, list.data)
-                    }else{
-                        completion(false, data as! String)
-                    }
-                }catch{
-                    completion(false, "there is a problem with json decode")
-                }
-                
-            }else{
-                completion(false, data as! String)
-            }
-        }
-    }
+	if var urlstr = getAlbireoServer(){
+		urlstr.append("/api/home/bangumi?page=")
+		urlstr.append(String(page))
+		urlstr.append("&count=-1&sort_field=air_date&sort_order=desc")
+		if name.lengthOfBytes(using: .utf8) > 0{
+			urlstr.append("&name=")
+			urlstr.append(name)
+		}
+		urlstr.append("&type=-1")
+		if loadAlbireoCookies(){
+			getServer(urlString: urlstr) { result, data in
+				if result{
+					do {
+							//Use OnAir model for temp
+						if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
+							completion(true, list.data)
+						}else{
+							completion(false, data as! String)
+						}
+					}catch{
+						completion(false, "there is a problem with json decode")
+					}
+
+				}else{
+					completion(false, data as! String)
+				}
+			}
+		}
+	}else{
+		completion(false, "Can not get server address.")
+	}
 }
 func getAlbireoBangumiDetail(id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = getAlbireoServer()
-    urlstr.append("/api/home/bangumi/")
-    urlstr.append(id)
-    if loadAlbireoCookies(){
-		print(urlstr)
-        getServer(urlString: urlstr) { result, data in
-            if result{
-                do {
-                    if let detail = try jsonDecoder.decode(BGMDetailDataModel?.self, from: data as! Data){
-                        completion(true, detail.data)
-                    }else{
-                        completion(false, data as! String)
-                    }
-                }catch{
-                    completion(false, "there is a problem with json decode")
-                }
-            }else{
-                completion(false, data as! String)
-            }
-        }
-    }
+	if var urlstr = getAlbireoServer(){
+		urlstr.append("/api/home/bangumi/")
+		urlstr.append(id)
+		if loadAlbireoCookies(){
+			print(urlstr)
+			getServer(urlString: urlstr) { result, data in
+				if result{
+					do {
+						if let detail = try jsonDecoder.decode(BGMDetailDataModel?.self, from: data as! Data){
+							completion(true, detail.data)
+						}else{
+							completion(false, data as! String)
+						}
+					}catch{
+						completion(false, "there is a problem with json decode")
+					}
+				}else{
+					completion(false, data as! String)
+				}
+			}
+		}
+	}else {
+		completion(false, "Can not get server address.")
+	}
 }
 func getAlbireoEPDetail(ep_id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
-    var urlstr = getAlbireoServer()
-    urlstr.append("/api/home/episode/")
-    urlstr.append(ep_id)
-    if loadAlbireoCookies(){
-        getServer(urlString: urlstr) { result, data in
-            if result{
-                do {
-                    if let epDetail = try jsonDecoder.decode(EpisodeDetailModel?.self, from: data as! Data){
-                        completion(true, epDetail)
-                    }else{
-                        completion(false, data as! String)
-                    }
-                }catch{
-                    print(error)
-                    completion(false, "there is a problem with json decode")
-                }
-            }else{
-                completion(false, data as! String)
-            }
-        }
-        
-    }
+	if var urlstr = getAlbireoServer(){
+		urlstr.append("/api/home/episode/")
+		urlstr.append(ep_id)
+		if loadAlbireoCookies(){
+			getServer(urlString: urlstr) { result, data in
+				if result{
+					do {
+						if let epDetail = try jsonDecoder.decode(EpisodeDetailModel?.self, from: data as! Data){
+							completion(true, epDetail)
+						}else{
+							completion(false, data as! String)
+						}
+					}catch{
+						print(error)
+						completion(false, "there is a problem with json decode")
+					}
+				}else{
+					completion(false, data as! String)
+				}
+			}
+
+		}
+	}else {
+		completion(false, "Can not get server address.")
+	}
 }
 
 func sentAlbireoEPWatchProgress(ep_id: String,
@@ -375,49 +397,55 @@ func sentAlbireoEPWatchProgress(ep_id: String,
                          percentage:Double,
                          is_finished:Bool,
                          completion: @escaping (Bool, Any?) -> Void){
-    var urlstr = getAlbireoServer()
-    urlstr.append("/api/watch/history/")
-    urlstr.append(ep_id)
-    if loadAlbireoCookies(){
-    let postdata = ["bangumi_id": bangumi_id,
-                    "last_watch_position": last_watch_position,
-                    "percentage": percentage,
-                    "is_finished":is_finished] as [String: Any]
-        
-        postServer(urlString: urlstr, postdata: postdata) { result, data in
-            if result{
-                if let d = data as? Data{
-                    let s = String(data: d, encoding: .utf8)
-                    completion(true, s)
-                }
-            }else{
-                completion(false, data as! String)
-            }
-        }
-        
-    }
+	if var urlstr = getAlbireoServer(){
+		urlstr.append("/api/watch/history/")
+		urlstr.append(ep_id)
+		if loadAlbireoCookies(){
+			let postdata = ["bangumi_id": bangumi_id,
+							"last_watch_position": last_watch_position,
+							"percentage": percentage,
+							"is_finished":is_finished] as [String: Any]
+
+			postServer(urlString: urlstr, postdata: postdata) { result, data in
+				if result{
+					if let d = data as? Data{
+						let s = String(data: d, encoding: .utf8)
+						completion(true, s)
+					}
+				}else{
+					completion(false, data as! String)
+				}
+			}
+
+		}
+	}else{
+		completion(false, "Can not get server address.")
+	}
 }
 
 func changeAlbireoFavStatus(bangumi_id:String,
                      status:Int,
                      completion: @escaping (Bool, Any?) -> Void){
-    var urlstr = getAlbireoServer()
-    urlstr.append("/api/watch/favorite/bangumi/")
-    urlstr.append(bangumi_id)
-    if loadAlbireoCookies(){
-    let postdata = ["status": status] as [String: Any]
-        
-        postServer(urlString: urlstr, postdata: postdata) { result, data in
-            if result{
-                if let d = data as? Data{
-                    let s = String(data: d, encoding: .utf8)
-                    completion(true, s)
-                }
-            }else{
-                completion(false, data as! String)
-            }
-        }
-        
-    }
+	if var urlstr = getAlbireoServer(){
+		urlstr.append("/api/watch/favorite/bangumi/")
+		urlstr.append(bangumi_id)
+		if loadAlbireoCookies(){
+			let postdata = ["status": status] as [String: Any]
+
+			postServer(urlString: urlstr, postdata: postdata) { result, data in
+				if result{
+					if let d = data as? Data{
+						let s = String(data: d, encoding: .utf8)
+						completion(true, s)
+					}
+				}else{
+					completion(false, data as! String)
+				}
+			}
+
+		}
+	}else{
+		completion(false, "Can not get server address.")
+	}
 }
 

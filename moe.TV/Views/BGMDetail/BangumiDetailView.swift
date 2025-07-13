@@ -39,8 +39,12 @@ struct BangumiDetailView: View {
 						}
 					}
 				}else{
-					if selectedItem != nil{
-						ProgressView()
+					if let item = selectedItem{
+						if let name = item.name{
+							if !name.isEmpty{
+								ProgressView()
+							}
+						}
 					}
 				}
 

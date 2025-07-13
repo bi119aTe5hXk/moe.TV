@@ -45,8 +45,9 @@ class LoginViewController: ObservableObject {
     }
     
     init(){
-        self.server = getAlbireoServer()
-        
+		if let Aserver = getAlbireoServer(){
+			self.server = Aserver
+		}
         $server.sink(receiveValue: {
             self.isValidServer = $0.isValidURL && !$0.isEmpty ? true : false
         }).store(in: &disposables)
