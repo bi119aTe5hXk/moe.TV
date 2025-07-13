@@ -44,15 +44,13 @@ struct BangumiListView: View {
 					getBGMList()
 				}
             }
-        
-            //.searchable(text: $listVC.searchText)
+
             .modifier(OptionalSearchableViewModifier(
                 isSearchable: listVC.isSearchable(selectedFunc: selectedFunc),
                 selectedFunc: selectedFunc,
                 listVC: listVC,
                 searchString: $listVC.searchText))
-        
-//        }
+
         
             .alert("Albireo cookies may expired. Logout?",isPresented: $listVC.showLogoutAlert) {
                 Button("Yes, logout & exit") {
@@ -66,7 +64,6 @@ struct BangumiListView: View {
                 }
                 
             }
-            //.navigationTitle(" \( selectedFunc?.localizedName ) ")
            
     }
     
@@ -83,24 +80,84 @@ struct OptionalSearchableViewModifier: ViewModifier{
     let selectedFunc: FuncViewModel?
 	let listVC: BangumiListViewController
     @Binding var searchString: String
-    
+
+	private let settingsHandler = SettingsHandler()
+	
+
     func body(content: Content) -> some View {
+		var searchHistory = settingsHandler.getSearchHistory()
+
         switch isSearchable{
         case true:
             if selectedFunc == .search{
+				//for search via API
                 content
-                    .searchable(text: $searchString, prompt: "Search")
+                    .searchable(text: $searchString, prompt: "Search on Cloud")
+					.searchSuggestions {
+						if searchString.isEmpty && searchHistory.count > 0{
+							Section("History") {
+								ForEach(searchHistory, id: \.self) { history in
+									Label(history, systemImage: "clock.arrow.circlepath")
+										.searchCompletion(history)
+										.swipeActions(edge: .trailing, allowsFullSwipe: true) {
+											Button(role: .destructive) {
+												searchHistory.removeAll { $0 == history }
+												settingsHandler.setSearchHistory(history: searchHistory)
+											} label: {
+												Text("Delete")
+											}
+										}
+								}
+							}
+						}
+					}
                     .onSubmit(of: .search) {
-                            //print(searchString)
-                            if searchString.lengthOfBytes(using: .utf8) > 0{
-                                listVC.getBGMList(funcType: selectedFunc, searchKeyword: searchString)
-                            }else{
+						if searchString.lengthOfBytes(using: .utf8) > 0{
+							print(searchString)
+							if !searchHistory.contains(searchString) {
+								searchHistory.append(searchString)
+								settingsHandler.setSearchHistory(history: searchHistory)
+								print("saved:\(searchHistory)")
+							}
+							listVC.getBGMList(funcType: selectedFunc, searchKeyword: searchString)
+						}else{
                                 listVC.bgmList = []
                             }
                         }
+
             }else{
+				//for filtering items
                 content
-                    .searchable(text: $searchString, prompt: "Search")
+                    .searchable(text: $searchString, prompt: "Search...")
+					.searchSuggestions {
+						if searchString.isEmpty && searchHistory.count > 0{
+							Section("History") {
+								ForEach(searchHistory, id: \.self) { history in
+									Label(history, systemImage: "clock.arrow.circlepath")
+										.searchCompletion(history)
+										.swipeActions(edge: .trailing, allowsFullSwipe: true) {
+											Button(role: .destructive) {
+												searchHistory.removeAll { $0 == history }
+												settingsHandler.setSearchHistory(history: searchHistory)
+											} label: {
+												Text("Delete")
+											}
+										}
+								}
+							}
+						}
+					}
+
+					.onSubmit(of: .search){
+						print("searchString:\(searchString)")
+						if searchString.lengthOfBytes(using: .utf8) > 0{
+							if !searchHistory.contains(searchString) {
+								searchHistory.append(searchString)
+								settingsHandler.setSearchHistory(history: searchHistory)
+								print("saved:\(searchHistory)")
+							}
+						}
+					}
             }
         case false:
             content

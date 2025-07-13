@@ -7,6 +7,16 @@
     "%@" : {
 
     },
+    "%@ / %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ / %2$@"
+          }
+        }
+      }
+    },
     "%@ %%" : {
 
     },
@@ -468,6 +478,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "預設播放速度"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除"
           }
         }
       }
@@ -1164,6 +1196,12 @@
           }
         }
       }
+    },
+    "Search on Cloud" : {
+
+    },
+    "Search..." : {
+
     },
     "Server URL" : {
       "localizations" : {
