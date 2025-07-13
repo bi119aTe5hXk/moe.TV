@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
+import SDWebImage
+import SDWebImageSwiftUI
 
 
 
@@ -17,6 +18,9 @@ struct EPCellView: View {
 	//@State var bgmEPItem:BGMTVUserEpisodeCollectionModel?
     @State var showVideoFileExisitAlert = false
     @State var showNotDownloadableAlert = false
+
+	@State private var loadFailed = false
+
 	@ObservedObject var detailVC : BangumiDetailViewController
     @EnvironmentObject var downloadManager: DownloadManager
     @EnvironmentObject var offlinePBM:OfflinePlaybackManager
@@ -24,113 +28,144 @@ struct EPCellView: View {
     var body: some View {
         HStack{
 			//play button
-            Button(
-action: {
-				getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
-                    if result{
-                        if let epDetail = data as? EpisodeDetailModel{
-							detailVC.setSelectedEP(ep: epDetail)
-                        }
-                    }else{
-                        print(data as Any)
-                    }
-                }
-            },
- label: {
-//                    GeometryReader { geo in
-                ZStack{
 
-					if let thumbnail = newEPItem.ep.thumbnail{
-                        CachedAsyncImage(
-                            url: fixPathNotCompete(path: thumbnail),
-                            placeholder: { progress in
-                                // Create any view for placeholder (optional).
-                                ZStack {
-                                    
-                                    ProgressView() {
-                                        VStack {
-                                            Text("Loading...")
-                                            
-                                            Text("\(progress) %")
-                                        }
-                                    }
-                                }
-                            },
-                            image: {
-                                // Customize image.
-                                Image(uiImage: $0)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .cornerRadius(10)
-                                    .frame(maxWidth: 300)
-                                
-                                
-                            },error: { error, retry in
-                                HStack{
-                                    ExecuteCode {
-                                        DispatchQueue.main.async {
-                                            self.isEmptyEP = true
-                                        }
-                                    }
-                                    
-                                    // Create any view for error (optional).
-                                    Text("No Picture")
-                                }
-                                
-                            }
-                        )
-                        //                                .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
-                        if !self.isEmptyEP{
-                            Image(systemName: "play.circle.fill")
-                                .font(.largeTitle)
-                                .foregroundColor(.gray)
-                            //                                    .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
-                        }
-                    }
-                    //                        }
-                    
-                }
-                    
-                Spacer()
-                
-                VStack{
-                    HStack{
-						Text("\(newEPItem.ep.episode_no ?? 0). ")
-                        if !((newEPItem.ep.name ?? "").isEmpty){
-                            Text("\(newEPItem.ep.name ?? "")")
-                                .lineLimit(1)
-                                .background(Color.clear)
-                        }
-                    }
-                    if !((newEPItem.ep.name_cn ?? "").isEmpty){
-                        Text("\(newEPItem.ep.name_cn ?? "")")
-                            .lineLimit(1)
-                            .background(Color.clear)
-                    }
-                }
-                
-                
-                
-                Spacer()
+				Button(
+					action: {
+						getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
+							if result{
+								if let epDetail = data as? EpisodeDetailModel{
+									detailVC.setSelectedEP(ep: epDetail)
+								}
+							}else{
+								print(data as Any)
+							}
+						}
+					}, label: {
+							//                    GeometryReader { geo in
+						if loadFailed {
+							Text("No Picture")
+						}else{
+							
+						ZStack{
 
-	 EPCellProgressView(
-		bgmWatchStatus: .constant(
-			newEPItem.bgmEP?.type ?? 0
-		),
-								   progress: .constant(CGFloat(newEPItem.ep.watch_progress?.percentage ?? 0)),
-                                   color:.constant(newEPItem.ep.watch_progress?.watch_status == 2 ? Color.green : Color.orange)
-)
-                    .frame(maxWidth: 100,maxHeight: 100)
-                    .padding(10)
-                    
-                
-            })
-            .buttonStyle(.plain)
-            
-            
-//            .padding(10)
-            
-            
+							if let thumbnail = newEPItem.ep.thumbnail{
+								WebImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
+									image.resizable()
+
+								}placeholder: {
+									ZStack {
+										ProgressView() {
+											VStack {
+												Text("Loading...")
+
+													//											Text("\(progress) %")
+											}
+										}
+									}
+								}
+								.onFailure { error in
+									print("error \(error)")
+									DispatchQueue.main.async {
+										self.isEmptyEP = true
+										loadFailed = true
+									}
+								}
+								.resizable()
+								.scaledToFit()
+								.frame(maxWidth: 300)
+								.cornerRadius(10)
+
+									//                        CachedAsyncImage(
+									//                            url: fixPathNotCompete(path: thumbnail),
+									//                            placeholder: { progress in
+									//                                // Create any view for placeholder (optional).
+									//                                ZStack {
+									//                                    ProgressView() {
+									//                                        VStack {
+									//                                            Text("Loading...")
+									//
+									//                                            Text("\(progress) %")
+									//                                        }
+									//                                    }
+									//                                }
+									//                            },
+									//                            image: {
+									//                                // Customize image.
+									//                                Image(uiImage: $0)
+									//                                    .resizable()
+									//                                    .scaledToFit()
+									//                                    .cornerRadius(10)
+									//                                    .frame(maxWidth: 300)
+									//
+									//
+									//                            },error: { error, retry in
+									//                                HStack{
+									//                                    ExecuteCode {
+									//                                        DispatchQueue.main.async {
+									//                                            self.isEmptyEP = true
+									//                                        }
+									//                                    }
+									//
+									//                                    // Create any view for error (optional).
+									//                                    Text("No Picture")
+									//                                }
+									//
+									//                            }
+									//                        )
+									//                                .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
+								if !self.isEmptyEP{
+									Image(systemName: "play.circle.fill")
+										.font(.largeTitle)
+										.foregroundColor(.gray)
+										//                                    .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
+								}
+							}
+								//                        }
+
+						}
+
+
+
+
+
+			}
+					Spacer()
+
+					VStack{
+						HStack{
+							Text("\(newEPItem.ep.episode_no ?? 0). ")
+							if !((newEPItem.ep.name ?? "").isEmpty){
+								Text("\(newEPItem.ep.name ?? "")")
+									.lineLimit(1)
+									.background(Color.clear)
+							}
+						}
+						if !((newEPItem.ep.name_cn ?? "").isEmpty){
+							Text("\(newEPItem.ep.name_cn ?? "")")
+								.lineLimit(1)
+								.background(Color.clear)
+						}
+					}
+
+
+
+					Spacer()
+
+					EPCellProgressView(
+						bgmWatchStatus: .constant(
+							newEPItem.bgmEP?.type ?? 0
+						),
+						progress: .constant(CGFloat(newEPItem.ep.watch_progress?.percentage ?? 0)),
+						color:.constant(newEPItem.ep.watch_progress?.watch_status == 2 ? Color.green : Color.orange)
+					)
+					.frame(maxWidth: 100,maxHeight: 100)
+					.padding(10)
+
+
+			})
+				.buttonStyle(.plain)
+				//            .padding(10)
+
             
             
 #if !os(tvOS)

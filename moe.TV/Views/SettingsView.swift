@@ -12,7 +12,7 @@ struct SettingsView: View {
     @State private var showDownloadList: Bool = false
 	@State private var landscapePlayback: Bool = false
 	@State private var showBgmtvWebWhilePlaying: Bool = false
-
+	@State private var hideUnreleasedEps: Bool = false
 //    @Binding var listVM:BangumiListViewModel
 //    @Binding var loginVM:LoginViewModel
 //    @Binding var myBGMVM:MyBangumiViewModel
@@ -102,6 +102,15 @@ struct SettingsView: View {
                     }
 
 					Section(header: Text("Preferences")) {
+						Toggle("Hide unrelease/empty EPs",isOn: $hideUnreleasedEps)
+							.onAppear(){
+								self.hideUnreleasedEps = settingsVC.settingsHandler.getHideUnreleaseEPs()
+							}
+							.onChange(of: hideUnreleasedEps, initial: false) { newValue in
+								settingsVC.settingsHandler.setHideUnreleaseEPs(isEnabled: newValue)
+							}
+
+
 #if os(iOS)
 						if UIDevice.current.userInterfaceIdiom == .phone{
 							Toggle("Force landscape while playing (iPhone only)", isOn: $landscapePlayback)

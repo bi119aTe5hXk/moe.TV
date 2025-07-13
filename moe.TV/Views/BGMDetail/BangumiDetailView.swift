@@ -11,6 +11,8 @@ struct BangumiDetailView: View {
 	@Binding var selectedItem:BangumiItemModel?
 	@ObservedObject var detailVC = BangumiDetailViewController()
 
+	private let settingsHandler = SettingsHandler()
+
 	var body: some View {
 			//Text("favorite_status:\(selectedItem?.favorite_status)")
 		ScrollViewReader { proxy in
@@ -26,21 +28,32 @@ struct BangumiDetailView: View {
 				Divider()
 				if !detailVC.newEPList.isEmpty{
 					ForEach(detailVC.newEPList, id: \.ep.id){ item in
-						if let n = item.ep.name{
-							if !n.isEmpty{
-								EPCellView(newEPItem:item,detailVC:detailVC)
-									.environmentObject(DownloadManager())
-									.environmentObject(OfflinePlaybackManager())
-									.padding(10)
-							}else{
-									//							Text("\(item.ep.episode_no ?? 0). Pending")
-									//								.padding(5)
+						if settingsHandler.getHideUnreleaseEPs(){
+							//only show released EPs
+							if let n = item.ep.name{
+								if !n.isEmpty{
+									EPCellView(newEPItem:item,detailVC:detailVC)
+										.environmentObject(DownloadManager())
+										.environmentObject(OfflinePlaybackManager())
+										.padding(10)
+								}
 							}
+						}else{
+							//show all EPs
+							EPCellView(newEPItem:item,detailVC:detailVC)
+								.environmentObject(DownloadManager())
+								.environmentObject(OfflinePlaybackManager())
+								.padding(10)
 						}
+
 					}
 				}else{
-					if selectedItem != nil{
-						ProgressView()
+					if let item = selectedItem{
+						if let name = item.name{
+							if !name.isEmpty{
+								ProgressView()
+							}
+						}
 					}
 				}
 

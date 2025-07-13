@@ -6,9 +6,8 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
+import SDWebImageSwiftUI
 struct DebugView: View {
-	@ImageCache private var imageCache
     @State private var iCloudEnabled = (FileManager.default.ubiquityIdentityToken != nil)
     @State private var syncWithBGMTV = isBGMTVlogined()
     @State private var albireoCookiesArray:Array<String> = []
@@ -32,7 +31,7 @@ struct DebugView: View {
                     HStack{
                         Text("Server URL")
                         Spacer()
-                        Text(getAlbireoServer())
+                        Text(getAlbireoServer() ?? "")
                     }
                     ForEach(albireoCookiesArray, id: \.self) { string in
                         Text(string)
@@ -71,9 +70,12 @@ struct DebugView: View {
 
 				Section(header: Text("Functions")) {
 					Button{
-						imageCache.removeCache()
+//						imageCache.removeCache()
+						SDImageCache.shared.clear(with: .all, completion: {
+							print("Image cache cleared")
+						})
 					}label: {
-						Text("Clear Image Cache")
+						Text("Clear image cache")
 					}
 				}
             }

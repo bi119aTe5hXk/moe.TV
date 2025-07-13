@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
+import SDWebImageSwiftUI
 struct BangumiDetailCoverTextView: View {
     @Binding var item:BangumiDetailModel?
     @Binding var albireo_favorite_status:Int?
@@ -20,7 +20,31 @@ struct BangumiDetailCoverTextView: View {
             Spacer()
             if let i = item{
                 if let coverURL = i.image{
-                    GeometryReader { geo in
+					WebImage(url: URL(string: coverURL)){image in
+						image.resizable()
+					}placeholder: {
+						ZStack {
+
+							ProgressView() {
+								VStack {
+									Text("Loading...")
+
+										//											Text("\(progress) %")
+								}
+							}
+						}
+					}
+					
+
+						.scaledToFit()
+						.cornerRadius(10)
+						.frame(
+							minWidth: 100,
+							maxWidth:600,
+							minHeight: 200,
+							maxHeight: 600)
+					
+//                    GeometryReader { geo in
                         //                        CachedAsyncImage(url: URL(string: coverURL)){ image in
                         //                            image.resizable()
                         //                                .scaledToFit()
@@ -28,38 +52,40 @@ struct BangumiDetailCoverTextView: View {
                         //                        } placeholder: {
                         //                            ProgressView()
                         //                        }
-                        CachedAsyncImage(
-                            url: coverURL,
-                            placeholder: { progress in
-                                // Create any view for placeholder (optional).
-                                ZStack {
-                                    
-                                    ProgressView() {
-                                        VStack {
-                                            Text("Loading...")
-                                            
-                                            Text("\(progress) %")
-                                        }
-                                    }
-                                }
-                            },
-                            image: {
-                                // Customize image.
-                                Image(uiImage: $0)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .cornerRadius(10)
-                                    .frame(
-                                        minWidth: 100,
-                                        maxWidth:600,
-                                        minHeight: 200,
-                                        maxHeight: 600)
-                            }
-                        )
-                        .frame(width: geo.size.width,
-                               height: geo.size.height,
-                               alignment: .center)
-                    }
+
+
+//                        CachedAsyncImage(
+//                            url: coverURL,
+//                            placeholder: { progress in
+//                                // Create any view for placeholder (optional).
+//                                ZStack {
+//                                    
+//                                    ProgressView() {
+//                                        VStack {
+//                                            Text("Loading...")
+//                                            
+//                                            Text("\(progress) %")
+//                                        }
+//                                    }
+//                                }
+//                            },
+//                            image: {
+//                                // Customize image.
+//                                Image(uiImage: $0)
+//                                    .resizable()
+//                                    .scaledToFit()
+//                                    .cornerRadius(10)
+//                                    .frame(
+//                                        minWidth: 100,
+//                                        maxWidth:600,
+//                                        minHeight: 200,
+//                                        maxHeight: 600)
+//                            }
+//                        )
+//                        .frame(width: geo.size.width,
+//                               height: geo.size.height,
+//                               alignment: .center)
+//                    }
                     .padding(10)
                 }
                 

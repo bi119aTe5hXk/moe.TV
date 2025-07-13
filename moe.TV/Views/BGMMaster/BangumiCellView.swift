@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CachedAsyncImage
+import SDWebImageSwiftUI
 
 struct BangumiCellView: View {
     @State var bangumiItem: BangumiItemModel
