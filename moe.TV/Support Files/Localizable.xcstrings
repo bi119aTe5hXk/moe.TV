@@ -407,6 +407,9 @@
         }
       }
     },
+    "Clear image cache" : {
+
+    },
     "Clear playback history" : {
       "localizations" : {
         "ja" : {
@@ -681,7 +684,6 @@
       }
     },
     "Functions" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -693,6 +695,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "功能"
+          }
+        }
+      }
+    },
+    "Hide unrelease/empty EPs" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未放送/名前なしのエピソードを非表示"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隐藏未播出/无名字剧集"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隱藏未播出/無名劇集"
           }
         }
       }

@@ -68,13 +68,16 @@ struct DebugView: View {
                     }
                 }
 
-//				Section(header: Text("Functions")) {
-//					Button{
+				Section(header: Text("Functions")) {
+					Button{
 //						imageCache.removeCache()
-//					}label: {
-//						Text("Clear Image Cache")
-//					}
-//				}
+						SDImageCache.shared.clear(with: .all, completion: {
+							print("Image cache cleared")
+						})
+					}label: {
+						Text("Clear image cache")
+					}
+				}
             }
         }
         .onAppear(){

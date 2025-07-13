@@ -22,6 +22,8 @@ class SettingsHandler {
 
 	private let kPlaybackHistory = "kPlaybackHistory"
 
+	private let kHideUnreleaseEPs = "kHideUnreleaseEPs"
+
     private var ud = UserDefaults() //for tvOS
     private var ub = NSUbiquitousKeyValueStore()
     
@@ -102,6 +104,15 @@ class SettingsHandler {
     }
 
 	// MARK: - Preferences
+	//Hide unrelease EPs
+	func setHideUnreleaseEPs(isEnabled: Bool){
+		ub.set(isEnabled, forKey: kHideUnreleaseEPs)
+		sync()
+	}
+	func getHideUnreleaseEPs() -> Bool{
+		return ub.bool(forKey: kHideUnreleaseEPs)
+	}
+
 	//Landscape playback
 	func setLandscapePlayback(isEnabled: Bool){
 		ub.set(isEnabled, forKey: kLandscapePlayback)
