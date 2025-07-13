@@ -30,6 +30,7 @@
 		862C25A52A5458D3006827E6 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862C25A42A5458D3006827E6 /* PlayerViewController.swift */; };
 		862C25A82A546657006827E6 /* BGMTVOauthAccessTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862C25A72A546657006827E6 /* BGMTVOauthAccessTokenModel.swift */; };
 		862C25AA2A54710C006827E6 /* BGMTVUserInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862C25A92A54710C006827E6 /* BGMTVUserInfoModel.swift */; };
+		862CF4E72E23A9EF00624C04 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 862CF4E62E23A9EF00624C04 /* SDWebImageSwiftUI */; };
 		863417F02C71BD0600550AB4 /* BGMStatusTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863417EF2C71BD0600550AB4 /* BGMStatusTextView.swift */; };
 		863417F22C71D15D00550AB4 /* BangumiDetailCoverTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863417F12C71D15D00550AB4 /* BangumiDetailCoverTextViewController.swift */; };
 		86436D4B2A389EE200E6936F /* EpisodeDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86436D4A2A389EE200E6936F /* EpisodeDetailModel.swift */; };
@@ -73,7 +74,6 @@
 		86AD92A02A33A540008461FF /* BangumiCellStatusTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AD929F2A33A540008461FF /* BangumiCellStatusTextView.swift */; };
 		86B06C302C156B2400169F55 /* ViewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B06C2F2C156B2400169F55 /* ViewUtils.swift */; };
 		86B36A8A2A581B9D00824050 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B36A892A581B9D00824050 /* SettingsViewController.swift */; };
-		86B5CC172C148E02000FE82A /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = 86B5CC162C148E02000FE82A /* CachedAsyncImage */; };
 		86B8F0932A850A7000FD467A /* SettingsButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B8F0922A850A7000FD467A /* SettingsButtonView.swift */; };
 		86B9A8102A8A777D002A9C94 /* OfflineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B9A80F2A8A777D002A9C94 /* OfflineView.swift */; };
 		86BAC66B2A38BE52001C064F /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */; };
@@ -189,7 +189,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86B5CC172C148E02000FE82A /* CachedAsyncImage in Frameworks */,
+				862CF4E72E23A9EF00624C04 /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,7 +420,7 @@
 			);
 			name = moe.TV;
 			packageProductDependencies = (
-				86B5CC162C148E02000FE82A /* CachedAsyncImage */,
+				862CF4E62E23A9EF00624C04 /* SDWebImageSwiftUI */,
 			);
 			productName = moe.TV;
 			productReference = 86A9C3E22A3306BC00FD0B44 /* moe.TV.app */;
@@ -457,7 +457,7 @@
 			);
 			mainGroup = 86A9C3D92A3306BC00FD0B44;
 			packageReferences = (
-				86B5CC152C148E02000FE82A /* XCRemoteSwiftPackageReference "CachedAsyncImage" */,
+				862CF4E52E23A9EF00624C04 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 86A9C3E32A3306BC00FD0B44 /* Products */;
 			projectDirPath = "";
@@ -933,21 +933,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		86B5CC152C148E02000FE82A /* XCRemoteSwiftPackageReference "CachedAsyncImage" */ = {
+		862CF4E52E23A9EF00624C04 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/bullinnyc/CachedAsyncImage";
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.6.0;
+				minimumVersion = 3.1.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		86B5CC162C148E02000FE82A /* CachedAsyncImage */ = {
+		862CF4E62E23A9EF00624C04 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 86B5CC152C148E02000FE82A /* XCRemoteSwiftPackageReference "CachedAsyncImage" */;
-			productName = CachedAsyncImage;
+			package = 862CF4E52E23A9EF00624C04 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

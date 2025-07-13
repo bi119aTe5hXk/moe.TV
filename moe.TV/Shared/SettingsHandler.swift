@@ -136,8 +136,8 @@ class SettingsHandler {
 	//Search history
 	func setSearchHistory(history:Array<String>){
 		var newHistory:Array<String> = history
-		if history.count > 10 {
-			newHistory.removeLast(history.count - 10)
+		if history.count > 20 {
+			newHistory.removeLast(history.count - 20)
 		}
 		ub.set(newHistory, forKey: kSearchHistory)
 		sync()

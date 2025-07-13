@@ -8,6 +8,7 @@
 import SwiftUI
 import AVKit
 import AVFoundation
+import MediaPlayer
 import Combine
 //TODO: PiP on tvOS & sharePlay & mediacenter
 #if os(iOS) || os(tvOS)
@@ -67,6 +68,28 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 			thePlayer.currentItem?.preferredForwardBufferDuration = TimeInterval(60.0)
 		}
 
+		//setup nowplaying
+		let item = player.currentItem
+		let duration = item?.duration
+
+		var nowPlayingInfo = [String: Any]()
+		nowPlayingInfo[MPMediaItemPropertyTitle] = ep?.name ?? ""
+		nowPlayingInfo[MPMediaItemPropertyArtist] = ep?.name_cn ?? ""
+
+		nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
+		nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime().seconds
+		nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+
+//		if let artworkImage = captureArtworkFromVideo(player: player) {
+//			let artwork = MPMediaItemArtwork(boundsSize: artworkImage.size) { _ in
+//				return artworkImage
+//			}
+//
+//			MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
+//		}
+
+		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+
 
 
         return controller
@@ -75,6 +98,17 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 		uiViewController.player = player
     }
 
+//	func captureArtworkFromVideo(player: AVPlayer) -> UIImage? {
+//		guard let asset = player.currentItem?.asset else { return nil }
+//		let generator = AVAssetImageGenerator(asset: asset)
+//		generator.appliesPreferredTrackTransform = true
+//
+//		let time = player.currentTime()
+//		if let cgImage = try? generator.copyCGImage(at: time, actualTime: nil) {
+//			return UIImage(cgImage: cgImage)
+//		}
+//		return nil
+//	}
 
 }
 #endif

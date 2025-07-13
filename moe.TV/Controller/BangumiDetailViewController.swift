@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CachedAsyncImage
+import SDWebImageSwiftUI
 
 struct NewEPItem:Decodable {
 	var ep:BGMEpisode
@@ -26,12 +26,12 @@ class BangumiDetailViewController : ObservableObject {
     @Published var albireo_favorite_status:Int?
 	@Published var bgmtv_favorite_status:Int?
 
-	init(){
-		ImageCache().wrappedValue.setCacheLimit(
-			countLimit: 1000, // 1000 items
-			totalCostLimit: 1024 * 1024 * 200 // 200 MB
-		)
-	}
+//	init(){
+//		ImageCache().wrappedValue.setCacheLimit(
+//			countLimit: 1000, // 1000 items
+//			totalCostLimit: 1024 * 1024 * 200 // 200 MB
+//		)
+//	}
 
 	// MARK: - Prepare Player
     //1 get selected EP
