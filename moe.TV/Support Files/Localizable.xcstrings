@@ -1372,21 +1372,27 @@
     },
     "Set watched when finished the final EP" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically changes status to watched after the last episode is played"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "最終回再生完了際、自動的「視聴済み」に変更する"
+            "value" : "最終回が再生終わると、自動的にステータスが「視聴済み」に変更する"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "看完最后一话时自动标记为“看过”"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "播完最後一話時自動標記為“看過”"
           }
         }
