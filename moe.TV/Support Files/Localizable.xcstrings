@@ -1370,6 +1370,28 @@
         }
       }
     },
+    "Set watched when finished the final EP" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終回再生完了際、自動的「視聴済み」に変更する"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "看完最后一话时自动标记为“看过”"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播完最後一話時自動標記為“看過”"
+          }
+        }
+      }
+    },
     "Settings" : {
       "localizations" : {
         "ja" : {
@@ -1392,24 +1414,24 @@
         }
       }
     },
-    "Show Bgm.tv while playing" : {
+    "Show Bgm.tv while playing (may result in spoilers!)" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "再生する際、bgm.tvコミュニティを表示する"
+            "value" : "再生する際、bgm.tvを表示する（ネタバレ注意！）"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在播放时显示bgm.tv讨论页面"
+            "value" : "在播放时显示bgm.tv讨论页面(可能会导致剧透！)"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "播放時顯示bgm.tv討論頁"
+            "value" : "播放時顯示bgm.tv討論頁（可能會導致劇透！）"
           }
         }
       }
@@ -1540,7 +1562,7 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "未知状态"
           }
         },
@@ -1568,7 +1590,7 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "未知"
           }
         },

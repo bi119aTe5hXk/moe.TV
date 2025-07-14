@@ -15,6 +15,8 @@ class PlayerViewController: ObservableObject {
     @Published var avPlayer:AVPlayer?
     let offlinePBM = OfflinePlaybackManager()
 
+	var settingsHandler = SettingsHandler()
+
     func loadFromUrl(url: URL) {
 		print("\(url)")
         avPlayer = AVPlayer(url: url)
@@ -110,12 +112,21 @@ class PlayerViewController: ObservableObject {
                 }else{
                     print("ep.bangumi_id is missing")
                 }
-                //TODO: update bangumi fav status when final ep watched
                 if let episode_no  = theEP.episode_no{
                     if let eps = theEP.bangumi?.eps{
                         if episode_no == eps{
-                            print("should set the subject/collection as watched: episode_no:\(episode_no),eps:\(eps)")
-
+								//TODO: check bgm.tv fav status
+								//only do auto set when fav status is watching
+							if bgmItem?.favorite_status == 3{
+								print("should set the subject/collection as watched: episode_no:\(episode_no),eps:\(eps)")
+								if settingsHandler.getSetWatchedWhenFinishedFinalEP(){
+									changeFavStatus(
+										idstr: theEP.id,
+										bgmid: bgmItem?.bgm_id,
+										status: 2
+									)
+								}
+							}
                         }
                     }
                 }
@@ -171,6 +182,29 @@ class PlayerViewController: ObservableObject {
 			// Specify "und" to indicate an undefined language.
 		item.extendedLanguageTag = "und"
 		return item.copy() as! AVMetadataItem
+	}
+
+	func changeFavStatus(idstr:String, bgmid:Int?, status:Int) {
+		print("changing fav status to \(status)")
+		changeAlbireoFavStatus(bangumi_id: idstr, status: status, completion: { isSuccess, result in
+			print(result as Any)
+			if isSuccess {
+				print("albireo fav status change success")
+			}
+		})
+
+		if let bgm_id = bgmid{
+			setBGMCollectionStatus(subject_id: bgm_id, status: status) { isSuccess, result in
+				print(result as Any)
+				if isSuccess {
+					print("setBGMCollectionStatus success")
+				}else{
+					print("setBGMCollectionStatus retrun false")
+				}
+			}
+		}else{
+			print("bgmid not found")
+		}
 	}
 }
 
