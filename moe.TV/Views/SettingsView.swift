@@ -134,17 +134,20 @@ struct SettingsView: View {
 						}
 #endif
 #if !os(tvOS)
-						Toggle("Show Bgm.tv while playing (may result in spoilers!)", isOn: $showBgmtvWebWhilePlaying)
-							.onAppear(){
-								self.showBgmtvWebWhilePlaying = settingsVC.settingsHandler
-									.getShowBgmtvWebWhilePlaying()
-							}
-							.onChange(of: showBgmtvWebWhilePlaying, initial: false, perform: { value in
-								settingsVC.settingsHandler
-									.setShowBgmtvWebWhilePlaying(
-										isEnabled: value
-									)
-							})
+						//Do not show this setting for iPhone
+						if UIDevice.current.userInterfaceIdiom != .phone{
+							Toggle("Show Bgm.tv while playing (may result in spoilers!)", isOn: $showBgmtvWebWhilePlaying)
+								.onAppear(){
+									self.showBgmtvWebWhilePlaying = settingsVC.settingsHandler
+										.getShowBgmtvWebWhilePlaying()
+								}
+								.onChange(of: showBgmtvWebWhilePlaying, initial: false, perform: { value in
+									settingsVC.settingsHandler
+										.setShowBgmtvWebWhilePlaying(
+											isEnabled: value
+										)
+								})
+						}
 #endif
 						Picker(
 							"Default playbck speed",
