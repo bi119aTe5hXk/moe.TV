@@ -108,35 +108,32 @@ class PlayerViewController: ObservableObject {
 				}
 
 				if let item = bgmItem{
-					//save to playback history
+						//save to playback history
 					savePlaybackHistory(item)
 
-					//set watched when finish final ep
-					if isFinished{
-						//check is the final ep
+						//set watched when finish final ep
+					if settingsHandler.getSetWatchedWhenFinishedFinalEP() && isFinished{
+							//check is the final ep
 						if let episode_no  = theEP.episode_no{
 							if let eps = theEP.bangumi?.eps{
 								if episode_no == eps{
-										//TODO: check bgm.tv fav status
+									print("should set the subject/collection as watched: episode_no:\(episode_no),eps:\(eps)")
 										//only do auto set when fav status is watching
-									if bgmItem?.favorite_status == 3{
-										print("should set the subject/collection as watched: episode_no:\(episode_no),eps:\(eps)")
-										if settingsHandler.getSetWatchedWhenFinishedFinalEP(){
-											changeFavStatus(
-												idstr: bgmItem?.id,
-												bgmid: bgmItem?.bgm_id,
-												status: 2
-											)
-										}
+										//TODO: check bgm.tv fav status
+									if item.favorite_status == 3{
+										changeFavStatus(
+											idstr: item.id,
+											bgmid: item.bgm_id,
+											status: 2
+										)
+									}else{
+										print("fav status is not watching. skip set as watched")
 									}
 								}
 							}
 						}
 					}
 				}
-
-
-
 
             }
             
