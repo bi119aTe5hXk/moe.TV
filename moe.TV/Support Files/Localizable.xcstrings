@@ -7,12 +7,12 @@
     "%@" : {
       "shouldTranslate" : false
     },
-    "%@ / %@" : {
+    "%@ (%@)" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "%1$@ / %2$@"
+            "value" : "%1$@ (%2$@)"
           }
         }
       },
@@ -89,7 +89,7 @@
 
     },
     "Albireo" : {
-
+      "shouldTranslate" : false
     },
     "Albireo cookies may expired. Logout?" : {
       "localizations" : {
@@ -408,7 +408,26 @@
       }
     },
     "Clear image cache" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像キャッシュをクリア"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清理图片缓存"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清理圖片緩存"
+          }
+        }
+      }
     },
     "Clear playback history" : {
       "localizations" : {
@@ -750,7 +769,7 @@
 
     },
     "ID: %@" : {
-
+      "shouldTranslate" : false
     },
     "Loading..." : {
       "localizations" : {
@@ -841,7 +860,7 @@
       }
     },
     "moe.TV" : {
-
+      "shouldTranslate" : false
     },
     "MyBangumi" : {
       "extractionState" : "manual",
@@ -1049,7 +1068,7 @@
       }
     },
     "OK" : {
-
+      "shouldTranslate" : false
     },
     "OnAir" : {
       "extractionState" : "manual",
@@ -1392,7 +1411,7 @@
         },
         "zh-Hant" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "播完最後一話時自動標記為“看過”"
           }
         }
@@ -1422,15 +1441,21 @@
     },
     "Show Bgm.tv while playing (may result in spoilers!)" : {
       "localizations" : {
-        "ja" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Show Bgm.tv while playing (Spoiler Alert!)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "再生する際、bgm.tvを表示する（ネタバレ注意！）"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "在播放时显示bgm.tv讨论页面(可能会导致剧透！)"
           }
         },
