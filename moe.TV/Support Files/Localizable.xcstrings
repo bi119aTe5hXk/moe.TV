@@ -7,12 +7,12 @@
     "%@" : {
       "shouldTranslate" : false
     },
-    "%@ / %@" : {
+    "%@ (%@)" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "%1$@ / %2$@"
+            "value" : "%1$@ (%2$@)"
           }
         }
       },
@@ -89,7 +89,7 @@
 
     },
     "Albireo" : {
-
+      "shouldTranslate" : false
     },
     "Albireo cookies may expired. Logout?" : {
       "localizations" : {
@@ -408,7 +408,26 @@
       }
     },
     "Clear image cache" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像キャッシュをクリア"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清理图片缓存"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清理圖片緩存"
+          }
+        }
+      }
     },
     "Clear playback history" : {
       "localizations" : {
@@ -750,7 +769,7 @@
 
     },
     "ID: %@" : {
-
+      "shouldTranslate" : false
     },
     "Loading..." : {
       "localizations" : {
@@ -841,7 +860,7 @@
       }
     },
     "moe.TV" : {
-
+      "shouldTranslate" : false
     },
     "MyBangumi" : {
       "extractionState" : "manual",
@@ -1049,7 +1068,7 @@
       }
     },
     "OK" : {
-
+      "shouldTranslate" : false
     },
     "OnAir" : {
       "extractionState" : "manual",
@@ -1370,6 +1389,34 @@
         }
       }
     },
+    "Set watched when finished the final EP" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically changes status to watched after the last episode is played"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終回が再生終わると、自動的にステータスが「視聴済み」に変更する"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "看完最后一话时自动标记为“看过”"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播完最後一話時自動標記為“看過”"
+          }
+        }
+      }
+    },
     "Settings" : {
       "localizations" : {
         "ja" : {
@@ -1392,24 +1439,30 @@
         }
       }
     },
-    "Show Bgm.tv while playing" : {
+    "Show Bgm.tv while playing (may result in spoilers!)" : {
       "localizations" : {
-        "ja" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "再生する際、bgm.tvコミュニティを表示する"
+            "value" : "Show Bgm.tv while playing (Spoiler Alert!)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "再生する際、bgm.tvを表示する（ネタバレ注意！）"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "在播放时显示bgm.tv讨论页面"
+            "state" : "needs_review",
+            "value" : "在播放时显示bgm.tv讨论页面(可能会导致剧透！)"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "播放時顯示bgm.tv討論頁"
+            "value" : "播放時顯示bgm.tv討論頁（可能會導致劇透！）"
           }
         }
       }
@@ -1540,7 +1593,7 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "未知状态"
           }
         },
@@ -1568,7 +1621,7 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "未知"
           }
         },

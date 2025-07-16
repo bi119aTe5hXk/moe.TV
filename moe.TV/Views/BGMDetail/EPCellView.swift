@@ -24,13 +24,16 @@ struct EPCellView: View {
 	@ObservedObject var detailVC : BangumiDetailViewController
     @EnvironmentObject var downloadManager: DownloadManager
     @EnvironmentObject var offlinePBM:OfflinePlaybackManager
-    
+
+//	@Binding var seledID: String?
+
     var body: some View {
         HStack{
 			//play button
 
 				Button(
 					action: {
+						detailVC.selectedID = newEPItem.ep.id
 						getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
 							if result{
 								if let epDetail = data as? EpisodeDetailModel{
@@ -41,7 +44,6 @@ struct EPCellView: View {
 							}
 						}
 					}, label: {
-							//                    GeometryReader { geo in
 						if loadFailed {
 							Text("No Picture")
 						}else{
@@ -58,7 +60,7 @@ struct EPCellView: View {
 											VStack {
 												Text("Loading...")
 
-													//											Text("\(progress) %")
+													//	Text("\(progress) %")
 											}
 										}
 									}
@@ -75,57 +77,15 @@ struct EPCellView: View {
 								.frame(maxWidth: 300)
 								.cornerRadius(10)
 
-									//                        CachedAsyncImage(
-									//                            url: fixPathNotCompete(path: thumbnail),
-									//                            placeholder: { progress in
-									//                                // Create any view for placeholder (optional).
-									//                                ZStack {
-									//                                    ProgressView() {
-									//                                        VStack {
-									//                                            Text("Loading...")
-									//
-									//                                            Text("\(progress) %")
-									//                                        }
-									//                                    }
-									//                                }
-									//                            },
-									//                            image: {
-									//                                // Customize image.
-									//                                Image(uiImage: $0)
-									//                                    .resizable()
-									//                                    .scaledToFit()
-									//                                    .cornerRadius(10)
-									//                                    .frame(maxWidth: 300)
-									//
-									//
-									//                            },error: { error, retry in
-									//                                HStack{
-									//                                    ExecuteCode {
-									//                                        DispatchQueue.main.async {
-									//                                            self.isEmptyEP = true
-									//                                        }
-									//                                    }
-									//
-									//                                    // Create any view for error (optional).
-									//                                    Text("No Picture")
-									//                                }
-									//
-									//                            }
-									//                        )
-									//                                .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
+
 								if !self.isEmptyEP{
 									Image(systemName: "play.circle.fill")
 										.font(.largeTitle)
 										.foregroundColor(.gray)
-										//                                    .frame(width: geo.size.width,height: geo.size.height,alignment: .center)
 								}
 							}
-								//                        }
 
 						}
-
-
-
 
 
 			}

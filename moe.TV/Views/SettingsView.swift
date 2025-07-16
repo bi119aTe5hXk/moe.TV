@@ -13,6 +13,9 @@ struct SettingsView: View {
 	@State private var landscapePlayback: Bool = false
 	@State private var showBgmtvWebWhilePlaying: Bool = false
 	@State private var hideUnreleasedEps: Bool = false
+	@State private var setWatchedWhenFinishedFinalEP: Bool = false
+
+
 //    @Binding var listVM:BangumiListViewModel
 //    @Binding var loginVM:LoginViewModel
 //    @Binding var myBGMVM:MyBangumiViewModel
@@ -110,6 +113,14 @@ struct SettingsView: View {
 								settingsVC.settingsHandler.setHideUnreleaseEPs(isEnabled: newValue)
 							}
 
+						Toggle("Set watched when finished the final EP",isOn: $setWatchedWhenFinishedFinalEP)
+							.onAppear(){
+								self.setWatchedWhenFinishedFinalEP = settingsVC.settingsHandler.getSetWatchedWhenFinishedFinalEP()
+							}
+							.onChange(of: setWatchedWhenFinishedFinalEP, initial: false) { newValue in
+								settingsVC.settingsHandler.setSetWatchedWhenFinishedFinalEP(isEnabled: newValue)
+							}
+
 
 #if os(iOS)
 						if UIDevice.current.userInterfaceIdiom == .phone{
@@ -120,8 +131,12 @@ struct SettingsView: View {
 								.onChange(of: landscapePlayback, initial: false, perform: { value in
 									settingsVC.settingsHandler.setLandscapePlayback(isEnabled: value)
 								})
-						}else{
-							Toggle("Show Bgm.tv while playing", isOn: $showBgmtvWebWhilePlaying)
+						}
+#endif
+#if !os(tvOS)
+						//Do not show this setting for iPhone
+						if UIDevice.current.userInterfaceIdiom != .phone{
+							Toggle("Show Bgm.tv while playing (may result in spoilers!)", isOn: $showBgmtvWebWhilePlaying)
 								.onAppear(){
 									self.showBgmtvWebWhilePlaying = settingsVC.settingsHandler
 										.getShowBgmtvWebWhilePlaying()
@@ -134,21 +149,6 @@ struct SettingsView: View {
 								})
 						}
 #endif
-#if os(macOS)
-						Toggle("Show Bgm.tv while playing", isOn: $showBgmtvWebWhilePlaying)
-							.onAppear(){
-								self.showBgmtvWebWhilePlaying = settingsVC.settingsHandler
-									.getShowBgmtvWebWhilePlaying()
-							}
-							.onChange(of: showBgmtvWebWhilePlaying, initial: false, perform: { value in
-								settingsVC.settingsHandler
-									.setShowBgmtvWebWhilePlaying(
-										isEnabled: value
-									)
-							})
-#endif
-
-
 						Picker(
 							"Default playbck speed",
 							selection: $settingsVC.playbackRate

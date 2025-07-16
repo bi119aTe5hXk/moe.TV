@@ -21,15 +21,16 @@ struct BGMTVUserEpisodeCollectionModel: Decodable {
 struct BGMTVEpisodeModel: Decodable {
 	let id : Int
 	let type : Int?
-	let name : String?
-	let name_cn : String?
-	let sort: Int?
-	let ep: Int?
-	let airdate: String?
-	let comment: Int?
-	let subject_id: Int?
-	let duration: String?
-	let desc: String?
-	let disc: Int?
-	let duration_seconds: Int?
+	//TODO: json decode error in some bangumi
+//	let name : String?
+//	let name_cn : String?
+//	let sort: Int?
+//	let ep: Int?
+//	let airdate: String?
+//	let comment: Int?
+//	let subject_id: Int?
+//	let duration: String?
+//	let desc: String?
+//	let disc: Int?
+//	let duration_seconds: Int?
 }

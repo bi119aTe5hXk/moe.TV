@@ -26,6 +26,9 @@ class BangumiDetailViewController : ObservableObject {
     @Published var albireo_favorite_status:Int?
 	@Published var bgmtv_favorite_status:Int?
 
+	@Published var isLoading:Bool = false
+	@Published var selectedID: String? = nil
+
 //	init(){
 //		ImageCache().wrappedValue.setCacheLimit(
 //			countLimit: 1000, // 1000 items
@@ -110,6 +113,7 @@ class BangumiDetailViewController : ObservableObject {
         print("getBGMDetail:\(id)")
 		self.detailItem = nil
 		self.newEPList = []
+		self.isLoading = true
         getAlbireoBangumiDetail(id: id) { isSuccessed, data in
             if !isSuccessed{
                 return
@@ -197,6 +201,7 @@ class BangumiDetailViewController : ObservableObject {
 								eps: epList,
 								bgmEPs: r.data ?? []
 							)
+						self.isLoading = false
 					}
 				}else{
 					print( "data is not BGMTVCollectionEpisodesModel")
@@ -233,6 +238,7 @@ class BangumiDetailViewController : ObservableObject {
 				eps: eps,
 				bgmEPs: []
 			)
+			self.isLoading = false
 		}
 	}
 

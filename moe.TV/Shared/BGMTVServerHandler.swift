@@ -342,7 +342,8 @@ func getBGMCollectionEpisodeList(subject_id:Int, completion: @escaping (Bool, An
 						completion(false, data as! String)
 					}
 				}catch{
-					print("getBGMCollectionEpisodeList json decode failed: \(error.localizedDescription)")
+					let datastr = String.init(data: data as! Data, encoding: .utf8)
+					print("getBGMCollectionEpisodeList json decode failed: \(error.localizedDescription), data: \(datastr ?? "")")
 					completion(false, "there is a problem with json decode")
 				}
 			}else{

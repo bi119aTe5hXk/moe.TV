@@ -28,23 +28,28 @@ struct BangumiDetailView: View {
 				Divider()
 				if !detailVC.newEPList.isEmpty{
 					ForEach(detailVC.newEPList, id: \.ep.id){ item in
+						let e = item.ep
 						if settingsHandler.getHideUnreleaseEPs(){
-							//only show released EPs
-							if let n = item.ep.name{
+								//only show released EPs
+							if let n = e.name{
 								if !n.isEmpty{
 									EPCellView(newEPItem:item,detailVC:detailVC)
 										.environmentObject(DownloadManager())
 										.environmentObject(OfflinePlaybackManager())
 										.padding(10)
+										.id(e.id)
 								}
 							}
+
 						}else{
-							//show all EPs
+								//show all EPs
 							EPCellView(newEPItem:item,detailVC:detailVC)
 								.environmentObject(DownloadManager())
 								.environmentObject(OfflinePlaybackManager())
 								.padding(10)
+								.id(e.id)
 						}
+
 
 					}
 				}else{
@@ -60,24 +65,31 @@ struct BangumiDetailView: View {
 
 			}
 			.onAppear(){
+				print("BangumiDetailView onAppear")
 				if let item = selectedItem{
-					print("BangumiDetailView onAppear")
-					detailVC.getBGMDetail(id: item.id){	result in
-
+					detailVC.getBGMDetail(id: item.id){	_ in
 					}
 				}
 			}
 			.onChange(of: selectedItem, initial: true) { newValue in
 				if let item = newValue{
 					print("BangumiDetailView onchange")
-					detailVC.getBGMDetail(id: item.id){	result in
-						if result {
-//							if let last = detailVC.newEPList.last?.ep.episode_no{
-//								proxy.scrollTo(last.ep.episode_no ?? 0, anchor: .bottom)
-//							}
-						}
+					detailVC.getBGMDetail(id: item.id){	_ in
 					}
 
+				}
+			}
+			.onChange(of: detailVC.isLoading, initial: true) { newValue in
+				if !newValue {
+					print("finished loading")
+					if let id = detailVC.selectedID {
+						print("should scroll to \(id)")
+						DispatchQueue.main.async {
+							withAnimation {
+								proxy.scrollTo(id, anchor: .top)
+							}
+						}
+					}
 				}
 			}
 			.refreshable {

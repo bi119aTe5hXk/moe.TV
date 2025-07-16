@@ -19,6 +19,7 @@ class SettingsHandler {
 	private let kShowBgmtvWebWhilePlaying = "kShowBgmtvWebWhilePlaying"
 	private let kPlaybackRate = "kPlaybackRate"
 	private let kSearchHistory = "kSearchHistory"
+	private let kSetWatchedWhenFinishedFinalEP = "kSetWatchedWhenFinishedFinalEP"
 
 	private let kPlaybackHistory = "kPlaybackHistory"
 
@@ -111,6 +112,15 @@ class SettingsHandler {
 	}
 	func getHideUnreleaseEPs() -> Bool{
 		return ub.bool(forKey: kHideUnreleaseEPs)
+	}
+
+	//Set Bangumi status to watched when finished final EP
+	func setSetWatchedWhenFinishedFinalEP(isEnabled: Bool){
+		ub.set(isEnabled, forKey: kSetWatchedWhenFinishedFinalEP)
+		sync()
+	}
+	func getSetWatchedWhenFinishedFinalEP() -> Bool{
+		return ub.bool(forKey: kSetWatchedWhenFinishedFinalEP)
 	}
 
 	//Landscape playback
