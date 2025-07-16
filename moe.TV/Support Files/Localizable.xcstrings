@@ -1550,7 +1550,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "登出: %@"
+            "value" : "簽名: %@"
           }
         }
       }
@@ -1572,7 +1572,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "同步收視進度到bam.tv"
+            "value" : "同步收視進度到bgm.tv"
           }
         }
       }
