@@ -152,15 +152,15 @@ struct BangumiDetailView: View {
 										isBGMTVWatched: detailVC.isBGMEPWatched())
 						.frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
 							//TODO: better close button for macOS
-						Button(action: {
-							detailVC.closePlayer()
-						}, label: {
-							Image(systemName: "xmark")
-								.resizable()
-								.renderingMode(.template)
-								.frame(width: 15, height: 15)
-								.foregroundColor(.white)
-						}).buttonStyle(.plain)
+//						Button(action: {
+//							detailVC.closePlayer()
+//						}, label: {
+//							Image(systemName: "xmark")
+//								.resizable()
+//								.renderingMode(.template)
+//								.frame(width: 15, height: 15)
+//								.foregroundColor(.white)
+//						}).buttonStyle(.plain)
 					}
 
 				}else{

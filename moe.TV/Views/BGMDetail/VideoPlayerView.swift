@@ -112,7 +112,7 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 
 }
 #endif
-//TODO: PiP macOS support
+//TODO: PiP / playback rate macOS support
 //#if os(macOS)
 //struct VideoPlayerViewMacOS:NSViewControllerRepresentable{
 //    typealias NSViewControllerType = NSViewController
@@ -152,6 +152,10 @@ struct VideoPlayerView: View {
 
 	private let settingsHandler = SettingsHandler()
 
+
+	@AppStorage("dividerPosition") private var dividerPosition: Double = 0.7 //left
+	@GestureState private var dragOffset: CGFloat = 0
+
     var body: some View {
 		ZStack{
 			if let avPlayer = playerVM.avPlayer {
@@ -163,6 +167,9 @@ struct VideoPlayerView: View {
 				{
 						//player with navbar & webview
 					GeometryReader { geometry in
+						let totalWidth = geometry.size.width
+						let leftWidth = max(200, min(totalWidth - 200, totalWidth * CGFloat(dividerPosition) + dragOffset))
+
 						NavigationView{
 							HStack{
 								ZStack {
@@ -180,7 +187,23 @@ struct VideoPlayerView: View {
 												)
 										}
 										.persistentSystemOverlays(.hidden)
-								}.frame(maxWidth: .infinity)
+								}.frame(width: leftWidth)
+
+								Divider()
+									.frame(width: 10)
+									.background(Color.gray.opacity(0.2))
+									.gesture(
+										DragGesture()
+											.updating($dragOffset) { value, state, _ in
+												state = value.translation.width
+											}
+											.onEnded { value in
+												let newRatio = (leftWidth + value.translation.width) / totalWidth
+												dividerPosition = Double(max(0.2, min(0.8, newRatio)))
+											}
+									)
+									.background(Color.secondary)
+
 								if let theEP = ep{
 									if UIDevice.current.userInterfaceIdiom == .pad {
 
@@ -190,7 +213,7 @@ struct VideoPlayerView: View {
 											WebView(url: URL(string: urlString)!)
 												.ignoresSafeArea()
 												.navigationBarTitleDisplayMode(.inline)
-												.frame(width: geometry.size.width*0.2)
+												.frame(width: totalWidth - leftWidth - 10)
 												.navigationTitle("\(ep?.name ?? "") (\(ep?.name_cn ?? "NAME_CN_EMPTY"))")
 												.navigationBarItems(leading:
 																		Button(action: {
@@ -247,6 +270,8 @@ struct VideoPlayerView: View {
 #if os(macOS)
 						//player with navbar & webview
 				GeometryReader { geometry in
+					let totalWidth = geometry.size.width
+					let leftWidth = max(200, min(totalWidth - 200, totalWidth * CGFloat(dividerPosition) + dragOffset))
 					NavigationView{
 						HStack{
 							ZStack {
@@ -275,7 +300,22 @@ struct VideoPlayerView: View {
 											}
 										}
 									}
-							}.frame(maxWidth: .infinity)
+							}.frame(width: leftWidth)
+							Divider()
+								.frame(width: 10)
+								.background(Color.gray.opacity(0.2))
+								.gesture(
+									DragGesture()
+										.updating($dragOffset) { value, state, _ in
+											state = value.translation.width
+										}
+										.onEnded { value in
+											let newRatio = (leftWidth + value.translation.width) / totalWidth
+											dividerPosition = Double(max(0.2, min(0.8, newRatio)))
+										}
+								)
+								.background(Color.secondary)
+
 							if settingsHandler
 								.getShowBgmtvWebWhilePlaying() && (detailVC != nil){
 								if let theEP = ep{
@@ -287,7 +327,7 @@ struct VideoPlayerView: View {
 										WebView(url: URL(string: urlString)!)
 											.ignoresSafeArea()
 //											.navigationBarTitleDisplayMode(.inline)
-											.frame(width: geometry.size.width*0.2)
+											.frame(width: totalWidth - leftWidth - 10)
 
 									}
 								}
