@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BangumiListView: View {
 	@ObservedObject var listVC = BangumiListViewController()
+	@ObservedObject var detailVC = BangumiDetailViewController() //TODO: update list when playback finished
     @Binding var selectedItem: BangumiItemModel?
     @Binding var selectedFunc: FuncViewModel?
 
@@ -39,11 +40,20 @@ struct BangumiListView: View {
             }
             .onChange(of: selectedFunc, initial: true) {  newValue in
 				if oldValue != newValue {
-					print("onChange.getBGMList")
+					print("onChange.selectedFunc.getBGMList")
 					oldValue = newValue
 					getBGMList()
 				}
             }
+			.onChange(of: detailVC.isLoading, initial: true) { newValue in
+				if !newValue {
+					print("finished loading")
+					if let _ = detailVC.selectedID {
+						print("onChange.detailVC.isLoading.getBGMList")
+						getBGMList()
+					}
+				}
+			}
 
             .modifier(OptionalSearchableViewModifier(
                 isSearchable: listVC.isSearchable(selectedFunc: selectedFunc),

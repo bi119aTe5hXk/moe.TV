@@ -73,7 +73,7 @@ struct BangumiDetailView: View {
 			}
 			.onChange(of: selectedItem, initial: true) { newValue in
 				if let item = newValue{
-					print("BangumiDetailView onchange")
+					print("BangumiDetailView onchange by selectedItem")
 					detailVC.getBGMDetail(id: item.id){	_ in
 					}
 
@@ -181,7 +181,7 @@ struct BangumiDetailView: View {
 				if let ep = detailVC.ep{
 					ForEach(ep.video_files
 							?? [], id: \.self){ item in
-						Button(item.file_name ?? "unknow source"){
+						Button(item.file_name ?? "\(item.url ?? "unknown source")"){
 							if let urlstr = item.url{
 								detailVC.showVideoView(url: fixPathNotCompete(path: urlstr).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!, seekTime: detailVC.seek)
 							}else{

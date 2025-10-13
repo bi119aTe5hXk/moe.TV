@@ -45,6 +45,7 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 		let metadata = playerVM.setMatadata(ep: ep)
 		controller.player?.currentItem?.externalMetadata = metadata
 		controller.player?.currentItem?.preferredForwardBufferDuration = TimeInterval(60.0)
+		controller.player?.automaticallyWaitsToMinimizeStalling = true
 
         if AVPictureInPictureController.isPictureInPictureSupported() {
 //            pipController = AVPictureInPictureController(playerLayer: playerLayer)!
@@ -66,9 +67,19 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 			thePlayer.playImmediately(atRate: rate )
 			thePlayer.defaultRate = rate
 			thePlayer.currentItem?.preferredForwardBufferDuration = TimeInterval(60.0)
+			thePlayer.automaticallyWaitsToMinimizeStalling = true
 		}
 
-		//setup nowplaying
+		setupNowPlayingInfo(player: player)
+
+        return controller
+    }
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayerViewiOS>) {
+		uiViewController.player = player
+    }
+
+	func setupNowPlayingInfo(player: AVPlayer){
+			//setup nowplaying
 		let item = player.currentItem
 		let duration = item?.duration
 
@@ -79,24 +90,15 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 		nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
 		nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime().seconds
 		nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
-
-//		if let artworkImage = captureArtworkFromVideo(player: player) {
-//			let artwork = MPMediaItemArtwork(boundsSize: artworkImage.size) { _ in
-//				return artworkImage
-//			}
-//
-//			MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
-//		}
-
+			//		if let artworkImage = captureArtworkFromVideo(player: player) {
+			//			let artwork = MPMediaItemArtwork(boundsSize: artworkImage.size) { _ in
+			//				return artworkImage
+			//			}
+			//
+			//			MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
+			//		}
 		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-
-
-
-        return controller
-    }
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayerViewiOS>) {
-		uiViewController.player = player
-    }
+	}
 
 //	func captureArtworkFromVideo(player: AVPlayer) -> UIImage? {
 //		guard let asset = player.currentItem?.asset else { return nil }
@@ -109,6 +111,9 @@ struct VideoPlayerViewiOS:UIViewControllerRepresentable{
 //		}
 //		return nil
 //	}
+
+	
+
 
 }
 #endif
@@ -151,6 +156,7 @@ struct VideoPlayerView: View {
 	var isBGMTVWatched:Bool
 
 	private let settingsHandler = SettingsHandler()
+
 
 
 	@AppStorage("dividerPosition") private var dividerPosition: Double = 0.7 //left
@@ -348,10 +354,11 @@ struct VideoPlayerView: View {
 				OrientationController.shared.currentOrientation = .landscapeRight
 			}
 #endif
-            playerVM.loadFromUrl(url: url)
+			playerVM.loadFromUrl(url: url)
             if let player = playerVM.avPlayer{
 				player.currentItem?.preferredForwardBufferDuration = TimeInterval(60)
 				player.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
+				player.automaticallyWaitsToMinimizeStalling = true
 
                 if seekTime != 0{
                     print("seekto:\(seekTime)")

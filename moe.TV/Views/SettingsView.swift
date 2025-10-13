@@ -44,18 +44,21 @@ struct SettingsView: View {
 #endif
 						.onAppear(){
 							if syncWithBGMTV{
-								getBGMUserInfo()
+								settingsVC.getBGMUserInfo()
 							}
 						}
-						.onChange(of: syncWithBGMTV, initial: true) { newValue in
-							if syncWithBGMTV{
-								if newValue {
-									if !isBGMTVlogined(){
-										startBGMTVLogin()
-									}
-								}else{
-									settingsVC.showLogoutBGMTVAlert()
+						.onChange(of: syncWithBGMTV, initial: false) { newValue in
+//							if !syncWithBGMTV{
+//								print("syncWithBGMTV is false, do nothing")
+//								return
+//							}
+							print("newValue: \(newValue)")
+							if newValue {
+								if !isBGMTVlogined(){
+									startBGMTVLogin()
 								}
+							}else{
+								settingsVC.showLogoutBGMTVAlert()
 							}
 						}
 						.alert(isPresented: $settingsVC.presentLogoutBGMTVAlert) {
@@ -64,6 +67,7 @@ struct SettingsView: View {
 								primaryButton: .destructive(Text("Logout")) {
 									syncWithBGMTV = false
 									logoutBGMTV()
+									settingsVC.isBGMUserInfoReady = false
 								},
 								secondaryButton: .cancel(){
 									syncWithBGMTV = true
@@ -268,25 +272,7 @@ struct SettingsView: View {
 	}
 
     
-    func getBGMUserInfo() {
-        print("getBGMUserInfo")
-        getBGMTVUserInfo(completion: { result, data in
-            if result{
-                if let d = data as? BGMTVUserInfoModel{
-                    settingsVC.setBGMInfo(avatar_url: d.avatar?.large ?? "",
-                                          bgmUsername: d.username ?? "",
-                                          bgmNickname: d.nickname ?? "",
-                                          bgmID: d.id ?? 0,
-                                          bgmSign: d.sign ?? "")
-                    settingsVC.showBGMUserInfo()
-                }
-            }else{
-                print("bgm.tv oauth info invalid")
-				logoutBGMTV()
-				syncWithBGMTV = false
-            }
-        })
-    }
+    
 }
 
 //struct SettingsView_Previews: PreviewProvider {

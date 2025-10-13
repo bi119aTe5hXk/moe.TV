@@ -36,7 +36,8 @@ struct BangumiDetailNavItemView: View {
 #endif
 #if os(tvOS)
     var body: some View {
-        Button("Download All", action: startDwonloadAll)
+		//TODO: temp rm DL-all btn for fix scroll issues on tvOS
+        //Button("Download All", action: startDwonloadAll)
     }
 #endif
     private func startDwonloadAll(){

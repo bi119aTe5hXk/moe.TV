@@ -23,6 +23,16 @@ class SettingsViewController: ObservableObject{
 
 	@Published var playbackRate:Double = 1.0
 
+	init() {
+		NotificationCenter.default
+			.addObserver(
+				self,
+				selector: #selector(getBGMUserInfo),
+				name: Notification.Name("getBGMUserInfo"),
+				object: nil
+			)
+	}
+
     func showLogoutAlbireoAlert(){
         self.presentLogoutAlbireoAlert = true
     }
@@ -58,4 +68,24 @@ class SettingsViewController: ObservableObject{
             return "UNKNOWN_BUILD"
         }
     }
+
+	@objc func getBGMUserInfo() {
+		print("getBGMUserInfo")
+		getBGMTVUserInfo(completion: { result, data in
+			if result{
+				if let d = data as? BGMTVUserInfoModel{
+					self.setBGMInfo(avatar_url: d.avatar?.large ?? "",
+										  bgmUsername: d.username ?? "",
+										  bgmNickname: d.nickname ?? "",
+										  bgmID: d.id ?? 0,
+										  bgmSign: d.sign ?? "")
+					self.showBGMUserInfo()
+				}
+			}else{
+				print("bgm.tv oauth info invalid")
+				logoutBGMTV()
+				//syncWithBGMTV = false
+			}
+		})
+	}
 }
