@@ -15,15 +15,15 @@ struct moe_TVApp: App {
     @State var showBGMDetailView:Bool = false
     @State var bgmID:String?
     @StateObject var networkMonitor = NetworkMonitor()
-    
+
     var body: some Scene {
         WindowGroup {
             MainView()
             
                 //for URI scheme
                 .sheet(
-isPresented: $showBGMDetailView,
- content: {
+					isPresented: $showBGMDetailView,
+					content: {
 #if !os(tvOS)
                     HStack{
                         Button(action: {
@@ -34,14 +34,14 @@ isPresented: $showBGMDetailView,
                         Spacer()
                     }
 #endif
-	 if let id = bgmID{
-		 BangumiDetailView(
-			selectedItem:
-					.constant(
-						BangumiItemModel(id: id, type: 0, status: 0, eps: 0)
-					),
-			detailVC: BangumiDetailViewController()
-		 )
+						if let id = bgmID{
+							BangumiDetailView(
+								selectedItem:
+										.constant(
+											BangumiItemModel(id: id, type: 0, status: 0, eps: 0)
+										),
+								detailVC: BangumiDetailViewController()
+							)
                     }
                 })
                 .environmentObject(networkMonitor)
@@ -62,7 +62,14 @@ isPresented: $showBGMDetailView,
                         case "bgmtv":
                             if let code = queryUrlComponents.queryItems?.first(where: { $0.name == "code" })?.value{
                                 print(code)
-                                getBGMTVAccessToken(code: code)
+								getBGMTVAccessToken(code: code){ isSuccess, result in
+									if isSuccess{
+										NotificationCenter.default
+											.post(name: Notification.Name("getBGMUserInfo"), object: nil)
+									}else{
+										print("getBGMTVAccessToken failed: \(result)")
+									}
+								}
                             }
                             break
                             default:

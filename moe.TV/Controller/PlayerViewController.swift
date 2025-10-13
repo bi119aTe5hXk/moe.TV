@@ -17,10 +17,14 @@ class PlayerViewController: ObservableObject {
 
 	var settingsHandler = SettingsHandler()
 
-    func loadFromUrl(url: URL) {
+
+
+	func loadFromUrl(url: URL){
 		print("\(url)")
-        avPlayer = AVPlayer(url: url)
-    }
+		
+		avPlayer = AVPlayer(url: url)
+		
+	}
 
 	func playerObserverHandler(
 		status:AVPlayer.TimeControlStatus?,
@@ -53,6 +57,7 @@ class PlayerViewController: ObservableObject {
 				print("unknown player status:\(String(describing: status))")
 		}
 	}
+
 
     func logPlaybackPosition(player:AVPlayer,
 							 bgmItem:BangumiItemModel?,
@@ -179,7 +184,7 @@ class PlayerViewController: ObservableObject {
 		return metadata
 	}
 
-	private func createMetadataItem(for identifier: AVMetadataIdentifier,
+	func createMetadataItem(for identifier: AVMetadataIdentifier,
 									value: Any) -> AVMetadataItem {
 		let item = AVMutableMetadataItem()
 		item.identifier = identifier

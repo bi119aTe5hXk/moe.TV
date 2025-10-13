@@ -44,20 +44,26 @@ struct DebugView: View {
                     HStack{
                         Text("AccessToken")
                         Spacer()
-                        Text(debugVC.getBGMTVAccessToken())
+						Text(debugVC.getBGMTVAccessTokenDEBUG())
                     }
                     HStack{
                         Text("RefreshToken")
                         Spacer()
-                        Text(debugVC.getBGMTVRefreshToken())
+						Text(debugVC.getBGMTVRefreshTokenDEBUG())
                     }
                     HStack{
                         Text("ExpireTime")
                         Spacer()
-                        Text("\(debugVC.getBGMExpireTime())")
+                        Text("\(debugVC.getBGMExpireTimeDEBUG())")
                     }
                     Button {
-                        refreshBGMTVToken()
+						refreshBGMTVToken(){ isSuccess, result in
+							if isSuccess{
+								print("refreshBGMTVToken success")
+							}else{
+								print("refreshBGMTVToken failed: \(result)")
+							}
+						}
                     } label: {
                         Text("Refresh BGM Access Token")
                     }

@@ -9,24 +9,24 @@ import Foundation
 
 class DebugViewController: ObservableObject {
     let settings = SettingsHandler()
-	func getBGMTVUsername() -> String {
+	func getBGMTVUsernameDEBUG() -> String {
 		return settings.getBGMTVUsername()
 	}
 
-    func getBGMTVAccessToken() -> String {
-        return settings.getBGMTVAccessToken()
+    func getBGMTVAccessTokenDEBUG() -> String {
+        return settings.getBGMTVAccessTokenKey()
     }
-    func getBGMTVRefreshToken() -> String {
-        return settings.getBGMTVRefreshToken()
+    func getBGMTVRefreshTokenDEBUG() -> String {
+        return settings.getBGMTVRefreshTokenKey()
     }
-    func getBGMExpireTime() -> Int {
+    func getBGMExpireTimeDEBUG() -> Int {
         return settings.getBGMTVExpireTime()
     }
     
     func reSyncBGM(){
 		saveBGMLoginInfo(username: settings.getBGMTVUsername(),
-						 accessToken: settings.getBGMTVAccessToken(),
-                         refreshToken: settings.getBGMTVRefreshToken(),
+						 accessToken: settings.getBGMTVAccessTokenKey(),
+                         refreshToken: settings.getBGMTVRefreshTokenKey(),
                          expireIn: settings.getBGMTVExpireTime())
         settings.sync()
     }

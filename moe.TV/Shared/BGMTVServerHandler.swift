@@ -15,7 +15,7 @@ private let jsonDecoder = JSONDecoder()
 private let baseBGMTVAPIURL = "https://api.bgm.tv"
 
 func isBGMTVlogined() -> Bool {
-    let token = settingsHandler.getBGMTVAccessToken()
+	let token = settingsHandler.getBGMTVAccessTokenKey()
     if token.isEmpty{
         print("BGMTVAccessToken is empty")
         return false
@@ -25,8 +25,8 @@ func isBGMTVlogined() -> Bool {
     }
 }
 func logoutBGMTV(){
-    settingsHandler.setBGMTVAccessToken(token: "")
-    settingsHandler.setBGMTVRefreshToken(token: "")
+	settingsHandler.setBGMTVAccessTokenKey(token: "")
+	settingsHandler.setBGMTVRefreshTokenKey(token: "")
     settingsHandler.setBGMTVExpireTime(time: 0)
     print("bgm.tv auth cleared")
 }
@@ -40,7 +40,7 @@ private func patchServer(urlString:String,
         var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
-        request.setValue("Bearer \(settingsHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(settingsHandler.getBGMTVAccessTokenKey())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
@@ -70,7 +70,7 @@ private func putServer(urlString:String,
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
-        request.setValue("Bearer \(settingsHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(settingsHandler.getBGMTVAccessTokenKey())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
@@ -98,7 +98,7 @@ private func getServer(urlString:String,
     var request = URLRequest(url: url)
     request.httpMethod = "GET"
     request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-    request.setValue("Bearer \(settingsHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
+    request.setValue("Bearer \(settingsHandler.getBGMTVAccessTokenKey())", forHTTPHeaderField: "Authorization")
 
     URLSession.shared.dataTask(with: request){(data, response, error) in
         if let err = error {
@@ -126,7 +126,7 @@ private func postServer(urlString:String,
 
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 		if withAccessToken{
-			request.setValue("Bearer \(settingsHandler.getBGMTVAccessToken())", forHTTPHeaderField: "Authorization")
+			request.setValue("Bearer \(settingsHandler.getBGMTVAccessTokenKey())", forHTTPHeaderField: "Authorization")
 		}
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
         URLSession.shared.dataTask(with: request){(data, response, error) in
@@ -156,7 +156,7 @@ func startBGMTVLogin() {
 #endif
 }
 
-func getBGMTVAccessToken(code:String){
+func getBGMTVAccessToken(code:String, completion:@escaping (Bool, String) -> Void){
     let urlString = "https://bgm.tv/oauth/access_token"
     
     let postdata = ["grant_type":"authorization_code",
@@ -178,25 +178,26 @@ func getBGMTVAccessToken(code:String){
 										 accessToken: accesstoken,
                                          refreshToken: r.refresh_token!,
                                          expireIn: r.expires_in!)
+						completion(true, "success")
                     }else{
-                        print("get bgm.tv access token error -1")
+						completion(false, "get bgm.tv access token error -1")
                     }
                 }else{
-                    print("json decode error -1")
+					completion(false, "json decode error -1")
                 }
             }catch{
-                print("json decode error")
+				completion(false, "json decode error")
             }
         }else{
-            print("get bgm.tv access token error")
+			completion(false, "get bgm.tv access token error")
         }
     }
 }
 
 
-func refreshBGMTVToken(){
+func refreshBGMTVToken(completion:@escaping (Bool, String) -> Void){
     let urlString = "https://bgm.tv/oauth/access_token"
-    let refreshToken = settingsHandler.getBGMTVRefreshToken()
+	let refreshToken = settingsHandler.getBGMTVRefreshTokenKey()
     let postdata = ["grant_type":"refresh_token",
                     "client_id":"\(bgmAppID)",
                     "client_secret":"\(bgmAppSecret)",
@@ -216,18 +217,19 @@ func refreshBGMTVToken(){
 										 accessToken: accesstoken,
                                          refreshToken: r.refresh_token!,
                                          expireIn: r.expires_in!)
+						completion(true, "success")
                     }else{
-                        print("refresh bgm.tv token error -1, logout")
                         logoutBGMTV()
+						completion(false, "refresh bgm.tv token error -1, logout")
                     }
                 }else{
-                    print("json decode error -1")
+					completion(false, "json decode error -1")
                 }
             }catch{
-                print("json decode error")
+				completion(false, "json decode error")
             }
         }else{
-            print("refresh bgm.tv token error")
+			completion(false, "refresh bgm.tv token error")
         }
     }
 }
@@ -238,11 +240,11 @@ func saveBGMLoginInfo(username:String?, accessToken:String?, refreshToken:String
 		print("bgm.tv username saved")
 	}
 	if let accessToken = accessToken{
-		settingsHandler.setBGMTVAccessToken(token: accessToken)
+		settingsHandler.setBGMTVAccessTokenKey(token: accessToken)
 		print("bgm.tv accessToken saved")
 	}
 	if let refreshToken = refreshToken{
-		settingsHandler.setBGMTVRefreshToken(token: refreshToken)
+		settingsHandler.setBGMTVRefreshTokenKey(token: refreshToken)
 		print("bgm.tv refreshToken saved")
 	}
 	if let expireIn = expireIn{
@@ -299,7 +301,11 @@ func isBGMAccessTokenExpired() -> Bool{
 func getBGMCollectionStatus(subject_id:Int, completion: @escaping (Bool, Any) -> Void){
 	if isBGMTVlogined(){
 		if isBGMAccessTokenExpired(){
-			refreshBGMTVToken()
+			refreshBGMTVToken(){ isSuccess, result in
+				if !isSuccess{
+					print("failed to refresh bgm.tv token: \(result)")
+				}
+			}
 		}
 		if settingsHandler.getBGMTVUsername().isEmpty{
 			getBGMTVUserInfo(completion: { (_, _) in})
@@ -327,7 +333,11 @@ func getBGMCollectionStatus(subject_id:Int, completion: @escaping (Bool, Any) ->
 func getBGMCollectionEpisodeList(subject_id:Int, completion: @escaping (Bool, Any) -> Void){
 	if isBGMTVlogined(){
 		if isBGMAccessTokenExpired(){
-			refreshBGMTVToken()
+			refreshBGMTVToken(){ isSuccess, result in
+				if !isSuccess{
+					print("failed to refresh bgm.tv token: \(result)")
+				}
+			}
 		}
 		let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)/episodes"
 		getServer(urlString: urlStr) { result, data in
@@ -359,7 +369,11 @@ func getBGMCollectionEpisodeList(subject_id:Int, completion: @escaping (Bool, An
 func setBGMCollectionStatus(subject_id:Int, status:Int, completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         if isBGMAccessTokenExpired(){
-            refreshBGMTVToken()
+			refreshBGMTVToken(){ isSuccess, result in
+				if !isSuccess{
+					print("failed to refresh bgm.tv token: \(result)")
+				}
+			}
         }
         let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)"
 		postServer(urlString: urlStr,
@@ -374,7 +388,11 @@ func setBGMCollectionStatus(subject_id:Int, status:Int, completion: @escaping (B
 func setBGMEPWatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         if isBGMAccessTokenExpired(){
-            refreshBGMTVToken()
+			refreshBGMTVToken(){ isSuccess, result in
+				if !isSuccess{
+					print("failed to refresh bgm.tv token: \(result)")
+				}
+			}
         }
         let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/-/episodes/\(epID)"
         putServer(urlString: urlStr,
@@ -386,7 +404,11 @@ func setBGMEPWatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
 func setBGMSBEPStatues(subject_id:Int,episode_id:Int,status:Int,completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         if isBGMAccessTokenExpired(){
-            refreshBGMTVToken()
+			refreshBGMTVToken(){ isSuccess, result in
+				if !isSuccess{
+					print("failed to refresh bgm.tv token: \(result)")
+				}
+			}
         }
         let urlstr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)/episodes"
         patchServer(urlString: urlstr, postdata: ["episode_id":[episode_id],"type":status]) { result, data in
@@ -400,7 +422,11 @@ func setBGMSBEPStatues(subject_id:Int,episode_id:Int,status:Int,completion: @esc
 func getBGMTVUserInfo(completion: @escaping (Bool, Any) -> Void){
     if isBGMTVlogined(){
         if isBGMAccessTokenExpired(){
-            refreshBGMTVToken()
+			refreshBGMTVToken(){ isSuccess, result in
+				if !isSuccess{
+					print("failed to refresh bgm.tv token: \(result)")
+				}
+			}
         }
         let urlstr = "\(baseBGMTVAPIURL)/v0/me"
         getServer(urlString: urlstr) { result, data in

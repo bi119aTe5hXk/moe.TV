@@ -78,20 +78,20 @@ class SettingsHandler {
 
     // MARK: - bgm.tv
 	//BGMTV Access Token
-    func setBGMTVAccessToken(token:String){
+    func setBGMTVAccessTokenKey(token:String){
         ub.set(token, forKey: kBGMTVAccessToken)
         sync()
     }
-    func getBGMTVAccessToken() -> String {
+    func getBGMTVAccessTokenKey() -> String {
         return ub.string(forKey: kBGMTVAccessToken) ?? ""
     }
     
     //BGMTV Refresh Token
-    func setBGMTVRefreshToken(token:String){
+    func setBGMTVRefreshTokenKey(token:String){
         ub.set(token, forKey: kBGMTVRefreshToken)
         sync()
     }
-    func getBGMTVRefreshToken() -> String {
+    func getBGMTVRefreshTokenKey() -> String {
         return ub.string(forKey: kBGMTVRefreshToken) ?? ""
     }
     
