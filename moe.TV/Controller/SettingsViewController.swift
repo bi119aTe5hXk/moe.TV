@@ -12,6 +12,7 @@ class SettingsViewController: ObservableObject{
     @Published var presentLogoutBGMTVAlert = false
 	@Published var presentClearHistoryAlert = false
 
+	@Published var isBGMSyncEnabled:Bool = false
     @Published var isBGMUserInfoReady = false
     @Published var avatar_url = ""
     @Published var bgmUsername = ""
@@ -24,6 +25,8 @@ class SettingsViewController: ObservableObject{
 	@Published var playbackRate:Double = 1.0
 
 	init() {
+		getBGMLoginStatus()
+		
 		NotificationCenter.default
 			.addObserver(
 				self,
@@ -84,8 +87,16 @@ class SettingsViewController: ObservableObject{
 			}else{
 				print("bgm.tv oauth info invalid")
 				logoutBGMTV()
-				//syncWithBGMTV = false
+				self.isBGMSyncEnabled = false
 			}
 		})
+	}
+
+	func getBGMLoginStatus(){
+		if isBGMTVlogined(){
+			self.isBGMSyncEnabled = true
+		}else{
+			self.isBGMSyncEnabled = false
+		}
 	}
 }

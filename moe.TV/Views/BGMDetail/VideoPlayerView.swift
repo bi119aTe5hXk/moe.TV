@@ -139,9 +139,11 @@ class PlayerItemObserver {
     init(player: AVPlayer) {
         itemObservation = player.publisher(for: \.timeControlStatus).sink { newStatus in
             self.currentStatus = newStatus
+			print("newStatus: \(newStatus)")
         }
     }
 }
+
 
 struct VideoPlayerView: View {
     var url:URL
@@ -365,7 +367,11 @@ struct VideoPlayerView: View {
                     player.seek(to: CMTime(seconds: seekTime,
                                            preferredTimescale: Int32(NSEC_PER_SEC)),
                                 toleranceBefore: CMTime.zero,
-                                toleranceAfter: CMTime.zero)
+								toleranceAfter: CMTime.zero){ finished in
+						if finished{
+							player.play()
+						}
+					}
                 }else{
                     print("seek0")
                 }
