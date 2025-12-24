@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var syncWithBGMTV = isBGMTVlogined()
+//    @State private var syncWithBGMTV = isBGMTVlogined()
     @State private var showDownloadList: Bool = false
 	@State private var landscapePlayback: Bool = false
 	@State private var showBgmtvWebWhilePlaying: Bool = false
@@ -36,18 +36,18 @@ struct SettingsView: View {
 #if os(tvOS)
 						Text("Bgm.tv setting on tvOS is not supported. But you can use iOS or macOS device to setup and will do sync with bgm.tv on tvOS.")
 #endif
-						Toggle(isOn: $syncWithBGMTV){
+						Toggle(isOn: $settingsVC.isBGMSyncEnabled){
 							Text("Sync status with bgm.tv")
 						}
 #if os(tvOS)
 						.disabled(true)
 #endif
 						.onAppear(){
-							if syncWithBGMTV{
+							if settingsVC.isBGMSyncEnabled{
 								settingsVC.getBGMUserInfo()
 							}
 						}
-						.onChange(of: syncWithBGMTV, initial: false) { newValue in
+						.onChange(of: settingsVC.isBGMSyncEnabled, initial: false) { newValue in
 //							if !syncWithBGMTV{
 //								print("syncWithBGMTV is false, do nothing")
 //								return
@@ -65,12 +65,12 @@ struct SettingsView: View {
 							Alert(
 								title: Text("Are you sure you want to logout from bgm.tv?"),
 								primaryButton: .destructive(Text("Logout")) {
-									syncWithBGMTV = false
+									settingsVC.isBGMSyncEnabled = false
 									logoutBGMTV()
 									settingsVC.isBGMUserInfoReady = false
 								},
 								secondaryButton: .cancel(){
-									syncWithBGMTV = true
+									settingsVC.isBGMSyncEnabled = true
 								}
 							)
 						}
