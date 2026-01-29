@@ -7,142 +7,11 @@
 
 import AVFoundation
 import AVKit
-import Combine
+
 import MediaPlayer
 import SwiftUI
-// TODO: PiP on tvOS & sharePlay & mediacenter
-#if os(iOS) || os(tvOS)
-    import UIKit
-    struct VideoPlayerViewiOS: UIViewControllerRepresentable {
-        let player: AVPlayer
-        let playerVM: PlayerViewController
-        let ep: EpisodeDetailModel?
 
-        private let settingsHandler = SettingsHandler()
 
-        func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerViewiOS>) -> AVPlayerViewController {
-            let controller = AVPlayerViewController()
-            let audioSession = AVAudioSession.sharedInstance()
-            do {
-                try audioSession.setCategory(.playback)
-                try audioSession.setActive(true, options: [])
-            } catch {
-                print("Setting category to AVAudioSessionCategoryPlayback failed.")
-            }
-
-//        var playerLayer = AVPlayerLayer(player: player)
-//        var pipController: AVPictureInPictureController?
-//        playerLayer.videoGravity = .resizeAspect
-//        layer.addSublayer(playerLayer)
-//        playerLayer.frame = self.bounds
-
-            controller.player = player
-            controller.modalPresentationStyle = .automatic
-            controller.showsPlaybackControls = true
-            controller.allowsPictureInPicturePlayback = true
-
-            let metadata = playerVM.setMatadata(ep: ep)
-            controller.player?.currentItem?.externalMetadata = metadata
-            controller.player?.currentItem?.preferredForwardBufferDuration = TimeInterval(120)
-            controller.player?.automaticallyWaitsToMinimizeStalling = true
-
-            if AVPictureInPictureController.isPictureInPictureSupported() {
-//            pipController = AVPictureInPictureController(playerLayer: playerLayer)!
-                print("canpip")
-
-            } else {
-                print("nopip")
-            }
-
-            //		if UIDevice.current.userInterfaceIdiom == .phone{
-            //			print("try set landscape")
-            //			let value = UIInterfaceOrientation.landscapeLeft.rawValue
-            //			UIDevice.current.setValue(value, forKey: "orientation")
-            //		}
-
-            let rate = Float(settingsHandler.getPlaybackRate())
-            //		print("rate: \(rate)")
-            if let thePlayer = controller.player {
-                thePlayer.playImmediately(atRate: rate)
-                thePlayer.defaultRate = rate
-                thePlayer.currentItem?.preferredForwardBufferDuration = TimeInterval(120)
-                thePlayer.automaticallyWaitsToMinimizeStalling = true
-            }
-
-            setupNowPlayingInfo(player: player)
-
-            return controller
-        }
-
-        func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<VideoPlayerViewiOS>) {
-            uiViewController.player = player
-        }
-
-        func setupNowPlayingInfo(player: AVPlayer) {
-            // setup nowplaying
-            let item = player.currentItem
-            let duration = item?.duration
-
-            var nowPlayingInfo = [String: Any]()
-            nowPlayingInfo[MPMediaItemPropertyTitle] = ep?.name ?? ""
-            nowPlayingInfo[MPMediaItemPropertyArtist] = ep?.name_cn ?? ""
-
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime().seconds
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
-            //		if let artworkImage = captureArtworkFromVideo(player: player) {
-            //			let artwork = MPMediaItemArtwork(boundsSize: artworkImage.size) { _ in
-            //				return artworkImage
-            //			}
-            //
-            //			MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
-            //		}
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-        }
-
-        //	func captureArtworkFromVideo(player: AVPlayer) -> UIImage? {
-        //		guard let asset = player.currentItem?.asset else { return nil }
-        //		let generator = AVAssetImageGenerator(asset: asset)
-        //		generator.appliesPreferredTrackTransform = true
-//
-        //		let time = player.currentTime()
-        //		if let cgImage = try? generator.copyCGImage(at: time, actualTime: nil) {
-        //			return UIImage(cgImage: cgImage)
-        //		}
-        //		return nil
-        //	}
-    }
-#endif
-// TODO: PiP / playback rate macOS support
-// #if os(macOS)
-// struct VideoPlayerViewMacOS:NSViewControllerRepresentable{
-//    typealias NSViewControllerType = NSViewController
-//    let player: AVPlayer
-//    func makeNSViewController(context: Context) -> NSViewController {
-//		let controller = AVPlayerViewController()
-//        return controller
-//    }
-//
-//    func updateNSViewController(_ nsViewController: NSViewController, context: Context) {
-//
-//    }
-// }
-// #endif
-
-final class PlayerItemObserver: ObservableObject {
-    @Published var currentStatus: AVPlayer.TimeControlStatus?
-    private var cancellable: AnyCancellable?
-
-    func observe(_ player: AVPlayer?) {
-        cancellable?.cancel()
-        guard let player else { currentStatus = nil; return }
-        cancellable = player.publisher(for: \.timeControlStatus)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] in self?.currentStatus = $0 }
-    }
-
-    deinit { cancellable?.cancel() }
-}
 
 struct VideoPlayerView: View {
     var url: URL
@@ -190,9 +59,14 @@ struct VideoPlayerView: View {
                             NavigationView {
                                 HStack {
                                     ZStack {
-                                        VideoPlayerViewiOS(player: avPlayer, playerVM: playerVM, ep: ep)
-                                            .onReceive(playerObserver.$currentStatus, perform: handleStatus)
-                                              .onAppear { playerObserver.observe(avPlayer) }
+                                        
+                                        PlayerSurfaceView(
+                                            player: avPlayer,
+                                            ep: ep,
+                                            playerVM: playerVM,
+                                            observer: playerObserver,
+                                            onStatus: handleStatus
+                                        )
                                             .persistentSystemOverlays(.hidden)
                                     }.frame(width: leftWidth)
 
@@ -237,9 +111,13 @@ struct VideoPlayerView: View {
                     } else {
                         // full screen player
                         ZStack {
-                            VideoPlayerViewiOS(player: avPlayer, playerVM: playerVM, ep: ep)
-                                .onReceive(playerObserver.$currentStatus, perform: handleStatus)
-                                  .onAppear { playerObserver.observe(avPlayer) }
+                            PlayerSurfaceView(
+                                player: avPlayer,
+                                ep: ep,
+                                playerVM: playerVM,
+                                observer: playerObserver,
+                                onStatus: handleStatus
+                            )
                                 .persistentSystemOverlays(.hidden)
                         }
                     }
@@ -247,10 +125,13 @@ struct VideoPlayerView: View {
                 #if os(tvOS)
                     // full screen player
                     ZStack {
-                        let playerObserver = PlayerItemObserver(player: avPlayer)
-                        VideoPlayerViewiOS(player: avPlayer, playerVM: playerVM, ep: ep)
-                            .onReceive(playerObserver.$currentStatus, perform: handleStatus)
-                              .onAppear { playerObserver.observe(avPlayer) }
+                        PlayerSurfaceView(
+                            player: avPlayer,
+                            ep: ep,
+                            playerVM: playerVM,
+                            observer: playerObserver,
+                            onStatus: handleStatus
+                        )
                             .persistentSystemOverlays(.hidden)
                     }
                 #endif
@@ -262,10 +143,13 @@ struct VideoPlayerView: View {
                         NavigationView {
                             HStack {
                                 ZStack {
-                                    let playerObserver = PlayerItemObserver(player: avPlayer)
-                                    VideoPlayer(player: avPlayer)
-                                        .onReceive(playerObserver.$currentStatus, perform: handleStatus)
-                                          .onAppear { playerObserver.observe(avPlayer) }
+                                    PlayerSurfaceView(
+                                        player: avPlayer,
+                                        ep: ep,
+                                        playerVM: playerVM,
+                                        observer: playerObserver,
+                                        onStatus: handleStatus
+                                    )
 
                                         .navigationTitle("\(ep?.name ?? "") (\(ep?.name_cn ?? "NAME_CN_EMPTY"))")
 
@@ -323,7 +207,7 @@ struct VideoPlayerView: View {
             #endif
             playerVM.loadFromUrl(url: url)
             if let player = playerVM.avPlayer {
-                player.currentItem?.preferredForwardBufferDuration = TimeInterval(60)
+                player.currentItem?.preferredForwardBufferDuration = TimeInterval(120)
                 player.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
                 player.automaticallyWaitsToMinimizeStalling = true
 
