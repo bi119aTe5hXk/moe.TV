@@ -225,7 +225,7 @@ struct SettingsView: View {
 						.alert( isPresented: $settingsVC.presentClearHistoryAlert) {
 							Alert(
 								title: Text("Are you sure to delete all playback history?"),
-								primaryButton: .destructive(Text("Yes")){
+								primaryButton: .destructive(Text("Clear history")){
 									settingsVC.settingsHandler
 										.setPlaybackHistory(history: [])
 								},

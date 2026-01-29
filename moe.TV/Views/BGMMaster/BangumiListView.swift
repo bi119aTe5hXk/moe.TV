@@ -63,13 +63,13 @@ struct BangumiListView: View {
 
         
             .alert("Albireo cookies may expired. Logout?",isPresented: $listVC.showLogoutAlert) {
-                Button("Yes, logout & exit") {
+                Button("Logout & exit") {
                     logoutAlbireoServer { result, str in
                         exit(0);
                     }
                     exit(0);
                 }
-                Button("No, Stay login"){
+                Button("Stay login"){
                     listVC.showLogoutAlert.toggle()
                 }
                 
