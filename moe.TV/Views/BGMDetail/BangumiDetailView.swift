@@ -20,7 +20,7 @@ struct BangumiDetailView: View {
 				BangumiDetailCoverTextView(
 					item: $detailVC.detailItem,
 					albireo_favorite_status: $detailVC.albireo_favorite_status,
-					bgmtv_favorite_status: $detailVC.bgmtv_favorite_status,
+                    bgmtv_favorite_status: $detailVC.bgmtv_favorite_status, favStatusFinished: $detailVC.favStatusLoaded,
 					detailVC: detailVC
 				)
 				.frame(minHeight: 300,maxHeight: 600)
@@ -79,9 +79,9 @@ struct BangumiDetailView: View {
 
 				}
 			}
-			.onChange(of: detailVC.isLoading, initial: true) { newValue in
+			.onChange(of: detailVC.isFinished, initial: true) { newValue in
 				if !newValue {
-					print("finished loading")
+					print("BangumiDetailView onchange by isFinished")
 					if let id = detailVC.selectedID {
 						print("should scroll to \(id)")
 						DispatchQueue.main.async {
@@ -191,7 +191,8 @@ struct BangumiDetailView: View {
 					}
 				}
 			}
-			.alert("Continue from last position?",isPresented: $detailVC.presentContinuePlayAlert) {
+			.alert("Continue from last position?",
+                   isPresented: $detailVC.presentContinuePlayAlert) {
 				Button("Continue") {
 					detailVC.checkVideoSource(ep: detailVC.ep!, seekTime: (detailVC.ep!.watch_progress!.last_watch_position! - 5))
 				}
@@ -200,6 +201,7 @@ struct BangumiDetailView: View {
 				}
 
 			}
+            
 
 		}
 	}

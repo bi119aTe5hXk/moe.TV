@@ -45,9 +45,9 @@ struct BangumiListView: View {
 					getBGMList()
 				}
             }
-			.onChange(of: detailVC.isLoading, initial: true) { newValue in
+			.onChange(of: detailVC.isFinished, initial: true) { newValue in
 				if !newValue {
-					print("finished loading")
+					print("onChange: finished loading")
 					if let _ = detailVC.selectedID {
 						print("onChange.detailVC.isLoading.getBGMList")
 						getBGMList()

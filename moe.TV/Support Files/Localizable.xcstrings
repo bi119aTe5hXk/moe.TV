@@ -135,6 +135,9 @@
         }
       }
     },
+    "Albireo favorite status is nil" : {
+
+    },
     "All video download failed." : {
       "localizations" : {
         "ja" : {
@@ -338,6 +341,9 @@
         }
       }
     },
+    "BGM.TV favorite status is nil" : {
+
+    },
     "BGM.TV Logined" : {
 
     },
@@ -406,6 +412,9 @@
           }
         }
       }
+    },
+    "Check favorite status conflict" : {
+
     },
     "Clear history" : {
       "localizations" : {
@@ -555,6 +564,9 @@
         }
       }
     },
+    "Custom status" : {
+
+    },
     "Debug" : {
 
     },
@@ -694,6 +706,9 @@
       }
     },
     "ExpireTime" : {
+
+    },
+    "Favorite status conflict has been detected. Choose which one you want to keep." : {
 
     },
     "Finished" : {
@@ -1407,6 +1422,12 @@
         }
       }
     },
+    "Set Albreo's favorite status to BGM.TV?" : {
+
+    },
+    "Set BGM.TV's favorite status to Albreo?" : {
+
+    },
     "Set watched when finished the final EP" : {
       "localizations" : {
         "en" : {
@@ -1817,6 +1838,9 @@
           }
         }
       }
+    },
+    "Yes" : {
+
     }
   },
   "version" : "1.1"

@@ -14,6 +14,7 @@ struct SettingsView: View {
 	@State private var showBgmtvWebWhilePlaying: Bool = false
 	@State private var hideUnreleasedEps: Bool = false
 	@State private var setWatchedWhenFinishedFinalEP: Bool = false
+    @State private var checkFavStatusConflict: Bool = false
 
 
 //    @Binding var listVM:BangumiListViewModel
@@ -124,6 +125,14 @@ struct SettingsView: View {
 							.onChange(of: setWatchedWhenFinishedFinalEP, initial: false) { newValue in
 								settingsVC.settingsHandler.setSetWatchedWhenFinishedFinalEP(isEnabled: newValue)
 							}
+                        
+                        Toggle("Check favorite status conflict", isOn: $checkFavStatusConflict)
+                            .onAppear(){
+                                self.checkFavStatusConflict = settingsVC.settingsHandler.getCheckFavStatusConflict()
+                            }
+                            .onChange(of: checkFavStatusConflict, initial: false) { newValue in
+                                settingsVC.settingsHandler.setCheckFavStatusConflict(isEnabled: newValue)
+                            }
 
 
 #if os(iOS)
