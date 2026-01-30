@@ -14,7 +14,6 @@ struct BangumiDetailView: View {
 	private let settingsHandler = SettingsHandler()
 
 	var body: some View {
-			//Text("favorite_status:\(selectedItem?.favorite_status)")
 		ScrollViewReader { proxy in
 			ScrollView{
 				BangumiDetailCoverTextView(

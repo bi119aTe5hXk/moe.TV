@@ -212,9 +212,11 @@ class BangumiDetailViewController : ObservableObject {
 								eps: epList,
 								bgmEPs: r.data ?? []
 							)
+                        self.isFinished = true
+                        print("Finished: getBGMCollectionEpisodeList")
 					}
-                    self.isFinished = true
-                    print("Finished: getBGMCollectionEpisodeList")
+                    
+                    
 				}else{
 					print( "data is not BGMTVCollectionEpisodesModel")
 					self.showOnlyAlbireoEPs(eps: epList)

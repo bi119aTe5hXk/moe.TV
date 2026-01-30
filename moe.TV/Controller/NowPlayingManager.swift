@@ -113,7 +113,7 @@ final class NowPlayingManager {
         let urlString: String? = {
             // Prefer a dedicated thumbnail if present
             if let e = ep{
-                if let thumbnail = ep?.thumbnail{
+                if let thumbnail = e.thumbnail{
                     return fixPathNotCompete(path:thumbnail)
                 }
             }
@@ -137,7 +137,7 @@ final class NowPlayingManager {
 
         artworkTask?.cancel()
         artworkTask = Task { [weak self] in
-            guard let self else { return }
+            guard self != nil else { return }
             do {
                 let (data, _) = try await URLSession.shared.data(from: url)
                 if Task.isCancelled { return }
