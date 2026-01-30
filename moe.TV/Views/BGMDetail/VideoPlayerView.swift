@@ -90,7 +90,7 @@ struct VideoPlayerView: View {
                                             if let bgm_eps_id = theEP.bgm_eps_id {
                                                 let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
 
-                                                WebView(url: URL(string: urlString)!)
+                                                WebView(url: URL(string: urlString)!, mode:.inlineWK)
                                                     .ignoresSafeArea()
                                                     .navigationBarTitleDisplayMode(.inline)
                                                     .frame(width: totalWidth - leftWidth - 10)
@@ -184,7 +184,7 @@ struct VideoPlayerView: View {
                                         if let bgm_eps_id = theEP.bgm_eps_id {
                                             let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
 
-                                            WebView(url: URL(string: urlString)!)
+                                            WebView(url: URL(string: urlString)!, mode: .inlineWK)
                                                 .ignoresSafeArea()
                                                 //											.navigationBarTitleDisplayMode(.inline)
                                                 .frame(width: totalWidth - leftWidth - 10)
