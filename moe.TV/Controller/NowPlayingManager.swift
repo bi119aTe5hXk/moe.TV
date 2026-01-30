@@ -8,6 +8,12 @@ import AVFoundation
 import AVKit
 import MediaPlayer
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
+#if canImport(AppKit)
+import AppKit
+#endif
 
 // MARK: - System Now Playing (macOS Control Center / menu bar)
 final class NowPlayingManager {
@@ -25,6 +31,10 @@ final class NowPlayingManager {
     
     private var skipForwardTarget: Any?
     private var skipBackwardTarget: Any?
+
+    // Artwork loading
+    private var artworkTask: Task<Void, Never>?
+    private var lastArtworkURLString: String?
 
     func start(player: AVPlayer, ep: EpisodeDetailModel?) {
         // If the same player is started again (common with SwiftUI re-render / Catalyst),
@@ -62,6 +72,7 @@ final class NowPlayingManager {
         var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
         nowPlayingInfo[MPMediaItemPropertyTitle] = ep?.name ?? ""
         nowPlayingInfo[MPMediaItemPropertyArtist] = ep?.name_cn ?? ""
+        updateArtworkIfNeeded(ep: ep)
 
         if let d = durationSeconds, d.isFinite, d > 0 {
             nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = d
@@ -75,6 +86,9 @@ final class NowPlayingManager {
     func stop() {
         // Stop old playback to avoid lingering audio when remote commands fire.
         player?.pause()
+        artworkTask?.cancel()
+        artworkTask = nil
+        lastArtworkURLString = nil
 
         if let player, let timeObserver {
             player.removeTimeObserver(timeObserver)
@@ -92,6 +106,61 @@ final class NowPlayingManager {
         #if os(macOS)
         MPNowPlayingInfoCenter.default().playbackState = .stopped
         #endif
+    }
+
+    private func updateArtworkIfNeeded(ep: EpisodeDetailModel?) {
+        // Try common thumbnail fields; adjust the key if your model uses a different name.
+        let urlString: String? = {
+            // Prefer a dedicated thumbnail if present
+            if let e = ep{
+                if let thumbnail = ep?.thumbnail{
+                    return fixPathNotCompete(path:thumbnail)
+                }
+            }
+            return nil
+        }()
+
+        // If no artwork URL, remove existing artwork.
+        guard let urlString, let url = URL(string: urlString) else {
+            var info = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+            info.removeValue(forKey: MPMediaItemPropertyArtwork)
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+            lastArtworkURLString = nil
+            artworkTask?.cancel()
+            artworkTask = nil
+            return
+        }
+
+        // Avoid refetching the same artwork repeatedly.
+        if lastArtworkURLString == urlString { return }
+        lastArtworkURLString = urlString
+
+        artworkTask?.cancel()
+        artworkTask = Task { [weak self] in
+            guard let self else { return }
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                if Task.isCancelled { return }
+
+                #if canImport(UIKit)
+                guard let image = UIImage(data: data) else { return }
+                let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+                #elseif canImport(AppKit)
+                guard let image = NSImage(data: data) else { return }
+                let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+                #else
+                return
+                #endif
+
+                await MainActor.run {
+                    var info = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+                    info[MPMediaItemPropertyArtwork] = artwork
+                    MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+                }
+            } catch {
+                // Ignore artwork failures.
+            }
+        }
     }
 
     private func removeRemoteCommandTargets() {
