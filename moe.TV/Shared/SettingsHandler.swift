@@ -24,6 +24,8 @@ class SettingsHandler {
 	private let kPlaybackHistory = "kPlaybackHistory"
 
 	private let kHideUnreleaseEPs = "kHideUnreleaseEPs"
+    
+    private let kCheckFavStatusConflict = "kCheckFavStatusConflict"
 
     private var ud = UserDefaults() //for tvOS
     private var ub = NSUbiquitousKeyValueStore()
@@ -153,6 +155,16 @@ class SettingsHandler {
 			return ub.double(forKey: kPlaybackRate)
 		}
 	}
+    
+    //Sync fav status
+    func setCheckFavStatusConflict(isEnabled: Bool){
+        ub.set(isEnabled, forKey: kCheckFavStatusConflict)
+        sync()
+    }
+    func getCheckFavStatusConflict() -> Bool{
+        return ub.bool(forKey: kCheckFavStatusConflict)
+    }
+    
 
 	//Search history
 	func setSearchHistory(history:Array<String>){

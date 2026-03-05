@@ -17,6 +17,7 @@ class BangumiDetailViewController : ObservableObject {
     @Published var presentVideoView = false
     @Published var presentContinuePlayAlert = false
     @Published var presentSourceSelectAlert = false
+    
     @Published var videoURL:String = ""
     @Published var seek:Double = 0.0
     @Published var ep:EpisodeDetailModel?
@@ -26,8 +27,11 @@ class BangumiDetailViewController : ObservableObject {
     @Published var albireo_favorite_status:Int?
 	@Published var bgmtv_favorite_status:Int?
 
-	@Published var isLoading:Bool = false
+	@Published var isFinished:Bool = true
+    @Published var favStatusLoaded:Bool = false
 	@Published var selectedID: String? = nil
+    
+    
 
 //	init(){
 //		ImageCache().wrappedValue.setCacheLimit(
@@ -112,10 +116,15 @@ class BangumiDetailViewController : ObservableObject {
     func getBGMDetail(id:String, completion: @escaping (Bool) -> Void) {
         print("getBGMDetail:\(id)")
 		self.detailItem = nil
+        self.albireo_favorite_status = nil
+        self.bgmtv_favorite_status = nil
 		self.newEPList = []
-		self.isLoading = true
+		self.isFinished = false
+        self.favStatusLoaded = false
         getAlbireoBangumiDetail(id: id) { isSuccessed, data in
             if !isSuccessed{
+                self.isFinished = true
+                print("Finished: no bangumi detail")
                 return
             }
             if let bgmItem = data as? BangumiDetailModel{
@@ -134,9 +143,11 @@ class BangumiDetailViewController : ObservableObject {
 						DispatchQueue.main.async {
 							if !isSuccessed{
 								self.bgmtv_favorite_status = 0
+                                self.favStatusLoaded = true
 								return
 							}
 							self.bgmtv_favorite_status = result
+                            self.favStatusLoaded = true
 						}
 					}
 
@@ -201,8 +212,11 @@ class BangumiDetailViewController : ObservableObject {
 								eps: epList,
 								bgmEPs: r.data ?? []
 							)
-						self.isLoading = false
+                        self.isFinished = true
+                        print("Finished: getBGMCollectionEpisodeList")
 					}
+                    
+                    
 				}else{
 					print( "data is not BGMTVCollectionEpisodesModel")
 					self.showOnlyAlbireoEPs(eps: epList)
@@ -238,7 +252,8 @@ class BangumiDetailViewController : ObservableObject {
 				eps: eps,
 				bgmEPs: []
 			)
-			self.isLoading = false
+			self.isFinished = true
+            print("Finished: showOnlyAlbireoEPs")
 		}
 	}
 
@@ -249,4 +264,5 @@ class BangumiDetailViewController : ObservableObject {
 		return false
 	}
 
+    
 }

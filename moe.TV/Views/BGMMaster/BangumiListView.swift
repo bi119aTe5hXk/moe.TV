@@ -45,9 +45,9 @@ struct BangumiListView: View {
 					getBGMList()
 				}
             }
-			.onChange(of: detailVC.isLoading, initial: true) { newValue in
+			.onChange(of: detailVC.isFinished, initial: true) { newValue in
 				if !newValue {
-					print("finished loading")
+					print("onChange: finished loading")
 					if let _ = detailVC.selectedID {
 						print("onChange.detailVC.isLoading.getBGMList")
 						getBGMList()
@@ -63,13 +63,13 @@ struct BangumiListView: View {
 
         
             .alert("Albireo cookies may expired. Logout?",isPresented: $listVC.showLogoutAlert) {
-                Button("Yes, logout & exit") {
+                Button("Logout & exit") {
                     logoutAlbireoServer { result, str in
                         exit(0);
                     }
                     exit(0);
                 }
-                Button("No, Stay login"){
+                Button("Stay login"){
                     listVC.showLogoutAlert.toggle()
                 }
                 

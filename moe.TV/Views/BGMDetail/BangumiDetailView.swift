@@ -14,13 +14,12 @@ struct BangumiDetailView: View {
 	private let settingsHandler = SettingsHandler()
 
 	var body: some View {
-			//Text("favorite_status:\(selectedItem?.favorite_status)")
 		ScrollViewReader { proxy in
 			ScrollView{
 				BangumiDetailCoverTextView(
 					item: $detailVC.detailItem,
 					albireo_favorite_status: $detailVC.albireo_favorite_status,
-					bgmtv_favorite_status: $detailVC.bgmtv_favorite_status,
+                    bgmtv_favorite_status: $detailVC.bgmtv_favorite_status, favStatusFinished: $detailVC.favStatusLoaded,
 					detailVC: detailVC
 				)
 				.frame(minHeight: 300,maxHeight: 600)
@@ -79,9 +78,9 @@ struct BangumiDetailView: View {
 
 				}
 			}
-			.onChange(of: detailVC.isLoading, initial: true) { newValue in
+			.onChange(of: detailVC.isFinished, initial: true) { newValue in
 				if !newValue {
-					print("finished loading")
+					print("BangumiDetailView onchange by isFinished")
 					if let id = detailVC.selectedID {
 						print("should scroll to \(id)")
 						DispatchQueue.main.async {
@@ -191,15 +190,17 @@ struct BangumiDetailView: View {
 					}
 				}
 			}
-			.alert("Continue from last position?",isPresented: $detailVC.presentContinuePlayAlert) {
-				Button("Yes") {
+			.alert("Continue from last position?",
+                   isPresented: $detailVC.presentContinuePlayAlert) {
+				Button("Continue") {
 					detailVC.checkVideoSource(ep: detailVC.ep!, seekTime: (detailVC.ep!.watch_progress!.last_watch_position! - 5))
 				}
-				Button("No, start from beginning"){
+				Button("Start from beginning"){
 					detailVC.checkVideoSource(ep: detailVC.ep!, seekTime: 0)
 				}
 
 			}
+            
 
 		}
 	}
