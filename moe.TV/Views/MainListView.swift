@@ -56,25 +56,35 @@ struct MainListView: View {
 		.navigationSplitViewStyle(.balanced)
 #endif
 
-        .sheet(isPresented: self.$presentSettingView, content: {
-            HStack{
-#if !os(tvOS)
-                Button(action: {
-                    self.presentSettingView = false
-                }, label: {
-                    Text("Close")
-                }).padding(20)
-                Spacer()
+
+
+#if os(tvOS)
+		.fullScreenCover(isPresented: $presentSettingView) {
+			SettingsView(settingsVC: SettingsViewController())
+				.background().edgesIgnoringSafeArea(.all)
+        }
 #endif
-            }
+
+#if !os(tvOS)
+		.sheet(isPresented: self.$presentSettingView, content: {
+			HStack{
+
+				Button(action: {
+					self.presentSettingView = false
+				}, label: {
+					Text("Close")
+				}).padding(20)
+				Spacer()
+			}
 			SettingsView(settingsVC: SettingsViewController())
 #if os(macOS)
-        .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
+				.frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
 #endif
-            Spacer()
-        })
-        
-        
+			Spacer()
+		})
+#endif
+		
+
     }
     
     
