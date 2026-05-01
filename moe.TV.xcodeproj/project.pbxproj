@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		47222CE52B3F267500085EBD /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47222CE42B3F267500085EBD /* DebugView.swift */; };
 		47222CE72B3F291200085EBD /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47222CE62B3F291200085EBD /* DebugViewController.swift */; };
+		477801792FA34C77004757F4 /* TVSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477801782FA34C71004757F4 /* TVSidebar.swift */; };
 		4779043B2F2B857900EF74D5 /* PlayerViewControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779043A2F2B854500EF74D5 /* PlayerViewControllerHost.swift */; };
 		4779043D2F2B86D700EF74D5 /* PlayerSurfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779043C2F2B86C400EF74D5 /* PlayerSurfaceView.swift */; };
 		4779043F2F2B91F400EF74D5 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779043E2F2B91D000EF74D5 /* NowPlayingManager.swift */; };
@@ -111,6 +112,7 @@
 /* Begin PBXFileReference section */
 		47222CE42B3F267500085EBD /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		47222CE62B3F291200085EBD /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
+		477801782FA34C71004757F4 /* TVSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVSidebar.swift; sourceTree = "<group>"; };
 		4779043A2F2B854500EF74D5 /* PlayerViewControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewControllerHost.swift; sourceTree = "<group>"; };
 		4779043C2F2B86C400EF74D5 /* PlayerSurfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSurfaceView.swift; sourceTree = "<group>"; };
 		4779043E2F2B91D000EF74D5 /* NowPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
@@ -348,12 +350,13 @@
 				86A9C3E72A3306BC00FD0B44 /* MainView.swift */,
 				86B9A80F2A8A777D002A9C94 /* OfflineView.swift */,
 				8627A92F2A343CDA00A5FCAC /* LoginView.swift */,
+				8627A92B2A34293100A5FCAC /* MainListView.swift */,
+				86B8F0922A850A7000FD467A /* SettingsButtonView.swift */,
 				47E7802C2A39C19000827D03 /* SettingsView.swift */,
 				47222CE42B3F267500085EBD /* DebugView.swift */,
-				86B8F0922A850A7000FD467A /* SettingsButtonView.swift */,
 				86A968F72A7FC46500E9BD59 /* DownloadListView.swift */,
-				8627A92B2A34293100A5FCAC /* MainListView.swift */,
 				867FCB052C43860F00F42564 /* SidebarView.swift */,
+				477801782FA34C71004757F4 /* TVSidebar.swift */,
 				86E83E6F2A695D9800E3EB04 /* BGMMaster */,
 				86E83E702A695DBE00E3EB04 /* BGMDetail */,
 			);
@@ -586,6 +589,7 @@
 				864F0BD52A812BE700604B7F /* OfflinePlaybackManager.swift in Sources */,
 				86436D4B2A389EE200E6936F /* EpisodeDetailModel.swift in Sources */,
 				86A9C3E62A3306BC00FD0B44 /* moe_TVApp.swift in Sources */,
+				477801792FA34C77004757F4 /* TVSidebar.swift in Sources */,
 				86AD92982A338D9C008461FF /* BangumiDetailView.swift in Sources */,
 				86AD92902A33750F008461FF /* BangumiCellView.swift in Sources */,
 				47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */,
@@ -619,6 +623,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 202503182356;
+				DEVELOPMENT_TEAM = 26E2Z7VDS4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = topShelf/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = topShelf;
@@ -653,6 +658,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 202503182356;
+				DEVELOPMENT_TEAM = 26E2Z7VDS4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = topShelf/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = topShelf;
@@ -870,7 +876,7 @@
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3,7";
-				TVOS_DEPLOYMENT_TARGET = 16.0;
+				TVOS_DEPLOYMENT_TARGET = 26.0;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
@@ -930,7 +936,7 @@
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3,7";
-				TVOS_DEPLOYMENT_TARGET = 16.0;
+				TVOS_DEPLOYMENT_TARGET = 26.0;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 				XROS_DEPLOYMENT_TARGET = 1.0;
 			};

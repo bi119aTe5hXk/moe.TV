@@ -8,14 +8,30 @@
 import SwiftUI
 
 struct SidebarView: View {
+	var destinations = FuncViewModel.allCases
+//#if !os(tvOS)
     @Binding var selectedDestination:FuncViewModel?
-    var destinations = FuncViewModel.allCases
     var body: some View {
         List(destinations, selection: $selectedDestination) { dest in
             NavigationLink(dest.localizedName, value: dest)
                
         }
+		
     }
+//#else
+//	@Binding var navigationPath: [FuncViewModel]
+//	var body: some View {
+//		List(destinations, id: \.self) { dest in
+//			Button(action: {
+//				print("navigating to \(dest.localizedName)")
+//				navigationPath.append(dest)
+//			}) {
+//				Text(dest.localizedName)
+//			}
+//		}
+//	}
+//#endif
+
 }
 
 //#Preview {

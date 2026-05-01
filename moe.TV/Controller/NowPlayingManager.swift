@@ -166,9 +166,9 @@ final class NowPlayingManager {
     private func removeRemoteCommandTargets() {
         let commandCenter = MPRemoteCommandCenter.shared()
 
-        if let playTarget { commandCenter.playCommand.removeTarget(playTarget) }
-        if let pauseTarget { commandCenter.pauseCommand.removeTarget(pauseTarget) }
-        if let toggleTarget { commandCenter.togglePlayPauseCommand.removeTarget(toggleTarget) }
+//        if let playTarget { commandCenter.playCommand.removeTarget(playTarget) }
+//        if let pauseTarget { commandCenter.pauseCommand.removeTarget(pauseTarget) }
+//        if let toggleTarget { commandCenter.togglePlayPauseCommand.removeTarget(toggleTarget) }
         if let skipForwardTarget { commandCenter.skipForwardCommand.removeTarget(skipForwardTarget) }
         if let skipBackwardTarget { commandCenter.skipBackwardCommand.removeTarget(skipBackwardTarget) }
         
@@ -182,9 +182,9 @@ final class NowPlayingManager {
         toggleTarget = nil
 
         // Optional: disable when not playing.
-        commandCenter.playCommand.isEnabled = false
-        commandCenter.pauseCommand.isEnabled = false
-        commandCenter.togglePlayPauseCommand.isEnabled = false
+//        commandCenter.playCommand.isEnabled = false
+//        commandCenter.pauseCommand.isEnabled = false
+//        commandCenter.togglePlayPauseCommand.isEnabled = false
     }
 
     private func installRemoteCommands(for player: AVPlayer) {
@@ -193,49 +193,51 @@ final class NowPlayingManager {
 
         let commandCenter = MPRemoteCommandCenter.shared()
 
-        commandCenter.playCommand.isEnabled = true
-        commandCenter.pauseCommand.isEnabled = true
-        commandCenter.togglePlayPauseCommand.isEnabled = true
-        
+//        commandCenter.playCommand.isEnabled = false
+//        commandCenter.pauseCommand.isEnabled = false
+//        commandCenter.togglePlayPauseCommand.isEnabled = true
+
         commandCenter.skipForwardCommand.isEnabled = true
         commandCenter.skipBackwardCommand.isEnabled = true
         commandCenter.skipForwardCommand.preferredIntervals = [10]
         commandCenter.skipBackwardCommand.preferredIntervals = [10]
 
-        playTarget = commandCenter.playCommand.addTarget { [weak self] _ in
-            self?.player?.play()
-            #if os(macOS)
-            MPNowPlayingInfoCenter.default().playbackState = .playing
-            #endif
-            NowPlayingManager.shared.updatePlaybackInfo()
-            return .success
-        }
+//        playTarget = commandCenter.playCommand.addTarget { [weak self] _ in
+//            self?.player?.play()
+//            #if os(macOS)
+//            MPNowPlayingInfoCenter.default().playbackState = .playing
+//            #endif
+//            NowPlayingManager.shared.updatePlaybackInfo()
+//            return .success
+//        }
+//
+//        pauseTarget = commandCenter.pauseCommand.addTarget { [weak self] _ in
+//            self?.player?.pause()
+//            #if os(macOS)
+//            MPNowPlayingInfoCenter.default().playbackState = .paused
+//            #endif
+//            NowPlayingManager.shared.updatePlaybackInfo()
+//            return .success
+//        }
 
-        pauseTarget = commandCenter.pauseCommand.addTarget { [weak self] _ in
-            self?.player?.pause()
-            #if os(macOS)
-            MPNowPlayingInfoCenter.default().playbackState = .paused
-            #endif
-            NowPlayingManager.shared.updatePlaybackInfo()
-            return .success
-        }
-
-        toggleTarget = commandCenter.togglePlayPauseCommand.addTarget { [weak self] _ in
-            guard let p = self?.player else { return .commandFailed }
-            if p.rate == 0 {
-                p.play()
-                #if os(macOS)
-                MPNowPlayingInfoCenter.default().playbackState = .playing
-                #endif
-            } else {
-                p.pause()
-                #if os(macOS)
-                MPNowPlayingInfoCenter.default().playbackState = .paused
-                #endif
-            }
-            NowPlayingManager.shared.updatePlaybackInfo()
-            return .success
-        }
+//        toggleTarget = commandCenter.togglePlayPauseCommand.addTarget { [weak self] _ in
+//            guard let p = self?.player else { return .commandFailed }
+//            if p.rate == 0 {
+//				print("play by commandCenter.togglePlayPauseCommand")
+//                p.play()
+//                #if os(macOS)
+//                MPNowPlayingInfoCenter.default().playbackState = .playing
+//                #endif
+//            } else {
+//				print("pause by commandCenter.togglePlayPauseCommand")
+//                p.pause()
+//                #if os(macOS)
+//                MPNowPlayingInfoCenter.default().playbackState = .paused
+//                #endif
+//            }
+//            NowPlayingManager.shared.updatePlaybackInfo()
+//            return .success
+//        }
         skipForwardTarget = commandCenter.skipForwardCommand.addTarget { [weak self] event in
             guard let self,
                   let e = event as? MPSkipIntervalCommandEvent,

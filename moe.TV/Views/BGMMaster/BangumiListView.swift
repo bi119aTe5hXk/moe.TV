@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct BangumiListView: View {
-	@ObservedObject var listVC = BangumiListViewController()
-	@ObservedObject var detailVC = BangumiDetailViewController() //TODO: update list when playback finished
+	@StateObject var listVC = BangumiListViewController()
+	@StateObject var detailVC = BangumiDetailViewController() //TODO: update list when playback finished
     @Binding var selectedItem: BangumiItemModel?
     @Binding var selectedFunc: FuncViewModel?
 
@@ -40,7 +40,7 @@ struct BangumiListView: View {
             }
             .onChange(of: selectedFunc, initial: true) {  newValue in
 				if oldValue != newValue {
-					print("onChange.selectedFunc.getBGMList")
+					print("onChange.selectedFunc.getBGMList \(newValue)")
 					oldValue = newValue
 					getBGMList()
 				}

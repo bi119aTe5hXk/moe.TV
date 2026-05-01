@@ -9,9 +9,15 @@ import SwiftUI
 
 struct LoginView: View {
 	@ObservedObject var loginVC = LoginViewController()
+//	@Binding var selectedItem: BangumiItemModel?
+//	@Binding var navigationPath:[AnyHashable]
+	
+	@State private var selectedFunc: FuncViewModel? = nil
+	
+
     var body: some View {
         if loadAlbireoCookies() || loginVC.isLoginSuccessd{
-            MainListView()
+			MainListView(selectedFunc: $selectedFunc)
         }else{
             HStack{
                 Spacer()

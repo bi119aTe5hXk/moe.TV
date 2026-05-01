@@ -27,9 +27,11 @@ private func topMostViewController(base: UIViewController? = UIApplication.share
 
 func openURLInApp(urlString: String) {
     guard let url = URL(string: urlString) else { return }
-    let vc = SFSafariViewController(url: url)
-    vc.dismissButtonStyle = .close
-    topMostViewController()?.present(vc, animated: true)
+	let vc = SFSafariViewController(url: url)
+#if !os(visionOS)
+	vc.dismissButtonStyle = .close
+#endif
+	topMostViewController()?.present(vc, animated: true)
 }
 
 func openURL(urlString: String) {
