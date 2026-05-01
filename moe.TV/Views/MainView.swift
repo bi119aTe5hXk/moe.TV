@@ -11,11 +11,13 @@ import SwiftUI
 struct MainView: View {
 	@ObservedObject var loginVC = LoginViewController()
     @EnvironmentObject var networkMonitor: NetworkMonitor
-    
+//	@Binding var selectedItem: BangumiItemModel?
+//	@Binding var navigationPath:[AnyHashable]
+
     
     var body: some View {
         if networkMonitor.isConnected {
-        LoginView()
+			LoginView()
         
         }else{
             VStack{

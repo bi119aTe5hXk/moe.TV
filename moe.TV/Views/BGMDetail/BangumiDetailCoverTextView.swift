@@ -38,7 +38,7 @@ struct BangumiDetailCoverTextView: View {
             }
         }
         .padding(10)
-        .onChange(of: favStatusFinished) { finished in
+        .onChange(of: favStatusFinished, initial: false) { finished in
             guard finished else { return }
             dctVC.checkFavConflict(a: albireo_favorite_status, b: bgmtv_favorite_status)
         }

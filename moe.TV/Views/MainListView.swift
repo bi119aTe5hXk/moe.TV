@@ -7,41 +7,68 @@
 
 import SwiftUI
 
+
 struct MainListView: View {
-    @State var selectedItem: BangumiItemModel?
+	@State var selectedItem: BangumiItemModel?
     @State var destination:FuncViewModel?
-    
+	
+	//for tvOS
+	@Binding var selectedFunc: FuncViewModel?
+	@State private var presentedItem: BangumiItemModel?
+
 //    @ObservedObject var settingsVM = SettingsViewModel()
     @State var presentSettingView = false
     @State private var columnVisibility = NavigationSplitViewVisibility.all
-
-//	@Environment(\.horizontalSizeClass) var horizontalSizeClass
+	
 
     var body: some View {
         
-        NavigationSplitView(columnVisibility: $columnVisibility) {
-            SidebarView(selectedDestination: $destination)
-                .background(Color.clear)
+
+#if os(tvOS)
+		HStack(spacing: 0) {
+			TVSidebar(selectedFunc: $selectedFunc)
+				.frame(width: 320)
+
+			BangumiListView(
+				selectedItem: $selectedItem,
+				selectedFunc: .constant(selectedFunc)
+			)
+//			.id(selectedFunc)
+		}
+		.onChange(of: selectedItem) { _, newValue in
+			if let item = newValue {
+				presentedItem = item
+			}
+		}
+		.fullScreenCover(item: $presentedItem, onDismiss: {
+			presentedItem = nil
+		}) { item in
+			NavigationStack{
+				BangumiDetailView(selectedItem: .constant(item))
+					.background(.thinMaterial)
+			}
+		}
+
+#else
+		NavigationSplitView(columnVisibility: $columnVisibility) {
+				//for iOS/macOS/visionOS
+			SidebarView(selectedDestination: $destination)
+				.background(Color.clear)
 #if os(macOS)
-                .listStyle(SidebarListStyle())
+				.listStyle(SidebarListStyle())
 #endif
-                .toolbar(content: {
+				.toolbar(content: {
 #if os(macOS)
-                    Spacer()
+					Spacer()
 #endif
-                    Button(action: {
-                        self.presentSettingView = true
-                    }, label: {
-                        SettingsButtonView()//(profileIconURL: settingsVM.avatar_url)
-                    })
-                })
-                .navigationTitle("moe.TV")
-//#if !os(tvOS)
-//			if horizontalSizeClass == .regular {
-//				let _ = {columnVisibility = .automatic}
-//			}
-//#endif
-        } content: {
+					Button(action: {
+						self.presentSettingView = true
+					}, label: {
+						SettingsButtonView()//(profileIconURL: settingsVM.avatar_url)
+					})
+				})
+				.navigationTitle("moe.TV")
+		} content: {
             if let dest = destination {
                 BangumiListView(selectedItem: $selectedItem, selectedFunc: $destination)
                     .navigationTitle(dest.localizedName)
@@ -49,28 +76,11 @@ struct MainListView: View {
         } detail: {
 			BangumiDetailView(selectedItem: $selectedItem)
         }
-#if !os(tvOS)
 		.navigationSplitViewStyle(.automatic)
-#endif
-#if os(tvOS)
-		.navigationSplitViewStyle(.balanced)
-#endif
-
-
-
-#if os(tvOS)
-		.fullScreenCover(isPresented: $presentSettingView) {
-			SettingsView(settingsVC: SettingsViewController())
-				.background().edgesIgnoringSafeArea(.all)
-        }
-#endif
-
-#if !os(tvOS)
 		.sheet(isPresented: self.$presentSettingView, content: {
 			HStack{
-
 				Button(action: {
-					self.presentSettingView = false
+					self.presentSettingView.toggle()
 				}, label: {
 					Text("Close")
 				}).padding(20)
@@ -83,7 +93,14 @@ struct MainListView: View {
 			Spacer()
 		})
 #endif
-		
+
+
+//#if !os(tvOS)
+//			if horizontalSizeClass == .regular {
+//				let _ = {columnVisibility = .automatic}
+//			}
+//#endif
+
 
     }
     
