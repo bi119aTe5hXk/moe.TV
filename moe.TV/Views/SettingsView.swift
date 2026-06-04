@@ -12,6 +12,7 @@ struct SettingsView: View {
     @State private var showDownloadList: Bool = false
 	@State private var landscapePlayback: Bool = false
 	@State private var showBgmtvWebWhilePlaying: Bool = false
+	@State private var useCustomPlayerUI: Bool = false
 	@State private var hideUnreleasedEps: Bool = false
 	@State private var setWatchedWhenFinishedFinalEP: Bool = false
     @State private var checkFavStatusConflict: Bool = false
@@ -174,6 +175,14 @@ struct SettingsView: View {
 							})
 
 #endif
+						Toggle("Use custom player UI", isOn: $useCustomPlayerUI)
+							.onAppear(){
+								self.useCustomPlayerUI = settingsVC.settingsHandler.getUseCustomPlayerUI()
+							}
+							.onChange(of: useCustomPlayerUI, initial: false) { newValue in
+								settingsVC.settingsHandler.setUseCustomPlayerUI(isEnabled: newValue)
+							}
+
 						Picker(
 							"Default playbck speed",
 							selection: $settingsVC.playbackRate

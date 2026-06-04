@@ -299,6 +299,12 @@
         }
       }
     },
+    "Back 15 seconds" : {
+
+    },
+    "Backward 15 seconds" : {
+
+    },
     "Bgm.tv" : {
       "localizations" : {
         "ja" : {
@@ -368,6 +374,9 @@
           }
         }
       }
+    },
+    "Buffering" : {
+
     },
     "Cancel" : {
       "localizations" : {
@@ -754,6 +763,12 @@
           }
         }
       }
+    },
+    "Forward 15 seconds" : {
+
+    },
+    "Full Screen" : {
+
     },
     "Functions" : {
       "localizations" : {
@@ -1236,6 +1251,15 @@
         }
       }
     },
+    "Picture in Picture" : {
+
+    },
+    "Play" : {
+
+    },
+    "Play/Pause" : {
+
+    },
     "Playback History" : {
       "localizations" : {
         "ja" : {
@@ -1257,6 +1281,9 @@
           }
         }
       }
+    },
+    "Playback speed" : {
+
     },
     "Please select a source:" : {
       "localizations" : {
@@ -1717,6 +1744,9 @@
           }
         }
       }
+    },
+    "Use custom player UI" : {
+
     },
     "Username" : {
       "localizations" : {
