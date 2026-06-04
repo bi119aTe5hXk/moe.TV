@@ -50,7 +50,9 @@ struct CustomPlayerSurfaceView: View {
 	@ObservedObject var observer: PlayerItemObserver
 	let onStatus: (AVPlayer.TimeControlStatus?) -> Void
 
+	#if os(iOS) || os(tvOS)
 	@State private var presentsFullscreenPlayer = false
+	#endif
 
 	#if os(iOS)
 	@StateObject private var pictureInPicture = PlayerPictureInPictureController()
@@ -67,10 +69,12 @@ struct CustomPlayerSurfaceView: View {
 			.onDisappear {
 				NowPlayingManager.shared.stop()
 			}
+			#if os(iOS) || os(tvOS)
 			.fullScreenCover(isPresented: $presentsFullscreenPlayer) {
 				customPlayerContent
 					.background(Color.black.ignoresSafeArea())
 			}
+			#endif
 	}
 
 	private var customPlayerContent: some View {
@@ -97,13 +101,15 @@ struct CustomPlayerSurfaceView: View {
 					presentsFullscreenPlayer.toggle()
 				}
 			)
-			#else
+			#elseif os(tvOS)
 			CustomPlayerControlsView(
 				playerVM: playerVM,
 				onFullScreenToggle: {
 					presentsFullscreenPlayer.toggle()
 				}
 			)
+			#else
+			CustomPlayerControlsView(playerVM: playerVM)
 			#endif
 		}
 	}

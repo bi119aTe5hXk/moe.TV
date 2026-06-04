@@ -117,7 +117,7 @@ struct CustomPlayerControlsView: View {
 			CachedProgressBar(
 				currentTime: isScrubbing ? scrubTime : playerVM.currentTime,
 				duration: playerVM.duration,
-				cacheState: playerVM.streamingCacheManager?.state,
+				loadedTimeRanges: playerVM.loadedTimeRanges,
 				onSeek: { seconds in
 					scrubTime = seconds
 					isScrubbing = true
@@ -316,7 +316,7 @@ struct CustomPlayerControlsView: View {
 private struct CachedProgressBar: View {
 	let currentTime: Double
 	let duration: Double
-	let cacheState: StreamingCacheState?
+	let loadedTimeRanges: [ClosedRange<Double>]
 	let onSeek: (Double) -> Void
 	let onSeekEnded: (Double) -> Void
 
@@ -372,12 +372,13 @@ private struct CachedProgressBar: View {
 
 	@ViewBuilder
 	private func cacheSegments(width: CGFloat) -> some View {
-		if let cacheState,
-		   cacheState.contentLength > 0 {
+		if duration.isFinite, duration > 0, !loadedTimeRanges.isEmpty {
 			ZStack(alignment: .leading) {
-				ForEach(Array(cacheState.cachedRanges.enumerated()), id: \.offset) { _, range in
-					let start = CGFloat(Double(range.start) / Double(cacheState.contentLength)) * width
-					let segmentWidth = CGFloat(Double(range.length) / Double(cacheState.contentLength)) * width
+				ForEach(Array(loadedTimeRanges.enumerated()), id: \.offset) { _, range in
+					let startRatio = min(max(range.lowerBound / duration, 0), 1)
+					let endRatio = min(max(range.upperBound / duration, 0), 1)
+					let start = CGFloat(startRatio) * width
+					let segmentWidth = CGFloat(max(0, endRatio - startRatio)) * width
 
 					Capsule()
 						.fill(.white.opacity(0.45))

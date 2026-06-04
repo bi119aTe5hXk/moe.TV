@@ -19,6 +19,7 @@ class PlayerViewController: ObservableObject {
 	@Published var isPlaying = false
 	@Published var isSeeking = false
 	@Published var playbackRate: Double = 1.0
+	@Published var loadedTimeRanges: [ClosedRange<Double>] = []
 
 	private let streamingFactory = StreamingPlayerItemFactory()
 	private var timeObserverToken: Any?
@@ -69,6 +70,7 @@ class PlayerViewController: ObservableObject {
 		isPlaying = false
 		isSeeking = false
 		playbackRate = settingsHandler.getPlaybackRate()
+		loadedTimeRanges = []
 		cancellables.removeAll()
 	}
 
@@ -342,6 +344,7 @@ class PlayerViewController: ObservableObject {
 		isPlaying = false
 		isSeeking = false
 		playbackRate = settingsHandler.getPlaybackRate()
+		loadedTimeRanges = []
 		cancellables.removeAll()
 	}
 
@@ -386,6 +389,13 @@ class PlayerViewController: ObservableObject {
 				}
 			}
 			.store(in: &cancellables)
+
+		item.publisher(for: \.loadedTimeRanges)
+			.receive(on: RunLoop.main)
+			.sink { [weak self] _ in
+				self?.updateLoadedTimeRanges()
+			}
+			.store(in: &cancellables)
 	}
 
 	@MainActor
@@ -406,6 +416,28 @@ class PlayerViewController: ObservableObject {
 					self.duration = duration
 				}
 			}
+
+			self.updateLoadedTimeRanges()
+		}
+	}
+
+	@MainActor
+	private func updateLoadedTimeRanges() {
+		guard let item = avPlayer?.currentItem else {
+			loadedTimeRanges = []
+			return
+		}
+
+		loadedTimeRanges = item.loadedTimeRanges.compactMap { value in
+			let range = value.timeRangeValue
+			let start = CMTimeGetSeconds(range.start)
+			let end = CMTimeGetSeconds(range.start + range.duration)
+
+			guard start.isFinite, end.isFinite, end > start else {
+				return nil
+			}
+
+			return start...end
 		}
 	}
 

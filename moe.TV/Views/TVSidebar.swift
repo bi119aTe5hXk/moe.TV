@@ -5,7 +5,7 @@
 //  Created by bi119aTe5hXk on 2026/04/30.
 //
 import SwiftUI
-
+#if os(tvOS)
 struct TVSidebar: View {
 	@Binding var selectedFunc: FuncViewModel?
 	@State var presentSettingView = false
@@ -41,3 +41,4 @@ struct TVSidebar: View {
 		}
 	}
 }
+#endif

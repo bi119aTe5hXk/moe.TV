@@ -1,16 +1,14 @@
-#if os(iOS)
 import SwiftUI
 import WebKit
+#if os(iOS)
 import SafariServices
+#endif
 
 // MARK: - Public API (choose how to show web content)
 
 /// Pick how to show a URL.
 /// - `.inlineWK`: Embeddable WKWebView (best for split view layouts).
-/// - `.safari`: In-app Safari view controller (best for reusing Safari cookies / logged-in state).
-///
-/// NOTE: Apple intends `SFSafariViewController` to be presented (sheet/fullScreenCover), not embedded.
-/// If you need a persistent side-by-side panel, use `.inlineWK`.
+/// - `.safari`: iOS in-app Safari view controller. On macOS this falls back to inline WKWebView.
 enum WebViewMode {
     case inlineWK
     case safari
@@ -26,15 +24,17 @@ struct WebView: View {
         case .inlineWK:
             WKInlineWebView(url: url)
         case .safari:
-            // If you place SafariView in navigation, Catalyst may show it like a new window/page.
-            // Prefer presenting via `.safariSheet(...)`.
+            #if os(iOS)
             SafariView(url: url)
-                // SafariViewController doesn't navigate via update; force recreation when URL changes.
                 .id(url.absoluteString)
+            #else
+            WKInlineWebView(url: url)
+            #endif
         }
     }
 }
 
+#if os(iOS)
 // MARK: - Sheet presenter for Safari
 
 /// Wrapper so we can present Safari via `.sheet(item:)`.
@@ -51,9 +51,11 @@ extension View {
         }
     }
 }
+#endif
 
 // MARK: - Inline WKWebView (embeddable)
 
+#if os(iOS)
 private struct WKInlineWebView: UIViewRepresentable {
     let url: URL
 
@@ -64,7 +66,6 @@ private struct WKInlineWebView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        // Avoid reloading the same URL on every SwiftUI update.
         if uiView.url != url {
             uiView.load(URLRequest(url: url))
         }
@@ -83,8 +84,22 @@ struct SafariView: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {
-        // Navigation is handled by recreating the controller via .id(...) in WebView or via sheet presentation.
     }
 }
+#elseif os(macOS)
+private struct WKInlineWebView: NSViewRepresentable {
+    let url: URL
 
+    func makeNSView(context: Context) -> WKWebView {
+        let webView = WKWebView(frame: .zero)
+        webView.allowsBackForwardNavigationGestures = true
+        return webView
+    }
+
+    func updateNSView(_ nsView: WKWebView, context: Context) {
+        if nsView.url != url {
+            nsView.load(URLRequest(url: url))
+        }
+    }
+}
 #endif
