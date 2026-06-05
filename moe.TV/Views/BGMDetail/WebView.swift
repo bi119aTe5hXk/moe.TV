@@ -15,7 +15,7 @@ enum WebViewMode {
     case inlineWK
     case safari
 }
-#if !os(tvOS)
+#if !os(tvOS) && !os(visionOS)
 /// A SwiftUI web container where the caller chooses the mode.
 struct WebView: View {
     let url: URL

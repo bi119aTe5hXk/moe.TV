@@ -9,7 +9,7 @@ import SwiftUI
 import AVKit
 
 
-#if os(iOS) || os(tvOS)
+#if os(iOS) || os(tvOS) || os(visionOS)
 struct AVPlayerLayerView: UIViewRepresentable {
 	let player: AVPlayer
 	var onLayerReady: ((AVPlayerLayer) -> Void)?

@@ -30,6 +30,7 @@ struct DownloadListView: View {
                     ForEach(dlListVC.fileList, id: \.self) { fileURL in
                         downloadedVideoRow(fileURL)
                             .tag(fileURL)
+#if !os(tvOS)
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
                                     deleteFiles([fileURL])
@@ -37,6 +38,7 @@ struct DownloadListView: View {
                                     Label("Delete", systemImage: "trash")
                                 }
                             }
+#endif
                     }
                     .onDelete(perform: delete)
                 } else {
@@ -160,6 +162,14 @@ struct DownloadListView: View {
                 Image(systemName: "play.circle")
             }
             .buttonStyle(.borderless)
+#if os(tvOS)
+			Button(role: .destructive) {
+				deleteFiles([fileURL])
+			} label: {
+				Image(systemName: "trash")
+			}
+			.buttonStyle(.borderless)
+#endif
         }
         .contentShape(Rectangle())
         .onTapGesture {
