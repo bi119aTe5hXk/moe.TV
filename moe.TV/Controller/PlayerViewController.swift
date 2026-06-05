@@ -23,6 +23,8 @@ class PlayerViewController: ObservableObject {
 
 	private let streamingFactory = StreamingPlayerItemFactory()
 	private var timeObserverToken: Any?
+	private var stallRecoveryTask: Task<Void, Never>?
+	private var shouldResumeAfterStall = false
 	private var cancellables = Set<AnyCancellable>()
 
 	let offlinePBM = OfflinePlaybackManager()
@@ -71,6 +73,9 @@ class PlayerViewController: ObservableObject {
 		isSeeking = false
 		playbackRate = settingsHandler.getPlaybackRate()
 		loadedTimeRanges = []
+		stallRecoveryTask?.cancel()
+		stallRecoveryTask = nil
+		shouldResumeAfterStall = false
 		cancellables.removeAll()
 	}
 
@@ -154,9 +159,15 @@ class PlayerViewController: ObservableObject {
 			print("nothing is here")
 		case .waitingToPlayAtSpecifiedRate:
 			print("waiting")
+			let shouldRecover = isPlaying || (avPlayer?.rate ?? 0) > 0
 			isPlaying = false
+			streamingCacheManager?.prefetchFromLastRequestedOffset()
+			if shouldRecover {
+				scheduleStallRecovery()
+			}
 		case .paused:
 			print("paused")
+			shouldResumeAfterStall = false
 			isPlaying = false
 			if let player = avPlayer {
 				logPlaybackPosition(
@@ -171,6 +182,9 @@ class PlayerViewController: ObservableObject {
 			streamingCacheManager?.prefetchFromLastRequestedOffset()
 		case .playing:
 			print("playing")
+			shouldResumeAfterStall = true
+			stallRecoveryTask?.cancel()
+			stallRecoveryTask = nil
 			isPlaying = true
 		case .some:
 			print("unknown player status:\(String(describing: status))")
@@ -345,6 +359,9 @@ class PlayerViewController: ObservableObject {
 		isSeeking = false
 		playbackRate = settingsHandler.getPlaybackRate()
 		loadedTimeRanges = []
+		stallRecoveryTask?.cancel()
+		stallRecoveryTask = nil
+		shouldResumeAfterStall = false
 		cancellables.removeAll()
 	}
 
@@ -396,6 +413,13 @@ class PlayerViewController: ObservableObject {
 				self?.updateLoadedTimeRanges()
 			}
 			.store(in: &cancellables)
+
+		NotificationCenter.default.publisher(for: .AVPlayerItemPlaybackStalled, object: item)
+			.receive(on: RunLoop.main)
+			.sink { [weak self] _ in
+				self?.handlePlaybackStalled()
+			}
+			.store(in: &cancellables)
 	}
 
 	@MainActor
@@ -438,6 +462,33 @@ class PlayerViewController: ObservableObject {
 			}
 
 			return start...end
+		}
+	}
+
+	@MainActor
+	private func handlePlaybackStalled() {
+		print("playback stalled")
+		streamingCacheManager?.prefetchFromLastRequestedOffset(length: 16 * 1024 * 1024)
+		if shouldResumeAfterStall {
+			scheduleStallRecovery()
+		}
+	}
+
+	@MainActor
+	private func scheduleStallRecovery() {
+		stallRecoveryTask?.cancel()
+		stallRecoveryTask = Task { @MainActor [weak self] in
+			try? await Task.sleep(nanoseconds: 900_000_000)
+			guard let self, self.shouldResumeAfterStall, let player = self.avPlayer else { return }
+			guard player.timeControlStatus != .playing else { return }
+
+			let current = player.currentTime()
+			player.seek(to: current, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
+				Task { @MainActor in
+					guard let self, self.shouldResumeAfterStall else { return }
+					self.applyPlaybackRate()
+				}
+			}
 		}
 	}
 

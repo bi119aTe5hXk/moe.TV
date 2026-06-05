@@ -136,7 +136,26 @@
       }
     },
     "Albireo favorite status is nil" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireoの記録がありませんでした"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireo收藏状态为空"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albreo收藏狀態為空"
+          }
+        }
+      }
     },
     "All video download failed." : {
       "localizations" : {
@@ -300,10 +319,48 @@
       }
     },
     "Back 15 seconds" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15秒戻し"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回退15秒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快退15秒"
+          }
+        }
+      }
     },
     "Backward 15 seconds" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15秒戻し"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回退15秒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快退15秒"
+          }
+        }
+      }
     },
     "Bgm.tv" : {
       "localizations" : {
@@ -348,7 +405,26 @@
       }
     },
     "BGM.TV favorite status is nil" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BGM.TVの記録がありませんでした。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BGM.TV收藏状态为空"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BGM.TV收藏狀態為空"
+          }
+        }
+      }
     },
     "BGM.TV Logined" : {
 
@@ -376,7 +452,26 @@
       }
     },
     "Buffering" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ロード中…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "缓冲中…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "讀取中..."
+          }
+        }
+      }
     },
     "Cancel" : {
       "localizations" : {
@@ -423,7 +518,26 @@
       }
     },
     "Check favorite status conflict" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "お気に入り状態の競合を確認する"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "检查收藏状态冲突"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檢測收藏狀態衝突"
+          }
+        }
+      }
     },
     "Clear history" : {
       "localizations" : {
@@ -574,7 +688,26 @@
       }
     },
     "Custom status" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタムステータス"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义状态"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自訂狀態"
+          }
+        }
+      }
     },
     "Debug" : {
 
@@ -718,7 +851,26 @@
 
     },
     "Favorite status conflict has been detected. Choose which one you want to keep." : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "お気に入りの状態に競合が検出されました。どちらを残すか選択してください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "检测到收藏状态冲突，请选择保留状态"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檢測到收藏狀態衝突，請選擇保留的收藏狀態"
+          }
+        }
+      }
     },
     "Finished" : {
       "localizations" : {
@@ -765,10 +917,48 @@
       }
     },
     "Forward 15 seconds" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15秒進む"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快进15秒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快進15秒"
+          }
+        }
+      }
     },
     "Full Screen" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全画面"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全屏"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全螢幕"
+          }
+        }
+      }
     },
     "Functions" : {
       "localizations" : {
@@ -782,6 +972,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "功能"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "機能"
           }
         }
       }
@@ -1252,13 +1448,70 @@
       }
     },
     "Picture in Picture" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピクチャー・イン・ピクチャー"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画中画"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "畫中畫"
+          }
+        }
+      }
     },
     "Play" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放"
+          }
+        }
+      }
     },
     "Play/Pause" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生/一時停止"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放/暂停"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放/暫停"
+          }
+        }
+      }
     },
     "Playback History" : {
       "localizations" : {
@@ -1283,7 +1536,26 @@
       }
     },
     "Playback speed" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生速度"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放速度"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回放倍數"
+          }
+        }
+      }
     },
     "Please select a source:" : {
       "localizations" : {
@@ -1450,10 +1722,48 @@
       }
     },
     "Set Albreo's favorite status to BGM.TV?" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Albireoのお気に入り設定をBGM.TVにする？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置Albireo的收藏状态到BGM.TV吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將Albireo的收藏狀態同步至BGM.TV？"
+          }
+        }
+      }
     },
     "Set BGM.TV's favorite status to Albreo?" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BGM.TVのお気に入り設定をAlbireoにする？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置BGM.TV的收藏状态到Albireo吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將BGM.TV的收藏狀態同步至Albireo？"
+          }
+        }
+      }
     },
     "Set watched when finished the final EP" : {
       "localizations" : {
@@ -1746,7 +2056,26 @@
       }
     },
     "Use custom player UI" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタムプレイヤーUIを使用する"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用定制播放器界面"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用訂製播放器UI"
+          }
+        }
+      }
     },
     "Username" : {
       "localizations" : {
