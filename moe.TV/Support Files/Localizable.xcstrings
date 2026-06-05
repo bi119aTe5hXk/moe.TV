@@ -473,6 +473,9 @@
         }
       }
     },
+    "Cache" : {
+
+    },
     "Cancel" : {
       "localizations" : {
         "ja" : {
@@ -598,6 +601,9 @@
           }
         }
       }
+    },
+    "Clear streaming video cache" : {
+
     },
     "Close" : {
       "localizations" : {
@@ -1607,6 +1613,9 @@
     "Refresh BGM Access Token" : {
 
     },
+    "Refresh video cache size" : {
+
+    },
     "RefreshToken" : {
 
     },
@@ -1976,6 +1985,9 @@
           }
         }
       }
+    },
+    "Streaming video cache" : {
+
     },
     "Sync status with bgm.tv" : {
       "localizations" : {

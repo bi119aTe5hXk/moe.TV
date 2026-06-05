@@ -10,7 +10,9 @@ import AVKit
 
 import MediaPlayer
 import SwiftUI
+#if !os(tvOS)
 import WebKit
+#endif
 
 
 struct VideoPlayerView: View {

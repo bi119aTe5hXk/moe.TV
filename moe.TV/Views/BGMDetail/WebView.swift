@@ -1,5 +1,7 @@
 import SwiftUI
+#if !os(tvOS)
 import WebKit
+#endif
 #if os(iOS)
 import SafariServices
 #endif
@@ -13,7 +15,7 @@ enum WebViewMode {
     case inlineWK
     case safari
 }
-
+#if !os(tvOS)
 /// A SwiftUI web container where the caller chooses the mode.
 struct WebView: View {
     let url: URL
@@ -33,7 +35,7 @@ struct WebView: View {
         }
     }
 }
-
+#endif
 #if os(iOS)
 // MARK: - Sheet presenter for Safari
 

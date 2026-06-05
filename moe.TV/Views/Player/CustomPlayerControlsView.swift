@@ -244,19 +244,23 @@ struct CustomPlayerControlsView: View {
 				playerVM.togglePlayPause()
 				showControlsTemporarily()
 			}
+#if !os(tvOS)
 			.keyboardShortcut(.space, modifiers: [])
-
+#endif
 			Button("Backward 15 seconds") {
 				playerVM.seek(by: -15, autoPlay: playerVM.isPlaying)
 				showControlsTemporarily()
 			}
+#if !os(tvOS)
 			.keyboardShortcut(.leftArrow, modifiers: [])
-
+#endif
 			Button("Forward 15 seconds") {
 				playerVM.seek(by: 15, autoPlay: playerVM.isPlaying)
 				showControlsTemporarily()
 			}
+#if !os(tvOS)
 			.keyboardShortcut(.rightArrow, modifiers: [])
+#endif
 		}
 		.frame(width: 0, height: 0)
 		.opacity(0)
@@ -350,6 +354,7 @@ private struct CachedProgressBar: View {
 			}
 			.frame(height: height)
 			.contentShape(Rectangle())
+#if !os(tvOS)
 			.gesture(
 				DragGesture(minimumDistance: 0)
 					.onChanged { value in
@@ -367,6 +372,7 @@ private struct CachedProgressBar: View {
 						onSeekEnded(seconds)
 					}
 			)
+#endif
 		}
 	}
 

@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import SafariServices
 import AuthenticationServices
 
 #if os(iOS) || os(visionOS)
 import UIKit
+import SafariServices
 
 private func topMostViewController(base: UIViewController? = UIApplication.shared.firstKeyWindow?.rootViewController) -> UIViewController? {
     if let nav = base as? UINavigationController {
@@ -83,6 +83,7 @@ extension UIApplication {
 
 #if os(macOS)
 import Cocoa
+import SafariServices
 func openURLInApp(urlString:String){
     openURL(urlString: urlString)
 }
