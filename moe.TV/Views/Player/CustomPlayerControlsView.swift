@@ -14,6 +14,9 @@ struct CustomPlayerControlsView: View {
 	var isPictureInPictureActive = false
 	var onPictureInPictureToggle: (() -> Void)?
 	var onFullScreenToggle: (() -> Void)?
+	var title: String?
+	var subtitle: String?
+	var onClose: (() -> Void)?
 
 	@State private var isControlsVisible = true
 	@State private var scrubTime: Double = 0
@@ -39,16 +42,17 @@ struct CustomPlayerControlsView: View {
 					}
 				}
 
-			if isControlsVisible {
-				VStack(spacing: 0) {
-					topBar
-					Spacer()
-					centerButton
-					Spacer()
-					bottomControls
+				if isControlsVisible {
+					VStack(spacing: 0) {
+						topBar
+						Spacer()
+						centerButton
+						Spacer()
+						bottomControls
+					}
+					.background(Color.black.opacity(0.24))
+					.transition(.opacity)
 				}
-				.transition(.opacity)
-			}
 		}
 		.overlay(keyboardShortcuts)
 		.foregroundStyle(.white)
@@ -77,7 +81,22 @@ struct CustomPlayerControlsView: View {
 	}
 
 	private var topBar: some View {
-		HStack {
+		HStack(spacing: 12) {
+			if let onClose {
+				Button(action: {
+					onClose()
+				}) {
+					Image(systemName: "xmark.circle.fill")
+						.font(.system(size: 30, weight: .semibold))
+						.foregroundColor(.white)
+						.shadow(radius: 4)
+						.frame(width: 54, height: 54)
+						.background(.black.opacity(0.34), in: Circle())
+				}
+				.buttonStyle(.plain)
+				.accessibilityLabel("Close")
+			}
+
 			Spacer()
 
 			if playerVM.streamingCacheManager?.state.isPrefetching == true {
@@ -94,8 +113,8 @@ struct CustomPlayerControlsView: View {
 				.background(.black.opacity(0.42), in: Capsule())
 			}
 		}
-		.padding(.horizontal, 18)
-		.padding(.top, 14)
+		.padding(.horizontal, 28)
+		.padding(.top, 22)
 	}
 
 	private var centerButton: some View {
@@ -114,6 +133,12 @@ struct CustomPlayerControlsView: View {
 
 	private var bottomControls: some View {
 		VStack(spacing: 10) {
+			if hasTitleText {
+				titleBlock
+					.frame(maxWidth: .infinity, alignment: .leading)
+					.padding(.bottom, 2)
+			}
+
 			CachedProgressBar(
 				currentTime: isScrubbing ? scrubTime : playerVM.currentTime,
 				duration: playerVM.duration,
@@ -170,6 +195,19 @@ struct CustomPlayerControlsView: View {
 					.minimumScaleFactor(0.75)
 
 				Spacer()
+
+#if !os(tvOS)
+				Button {
+					playerVM.copyCurrentFrameToPasteboard()
+					showControlsTemporarily()
+				} label: {
+					Image(systemName: "camera")
+						.font(.system(size: 19, weight: .medium))
+						.frame(width: 44, height: 38)
+				}
+				.buttonStyle(.plain)
+				.accessibilityLabel("Copy current frame")
+#endif
 
 				Menu {
 					ForEach(playbackRateOptions, id: \.self) { rate in
@@ -232,6 +270,31 @@ struct CustomPlayerControlsView: View {
 			)
 			.ignoresSafeArea(edges: .bottom)
 		)
+	}
+
+	private var titleBlock: some View {
+		VStack(alignment: .leading, spacing: 4) {
+			if let title, !title.isEmpty {
+				Text(title)
+					.font(.title3.weight(.semibold))
+					.lineLimit(1)
+					.minimumScaleFactor(0.75)
+					.shadow(radius: 4)
+			}
+
+			if let subtitle, !subtitle.isEmpty {
+				Text(subtitle)
+					.font(.subheadline)
+					.foregroundStyle(.white.opacity(0.82))
+					.lineLimit(1)
+					.minimumScaleFactor(0.75)
+					.shadow(radius: 4)
+			}
+		}
+	}
+
+	private var hasTitleText: Bool {
+		(title?.isEmpty == false) || (subtitle?.isEmpty == false)
 	}
 
 	private var timeText: String {

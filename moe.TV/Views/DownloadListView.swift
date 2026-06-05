@@ -12,7 +12,9 @@ struct DownloadListView: View {
     @EnvironmentObject var offlinePBM: OfflinePlaybackManager
     @ObservedObject var dlListVC: DownloadListViewController
     var onPlayVideo: ((URL, String, Double?) -> Void)? = nil
+#if os(iOS)
     @State private var editMode: EditMode = .inactive
+#endif
     @State private var selectedFiles = Set<URL>()
 
     var body: some View {
@@ -55,9 +57,11 @@ struct DownloadListView: View {
         .onReceive(downloadManager.$activeDownloads) { _ in
             getDownloadList()
         }
+#if os(iOS)
         .environment(\.editMode, $editMode)
+#endif
         .toolbar {
-#if !os(tvOS)
+#if os(iOS)
             if !dlListVC.fileList.isEmpty {
                 ToolbarItemGroup(placement: .automatic) {
                     EditButton()
@@ -173,9 +177,13 @@ struct DownloadListView: View {
         }
         .contentShape(Rectangle())
         .onTapGesture {
+#if os(iOS)
             if !editMode.isEditing {
                 playDownloadedVideo(fileURL)
             }
+#else
+            playDownloadedVideo(fileURL)
+#endif
         }
     }
 
@@ -223,7 +231,9 @@ struct DownloadListView: View {
     private func deleteSelectedFiles() {
         deleteFiles(Array(selectedFiles))
         selectedFiles.removeAll()
+#if os(iOS)
         editMode = .inactive
+#endif
     }
 
     private func deleteFiles(_ files: [URL]) {

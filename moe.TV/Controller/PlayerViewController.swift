@@ -9,6 +9,11 @@ import AVKit
 import Combine
 import Foundation
 import MediaPlayer
+#if os(iOS) || os(tvOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 class PlayerViewController: ObservableObject {
 	@Published var avPlayer: AVPlayer?
@@ -144,6 +149,38 @@ class PlayerViewController: ObservableObject {
 	func seek(by delta: Double, autoPlay: Bool = false) {
 		seek(to: currentTime + delta, autoPlay: autoPlay)
 	}
+
+	#if !os(tvOS)
+	@MainActor
+	func copyCurrentFrameToPasteboard() {
+		guard let currentItem = avPlayer?.currentItem else { return }
+
+		let asset = currentItem.asset
+		let time = currentItem.currentTime()
+
+		Task.detached(priority: .userInitiated) {
+			let generator = AVAssetImageGenerator(asset: asset)
+			generator.appliesPreferredTrackTransform = true
+			generator.requestedTimeToleranceBefore = .zero
+			generator.requestedTimeToleranceAfter = .zero
+
+			do {
+				let image = try generator.copyCGImage(at: time, actualTime: nil)
+				await MainActor.run {
+					#if os(iOS)
+					UIPasteboard.general.image = UIImage(cgImage: image)
+					#elseif os(macOS)
+					let pasteboard = NSPasteboard.general
+					pasteboard.clearContents()
+					pasteboard.writeObjects([NSImage(cgImage: image, size: .zero)])
+					#endif
+				}
+			} catch {
+				print("Failed to copy current video frame: \(error)")
+			}
+		}
+	}
+	#endif
 
 	@MainActor
 	func playerObserverHandler(

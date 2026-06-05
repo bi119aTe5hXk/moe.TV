@@ -44,6 +44,27 @@ struct VideoPlayerView: View {
         #endif
     }
 
+    private var playerChromeTitle: String? {
+        let title = ep?.name?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return title.isEmpty ? nil : title
+    }
+
+    private var playerChromeSubtitle: String? {
+        let subtitle = ep?.name_cn?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return subtitle.isEmpty ? nil : subtitle
+    }
+
+    private var playerChromeCloseAction: (() -> Void)? {
+        #if os(tvOS)
+        return nil
+        #else
+        guard detailVC != nil else { return nil }
+        return {
+            detailVC?.closePlayer()
+        }
+        #endif
+    }
+
     private func handleStatus(_ status: AVPlayer.TimeControlStatus?) {
         playerVM.playerObserverHandler(
             status: status,
@@ -55,8 +76,20 @@ struct VideoPlayerView: View {
         )
     }
 
+    private func clampedSplitPlayerWidth(totalWidth: CGFloat, offset: CGFloat = 0) -> CGFloat {
+        guard totalWidth > 0 else { return 0 }
+        let minimumPaneWidth = min(200, totalWidth / 2)
+        let baseWidth = totalWidth * CGFloat(dividerPosition)
+        return max(minimumPaneWidth, min(totalWidth - minimumPaneWidth, baseWidth + offset))
+    }
+
+    private func clampedDividerPosition(_ ratio: CGFloat) -> Double {
+        Double(max(0.2, min(0.8, ratio)))
+    }
+
     var body: some View {
         ZStack {
+            Color.black.ignoresSafeArea()
             if let avPlayer = playerVM.avPlayer {
                 #if os(iOS)
                     if settingsHandler
@@ -66,10 +99,10 @@ struct VideoPlayerView: View {
                         // player with navbar & webview
                         GeometryReader { geometry in
                             let totalWidth = geometry.size.width
-                            let leftWidth = max(200, min(totalWidth - 200, totalWidth * CGFloat(dividerPosition) + dragOffset))
+                            let baseLeftWidth = clampedSplitPlayerWidth(totalWidth: totalWidth)
+                            let leftWidth = clampedSplitPlayerWidth(totalWidth: totalWidth, offset: dragOffset)
 
-                            NavigationView {
-                                HStack {
+                            HStack(spacing: 0) {
                                     ZStack {
                                         
                                         PlayerSurfaceView(
@@ -78,7 +111,10 @@ struct VideoPlayerView: View {
                                             playerVM: playerVM,
                                             observer: playerObserver,
                                             onStatus: handleStatus,
-                                            mode: playerSurfaceMode
+                                            mode: playerSurfaceMode,
+                                            title: playerChromeTitle,
+                                            subtitle: playerChromeSubtitle,
+                                            onClose: playerChromeCloseAction
                                         )
                                             .persistentSystemOverlays(.hidden)
                                     }.frame(width: leftWidth)
@@ -92,8 +128,8 @@ struct VideoPlayerView: View {
                                                     state = value.translation.width
                                                 }
                                                 .onEnded { value in
-                                                    let newRatio = (leftWidth + value.translation.width) / totalWidth
-                                                    dividerPosition = Double(max(0.2, min(0.8, newRatio)))
+                                                    let newRatio = (baseLeftWidth + value.translation.width) / totalWidth
+                                                    dividerPosition = clampedDividerPosition(newRatio)
                                                 }
                                         )
                                         .background(Color.secondary)
@@ -105,21 +141,11 @@ struct VideoPlayerView: View {
 
                                                 WebView(url: URL(string: urlString)!, mode:.inlineWK)
                                                     .ignoresSafeArea()
-                                                    .navigationBarTitleDisplayMode(.inline)
                                                     .frame(width: totalWidth - leftWidth - 10)
-                                                    .navigationTitle("\(ep?.name ?? "") (\(ep?.name_cn ?? "NAME_CN_EMPTY"))")
-                                                    .navigationBarItems(leading:
-                                                        Button(action: {
-                                                            detailVC?.presentVideoView = false
-                                                        }) {
-                                                            Text("Close")
-                                                        }
-                                                    )
                                             }
                                         }
                                     }
                                 }
-                            }
                         }
                     } else {
                         // full screen player
@@ -130,7 +156,10 @@ struct VideoPlayerView: View {
                                 playerVM: playerVM,
                                 observer: playerObserver,
                                 onStatus: handleStatus,
-                                mode: playerSurfaceMode
+                                mode: playerSurfaceMode,
+                                title: playerChromeTitle,
+                                subtitle: playerChromeSubtitle,
+                                onClose: playerChromeCloseAction
                             )
                                 .persistentSystemOverlays(.hidden)
                         }
@@ -145,7 +174,10 @@ struct VideoPlayerView: View {
                             playerVM: playerVM,
                             observer: playerObserver,
                             onStatus: handleStatus,
-                            mode: playerSurfaceMode
+                            mode: playerSurfaceMode,
+                            title: playerChromeTitle,
+                            subtitle: playerChromeSubtitle,
+                            onClose: playerChromeCloseAction
                         )
                             .persistentSystemOverlays(.hidden)
                     }
@@ -154,9 +186,9 @@ struct VideoPlayerView: View {
                     // player with navbar & webview
                     GeometryReader { geometry in
                         let totalWidth = geometry.size.width
-                        let leftWidth = max(200, min(totalWidth - 200, totalWidth * CGFloat(dividerPosition) + dragOffset))
-                        NavigationView {
-                            HStack {
+                        let baseLeftWidth = clampedSplitPlayerWidth(totalWidth: totalWidth)
+                        let leftWidth = clampedSplitPlayerWidth(totalWidth: totalWidth, offset: dragOffset)
+                        HStack(spacing: 0) {
                                 ZStack {
                                     PlayerSurfaceView(
                                         player: avPlayer,
@@ -164,20 +196,11 @@ struct VideoPlayerView: View {
                                         playerVM: playerVM,
                                         observer: playerObserver,
                                         onStatus: handleStatus,
-                                        mode: playerSurfaceMode
+                                        mode: playerSurfaceMode,
+                                        title: playerChromeTitle,
+                                        subtitle: playerChromeSubtitle,
+                                        onClose: playerChromeCloseAction
                                     )
-
-                                        .navigationTitle("\(ep?.name ?? "") (\(ep?.name_cn ?? "NAME_CN_EMPTY"))")
-
-                                        .toolbar {
-                                            ToolbarItem(placement: .automatic) {
-                                                Button(action: {
-                                                    detailVC?.presentVideoView = false
-                                                }) {
-                                                    Text("Close")
-                                                }
-                                            }
-                                        }
                                 }.frame(width: leftWidth)
                                 Divider()
                                     .frame(width: 10)
@@ -188,8 +211,8 @@ struct VideoPlayerView: View {
                                                 state = value.translation.width
                                             }
                                             .onEnded { value in
-                                                let newRatio = (leftWidth + value.translation.width) / totalWidth
-                                                dividerPosition = Double(max(0.2, min(0.8, newRatio)))
+                                                let newRatio = (baseLeftWidth + value.translation.width) / totalWidth
+                                                dividerPosition = clampedDividerPosition(newRatio)
                                             }
                                     )
                                     .background(Color.secondary)
@@ -207,11 +230,11 @@ struct VideoPlayerView: View {
                                     }
                                 }
                             }
-                        }
                     }
                 #endif
             }
         }
+        .background(Color.black.ignoresSafeArea())
         .edgesIgnoringSafeArea(.all)
         .onAppear {
             #if os(iOS)
