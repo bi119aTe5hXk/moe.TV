@@ -37,7 +37,11 @@ struct VideoPlayerView: View {
     @GestureState private var dragOffset: CGFloat = 0
     
     private var playerSurfaceMode: PlayerSurfaceMode {
-        settingsHandler.getUseCustomPlayerUI() ? .custom : .system
+        #if os(tvOS)
+        return .system
+        #else
+        return settingsHandler.getUseCustomPlayerUI() ? .custom : .system
+        #endif
     }
 
     private func handleStatus(_ status: AVPlayer.TimeControlStatus?) {

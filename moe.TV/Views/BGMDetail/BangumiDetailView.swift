@@ -195,7 +195,7 @@ struct BangumiDetailView: View {
 				Button("Continue") {
 					detailVC.checkVideoSource(ep: detailVC.ep!, seekTime: (detailVC.ep!.watch_progress!.last_watch_position! - 5))
 				}
-				Button("Start from beginning"){
+				Button("Start from beginning", role: .destructive) {
 					detailVC.checkVideoSource(ep: detailVC.ep!, seekTime: 0)
 				}
 
