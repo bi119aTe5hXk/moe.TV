@@ -11,6 +11,7 @@ struct DebugView: View {
     @State private var iCloudEnabled = (FileManager.default.ubiquityIdentityToken != nil)
     @State private var syncWithBGMTV = isBGMTVlogined()
     @State private var albireoCookiesArray:Array<String> = []
+	@State private var streamingCacheSize: Int64 = 0
     @ObservedObject var debugVC:DebugViewController
 
     var body: some View {
@@ -74,6 +75,28 @@ struct DebugView: View {
                     }
                 }
 
+				Section(header: Text("Cache")) {
+					HStack {
+						Text("Streaming video cache")
+						Spacer()
+						Text(formatByteCount(streamingCacheSize))
+							.foregroundStyle(.secondary)
+					}
+
+					Button {
+						refreshStreamingCacheSize()
+					} label: {
+						Text("Refresh video cache size")
+					}
+
+					Button(role: .destructive) {
+						StreamingCacheManager.clearStreamingCache()
+						refreshStreamingCacheSize()
+					} label: {
+						Text("Clear streaming video cache")
+					}
+				}
+
 				Section(header: Text("Functions")) {
 					Button{
 //						imageCache.removeCache()
@@ -90,6 +113,15 @@ struct DebugView: View {
             getAllCookies { arr in
                 albireoCookiesArray = arr
             }
+			refreshStreamingCacheSize()
         }
     }
+
+	private func refreshStreamingCacheSize() {
+		streamingCacheSize = StreamingCacheManager.streamingCacheSize()
+	}
+
+	private func formatByteCount(_ byteCount: Int64) -> String {
+		ByteCountFormatter.string(fromByteCount: byteCount, countStyle: .file)
+	}
 }

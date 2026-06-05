@@ -92,18 +92,4 @@ struct VideoPlayerViewiOS: UIViewControllerRepresentable {
     //    }
 }
 #endif
-// TODO: PiP / playback rate macOS support
-// #if os(macOS)
-// struct VideoPlayerViewMacOS:NSViewControllerRepresentable{
-//    typealias NSViewControllerType = NSViewController
-//    let player: AVPlayer
-//    func makeNSViewController(context: Context) -> NSViewController {
-//        let controller = AVPlayerViewController()
-//        return controller
-//    }
-//
-//    func updateNSViewController(_ nsViewController: NSViewController, context: Context) {
-//
-//    }
-// }
-// #endif
+

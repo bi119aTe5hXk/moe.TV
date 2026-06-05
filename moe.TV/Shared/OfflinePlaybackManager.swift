@@ -12,6 +12,9 @@ struct OfflineVideoItem: Codable{
     var filename:String
     var position:Double
     var isFinished:Bool
+    var bangumiName:String? = nil
+    var episodeNo:Int? = nil
+    var episodeName:String? = nil
 }
 class OfflinePlaybackManager: ObservableObject {
     // MARK: - Playback manager
@@ -34,10 +37,38 @@ class OfflinePlaybackManager: ObservableObject {
         return nil
     }
     
+    func getPlayBackStatus(epID: String) -> OfflineVideoItem?{
+        if let list = getSaveStatusList(){
+            return list.first(where: { $0.epID == epID })
+        }
+        return nil
+    }
+
+    func getPlayBackStatus(bgmEpsID: Int?) -> OfflineVideoItem?{
+        guard let bgmEpsID else { return nil }
+        if let list = getSaveStatusList(){
+            return list.first(where: { $0.bgm_eps_id == bgmEpsID })
+        }
+        return nil
+    }
+    
     func setPlayBackStatus(item:OfflineVideoItem){
         if let oldItem = getPlayBackStatus(filename: item.filename){
             print("found oldItem:\(oldItem)")
             deletePlayBackStatus(filename: oldItem.filename)
+            addPlayBackStatus(
+                item: OfflineVideoItem(
+                    epID: item.epID ?? oldItem.epID,
+                    bgm_eps_id: item.bgm_eps_id ?? oldItem.bgm_eps_id,
+                    filename: item.filename,
+                    position: item.position,
+                    isFinished: item.isFinished,
+                    bangumiName: item.bangumiName ?? oldItem.bangumiName,
+                    episodeNo: item.episodeNo ?? oldItem.episodeNo,
+                    episodeName: item.episodeName ?? oldItem.episodeName
+                )
+            )
+            return
         }
         addPlayBackStatus(item: item)
     }
@@ -82,9 +113,6 @@ class OfflinePlaybackManager: ObservableObject {
     private func setSaveStatusList(array:[OfflineVideoItem]){
         print(array)
         
-        if array.isEmpty{
-            return
-        }
         var encodeArr = [Any]()
         array.forEach { item in
             if let encoded = try? PropertyListEncoder().encode(item) {

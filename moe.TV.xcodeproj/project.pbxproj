@@ -3,15 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		47222CE52B3F267500085EBD /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47222CE42B3F267500085EBD /* DebugView.swift */; };
 		47222CE72B3F291200085EBD /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47222CE62B3F291200085EBD /* DebugViewController.swift */; };
+		476F6EB72FD0120700140C2D /* StreamingAVPlayerCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476F6EB62FD0120700140C2D /* StreamingAVPlayerCache.swift */; };
 		477801792FA34C77004757F4 /* TVSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477801782FA34C71004757F4 /* TVSidebar.swift */; };
 		4779043B2F2B857900EF74D5 /* PlayerViewControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779043A2F2B854500EF74D5 /* PlayerViewControllerHost.swift */; };
-		4779043D2F2B86D700EF74D5 /* PlayerSurfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779043C2F2B86C400EF74D5 /* PlayerSurfaceView.swift */; };
 		4779043F2F2B91F400EF74D5 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779043E2F2B91D000EF74D5 /* NowPlayingManager.swift */; };
 		47CC30782A371784001D3F8C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC30772A371784001D3F8C /* LoginViewController.swift */; };
 		47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */; };
@@ -80,7 +80,6 @@
 		86B36A8A2A581B9D00824050 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B36A892A581B9D00824050 /* SettingsViewController.swift */; };
 		86B8F0932A850A7000FD467A /* SettingsButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B8F0922A850A7000FD467A /* SettingsButtonView.swift */; };
 		86B9A8102A8A777D002A9C94 /* OfflineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B9A80F2A8A777D002A9C94 /* OfflineView.swift */; };
-		86BAC66B2A38BE52001C064F /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */; };
 		86E83E6E2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E83E6D2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift */; };
 		86F9B8552E07F53B00051576 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F9B8542E07F53500051576 /* WebView.swift */; };
 /* End PBXBuildFile section */
@@ -112,9 +111,9 @@
 /* Begin PBXFileReference section */
 		47222CE42B3F267500085EBD /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		47222CE62B3F291200085EBD /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
+		476F6EB62FD0120700140C2D /* StreamingAVPlayerCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingAVPlayerCache.swift; sourceTree = "<group>"; };
 		477801782FA34C71004757F4 /* TVSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVSidebar.swift; sourceTree = "<group>"; };
 		4779043A2F2B854500EF74D5 /* PlayerViewControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewControllerHost.swift; sourceTree = "<group>"; };
-		4779043C2F2B86C400EF74D5 /* PlayerSurfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSurfaceView.swift; sourceTree = "<group>"; };
 		4779043E2F2B91D000EF74D5 /* NowPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
 		47CC30772A371784001D3F8C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiCellUnreadView.swift; sourceTree = "<group>"; };
@@ -179,10 +178,13 @@
 		86B36A892A581B9D00824050 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		86B8F0922A850A7000FD467A /* SettingsButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButtonView.swift; sourceTree = "<group>"; };
 		86B9A80F2A8A777D002A9C94 /* OfflineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineView.swift; sourceTree = "<group>"; };
-		86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		86E83E6D2A695C3700E3EB04 /* BangumiDetailCoverTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailCoverTextView.swift; sourceTree = "<group>"; };
 		86F9B8542E07F53500051576 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		476F6EBA2FD130D500140C2D /* Player */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Player; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		866727EB2A39C775009E0104 /* Frameworks */ = {
@@ -264,6 +266,7 @@
 		862C25A62A545912006827E6 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				476F6EB62FD0120700140C2D /* StreamingAVPlayerCache.swift */,
 				868E9DEB2A7E3F6B00967773 /* NetworkMonitor.swift */,
 				86A968F92A7FCD4900E9BD59 /* DownloadManager.swift */,
 				864F0BD42A812BE700604B7F /* OfflinePlaybackManager.swift */,
@@ -302,13 +305,13 @@
 		86A9C3D92A3306BC00FD0B44 = {
 			isa = PBXGroup;
 			children = (
-				86629CBB2BB007FF00EF1EE8 /* PrivacyInfo.xcprivacy */,
 				86A9C3E92A3306BE00FD0B44 /* Assets.xcassets */,
-				86AD92942A337DCA008461FF /* moe-TV-Info.plist */,
-				86A9C3E42A3306BC00FD0B44 /* moe.TV */,
-				866727F12A39C776009E0104 /* topShelf */,
-				86A9C3E32A3306BC00FD0B44 /* Products */,
 				86436D4E2A38B92000E6936F /* Frameworks */,
+				86A9C3E42A3306BC00FD0B44 /* moe.TV */,
+				86AD92942A337DCA008461FF /* moe-TV-Info.plist */,
+				86629CBB2BB007FF00EF1EE8 /* PrivacyInfo.xcprivacy */,
+				86A9C3E32A3306BC00FD0B44 /* Products */,
+				866727F12A39C776009E0104 /* topShelf */,
 			);
 			sourceTree = "<group>";
 		};
@@ -357,6 +360,7 @@
 				86A968F72A7FC46500E9BD59 /* DownloadListView.swift */,
 				867FCB052C43860F00F42564 /* SidebarView.swift */,
 				477801782FA34C71004757F4 /* TVSidebar.swift */,
+				476F6EBA2FD130D500140C2D /* Player */,
 				86E83E6F2A695D9800E3EB04 /* BGMMaster */,
 				86E83E702A695DBE00E3EB04 /* BGMDetail */,
 			);
@@ -403,8 +407,6 @@
 				863417EF2C71BD0600550AB4 /* BGMStatusTextView.swift */,
 				47E7802A2A397ED900827D03 /* EPCellProgressView.swift */,
 				8622C61B2A9261B70099DC78 /* ProgressAlertView.swift */,
-				86BAC66A2A38BE52001C064F /* VideoPlayerView.swift */,
-				4779043C2F2B86C400EF74D5 /* PlayerSurfaceView.swift */,
 				86F9B8542E07F53500051576 /* WebView.swift */,
 			);
 			path = BGMDetail;
@@ -445,6 +447,9 @@
 			);
 			dependencies = (
 				866727F62A39C776009E0104 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				476F6EBA2FD130D500140C2D /* Player */,
 			);
 			name = moe.TV;
 			packageProductDependencies = (
@@ -550,7 +555,6 @@
 				86B8F0932A850A7000FD467A /* SettingsButtonView.swift in Sources */,
 				863417F22C71D15D00550AB4 /* BangumiDetailCoverTextViewController.swift in Sources */,
 				8627A9372A343DBC00A5FCAC /* SettingsHandler.swift in Sources */,
-				86BAC66B2A38BE52001C064F /* VideoPlayerView.swift in Sources */,
 				86A968FA2A7FCD4900E9BD59 /* DownloadManager.swift in Sources */,
 				86112E862A3C73F60034AD97 /* BGMTVServerHandler.swift in Sources */,
 				8627A9322A343D6500A5FCAC /* AlbireoServerHandler.swift in Sources */,
@@ -583,7 +587,6 @@
 				862C25A32A545899006827E6 /* BangumiDetailViewController.swift in Sources */,
 				867FCB062C43860F00F42564 /* SidebarView.swift in Sources */,
 				865B0F7C2CB436B000D8D2F5 /* SceneDelegate.swift in Sources */,
-				4779043D2F2B86D700EF74D5 /* PlayerSurfaceView.swift in Sources */,
 				47E7802B2A397ED900827D03 /* EPCellProgressView.swift in Sources */,
 				865B0F7E2CB436FD00D8D2F5 /* AppDelegate.swift in Sources */,
 				864F0BD52A812BE700604B7F /* OfflinePlaybackManager.swift in Sources */,
@@ -593,6 +596,7 @@
 				86AD92982A338D9C008461FF /* BangumiDetailView.swift in Sources */,
 				86AD92902A33750F008461FF /* BangumiCellView.swift in Sources */,
 				47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */,
+				476F6EB72FD0120700140C2D /* StreamingAVPlayerCache.swift in Sources */,
 				47222CE52B3F267500085EBD /* DebugView.swift in Sources */,
 				863417F02C71BD0600550AB4 /* BGMStatusTextView.swift in Sources */,
 				47E7802D2A39C19000827D03 /* SettingsView.swift in Sources */,
@@ -832,7 +836,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe_TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202503182356;
+				CURRENT_PROJECT_VERSION = 202506042051;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "moe.TV/Support\\ Files/Preview\\ Content Assets.xcassets";
 				ENABLE_APP_SANDBOX = YES;
@@ -844,6 +848,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "moe-TV-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = moe.TV;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -892,7 +897,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe_TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202503182356;
+				CURRENT_PROJECT_VERSION = 202506042051;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "moe.TV/Support\\ Files/Preview\\ Content Assets.xcassets";
 				ENABLE_APP_SANDBOX = YES;
@@ -904,6 +909,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "moe-TV-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = moe.TV;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

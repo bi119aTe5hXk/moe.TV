@@ -10,7 +10,9 @@ import AVKit
 
 import MediaPlayer
 import SwiftUI
-
+#if !os(tvOS)
+import WebKit
+#endif
 
 
 struct VideoPlayerView: View {
@@ -22,6 +24,8 @@ struct VideoPlayerView: View {
     var filename: String?
     @StateObject private var playerVM = PlayerViewController()
     var detailVC: BangumiDetailViewController?
+	
+	private let streamingFactory = StreamingPlayerItemFactory()
 
     var isBGMTVWatched: Bool
 
@@ -32,6 +36,14 @@ struct VideoPlayerView: View {
     @AppStorage("dividerPosition") private var dividerPosition: Double = 0.7 // left
     @GestureState private var dragOffset: CGFloat = 0
     
+    private var playerSurfaceMode: PlayerSurfaceMode {
+        #if os(tvOS)
+        return .system
+        #else
+        return settingsHandler.getUseCustomPlayerUI() ? .custom : .system
+        #endif
+    }
+
     private func handleStatus(_ status: AVPlayer.TimeControlStatus?) {
         playerVM.playerObserverHandler(
             status: status,
@@ -65,7 +77,8 @@ struct VideoPlayerView: View {
                                             ep: ep,
                                             playerVM: playerVM,
                                             observer: playerObserver,
-                                            onStatus: handleStatus
+                                            onStatus: handleStatus,
+                                            mode: playerSurfaceMode
                                         )
                                             .persistentSystemOverlays(.hidden)
                                     }.frame(width: leftWidth)
@@ -116,7 +129,8 @@ struct VideoPlayerView: View {
                                 ep: ep,
                                 playerVM: playerVM,
                                 observer: playerObserver,
-                                onStatus: handleStatus
+                                onStatus: handleStatus,
+                                mode: playerSurfaceMode
                             )
                                 .persistentSystemOverlays(.hidden)
                         }
@@ -130,7 +144,8 @@ struct VideoPlayerView: View {
                             ep: ep,
                             playerVM: playerVM,
                             observer: playerObserver,
-                            onStatus: handleStatus
+                            onStatus: handleStatus,
+                            mode: playerSurfaceMode
                         )
                             .persistentSystemOverlays(.hidden)
                     }
@@ -148,7 +163,8 @@ struct VideoPlayerView: View {
                                         ep: ep,
                                         playerVM: playerVM,
                                         observer: playerObserver,
-                                        onStatus: handleStatus
+                                        onStatus: handleStatus,
+                                        mode: playerSurfaceMode
                                     )
 
                                         .navigationTitle("\(ep?.name ?? "") (\(ep?.name_cn ?? "NAME_CN_EMPTY"))")
@@ -183,11 +199,10 @@ struct VideoPlayerView: View {
                                     if let theEP = ep {
                                         if let bgm_eps_id = theEP.bgm_eps_id {
                                             let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
-
                                             WebView(url: URL(string: urlString)!, mode: .inlineWK)
                                                 .ignoresSafeArea()
-                                                //											.navigationBarTitleDisplayMode(.inline)
                                                 .frame(width: totalWidth - leftWidth - 10)
+											
                                         }
                                     }
                                 }
@@ -205,7 +220,7 @@ struct VideoPlayerView: View {
                     OrientationController.shared.currentOrientation = .landscapeRight
                 }
             #endif
-            playerVM.loadFromUrl(url: url)
+			playerVM.loadFromUrl(url: url, useStreamingCache: !isOffline && !url.isFileURL)
             if let player = playerVM.avPlayer {
                 player.currentItem?.preferredForwardBufferDuration = TimeInterval(120)
                 player.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
@@ -223,6 +238,7 @@ struct VideoPlayerView: View {
                     }
                 } else {
                     print("seek0")
+                    playerVM.play()
                 }
             }
         }
@@ -238,6 +254,7 @@ struct VideoPlayerView: View {
                         filename: filename,
                         isBGMTVWatched: isBGMTVWatched
                     )
+					streamingFactory.stop(deleteCache: false)
                 }
             }
             #if os(iOS)

@@ -9,9 +9,10 @@ import SwiftUI
 
 struct BangumiListView: View {
 	@StateObject var listVC = BangumiListViewController()
-	@StateObject var detailVC = BangumiDetailViewController() //TODO: update list when playback finished
+	@StateObject var detailVC = BangumiDetailViewController()
     @Binding var selectedItem: BangumiItemModel?
     @Binding var selectedFunc: FuncViewModel?
+	@ObservedObject var loginVC: LoginViewController
 
 	@State private var oldValue: FuncViewModel?
 
@@ -63,13 +64,10 @@ struct BangumiListView: View {
 
         
             .alert("Albireo cookies may expired. Logout?",isPresented: $listVC.showLogoutAlert) {
-                Button("Logout & exit") {
-                    logoutAlbireoServer { result, str in
-                        exit(0);
-                    }
-                    exit(0);
+                Button("Logout", role: .destructive) {
+                    loginVC.logout()
                 }
-                Button("Stay login"){
+                Button("Stay login", role: .cancel) {
                     listVC.showLogoutAlert.toggle()
                 }
                 

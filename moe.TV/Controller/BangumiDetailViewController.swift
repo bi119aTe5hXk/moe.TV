@@ -19,6 +19,8 @@ class BangumiDetailViewController : ObservableObject {
     @Published var presentSourceSelectAlert = false
     
     @Published var videoURL:String = ""
+    @Published var videoIsOffline = false
+    @Published var videoFileName:String?
     @Published var seek:Double = 0.0
     @Published var ep:EpisodeDetailModel?
     @Published var detailItem:BangumiDetailModel?
@@ -31,8 +33,15 @@ class BangumiDetailViewController : ObservableObject {
     @Published var favStatusLoaded:Bool = false
 	@Published var selectedID: String? = nil
     
+    var playbackURL: URL? {
+        guard !videoURL.isEmpty else { return nil }
+        if let url = URL(string: videoURL), url.scheme != nil {
+            return url
+        }
+        return URL(fileURLWithPath: videoURL)
+    }
     
-
+    
 //	init(){
 //		ImageCache().wrappedValue.setCacheLimit(
 //			countLimit: 1000, // 1000 items
@@ -94,13 +103,18 @@ class BangumiDetailViewController : ObservableObject {
     
     
     //4 start playback
-    func showVideoView(url:String, seekTime:Double) {
+    func showVideoView(url:String, seekTime:Double, isOffline: Bool = false, filename: String? = nil) {
         DispatchQueue.main.async {
+            self.presentVideoView = false
             self.seek = seekTime
             self.videoURL = url
+            self.videoIsOffline = isOffline
+            self.videoFileName = filename
             self.presentContinuePlayAlert = false
             self.presentSourceSelectAlert = false
-            self.presentVideoView = true
+            DispatchQueue.main.async {
+                self.presentVideoView = true
+            }
         }
     }
     
@@ -109,6 +123,9 @@ class BangumiDetailViewController : ObservableObject {
     func closePlayer(){
         DispatchQueue.main.async {
             self.presentVideoView = false
+            self.videoURL = ""
+            self.videoIsOffline = false
+            self.videoFileName = nil
         }
     }
     

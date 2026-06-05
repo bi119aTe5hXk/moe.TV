@@ -35,7 +35,7 @@ func saveAlbireoCookies(response: HTTPURLResponse) {
 //return true if have cookie result
 func loadAlbireoCookies() -> Bool {
     settingsHandler.registerSettings()
-    if let cookieArray = settingsHandler.getAlbireoCookie(){
+    if let cookieArray = settingsHandler.getAlbireoCookie(), !cookieArray.isEmpty {
         for cookieProperties in cookieArray {
             if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any]) {
                 HTTPCookieStorage.shared.setCookie(cookie)
@@ -63,6 +63,9 @@ func getAllCookies(completion: @escaping (Array<String>) -> Void){
 }
 func clearCookie(){
     settingsHandler.setAlbireoCookie(array: [])
+    HTTPCookieStorage.shared.cookies?.forEach { cookie in
+        HTTPCookieStorage.shared.deleteCookie(cookie)
+    }
     print("albireo cookie cleared")
 }
 
@@ -206,6 +209,7 @@ func logoutAlbireoServer(completion: @escaping (Bool, String) -> Void) {
 //        }
 //    }
     clearCookie()
+    completion(true, "logout success")
 }
 
 func getAlbireoUserInfo(completion: @escaping (Bool, Any?) -> Void){

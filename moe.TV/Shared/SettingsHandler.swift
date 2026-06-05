@@ -18,6 +18,7 @@ class SettingsHandler {
 	private let kLandscapePlayback = "kLandscapePlayback"
 	private let kShowBgmtvWebWhilePlaying = "kShowBgmtvWebWhilePlaying"
 	private let kPlaybackRate = "kPlaybackRate"
+	private let kUseCustomPlayerUI = "kUseCustomPlayerUI"
 	private let kSearchHistory = "kSearchHistory"
 	private let kSetWatchedWhenFinishedFinalEP = "kSetWatchedWhenFinishedFinalEP"
 
@@ -154,6 +155,15 @@ class SettingsHandler {
 		}else {
 			return ub.double(forKey: kPlaybackRate)
 		}
+	}
+
+	//Custom player UI
+	func setUseCustomPlayerUI(isEnabled: Bool) {
+		ub.set(isEnabled, forKey: kUseCustomPlayerUI)
+		sync()
+	}
+	func getUseCustomPlayerUI() -> Bool {
+		return ub.bool(forKey: kUseCustomPlayerUI)
 	}
     
     //Sync fav status

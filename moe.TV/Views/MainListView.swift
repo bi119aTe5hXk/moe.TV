@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+private struct DownloadedVideoPlaybackItem: Identifiable {
+    let id = UUID()
+    let url: URL
+    let filename: String
+    let position: Double
+}
 
 struct MainListView: View {
 	@State var selectedItem: BangumiItemModel?
@@ -19,6 +25,8 @@ struct MainListView: View {
 //    @ObservedObject var settingsVM = SettingsViewModel()
     @State var presentSettingView = false
     @State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var downloadedVideoPlaybackItem: DownloadedVideoPlaybackItem?
+	@ObservedObject var loginVC: LoginViewController
 	
 
     var body: some View {
@@ -26,12 +34,13 @@ struct MainListView: View {
 
 #if os(tvOS)
 		HStack(spacing: 0) {
-			TVSidebar(selectedFunc: $selectedFunc)
+			TVSidebar(selectedFunc: $selectedFunc, loginVC: loginVC)
 				.frame(width: 320)
 
 			BangumiListView(
 				selectedItem: $selectedItem,
-				selectedFunc: .constant(selectedFunc)
+				selectedFunc: .constant(selectedFunc),
+				loginVC: loginVC
 			)
 //			.id(selectedFunc)
 		}
@@ -70,7 +79,7 @@ struct MainListView: View {
 				.navigationTitle("moe.TV")
 		} content: {
             if let dest = destination {
-                BangumiListView(selectedItem: $selectedItem, selectedFunc: $destination)
+                BangumiListView(selectedItem: $selectedItem, selectedFunc: $destination, loginVC: loginVC)
                     .navigationTitle(dest.localizedName)
             }
         } detail: {
@@ -86,12 +95,34 @@ struct MainListView: View {
 				}).padding(20)
 				Spacer()
 			}
-			SettingsView(settingsVC: SettingsViewController())
+			SettingsView(settingsVC: SettingsViewController(), loginVC: loginVC) { url, filename, position in
+                presentSettingView = false
+                DispatchQueue.main.async {
+                    downloadedVideoPlaybackItem = DownloadedVideoPlaybackItem(
+                        url: url,
+                        filename: filename,
+                        position: position ?? 0
+                    )
+                }
+            }
 #if os(macOS)
 				.frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
 #endif
 			Spacer()
 		})
+#if os(iOS)
+        .fullScreenCover(item: $downloadedVideoPlaybackItem) { item in
+            downloadedVideoPlayerView(item)
+        }
+#endif
+#if os(macOS)
+        .sheet(item: $downloadedVideoPlaybackItem) { item in
+            downloadedVideoPlayerView(item)
+#if os(macOS)
+                .frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
+#endif
+        }
+#endif
 #endif
 
 
@@ -103,8 +134,33 @@ struct MainListView: View {
 
 
     }
-    
-    
+
+#if !os(tvOS)
+    @ViewBuilder
+    private func downloadedVideoPlayerView(_ item: DownloadedVideoPlaybackItem) -> some View {
+        ZStack(alignment: .topLeading) {
+            VideoPlayerView(url: item.url,
+                            seekTime: item.position,
+                            bgmItem: .constant(nil),
+                            ep: nil,
+                            isOffline: true,
+                            filename: item.filename,
+                            isBGMTVWatched: false)
+            Button(action: {
+                downloadedVideoPlaybackItem = nil
+            }, label: {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
+                    .shadow(radius: 4)
+            })
+            .buttonStyle(.plain)
+            .padding(20)
+		}
+		.background(.black)
+    }
+#endif
+
     
 //    func fetchBGMProfileIcon(){
 //        if isBGMTVlogined(){

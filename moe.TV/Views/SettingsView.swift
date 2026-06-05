@@ -12,6 +12,7 @@ struct SettingsView: View {
     @State private var showDownloadList: Bool = false
 	@State private var landscapePlayback: Bool = false
 	@State private var showBgmtvWebWhilePlaying: Bool = false
+	@State private var useCustomPlayerUI: Bool = false
 	@State private var hideUnreleasedEps: Bool = false
 	@State private var setWatchedWhenFinishedFinalEP: Bool = false
     @State private var checkFavStatusConflict: Bool = false
@@ -21,6 +22,8 @@ struct SettingsView: View {
 //    @Binding var loginVM:LoginViewModel
 //    @Binding var myBGMVM:MyBangumiViewModel
 	@ObservedObject var settingsVC:SettingsViewController
+	@ObservedObject var loginVC: LoginViewController
+    var onPlayDownloadedVideo: ((URL, String, Double?) -> Void)? = nil
 
 	var body: some View {
 		NavigationStack{
@@ -174,6 +177,16 @@ struct SettingsView: View {
 							})
 
 #endif
+#if !os(tvOS)
+						Toggle("Use custom player UI", isOn: $useCustomPlayerUI)
+							.onAppear(){
+								self.useCustomPlayerUI = settingsVC.settingsHandler.getUseCustomPlayerUI()
+							}
+							.onChange(of: useCustomPlayerUI, initial: false) { newValue in
+								settingsVC.settingsHandler.setUseCustomPlayerUI(isEnabled: newValue)
+							}
+#endif
+
 						Picker(
 							"Default playbck speed",
 							selection: $settingsVC.playbackRate
@@ -218,9 +231,12 @@ struct SettingsView: View {
 #endif
 								}
 								DownloadListView(
-									dlListVC: DownloadListViewController()
+									dlListVC: DownloadListViewController(),
+                                    onPlayVideo: { url, filename, position in
+                                        self.showDownloadList = false
+                                        onPlayDownloadedVideo?(url, filename, position)
+                                    }
 								)
-								.environmentObject(DownloadManager())
 								.environmentObject(OfflinePlaybackManager())
 							})
 					}
@@ -255,21 +271,14 @@ struct SettingsView: View {
 						Button(action: {
 							settingsVC.showLogoutAlbireoAlert()
 						}, label: {
-							Text("Logout & Exit").foregroundColor(.red)
+							Text("Logout").foregroundColor(.red)
 						}).padding(10)
 
 							.alert(isPresented: $settingsVC.presentLogoutAlbireoAlert) {
 								Alert(
-									title: Text("Are you sure you want to logout and exit app?"),
+									title: Text("Are you sure you want to logout?"),
 									primaryButton: .destructive(Text("Logout")) {
-										logoutAlbireoServer { result, data in
-
-										}
-											//listVM.myBGMList = []
-											//                                    loginVM.presentLoginView = true //TODO: show login view after logout
-											//                                    loginVM.isLoginSuccessd = false
-											//myBangumiVM.toggleSettingView()
-										exit(0) //TODO: logout without exit
+										loginVC.logout()
 									},
 									secondaryButton: .cancel()
 								)

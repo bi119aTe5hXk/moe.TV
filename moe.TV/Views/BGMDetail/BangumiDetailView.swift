@@ -12,6 +12,7 @@ struct BangumiDetailView: View {
 	@ObservedObject var detailVC = BangumiDetailViewController()
 
 	private let settingsHandler = SettingsHandler()
+	@EnvironmentObject var downloadManager: DownloadManager
 
 	var body: some View {
 		ScrollViewReader { proxy in
@@ -33,7 +34,6 @@ struct BangumiDetailView: View {
 							if let n = e.name{
 								if !n.isEmpty{
 									EPCellView(newEPItem:item,detailVC:detailVC)
-										.environmentObject(DownloadManager())
 										.environmentObject(OfflinePlaybackManager())
 										.padding(10)
 										.id(e.id)
@@ -43,7 +43,6 @@ struct BangumiDetailView: View {
 						}else{
 								//show all EPs
 							EPCellView(newEPItem:item,detailVC:detailVC)
-								.environmentObject(DownloadManager())
 								.environmentObject(OfflinePlaybackManager())
 								.padding(10)
 								.id(e.id)
@@ -106,7 +105,7 @@ struct BangumiDetailView: View {
 						Spacer()
 						BangumiDetailNavTitleView(item: $detailVC.detailItem)
 						Spacer()
-						BangumiDetailNavItemView(downloadManager: DownloadManager(), bgmItem: $detailVC.detailItem)
+						BangumiDetailNavItemView(bgmItem: $detailVC.detailItem)
 					}
 				}
 			})
@@ -115,38 +114,42 @@ struct BangumiDetailView: View {
 			.fullScreenCover(isPresented:$detailVC.presentVideoView,
 							 onDismiss: { },
 							 content: {
-				if let url = URL(string: detailVC.videoURL){
+				if let url = detailVC.playbackURL{
 
 					VideoPlayerView(url: url,
 									seekTime: detailVC.seek,
 									bgmItem: $selectedItem,
-									ep: detailVC.ep!,
-									isOffline: false,
+									ep: detailVC.ep,
+									isOffline: detailVC.videoIsOffline,
+									filename: detailVC.videoFileName,
 									detailVC: detailVC,
 									isBGMTVWatched: detailVC.isBGMEPWatched())
 				}else{
-					Spacer()
-					Text("Error: Video URL is empty")
-					Spacer()
-					Button(action: {
-						detailVC.closePlayer()
-					}, label: {
-						Text("Close")
-					})
-					Spacer()
+					VStack {
+						Spacer()
+						ProgressView()
+						Text("Preparing video...")
+						Button(action: {
+							detailVC.closePlayer()
+						}, label: {
+							Text("Close")
+						})
+						Spacer()
+					}
 
 				}
 			})
 #endif
 #if os(macOS)
 			.sheet(isPresented:$detailVC.presentVideoView ) {
-				if let url = URL(string: detailVC.videoURL){
+				if let url = detailVC.playbackURL{
 					ZStack(alignment: .topLeading){
 						VideoPlayerView(url: url,
 										seekTime: detailVC.seek,
 										bgmItem: $selectedItem,
-										ep: detailVC.ep!,
-										isOffline: false,
+										ep: detailVC.ep,
+										isOffline: detailVC.videoIsOffline,
+										filename: detailVC.videoFileName,
 										detailVC: detailVC,
 										isBGMTVWatched: detailVC.isBGMEPWatched())
 						.frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
@@ -163,7 +166,8 @@ struct BangumiDetailView: View {
 					}
 
 				}else{
-					Text("Error: Video URL is empty")
+					ProgressView()
+					Text("Preparing video...")
 					Button(action: {
 						detailVC.closePlayer()
 					}, label: {
@@ -195,7 +199,7 @@ struct BangumiDetailView: View {
 				Button("Continue") {
 					detailVC.checkVideoSource(ep: detailVC.ep!, seekTime: (detailVC.ep!.watch_progress!.last_watch_position! - 5))
 				}
-				Button("Start from beginning"){
+				Button("Start from beginning", role: .destructive) {
 					detailVC.checkVideoSource(ep: detailVC.ep!, seekTime: 0)
 				}
 

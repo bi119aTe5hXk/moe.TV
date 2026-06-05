@@ -18,17 +18,26 @@ class DownloadListViewController: ObservableObject{
         self.fileList = list
     }
     func showVideoView(path:URL, filename:String){
-        self.videoFilePath = path
-        self.fileName = filename
-        if let pbItem = offlinePBM.getPlayBackStatus(filename: filename){
-            print("getPosition:\(pbItem.position)")
-            self.playbackPosition = pbItem.position
+        DispatchQueue.main.async {
+            self.presentVideoView = false
+            self.videoFilePath = path
+            self.fileName = filename
+            self.playbackPosition = nil
+            if let pbItem = self.offlinePBM.getPlayBackStatus(filename: filename){
+                print("getPosition:\(pbItem.position)")
+                self.playbackPosition = pbItem.position
+            }
+            DispatchQueue.main.async {
+                self.presentVideoView = true
+            }
         }
-        self.presentVideoView.toggle()
     }
     func closePlayer(){
         DispatchQueue.main.async {
             self.presentVideoView = false
+            self.videoFilePath = nil
+            self.fileName = ""
+            self.playbackPosition = nil
         }
     }
     
