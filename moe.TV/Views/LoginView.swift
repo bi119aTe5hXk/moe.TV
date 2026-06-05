@@ -33,18 +33,24 @@ struct LoginView: View {
                     Spacer()
                     
                     TextField("Server URL", text: $loginVC.server)
+#if !os(macOS)
                         .textInputAutocapitalization(.never)
+#endif
 #if os(iOS)
                         .keyboardType(.URL)
 #endif
                         .autocorrectionDisabled()
                         .padding(10)
                     TextField("Username", text: $loginVC.username)
+#if !os(macOS)
                         .textInputAutocapitalization(.never)
+#endif
                         .autocorrectionDisabled()
                         .padding(10)
                     SecureField("Password", text: $loginVC.password)
+#if !os(macOS)
                         .textInputAutocapitalization(.never)
+#endif
                         .autocorrectionDisabled()
                         .padding(10)
 						.onSubmit {

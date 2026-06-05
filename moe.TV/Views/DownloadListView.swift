@@ -12,9 +12,11 @@ struct DownloadListView: View {
     @EnvironmentObject var offlinePBM: OfflinePlaybackManager
     @ObservedObject var dlListVC: DownloadListViewController
     var onPlayVideo: ((URL, String, Double?) -> Void)? = nil
+    @State private var editMode: EditMode = .inactive
+    @State private var selectedFiles = Set<URL>()
 
     var body: some View {
-        List {
+        List(selection: $selectedFiles) {
             if !downloadManager.activeDownloads.isEmpty {
                 Section(header: Text("Active Downloads")) {
                     ForEach(downloadManager.activeDownloads) { item in
@@ -25,38 +27,16 @@ struct DownloadListView: View {
 
             Section(header: Text("Downloaded Videos")) {
                 if dlListVC.fileList.count > 0 {
-                    ForEach(dlListVC.fileList.indices, id: \.self) { i in
-                        Button {
-                            let filename = dlListVC.fileList[i].lastPathComponent
-                            if let playerItem = downloadManager.getVideoFileAsset(filename: filename) {
-                                let position = offlinePBM.getPlayBackStatus(filename: filename)?.position
-                                if let onPlayVideo {
-                                    onPlayVideo(playerItem, filename, position)
-                                } else {
-                                    dlListVC.showVideoView(path: playerItem, filename: filename)
+                    ForEach(dlListVC.fileList, id: \.self) { fileURL in
+                        downloadedVideoRow(fileURL)
+                            .tag(fileURL)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    deleteFiles([fileURL])
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
                                 }
                             }
-                        } label: {
-                            HStack {
-                                let filename = dlListVC.fileList[i].lastPathComponent
-                                let status = offlinePBM.getPlayBackStatus(filename: filename)
-                                let metadata = downloadManager.getDownloadMetadata(filename: filename)
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(displayTitle(filename: filename, metadata: metadata, item: status))
-                                        .lineLimit(2)
-                                    if metadata != nil || status != nil {
-                                        Text(filename)
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                            .lineLimit(1)
-                                    }
-                                }
-                                Spacer()
-                                if let status {
-                                    Text("\(secondsToHoursMinutesSeconds(seconds: status.position))")
-                                }
-                            }
-                        }
                     }
                     .onDelete(perform: delete)
                 } else {
@@ -72,6 +52,24 @@ struct DownloadListView: View {
         }
         .onReceive(downloadManager.$activeDownloads) { _ in
             getDownloadList()
+        }
+        .environment(\.editMode, $editMode)
+        .toolbar {
+#if !os(tvOS)
+            if !dlListVC.fileList.isEmpty {
+                ToolbarItemGroup(placement: .automatic) {
+                    EditButton()
+                    if editMode.isEditing {
+                        Button(role: .destructive) {
+                            deleteSelectedFiles()
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                        .disabled(selectedFiles.isEmpty)
+                    }
+                }
+            }
+#endif
         }
 #if os(iOS) || os(tvOS)
         .fullScreenCover(isPresented: $dlListVC.presentVideoView,
@@ -123,7 +121,7 @@ struct DownloadListView: View {
                     }).buttonStyle(.plain)
                 }
             } else {
-                Text("Error: Video URL is empty:\(dlListVC.videoFilePath)")
+                Text("Error: Video URL is empty")
 				Button(action: {
 					dlListVC.closePlayer()
 				}, label: {
@@ -132,6 +130,43 @@ struct DownloadListView: View {
             }
         }
 #endif
+    }
+
+    @ViewBuilder
+    private func downloadedVideoRow(_ fileURL: URL) -> some View {
+        let filename = fileURL.lastPathComponent
+        let status = offlinePBM.getPlayBackStatus(filename: filename)
+        let metadata = downloadManager.getDownloadMetadata(filename: filename)
+
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(displayTitle(filename: filename, metadata: metadata, item: status))
+                    .lineLimit(2)
+                if metadata != nil || status != nil {
+                    Text(filename)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
+            }
+            Spacer()
+            if let status {
+                Text("\(secondsToHoursMinutesSeconds(seconds: status.position))")
+                    .foregroundColor(.secondary)
+            }
+            Button {
+                playDownloadedVideo(fileURL)
+            } label: {
+                Image(systemName: "play.circle")
+            }
+            .buttonStyle(.borderless)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if !editMode.isEditing {
+                playDownloadedVideo(fileURL)
+            }
+        }
     }
 
     @ViewBuilder
@@ -172,11 +207,34 @@ struct DownloadListView: View {
     }
 
     func delete(at offsets: IndexSet) {
-        if let deleteItem = offsets.map({ dlListVC.fileList[$0] }).first {
+        deleteFiles(offsets.map { dlListVC.fileList[$0] })
+    }
+
+    private func deleteSelectedFiles() {
+        deleteFiles(Array(selectedFiles))
+        selectedFiles.removeAll()
+        editMode = .inactive
+    }
+
+    private func deleteFiles(_ files: [URL]) {
+        files.forEach { deleteItem in
             print("delete:\(deleteItem.lastPathComponent)")
             downloadManager.deleteFile(fileName: deleteItem.lastPathComponent)
             offlinePBM.deletePlayBackStatus(filename: deleteItem.lastPathComponent)
-            getDownloadList()
+        }
+        selectedFiles.subtract(files)
+        getDownloadList()
+    }
+
+    private func playDownloadedVideo(_ fileURL: URL) {
+        let filename = fileURL.lastPathComponent
+        if let playerItem = downloadManager.getVideoFileAsset(filename: filename) {
+            let position = offlinePBM.getPlayBackStatus(filename: filename)?.position
+            if let onPlayVideo {
+                onPlayVideo(playerItem, filename, position)
+            } else {
+                dlListVC.showVideoView(path: playerItem, filename: filename)
+            }
         }
     }
 
