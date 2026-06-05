@@ -44,6 +44,18 @@ class LoginViewController: ObservableObject {
         self.showError = true
     }
     
+    func logout() {
+        logoutAlbireoServer { _, _ in
+            DispatchQueue.main.async {
+                self.username = ""
+                self.password = ""
+                self.isLoginButtonTapped = false
+                self.showError = false
+                self.isLoginSuccessd = false
+            }
+        }
+    }
+    
     init(){
 		if let Aserver = getAlbireoServer(){
 			self.server = Aserver

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-	@ObservedObject var loginVC = LoginViewController()
+	@ObservedObject var loginVC: LoginViewController
 //	@Binding var selectedItem: BangumiItemModel?
 //	@Binding var navigationPath:[AnyHashable]
 	
@@ -17,7 +17,7 @@ struct LoginView: View {
 
     var body: some View {
         if loadAlbireoCookies() || loginVC.isLoginSuccessd{
-			MainListView(selectedFunc: $selectedFunc)
+			MainListView(selectedFunc: $selectedFunc, loginVC: loginVC)
         }else{
             HStack{
                 Spacer()
@@ -33,10 +33,19 @@ struct LoginView: View {
                     Spacer()
                     
                     TextField("Server URL", text: $loginVC.server)
+                        .textInputAutocapitalization(.never)
+#if os(iOS)
+                        .keyboardType(.URL)
+#endif
+                        .autocorrectionDisabled()
                         .padding(10)
                     TextField("Username", text: $loginVC.username)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
                         .padding(10)
                     SecureField("Password", text: $loginVC.password)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
                         .padding(10)
 						.onSubmit {
 							loginVC.isLoginButtonTapped = true

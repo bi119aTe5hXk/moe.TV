@@ -166,7 +166,7 @@ struct EPCellView: View {
             if result{
                 if let epDetail = data as? EpisodeDetailModel{
                     if let vFiles = epDetail.video_files {
-                        if let url = vFiles[0].url{ //TODO: support multiple video source
+                        if let url = vFiles[0].url{ //TODO: support select video source for downloading
                             let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
                             if let filename = epDetail.video_files![0].file_path{
                                 if !downloadManager.checkFileExists(fileName: filename){

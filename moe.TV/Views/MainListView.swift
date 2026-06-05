@@ -19,6 +19,7 @@ struct MainListView: View {
 //    @ObservedObject var settingsVM = SettingsViewModel()
     @State var presentSettingView = false
     @State private var columnVisibility = NavigationSplitViewVisibility.all
+	@ObservedObject var loginVC: LoginViewController
 	
 
     var body: some View {
@@ -26,12 +27,13 @@ struct MainListView: View {
 
 #if os(tvOS)
 		HStack(spacing: 0) {
-			TVSidebar(selectedFunc: $selectedFunc)
+			TVSidebar(selectedFunc: $selectedFunc, loginVC: loginVC)
 				.frame(width: 320)
 
 			BangumiListView(
 				selectedItem: $selectedItem,
-				selectedFunc: .constant(selectedFunc)
+				selectedFunc: .constant(selectedFunc),
+				loginVC: loginVC
 			)
 //			.id(selectedFunc)
 		}
@@ -70,7 +72,7 @@ struct MainListView: View {
 				.navigationTitle("moe.TV")
 		} content: {
             if let dest = destination {
-                BangumiListView(selectedItem: $selectedItem, selectedFunc: $destination)
+                BangumiListView(selectedItem: $selectedItem, selectedFunc: $destination, loginVC: loginVC)
                     .navigationTitle(dest.localizedName)
             }
         } detail: {
@@ -86,7 +88,7 @@ struct MainListView: View {
 				}).padding(20)
 				Spacer()
 			}
-			SettingsView(settingsVC: SettingsViewController())
+			SettingsView(settingsVC: SettingsViewController(), loginVC: loginVC)
 #if os(macOS)
 				.frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
 #endif

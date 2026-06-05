@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct MainView: View {
-	@ObservedObject var loginVC = LoginViewController()
+	@StateObject private var loginVC = LoginViewController()
     @EnvironmentObject var networkMonitor: NetworkMonitor
 //	@Binding var selectedItem: BangumiItemModel?
 //	@Binding var navigationPath:[AnyHashable]
@@ -17,7 +17,7 @@ struct MainView: View {
     
     var body: some View {
         if networkMonitor.isConnected {
-			LoginView()
+			LoginView(loginVC: loginVC)
         
         }else{
             VStack{

@@ -22,6 +22,7 @@ struct SettingsView: View {
 //    @Binding var loginVM:LoginViewModel
 //    @Binding var myBGMVM:MyBangumiViewModel
 	@ObservedObject var settingsVC:SettingsViewController
+	@ObservedObject var loginVC: LoginViewController
 
 	var body: some View {
 		NavigationStack{
@@ -266,21 +267,14 @@ struct SettingsView: View {
 						Button(action: {
 							settingsVC.showLogoutAlbireoAlert()
 						}, label: {
-							Text("Logout & Exit").foregroundColor(.red)
+							Text("Logout").foregroundColor(.red)
 						}).padding(10)
 
 							.alert(isPresented: $settingsVC.presentLogoutAlbireoAlert) {
 								Alert(
-									title: Text("Are you sure you want to logout and exit app?"),
+									title: Text("Are you sure you want to logout?"),
 									primaryButton: .destructive(Text("Logout")) {
-										logoutAlbireoServer { result, data in
-
-										}
-											//listVM.myBGMList = []
-											//                                    loginVM.presentLoginView = true //TODO: show login view after logout
-											//                                    loginVM.isLoginSuccessd = false
-											//myBangumiVM.toggleSettingView()
-										exit(0) //TODO: logout without exit
+										loginVC.logout()
 									},
 									secondaryButton: .cancel()
 								)
