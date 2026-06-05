@@ -84,39 +84,95 @@ final class PlayerPictureInPictureController: NSObject, ObservableObject, AVPict
 
 	private weak var currentLayer: AVPlayerLayer?
 	private var controller: AVPictureInPictureController?
+	private var hasStartedPictureInPictureOnce = false
+	private var isStartingPictureInPicture = false
 
 	func attach(to playerLayer: AVPlayerLayer) {
 		guard currentLayer !== playerLayer else { return }
 
 		currentLayer = playerLayer
 		controller = nil
+		hasStartedPictureInPictureOnce = false
 		isPictureInPictureSupported = AVPictureInPictureController.isPictureInPictureSupported()
 
-		guard isPictureInPictureSupported else { return }
-
-		if let controller = AVPictureInPictureController(playerLayer: playerLayer){
-			controller.delegate = self
-			controller.canStartPictureInPictureAutomaticallyFromInline = true
-			self.controller = controller
+		if isPictureInPictureSupported {
+			primeTimelineForPictureInPicture()
 		}
 	}
 
 	func toggle() {
-		guard let controller else { return }
+		if controller?.isPictureInPictureActive == true {
+			NowPlayingManager.shared.refreshPlaybackInfo()
+			controller?.stopPictureInPicture()
+			return
+		}
 
-		if controller.isPictureInPictureActive {
-			controller.stopPictureInPicture()
-		} else if controller.isPictureInPicturePossible {
+		startPictureInPictureAfterPriming()
+	}
+
+	private func startPictureInPictureAfterPriming() {
+		guard !isStartingPictureInPicture,
+		      isPictureInPictureSupported,
+		      let currentLayer else { return }
+
+		isStartingPictureInPicture = true
+		primeTimelineForPictureInPicture()
+
+		Task { @MainActor in
+			let initialDelay: UInt64 = hasStartedPictureInPictureOnce ? 120_000_000 : 550_000_000
+			try? await Task.sleep(nanoseconds: initialDelay)
+
+			NowPlayingManager.shared.refreshPlaybackInfo()
+
+			// Build the controller only after the player/Now Playing timeline has been refreshed.
+			// The first controller created too early can snapshot 00:00 for the PiP timeline.
+			let freshController = AVPictureInPictureController(playerLayer: currentLayer)
+			freshController?.delegate = self
+			freshController?.canStartPictureInPictureAutomaticallyFromInline = true
+			controller = freshController
+
+			try? await Task.sleep(nanoseconds: hasStartedPictureInPictureOnce ? 80_000_000 : 250_000_000)
+			NowPlayingManager.shared.refreshPlaybackInfo()
+
+			guard let controller,
+			      !controller.isPictureInPictureActive,
+			      controller.isPictureInPicturePossible else {
+				isStartingPictureInPicture = false
+				return
+			}
+
 			controller.startPictureInPicture()
+			hasStartedPictureInPictureOnce = true
+			isStartingPictureInPicture = false
+		}
+	}
+
+	private func primeTimelineForPictureInPicture() {
+		NowPlayingManager.shared.refreshPlaybackInfo()
+		Task { @MainActor in
+			try? await Task.sleep(nanoseconds: 150_000_000)
+			NowPlayingManager.shared.refreshPlaybackInfo()
 		}
 	}
 
 	func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+		NowPlayingManager.shared.refreshPlaybackInfo()
 		isPictureInPictureActive = true
+	}
+
+	func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+		NowPlayingManager.shared.refreshPlaybackInfo()
+		isStartingPictureInPicture = false
+	}
+
+	func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
+		isStartingPictureInPicture = false
+		print("PiP failed to start: \(error)")
 	}
 
 	func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
 		isPictureInPictureActive = false
+		NowPlayingManager.shared.refreshPlaybackInfo()
 	}
 }
 #endif

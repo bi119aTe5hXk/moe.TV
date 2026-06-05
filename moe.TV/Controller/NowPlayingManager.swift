@@ -63,6 +63,10 @@ final class NowPlayingManager {
         #endif
     }
 
+    func refreshPlaybackInfo() {
+        updatePlaybackInfo()
+    }
+
     func updateMetadata(ep: EpisodeDetailModel?) {
         guard let player = player else { return }
 
@@ -79,6 +83,8 @@ final class NowPlayingManager {
         }
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime().seconds
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+        nowPlayingInfo[MPNowPlayingInfoPropertyDefaultPlaybackRate] = player.defaultRate
+        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = false
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
@@ -305,6 +311,7 @@ final class NowPlayingManager {
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime().seconds
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
         nowPlayingInfo[MPNowPlayingInfoPropertyDefaultPlaybackRate] = player.defaultRate
+        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = false
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
 

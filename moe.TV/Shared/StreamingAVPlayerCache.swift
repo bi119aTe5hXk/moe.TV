@@ -274,6 +274,42 @@ final class StreamingCacheManager: ObservableObject {
 		state.contentLength = 0
 	}
 
+	static func streamingCacheDirectory() -> URL? {
+		try? FileManager.default
+			.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+			.appendingPathComponent("streaming-cache", isDirectory: true)
+	}
+
+	static func streamingCacheSize(cacheDirectory: URL? = nil) -> Int64 {
+		let fileManager = FileManager.default
+		guard let directory = cacheDirectory ?? streamingCacheDirectory(),
+		      let enumerator = fileManager.enumerator(
+				at: directory,
+				includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
+				options: [.skipsHiddenFiles]
+			  ) else {
+			return 0
+		}
+
+		var total: Int64 = 0
+		for case let fileURL as URL in enumerator {
+			guard let values = try? fileURL.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
+			      values.isRegularFile == true else {
+				continue
+			}
+			total += Int64(values.fileSize ?? 0)
+		}
+		return total
+	}
+
+	static func clearStreamingCache(cacheDirectory: URL? = nil) {
+		let fileManager = FileManager.default
+		guard let directory = cacheDirectory ?? streamingCacheDirectory() else { return }
+
+		try? fileManager.removeItem(at: directory)
+		try? fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+	}
+
 	static func cleanupCacheDirectory(
 		cacheDirectory: URL? = nil,
 		maxCacheBytes: Int64 = StreamingCacheConfiguration().maxCacheBytes,
