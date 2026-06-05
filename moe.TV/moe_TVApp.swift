@@ -15,6 +15,7 @@ struct moe_TVApp: App {
 //    @State var showBGMDetailView:Bool = false
 //    @State var bgmID:String?
     @StateObject var networkMonitor = NetworkMonitor()
+	@StateObject var downloadManager = DownloadManager()
 //	@State var selectedItem: BangumiItemModel?
 	@State private var navigationPath: [String] = []
 
@@ -38,9 +39,11 @@ struct moe_TVApp: App {
 				}
 			})
 			.environmentObject(networkMonitor)
+			.environmentObject(downloadManager)
 #else
 			MainView()
 				.environmentObject(networkMonitor)
+				.environmentObject(downloadManager)
 				.handlesExternalEvents(preferring: ["*"], allowing: ["*"])
 #endif
 

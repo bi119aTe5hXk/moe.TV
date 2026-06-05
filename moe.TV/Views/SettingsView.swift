@@ -23,6 +23,7 @@ struct SettingsView: View {
 //    @Binding var myBGMVM:MyBangumiViewModel
 	@ObservedObject var settingsVC:SettingsViewController
 	@ObservedObject var loginVC: LoginViewController
+    var onPlayDownloadedVideo: ((URL, String, Double?) -> Void)? = nil
 
 	var body: some View {
 		NavigationStack{
@@ -230,9 +231,12 @@ struct SettingsView: View {
 #endif
 								}
 								DownloadListView(
-									dlListVC: DownloadListViewController()
+									dlListVC: DownloadListViewController(),
+                                    onPlayVideo: { url, filename, position in
+                                        self.showDownloadList = false
+                                        onPlayDownloadedVideo?(url, filename, position)
+                                    }
 								)
-								.environmentObject(DownloadManager())
 								.environmentObject(OfflinePlaybackManager())
 							})
 					}

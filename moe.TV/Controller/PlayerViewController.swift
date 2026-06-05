@@ -38,7 +38,7 @@ class PlayerViewController: ObservableObject {
 
 	@MainActor
 	func loadFromUrl(url: URL, useStreamingCache: Bool = false) {
-		print("\(url)")
+		print("url:\(url)")
 
 		resetPlayerState()
 
@@ -280,7 +280,10 @@ class PlayerViewController: ObservableObject {
 						bgm_eps_id: ep?.bgm_eps_id ?? nil,
 						filename: theFileName,
 						position: currentTime,
-						isFinished: isFinished
+						isFinished: isFinished,
+						bangumiName: ep?.bangumi?.name_cn?.isEmpty == false ? ep?.bangumi?.name_cn : ep?.bangumi?.name,
+						episodeNo: ep?.episode_no,
+						episodeName: ep?.name_cn?.isEmpty == false ? ep?.name_cn : ep?.name
 					)
 				)
 			}

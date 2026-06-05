@@ -18,11 +18,24 @@
       },
       "shouldTranslate" : false
     },
+    "%@ / %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ / %2$@"
+          }
+        }
+      }
+    },
     "%lld" : {
       "shouldTranslate" : false
     },
     "%lld. " : {
       "shouldTranslate" : false
+    },
+    "%lld%%" : {
+
     },
     "0.5x" : {
       "localizations" : {
@@ -86,6 +99,9 @@
       }
     },
     "AccessToken" : {
+
+    },
+    "Active Downloads" : {
 
     },
     "Albireo" : {
@@ -502,6 +518,9 @@
         }
       }
     },
+    "Cancel Download" : {
+
+    },
     "Change favorite status" : {
       "localizations" : {
         "ja" : {
@@ -813,6 +832,12 @@
         }
       }
     },
+    "Downloaded Videos" : {
+
+    },
+    "Downloading %lld%%" : {
+
+    },
     "Downloading...%lld%%" : {
       "localizations" : {
         "ja" : {
@@ -836,6 +861,7 @@
       }
     },
     "Error: Video URL is empty" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1612,6 +1638,9 @@
           }
         }
       }
+    },
+    "Preparing video..." : {
+
     },
     "Re-Sync with iCloud" : {
 

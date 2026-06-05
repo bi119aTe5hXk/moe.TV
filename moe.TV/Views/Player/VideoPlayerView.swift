@@ -220,7 +220,7 @@ struct VideoPlayerView: View {
                     OrientationController.shared.currentOrientation = .landscapeRight
                 }
             #endif
-			playerVM.loadFromUrl(url: url, useStreamingCache: true)
+			playerVM.loadFromUrl(url: url, useStreamingCache: !isOffline && !url.isFileURL)
             if let player = playerVM.avPlayer {
                 player.currentItem?.preferredForwardBufferDuration = TimeInterval(120)
                 player.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
@@ -238,6 +238,7 @@ struct VideoPlayerView: View {
                     }
                 } else {
                     print("seek0")
+                    playerVM.play()
                 }
             }
         }

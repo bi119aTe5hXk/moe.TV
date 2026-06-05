@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BangumiDetailNavItemView: View {
-    @State var downloadManager:DownloadManager
+    @EnvironmentObject var downloadManager: DownloadManager
     @Binding var bgmItem:BangumiDetailModel?
 #if !os(tvOS)
     var body: some View {

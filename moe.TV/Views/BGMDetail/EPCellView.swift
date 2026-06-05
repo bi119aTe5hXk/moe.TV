@@ -9,130 +9,143 @@ import SwiftUI
 import SDWebImage
 import SDWebImageSwiftUI
 
-
-
 struct EPCellView: View {
-    @State var isEmptyEP:Bool = false
-	@State var newEPItem:NewEPItem
-//    @State var epItem:BGMEpisode
-	//@State var bgmEPItem:BGMTVUserEpisodeCollectionModel?
+    @State var isEmptyEP: Bool = false
+    @State var newEPItem: NewEPItem
     @State var showVideoFileExisitAlert = false
     @State var showNotDownloadableAlert = false
+    @State private var loadFailed = false
+    @State private var resolvedLocalOfflineItem: OfflineVideoItem?
 
-	@State private var loadFailed = false
-
-	@ObservedObject var detailVC : BangumiDetailViewController
+    @ObservedObject var detailVC: BangumiDetailViewController
     @EnvironmentObject var downloadManager: DownloadManager
-    @EnvironmentObject var offlinePBM:OfflinePlaybackManager
+    @EnvironmentObject var offlinePBM: OfflinePlaybackManager
 
-//	@Binding var seledID: String?
+    private var activeDownload: DownloadItem? {
+        downloadManager.activeDownloads.first { $0.request.epID == newEPItem.ep.id }
+    }
+
+    private var localOfflineItem: OfflineVideoItem? {
+        if let resolvedLocalOfflineItem {
+            return resolvedLocalOfflineItem
+        }
+        if let item = offlinePBM.getPlayBackStatus(epID: newEPItem.ep.id),
+           downloadManager.getVideoFileAsset(filename: item.filename) != nil {
+            return item
+        }
+        if let item = offlinePBM.getPlayBackStatus(bgmEpsID: newEPItem.ep.bgm_eps_id),
+           downloadManager.getVideoFileAsset(filename: item.filename) != nil {
+            return item
+        }
+        return nil
+    }
+
+    private var downloadMenuTitle: String {
+        if let activeDownload {
+            return "Downloading \(Int(activeDownload.progress * 100))%"
+        }
+        if localOfflineItem != nil {
+            return "Downloaded"
+        }
+        return "Download"
+    }
+
+    private var isDownloadButtonDisabled: Bool {
+        isEmptyEP || activeDownload != nil || localOfflineItem != nil
+    }
 
     var body: some View {
-        HStack{
-			//play button
+        HStack {
+            Button(
+                action: playEpisode,
+                label: {
+                    if loadFailed {
+                        Text("No Picture")
+                    } else {
+                        ZStack {
+                            if let thumbnail = newEPItem.ep.thumbnail {
+                                WebImage(url: URL(string: fixPathNotCompete(path: thumbnail))) { image in
+                                    image.resizable()
+                                } placeholder: {
+                                    ZStack {
+                                        ProgressView() {
+                                            VStack {
+                                                Text("Loading...")
+                                            }
+                                        }
+                                    }
+                                }
+                                .onFailure { error in
+                                    print("error \(error)")
+                                    DispatchQueue.main.async {
+                                        self.isEmptyEP = true
+                                        loadFailed = true
+                                    }
+                                }
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: 300)
+                                .cornerRadius(10)
 
-				Button(
-					action: {
-						detailVC.selectedID = newEPItem.ep.id
-						getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
-							if result{
-								if let epDetail = data as? EpisodeDetailModel{
-									detailVC.setSelectedEP(ep: epDetail)
-								}
-							}else{
-								print(data as Any)
-							}
-						}
-					}, label: {
-						if loadFailed {
-							Text("No Picture")
-						}else{
-							
-						ZStack{
+                                if !self.isEmptyEP {
+                                    Image(systemName: "play.circle.fill")
+                                        .font(.largeTitle)
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                        }
+                    }
 
-							if let thumbnail = newEPItem.ep.thumbnail{
-								WebImage(url: URL(string: fixPathNotCompete(path: thumbnail))){ image in
-									image.resizable()
+                    Spacer()
 
-								}placeholder: {
-									ZStack {
-										ProgressView() {
-											VStack {
-												Text("Loading...")
+                    VStack {
+                        HStack {
+                            Text("\(newEPItem.ep.episode_no ?? 0). ")
+                            if !((newEPItem.ep.name ?? "").isEmpty) {
+                                Text("\(newEPItem.ep.name ?? "")")
+                                    .lineLimit(1)
+                                    .background(Color.clear)
+                            }
+                        }
+                        if !((newEPItem.ep.name_cn ?? "").isEmpty) {
+                            Text("\(newEPItem.ep.name_cn ?? "")")
+                                .lineLimit(1)
+                                .background(Color.clear)
+                        }
 
-													//	Text("\(progress) %")
-											}
-										}
-									}
-								}
-								.onFailure { error in
-									print("error \(error)")
-									DispatchQueue.main.async {
-										self.isEmptyEP = true
-										loadFailed = true
-									}
-								}
-								.resizable()
-								.scaledToFit()
-								.frame(maxWidth: 300)
-								.cornerRadius(10)
+                        if let activeDownload {
+                            VStack(alignment: .leading, spacing: 4) {
+                                ProgressView(value: activeDownload.progress)
+                                Text("Downloading \(Int(activeDownload.progress * 100))%")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .frame(maxWidth: 220)
+                        }
+                    }
 
+                    Spacer()
 
-								if !self.isEmptyEP{
-									Image(systemName: "play.circle.fill")
-										.font(.largeTitle)
-										.foregroundColor(.gray)
-								}
-							}
+                    EPCellProgressView(
+                        bgmWatchStatus: .constant(newEPItem.bgmEP?.type ?? 0),
+                        progress: .constant(CGFloat(newEPItem.ep.watch_progress?.percentage ?? 0)),
+                        color: .constant(newEPItem.ep.watch_progress?.watch_status == 2 ? Color.green : Color.orange)
+                    )
+                    .frame(maxWidth: 100, maxHeight: 100)
+                    .padding(10)
+                }
+            )
+            .buttonStyle(.plain)
 
-						}
-
-
-			}
-					Spacer()
-
-					VStack{
-						HStack{
-							Text("\(newEPItem.ep.episode_no ?? 0). ")
-							if !((newEPItem.ep.name ?? "").isEmpty){
-								Text("\(newEPItem.ep.name ?? "")")
-									.lineLimit(1)
-									.background(Color.clear)
-							}
-						}
-						if !((newEPItem.ep.name_cn ?? "").isEmpty){
-							Text("\(newEPItem.ep.name_cn ?? "")")
-								.lineLimit(1)
-								.background(Color.clear)
-						}
-					}
-
-
-
-					Spacer()
-
-					EPCellProgressView(
-						bgmWatchStatus: .constant(
-							newEPItem.bgmEP?.type ?? 0
-						),
-						progress: .constant(CGFloat(newEPItem.ep.watch_progress?.percentage ?? 0)),
-						color:.constant(newEPItem.ep.watch_progress?.watch_status == 2 ? Color.green : Color.orange)
-					)
-					.frame(maxWidth: 100,maxHeight: 100)
-					.padding(10)
-
-
-			})
-				.buttonStyle(.plain)
-				//            .padding(10)
-
-            
-            
 #if !os(tvOS)
             Menu {
-                //TODO:  download status
-                //TODO:  download unwatch
-                Button("Download", action: startDwonload).disabled(self.isEmptyEP)
+                Button(downloadMenuTitle, action: startDwonload)
+                    .disabled(isDownloadButtonDisabled)
+                if let activeDownload {
+                    Button("Cancel Download", role: .destructive) {
+                        downloadManager.cancelDownload(filename: activeDownload.filename)
+                    }
+                }
                 Button("Show in bgm.tv", action: openBangumi)
             } label: {
                 Image(systemName: "ellipsis.circle")
@@ -142,70 +155,122 @@ struct EPCellView: View {
                     .padding(10)
             }
 #else
-            Button("Download", action: startDwonload)
+            Button(downloadMenuTitle, action: startDwonload)
+                .disabled(isDownloadButtonDisabled)
 #endif
         }
         .background(Color.clear)
         .padding(10)
-        
-        .alert("Already downloaded, if you want to replace the file, please delete it in download manager.",isPresented: self.$showVideoFileExisitAlert) {
-                
-            }
-        .alert("No video file.",isPresented: self.$showNotDownloadableAlert) {
-                
-            }
-        
-        //TODO: show downloading list
-        .sheet(isPresented: $downloadManager.isDownloading){
-            ProgressAlertView(progress: $downloadManager.downloadProgress)
-            
+        .alert("Already downloaded, if you want to replace the file, please delete it in download manager.", isPresented: self.$showVideoFileExisitAlert) {
+        }
+        .alert("No video file.", isPresented: self.$showNotDownloadableAlert) {
+        }
+        .onAppear {
+            resolveLocalDownloadIfNeeded()
         }
     }
-    func startDwonload(){
-		getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
-            if result{
-                if let epDetail = data as? EpisodeDetailModel{
-                    if let vFiles = epDetail.video_files {
-                        if let url = vFiles[0].url{ //TODO: support select video source for downloading
-                            let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
-                            if let filename = epDetail.video_files![0].file_path{
-                                if !downloadManager.checkFileExists(fileName: filename){
-                                    downloadManager.downloadFile(urlString: fileURL,savedAs: filename)
-                                    offlinePBM.setPlayBackStatus(item: OfflineVideoItem(epID: epDetail.id, bgm_eps_id: epDetail.bgm_eps_id,  filename: filename, position: epDetail.watch_progress?.last_watch_position ?? 0, isFinished: false))
-                                }else{
-                                    print("Video file exists")
-                                    self.showVideoFileExisitAlert.toggle()
-                                }
-                            }else{
-                                print("filename is missing")
-                            }
-                            
-                        }else{
-                            print("url is missing")
-                        }
-                    }else{
-                        print("epDetail.video_files is Empty!")
-                        self.showNotDownloadableAlert.toggle()
-                    }
+
+    private func playEpisode() {
+        detailVC.selectedID = newEPItem.ep.id
+        getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
+            if result, let epDetail = data as? EpisodeDetailModel {
+                if let request = downloadManager.makeDownloadRequest(epDetail: epDetail),
+                   let localURL = downloadManager.getVideoFileAsset(filename: request.filename) {
+                    offlinePBM.setPlayBackStatus(
+                        item: OfflineVideoItem(
+                            epID: epDetail.id,
+                            bgm_eps_id: epDetail.bgm_eps_id,
+                            filename: request.filename,
+                            position: epDetail.watch_progress?.last_watch_position ?? 0,
+                            isFinished: false,
+                            bangumiName: request.bangumiName,
+                            episodeNo: request.episodeNo,
+                            episodeName: request.episodeName
+                        )
+                    )
+                    detailVC.ep = epDetail
+                    detailVC.showVideoView(
+                        url: localURL.absoluteString,
+                        seekTime: epDetail.watch_progress?.last_watch_position ?? 0,
+                        isOffline: true,
+                        filename: request.filename
+                    )
+                } else {
+                    detailVC.setSelectedEP(ep: epDetail)
                 }
-            }else{
+            } else {
                 print(data as Any)
             }
         }
     }
+
+    func startDwonload() {
+        getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
+            if result, let epDetail = data as? EpisodeDetailModel {
+                guard let request = downloadManager.makeDownloadRequest(epDetail: epDetail) else {
+                    DispatchQueue.main.async {
+                        self.showNotDownloadableAlert.toggle()
+                    }
+                    return
+                }
+
+                switch downloadManager.status(epID: request.epID, filename: request.filename) {
+                case .downloaded:
+                    DispatchQueue.main.async {
+                        self.saveOfflineItem(epDetail: epDetail, request: request)
+                        self.resolvedLocalOfflineItem = self.offlinePBM.getPlayBackStatus(filename: request.filename)
+                        self.showVideoFileExisitAlert.toggle()
+                    }
+                case .downloading:
+                    print("Video file is already downloading")
+                case .failed, .notDownloaded:
+                    downloadManager.enqueueDownload(request)
+                    saveOfflineItem(epDetail: epDetail, request: request)
+                }
+            } else {
+                print(data as Any)
+            }
+        }
+    }
+
+    private func resolveLocalDownloadIfNeeded() {
+        guard localOfflineItem == nil else { return }
+        getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
+            guard result,
+                  let epDetail = data as? EpisodeDetailModel,
+                  let request = downloadManager.makeDownloadRequest(epDetail: epDetail),
+                  downloadManager.getVideoFileAsset(filename: request.filename) != nil else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.saveOfflineItem(epDetail: epDetail, request: request)
+                self.resolvedLocalOfflineItem = self.offlinePBM.getPlayBackStatus(filename: request.filename)
+            }
+        }
+    }
+
+    private func saveOfflineItem(epDetail: EpisodeDetailModel, request: DownloadRequest) {
+        downloadManager.recordDownloadMetadata(request)
+        offlinePBM.setPlayBackStatus(
+            item: OfflineVideoItem(
+                epID: epDetail.id,
+                bgm_eps_id: epDetail.bgm_eps_id,
+                filename: request.filename,
+                position: epDetail.watch_progress?.last_watch_position ?? 0,
+                isFinished: false,
+                bangumiName: request.bangumiName,
+                episodeNo: request.episodeNo,
+                episodeName: request.episodeName
+            )
+        )
+    }
+
 #if !os(tvOS)
-    func openBangumi(){
-		if let bgm_eps_id = newEPItem.ep.bgm_eps_id{
+    func openBangumi() {
+        if let bgm_eps_id = newEPItem.ep.bgm_eps_id {
             let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
             openURLInApp(urlString: urlString)
         }
     }
 #endif
 }
-
-//struct EPCellView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        EPCellView(epItem: BGMEpisode(id: "test", bangumi_id: "test", bgm_eps_id: 1, name: "test VERY LONG NAMEEEEEEEEE", thumbnail: testURL.appending("/pic/e0d1939d-298d-491a-9ddd-2c61de104f02/thumbnails/1.png?size=170x0"), status: 2, episode_no: 1, duration: "6",watch_progress: watchProgress(id: "12341234",watch_status: 3, percentage: 0.5)), detailVC: BangumiDetailViewModel())
-//            .environmentObject(DownloadManager())
-//    }
-//}
