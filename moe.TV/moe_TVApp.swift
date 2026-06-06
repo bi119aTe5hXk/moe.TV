@@ -27,8 +27,7 @@ struct moe_TVApp: App {
 				MainView()
 					.navigationDestination(for: String.self) { bgmID in
 						BangumiDetailView(
-							selectedItem: .constant(BangumiItemModel(id: bgmID, type: 0, status: 0, eps: 0)),
-							detailVC: BangumiDetailViewController()
+							selectedItem: .constant(BangumiItemModel(id: bgmID, type: 0, status: 0, eps: 0))
 						)
 					}
 			}

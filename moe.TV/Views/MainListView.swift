@@ -24,7 +24,7 @@ struct MainListView: View {
 
 //    @ObservedObject var settingsVM = SettingsViewModel()
     @State var presentSettingView = false
-    @State private var columnVisibility = NavigationSplitViewVisibility.all
+	@State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var downloadedVideoPlaybackItem: DownloadedVideoPlaybackItem?
 	@ObservedObject var loginVC: LoginViewController
 	
@@ -61,7 +61,7 @@ struct MainListView: View {
 #else
 		NavigationSplitView(columnVisibility: $columnVisibility) {
 				//for iOS/macOS/visionOS
-			SidebarView(selectedDestination: $destination)
+			SidebarView(selectedDestination: guardedDestination)
 				.background(Color.clear)
 #if os(macOS)
 				.listStyle(SidebarListStyle())
@@ -79,11 +79,11 @@ struct MainListView: View {
 				.navigationTitle("moe.TV")
 		} content: {
             if let dest = destination {
-                BangumiListView(selectedItem: $selectedItem, selectedFunc: $destination, loginVC: loginVC)
+                BangumiListView(selectedItem: guardedSelectedItem, selectedFunc: guardedDestination, loginVC: loginVC)
                     .navigationTitle(dest.localizedName)
             }
         } detail: {
-			BangumiDetailView(selectedItem: $selectedItem)
+			BangumiDetailView(selectedItem: guardedSelectedItem)
         }
 		.navigationSplitViewStyle(.automatic)
 		.sheet(isPresented: self.$presentSettingView, content: {
@@ -136,6 +136,30 @@ struct MainListView: View {
     }
 
 #if !os(tvOS)
+    private var guardedDestination: Binding<FuncViewModel?> {
+        Binding(
+            get: {
+                destination
+            },
+            set: { newValue in
+                guard !PlayerPresentationState.shared.isPlayerPresented else { return }
+                destination = newValue
+            }
+        )
+    }
+
+    private var guardedSelectedItem: Binding<BangumiItemModel?> {
+        Binding(
+            get: {
+                selectedItem
+            },
+            set: { newValue in
+                guard !PlayerPresentationState.shared.isPlayerPresented else { return }
+                selectedItem = newValue
+            }
+        )
+    }
+
     @ViewBuilder
     private func downloadedVideoPlayerView(_ item: DownloadedVideoPlaybackItem) -> some View {
         ZStack(alignment: .topLeading) {

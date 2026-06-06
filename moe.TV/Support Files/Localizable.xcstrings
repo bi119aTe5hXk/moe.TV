@@ -359,6 +359,7 @@
       }
     },
     "Backward 15 seconds" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -919,7 +920,6 @@
       }
     },
     "Error: Video URL is empty" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1540,6 +1540,7 @@
       }
     },
     "Play/Pause" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -2207,6 +2208,9 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "Volume %@" : {
+
     },
     "Watched" : {
       "localizations" : {

@@ -237,6 +237,7 @@ struct VideoPlayerView: View {
         .background(Color.black.ignoresSafeArea())
         .edgesIgnoringSafeArea(.all)
         .onAppear {
+            PlayerPresentationState.shared.beginPresentation()
             #if os(iOS)
                 if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback() {
                     OrientationController.shared.unlockOrientation()
@@ -266,6 +267,7 @@ struct VideoPlayerView: View {
             }
         }
         .onDisappear {
+            PlayerPresentationState.shared.endPresentation()
             Task {
                 if let player = playerVM.avPlayer {
                     player.pause()
@@ -297,6 +299,26 @@ struct VideoPlayerView: View {
                 }
             }
         }
+    }
+}
+
+@MainActor
+final class PlayerPresentationState: ObservableObject {
+    static let shared = PlayerPresentationState()
+
+    @Published private(set) var isPlayerPresented = false
+    private var activePresentationCount = 0
+
+    private init() {}
+
+    func beginPresentation() {
+        activePresentationCount += 1
+        isPlayerPresented = activePresentationCount > 0
+    }
+
+    func endPresentation() {
+        activePresentationCount = max(0, activePresentationCount - 1)
+        isPlayerPresented = activePresentationCount > 0
     }
 }
 

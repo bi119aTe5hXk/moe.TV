@@ -12,7 +12,7 @@ import UIKit
 
 struct BangumiDetailView: View {
 	@Binding var selectedItem:BangumiItemModel?
-	@ObservedObject var detailVC = BangumiDetailViewController()
+	@StateObject private var detailVC = BangumiDetailViewController()
 
 	private let settingsHandler = SettingsHandler()
 	@EnvironmentObject var downloadManager: DownloadManager

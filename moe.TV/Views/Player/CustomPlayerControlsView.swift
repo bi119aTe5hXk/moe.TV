@@ -7,6 +7,12 @@
 
 import AVFoundation
 import SwiftUI
+#if os(iOS)
+import GameController
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 struct CustomPlayerControlsView: View {
 	@ObservedObject var playerVM: PlayerViewController
@@ -22,6 +28,10 @@ struct CustomPlayerControlsView: View {
 	@State private var scrubTime: Double = 0
 	@State private var isScrubbing = false
 	@State private var hideControlsTask: Task<Void, Never>?
+	@State private var isVolumeHUDVisible = false
+	@State private var hideVolumeHUDTask: Task<Void, Never>?
+	@State private var actionHUD: PlayerActionHUD?
+	@State private var hideActionHUDTask: Task<Void, Never>?
 
 	var body: some View {
 		ZStack {
@@ -53,8 +63,20 @@ struct CustomPlayerControlsView: View {
 					.background(Color.black.opacity(0.24))
 					.transition(.opacity)
 				}
+
+#if !os(tvOS)
+			if isVolumeHUDVisible {
+				volumeHUD
+					.transition(.opacity.combined(with: .scale(scale: 0.96)))
+			}
+
+			if let actionHUD {
+				actionHUDView(actionHUD)
+					.transition(.opacity.combined(with: .scale(scale: 0.96)))
+			}
+#endif
 		}
-		.overlay(keyboardShortcuts)
+		.overlay(keyboardInput)
 		.foregroundStyle(.white)
 		.onChange(of: playerVM.currentTime) { newValue in
 			if !isScrubbing {
@@ -77,6 +99,8 @@ struct CustomPlayerControlsView: View {
 		}
 		.onDisappear {
 			hideControlsTask?.cancel()
+			hideVolumeHUDTask?.cancel()
+			hideActionHUDTask?.cancel()
 		}
 	}
 
@@ -116,6 +140,87 @@ struct CustomPlayerControlsView: View {
 		.padding(.horizontal, 28)
 		.padding(.top, 22)
 	}
+
+#if !os(tvOS)
+	private var volumeIndicator: some View {
+		HStack(spacing: 8) {
+			Image(systemName: volumeSystemImage)
+				.font(.system(size: 15, weight: .medium))
+				.frame(width: 18)
+
+			Slider(
+				value: Binding(
+					get: { clampedVolume },
+					set: { value in
+						hideControlsTask?.cancel()
+						playerVM.setVolume(value)
+					}
+				),
+				in: 0...1,
+				onEditingChanged: { isEditing in
+					if isEditing {
+						hideControlsTask?.cancel()
+					} else {
+						showControlsTemporarily()
+					}
+				}
+			)
+			.tint(.white)
+			.frame(width: 92)
+
+			Text(volumePercentText)
+				.font(.system(.caption, design: .rounded).weight(.semibold))
+				.monospacedDigit()
+				.frame(minWidth: 38, alignment: .trailing)
+		}
+		.padding(.horizontal, 12)
+		.frame(height: 32)
+		.background(.white.opacity(0.16), in: Capsule())
+		.accessibilityLabel("Volume \(volumePercentText)")
+	}
+
+	private var volumeHUD: some View {
+		VStack(spacing: 10) {
+			Image(systemName: volumeSystemImage)
+				.font(.system(size: 30, weight: .semibold))
+
+			Text(volumePercentText)
+				.font(.system(.title3, design: .rounded).weight(.semibold))
+				.monospacedDigit()
+
+			GeometryReader { geometry in
+				ZStack(alignment: .leading) {
+					Capsule()
+						.fill(.white.opacity(0.22))
+
+					Capsule()
+						.fill(.white)
+						.frame(width: geometry.size.width * CGFloat(clampedVolume))
+				}
+			}
+			.frame(width: 132, height: 5)
+		}
+		.padding(.horizontal, 22)
+		.padding(.vertical, 18)
+		.background(.black.opacity(0.68), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+		.shadow(color: .black.opacity(0.35), radius: 12, y: 4)
+	}
+
+	private func actionHUDView(_ hud: PlayerActionHUD) -> some View {
+		HStack(spacing: 10) {
+			Image(systemName: hud.systemImage)
+				.font(.system(size: 21, weight: .semibold))
+
+			Text(hud.message)
+				.font(.system(.subheadline, design: .rounded).weight(.semibold))
+				.lineLimit(1)
+		}
+		.padding(.horizontal, 18)
+		.padding(.vertical, 14)
+		.background(.black.opacity(0.72), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+		.shadow(color: .black.opacity(0.35), radius: 12, y: 4)
+	}
+#endif
 
 	private var centerButton: some View {
 		Button {
@@ -197,8 +302,16 @@ struct CustomPlayerControlsView: View {
 				Spacer()
 
 #if !os(tvOS)
+				volumeIndicator
+
 				Button {
-					playerVM.copyCurrentFrameToPasteboard()
+					playerVM.copyCurrentFrameToPasteboard { success in
+						showActionHUD(
+							success
+								? PlayerActionHUD(systemImage: "checkmark.circle.fill", message: "Copied to Clipboard")
+								: PlayerActionHUD(systemImage: "exclamationmark.triangle.fill", message: "Screenshot Failed")
+						)
+					}
 					showControlsTemporarily()
 				} label: {
 					Image(systemName: "camera")
@@ -301,34 +414,61 @@ struct CustomPlayerControlsView: View {
 		"\(formatTime(isScrubbing ? scrubTime : playerVM.currentTime)) / \(formatTime(playerVM.duration))"
 	}
 
-	private var keyboardShortcuts: some View {
-		Group {
-			Button("Play/Pause") {
-				playerVM.togglePlayPause()
-				showControlsTemporarily()
-			}
 #if !os(tvOS)
-			.keyboardShortcut(.space, modifiers: [])
-#endif
-			Button("Backward 15 seconds") {
-				playerVM.seek(by: -15, autoPlay: playerVM.isPlaying)
-				showControlsTemporarily()
-			}
-#if !os(tvOS)
-			.keyboardShortcut(.leftArrow, modifiers: [])
-#endif
-			Button("Forward 15 seconds") {
-				playerVM.seek(by: 15, autoPlay: playerVM.isPlaying)
-				showControlsTemporarily()
-			}
-#if !os(tvOS)
-			.keyboardShortcut(.rightArrow, modifiers: [])
-#endif
-		}
-		.frame(width: 0, height: 0)
-		.opacity(0)
-		.accessibilityHidden(true)
+	private var clampedVolume: Float {
+		min(1, max(0, playerVM.volume))
 	}
+
+	private var volumePercentText: String {
+		"\(Int((clampedVolume * 100).rounded()))%"
+	}
+
+	private var volumeSystemImage: String {
+		if clampedVolume <= 0 {
+			return "speaker.slash.fill"
+		} else if clampedVolume < 0.35 {
+			return "speaker.wave.1.fill"
+		} else if clampedVolume < 0.75 {
+			return "speaker.wave.2.fill"
+		} else {
+			return "speaker.wave.3.fill"
+		}
+	}
+#endif
+
+	@ViewBuilder
+	private var keyboardInput: some View {
+#if os(tvOS) || os(visionOS)
+		EmptyView()
+#else
+		PlayerKeyboardInputView { action in
+			handleKeyboardAction(action)
+		}
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.accessibilityHidden(true)
+#endif
+	}
+
+#if !os(tvOS)
+	private func handleKeyboardAction(_ action: PlayerKeyboardAction) {
+		switch action {
+		case .playPause:
+			playerVM.togglePlayPause()
+		case .backward:
+			playerVM.seek(by: -15, autoPlay: playerVM.isPlaying)
+		case .forward:
+			playerVM.seek(by: 15, autoPlay: playerVM.isPlaying)
+		case .volumeUp:
+			playerVM.adjustVolume(by: 0.05)
+			showVolumeHUD()
+		case .volumeDown:
+			playerVM.adjustVolume(by: -0.05)
+			showVolumeHUD()
+		}
+
+		showControlsTemporarily()
+	}
+#endif
 
 	private var playbackRateOptions: [Double] {
 		[0.5, 1.0, 1.25, 1.5, 2.0]
@@ -356,6 +496,42 @@ struct CustomPlayerControlsView: View {
 			}
 		}
 	}
+
+#if !os(tvOS)
+	private func showVolumeHUD() {
+		hideVolumeHUDTask?.cancel()
+
+		withAnimation(.easeInOut(duration: 0.12)) {
+			isVolumeHUDVisible = true
+		}
+
+		hideVolumeHUDTask = Task { @MainActor in
+			try? await Task.sleep(nanoseconds: 900_000_000)
+			if !Task.isCancelled {
+				withAnimation(.easeInOut(duration: 0.18)) {
+					isVolumeHUDVisible = false
+				}
+			}
+		}
+	}
+
+	private func showActionHUD(_ hud: PlayerActionHUD) {
+		hideActionHUDTask?.cancel()
+
+		withAnimation(.easeInOut(duration: 0.12)) {
+			actionHUD = hud
+		}
+
+		hideActionHUDTask = Task { @MainActor in
+			try? await Task.sleep(nanoseconds: 1_300_000_000)
+			if !Task.isCancelled {
+				withAnimation(.easeInOut(duration: 0.18)) {
+					actionHUD = nil
+				}
+			}
+		}
+	}
+#endif
 
 	private func formatTime(_ seconds: Double) -> String {
 		guard seconds.isFinite, seconds >= 0 else { return "--:--" }
@@ -465,3 +641,225 @@ private struct CachedProgressBar: View {
 		return CGFloat(min(max(current / duration, 0), 1))
 	}
 }
+
+#if !os(tvOS)
+private enum PlayerKeyboardAction {
+	case playPause
+	case backward
+	case forward
+	case volumeUp
+	case volumeDown
+}
+#endif
+
+private struct PlayerActionHUD {
+	let systemImage: String
+	let message: String
+}
+
+#if os(iOS)
+private struct PlayerKeyboardInputView: UIViewRepresentable {
+	let onAction: (PlayerKeyboardAction) -> Void
+
+	func makeUIView(context: Context) -> KeyboardInputUIView {
+		let view = KeyboardInputUIView()
+		view.onAction = onAction
+		DispatchQueue.main.async {
+			view.becomeFirstResponder()
+		}
+		return view
+	}
+
+	func updateUIView(_ uiView: KeyboardInputUIView, context: Context) {
+		uiView.onAction = onAction
+		DispatchQueue.main.async {
+			uiView.becomeFirstResponder()
+		}
+	}
+}
+
+private final class KeyboardInputUIView: UIView {
+	var onAction: ((PlayerKeyboardAction) -> Void)?
+	private weak var capturedKeyboardInput: GCKeyboardInput?
+	private var keyboardConnectObserver: NSObjectProtocol?
+	private var keyboardDisconnectObserver: NSObjectProtocol?
+
+	override func didMoveToWindow() {
+		super.didMoveToWindow()
+		if window == nil {
+			stopKeyboardCapture()
+		} else {
+			startKeyboardCapture()
+		}
+	}
+
+	override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+		false
+	}
+
+	deinit {
+		stopKeyboardCapture()
+	}
+
+	private func startKeyboardCapture() {
+		installKeyboardObserversIfNeeded()
+		captureCurrentKeyboard()
+	}
+
+	private func stopKeyboardCapture() {
+		capturedKeyboardInput?.keyChangedHandler = nil
+		capturedKeyboardInput = nil
+
+		if let keyboardConnectObserver {
+			NotificationCenter.default.removeObserver(keyboardConnectObserver)
+			self.keyboardConnectObserver = nil
+		}
+
+		if let keyboardDisconnectObserver {
+			NotificationCenter.default.removeObserver(keyboardDisconnectObserver)
+			self.keyboardDisconnectObserver = nil
+		}
+	}
+
+	private func installKeyboardObserversIfNeeded() {
+		guard keyboardConnectObserver == nil else { return }
+
+		keyboardConnectObserver = NotificationCenter.default.addObserver(
+			forName: .GCKeyboardDidConnect,
+			object: nil,
+			queue: .main
+		) { [weak self] _ in
+			self?.captureCurrentKeyboard()
+		}
+
+		keyboardDisconnectObserver = NotificationCenter.default.addObserver(
+			forName: .GCKeyboardDidDisconnect,
+			object: nil,
+			queue: .main
+		) { [weak self] _ in
+			self?.captureCurrentKeyboard()
+		}
+	}
+
+	private func captureCurrentKeyboard() {
+		guard window != nil else { return }
+
+		let keyboardInput = GCKeyboard.coalesced?.keyboardInput
+		guard keyboardInput !== capturedKeyboardInput else { return }
+
+		capturedKeyboardInput?.keyChangedHandler = nil
+		capturedKeyboardInput = keyboardInput
+
+		keyboardInput?.keyChangedHandler = { [weak self] _, _, keyCode, pressed in
+			guard pressed, let action = Self.action(for: keyCode) else { return }
+			DispatchQueue.main.async {
+				self?.onAction?(action)
+			}
+		}
+	}
+
+	private static func action(for keyCode: GCKeyCode) -> PlayerKeyboardAction? {
+		switch keyCode {
+		case .spacebar:
+			return .playPause
+		case .leftArrow:
+			return .backward
+		case .rightArrow:
+			return .forward
+		case .upArrow:
+			return .volumeUp
+		case .downArrow:
+			return .volumeDown
+		default:
+			return nil
+		}
+	}
+}
+#elseif os(macOS)
+private struct PlayerKeyboardInputView: NSViewRepresentable {
+	let onAction: (PlayerKeyboardAction) -> Void
+
+	func makeNSView(context: Context) -> KeyboardInputNSView {
+		let view = KeyboardInputNSView()
+		view.onAction = onAction
+		DispatchQueue.main.async {
+			view.window?.makeFirstResponder(view)
+		}
+		return view
+	}
+
+	func updateNSView(_ nsView: KeyboardInputNSView, context: Context) {
+		nsView.onAction = onAction
+		DispatchQueue.main.async {
+			nsView.window?.makeFirstResponder(nsView)
+		}
+	}
+}
+
+private final class KeyboardInputNSView: NSView {
+	var onAction: ((PlayerKeyboardAction) -> Void)?
+	private var localKeyMonitor: Any?
+
+	override var acceptsFirstResponder: Bool {
+		true
+	}
+
+	override func viewDidMoveToWindow() {
+		super.viewDidMoveToWindow()
+		if window == nil {
+			stopMonitoring()
+		} else {
+			startMonitoring()
+		}
+	}
+
+	deinit {
+		stopMonitoring()
+	}
+
+	override func keyDown(with event: NSEvent) {
+		if !handle(event) {
+			super.keyDown(with: event)
+		}
+	}
+
+	private func startMonitoring() {
+		window?.makeFirstResponder(self)
+		guard localKeyMonitor == nil else { return }
+		localKeyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+			guard let self else { return event }
+			return self.handle(event) ? nil : event
+		}
+	}
+
+	private func stopMonitoring() {
+		if let localKeyMonitor {
+			NSEvent.removeMonitor(localKeyMonitor)
+			self.localKeyMonitor = nil
+		}
+	}
+
+	private func handle(_ event: NSEvent) -> Bool {
+		guard event.modifierFlags.intersection(.deviceIndependentFlagsMask).isEmpty else {
+			return false
+		}
+
+		switch event.keyCode {
+		case 49:
+			onAction?(.playPause)
+		case 123:
+			onAction?(.backward)
+		case 124:
+			onAction?(.forward)
+		case 126:
+			onAction?(.volumeUp)
+		case 125:
+			onAction?(.volumeDown)
+		default:
+			return false
+		}
+
+		return true
+	}
+}
+#endif
