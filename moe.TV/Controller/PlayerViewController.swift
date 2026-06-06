@@ -9,6 +9,11 @@ import AVKit
 import Combine
 import Foundation
 import MediaPlayer
+#if os(iOS) || os(tvOS) || os(visionOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 class PlayerViewController: ObservableObject {
 	@Published var avPlayer: AVPlayer?
@@ -20,6 +25,7 @@ class PlayerViewController: ObservableObject {
 	@Published var isSeeking = false
 	@Published var playbackRate: Double = 1.0
 	@Published var loadedTimeRanges: [ClosedRange<Double>] = []
+	@Published var volume: Float = 1.0
 
 	private let streamingFactory = StreamingPlayerItemFactory()
 	private var timeObserverToken: Any?
@@ -73,6 +79,7 @@ class PlayerViewController: ObservableObject {
 		isSeeking = false
 		playbackRate = settingsHandler.getPlaybackRate()
 		loadedTimeRanges = []
+		volume = 1.0
 		stallRecoveryTask?.cancel()
 		stallRecoveryTask = nil
 		shouldResumeAfterStall = false
@@ -144,6 +151,71 @@ class PlayerViewController: ObservableObject {
 	func seek(by delta: Double, autoPlay: Bool = false) {
 		seek(to: currentTime + delta, autoPlay: autoPlay)
 	}
+
+	#if !os(tvOS)
+	@MainActor
+	func adjustVolume(by delta: Float) {
+		guard let player = avPlayer else { return }
+		setVolume(player.volume + delta)
+	}
+
+	@MainActor
+	func setVolume(_ value: Float) {
+		avPlayer?.volume = min(1, max(0, value))
+	}
+	#endif
+
+	#if !os(tvOS)
+	@MainActor
+	func copyCurrentFrameToPasteboard(completion: ((Bool) -> Void)? = nil) {
+		guard let currentItem = avPlayer?.currentItem else {
+			completion?(false)
+			return
+		}
+
+		let asset = currentItem.asset
+		let time = currentItem.currentTime()
+
+		Task.detached(priority: .userInitiated) {
+			let generator = AVAssetImageGenerator(asset: asset)
+			generator.appliesPreferredTrackTransform = true
+			generator.requestedTimeToleranceBefore = .zero
+			generator.requestedTimeToleranceAfter = .zero
+
+			await withCheckedContinuation { continuation in
+				generator.generateCGImagesAsynchronously(forTimes: [NSValue(time: time)]) { _, image, _, result, error in
+					if let error {
+						print("Failed to copy current video frame: \(error)")
+					}
+
+					guard result == .succeeded, let image else {
+						Task { @MainActor in
+							completion?(false)
+							continuation.resume()
+						}
+						return
+					}
+
+					Task { @MainActor in
+						let didCopy: Bool
+						#if os(iOS) || os(visionOS)
+						UIPasteboard.general.image = UIImage(cgImage: image)
+						didCopy = true
+						#elseif os(macOS)
+						let pasteboard = NSPasteboard.general
+						pasteboard.clearContents()
+						didCopy = pasteboard.writeObjects([NSImage(cgImage: image, size: .zero)])
+						#else
+						didCopy = false
+						#endif
+						completion?(didCopy)
+						continuation.resume()
+					}
+				}
+			}
+		}
+	}
+	#endif
 
 	@MainActor
 	func playerObserverHandler(
@@ -362,6 +434,7 @@ class PlayerViewController: ObservableObject {
 		isSeeking = false
 		playbackRate = settingsHandler.getPlaybackRate()
 		loadedTimeRanges = []
+		volume = avPlayer?.volume ?? 1.0
 		stallRecoveryTask?.cancel()
 		stallRecoveryTask = nil
 		shouldResumeAfterStall = false
@@ -377,6 +450,7 @@ class PlayerViewController: ObservableObject {
 		player.automaticallyWaitsToMinimizeStalling = true
 		playbackRate = settingsHandler.getPlaybackRate()
 		player.defaultRate = Float(playbackRate)
+		volume = player.volume
 
 		observePlayerItem(player.currentItem)
 		addTimeObserver(to: player)
@@ -385,6 +459,13 @@ class PlayerViewController: ObservableObject {
 			.receive(on: RunLoop.main)
 			.sink { [weak self] status in
 				self?.isPlaying = status == .playing
+			}
+			.store(in: &cancellables)
+
+		player.publisher(for: \.volume)
+			.receive(on: RunLoop.main)
+			.sink { [weak self] volume in
+				self?.volume = volume
 			}
 			.store(in: &cancellables)
 	}

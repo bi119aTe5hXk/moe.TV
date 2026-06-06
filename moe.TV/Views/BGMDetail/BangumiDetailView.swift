@@ -6,13 +6,20 @@
 //
 
 import SwiftUI
+#if os(iOS) || os(tvOS)
+import UIKit
+#endif
 
 struct BangumiDetailView: View {
 	@Binding var selectedItem:BangumiItemModel?
-	@ObservedObject var detailVC = BangumiDetailViewController()
+	@StateObject private var detailVC = BangumiDetailViewController()
 
 	private let settingsHandler = SettingsHandler()
 	@EnvironmentObject var downloadManager: DownloadManager
+
+	private var shouldShowPresentedPlayerCloseButton: Bool {
+		return false
+	}
 
 	var body: some View {
 		ScrollViewReader { proxy in
@@ -115,15 +122,29 @@ struct BangumiDetailView: View {
 							 onDismiss: { },
 							 content: {
 				if let url = detailVC.playbackURL{
-
-					VideoPlayerView(url: url,
-									seekTime: detailVC.seek,
-									bgmItem: $selectedItem,
-									ep: detailVC.ep,
-									isOffline: detailVC.videoIsOffline,
-									filename: detailVC.videoFileName,
-									detailVC: detailVC,
-									isBGMTVWatched: detailVC.isBGMEPWatched())
+					ZStack(alignment: .topLeading) {
+						Color.black.ignoresSafeArea()
+						VideoPlayerView(url: url,
+										seekTime: detailVC.seek,
+										bgmItem: $selectedItem,
+										ep: detailVC.ep,
+										isOffline: detailVC.videoIsOffline,
+										filename: detailVC.videoFileName,
+										detailVC: detailVC,
+										isBGMTVWatched: detailVC.isBGMEPWatched())
+						if shouldShowPresentedPlayerCloseButton {
+							Button(action: {
+								detailVC.closePlayer()
+							}, label: {
+								Image(systemName: "xmark.circle.fill")
+									.font(.largeTitle)
+									.foregroundColor(.white)
+									.shadow(radius: 4)
+							})
+							.buttonStyle(.plain)
+							.padding(20)
+						}
+					}
 				}else{
 					VStack {
 						Spacer()

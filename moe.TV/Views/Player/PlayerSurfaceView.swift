@@ -21,6 +21,9 @@ struct PlayerSurfaceView: View {
 	@ObservedObject var observer: PlayerItemObserver
 	let onStatus: (AVPlayer.TimeControlStatus?) -> Void
 	var mode: PlayerSurfaceMode = .custom
+	var title: String?
+	var subtitle: String?
+	var onClose: (() -> Void)?
 
 	var body: some View {
 		Group {
@@ -31,7 +34,10 @@ struct PlayerSurfaceView: View {
 					ep: ep,
 					playerVM: playerVM,
 					observer: observer,
-					onStatus: onStatus
+					onStatus: onStatus,
+					title: title,
+					subtitle: subtitle,
+					onClose: onClose
 				)
 
 			case .custom:
@@ -40,7 +46,10 @@ struct PlayerSurfaceView: View {
 					ep: ep,
 					playerVM: playerVM,
 					observer: observer,
-					onStatus: onStatus
+					onStatus: onStatus,
+					title: title,
+					subtitle: subtitle,
+					onClose: onClose
 				)
 			}
 		}

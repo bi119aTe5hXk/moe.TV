@@ -7,17 +7,6 @@
     "%@" : {
       "shouldTranslate" : false
     },
-    "%@ (%@)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ (%2$@)"
-          }
-        }
-      },
-      "shouldTranslate" : false
-    },
     "%@ / %@" : {
       "localizations" : {
         "en" : {
@@ -370,6 +359,7 @@
       }
     },
     "Backward 15 seconds" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -744,6 +734,9 @@
         }
       }
     },
+    "Copy current frame" : {
+
+    },
     "Custom status" : {
       "localizations" : {
         "ja" : {
@@ -927,7 +920,6 @@
       }
     },
     "Error: Video URL is empty" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1548,6 +1540,7 @@
       }
     },
     "Play/Pause" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -2215,6 +2208,9 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "Volume %@" : {
+
     },
     "Watched" : {
       "localizations" : {
