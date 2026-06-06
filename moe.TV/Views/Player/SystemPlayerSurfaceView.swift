@@ -105,6 +105,18 @@ struct CustomPlayerSurfaceView: View {
 					.padding(20)
 				}
 				.background(Color.black.ignoresSafeArea())
+				#if os(iOS)
+				.onAppear {
+					if UIDevice.current.userInterfaceIdiom == .phone {
+						OrientationController.shared.lockOrientation(to: .landscapeRight)
+					}
+				}
+				.onDisappear {
+					if UIDevice.current.userInterfaceIdiom == .phone {
+						OrientationController.shared.lockOrientation(to: .portrait)
+					}
+				}
+				#endif
 			}
 			#endif
 	}
@@ -131,7 +143,7 @@ struct CustomPlayerSurfaceView: View {
 					pictureInPicture.toggle()
 				},
 				onFullScreenToggle: {
-					presentsFullscreenPlayer.toggle()
+					toggleFullscreenPresentation()
 				},
 				title: title,
 				subtitle: subtitle,
@@ -153,6 +165,24 @@ struct CustomPlayerSurfaceView: View {
 			)
 			#endif
 		}
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.clipped()
+	}
+
+	private func toggleFullscreenPresentation() {
+		#if os(iOS)
+		if UIDevice.current.userInterfaceIdiom == .phone {
+			if OrientationController.shared.isLandscapeManaged() {
+				OrientationController.shared.lockOrientation(to: .portrait)
+			} else {
+				OrientationController.shared.lockOrientation(to: .landscapeRight)
+			}
+		} else {
+			presentsFullscreenPlayer.toggle()
+		}
+		#elseif os(tvOS)
+		presentsFullscreenPlayer.toggle()
+		#endif
 	}
 }
 
