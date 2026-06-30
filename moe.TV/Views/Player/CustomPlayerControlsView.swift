@@ -142,7 +142,7 @@ struct CustomPlayerControlsView: View {
 	}
 
 #if !os(tvOS)
-	private var volumeIndicator: some View {
+	private func volumeIndicator(sliderWidth: CGFloat = 92, showsPercent: Bool = true) -> some View {
 		HStack(spacing: 8) {
 			Image(systemName: volumeSystemImage)
 				.font(.system(size: 15, weight: .medium))
@@ -166,12 +166,14 @@ struct CustomPlayerControlsView: View {
 				}
 			)
 			.tint(.white)
-			.frame(width: 92)
+			.frame(width: sliderWidth)
 
-			Text(volumePercentText)
-				.font(.system(.caption, design: .rounded).weight(.semibold))
-				.monospacedDigit()
-				.frame(minWidth: 38, alignment: .trailing)
+			if showsPercent {
+				Text(volumePercentText)
+					.font(.system(.caption, design: .rounded).weight(.semibold))
+					.monospacedDigit()
+					.frame(minWidth: 38, alignment: .trailing)
+			}
 		}
 		.padding(.horizontal, 12)
 		.frame(height: 32)
@@ -260,117 +262,7 @@ struct CustomPlayerControlsView: View {
 			)
 			.frame(height: 28)
 
-			HStack(spacing: 12) {
-				Button {
-					playerVM.seek(by: -15, autoPlay: playerVM.isPlaying)
-					showControlsTemporarily()
-				} label: {
-					Image(systemName: "gobackward.15")
-						.font(.system(size: 22, weight: .medium))
-						.frame(width: 44, height: 38)
-				}
-				.buttonStyle(.plain)
-				.accessibilityLabel("Back 15 seconds")
-
-				Button {
-					playerVM.togglePlayPause()
-					showControlsTemporarily()
-				} label: {
-					Image(systemName: playerVM.isPlaying ? "pause.fill" : "play.fill")
-						.font(.system(size: 22, weight: .semibold))
-						.frame(width: 44, height: 38)
-				}
-				.buttonStyle(.plain)
-				.accessibilityLabel(playerVM.isPlaying ? "Pause" : "Play")
-
-				Button {
-					playerVM.seek(by: 15, autoPlay: playerVM.isPlaying)
-					showControlsTemporarily()
-				} label: {
-					Image(systemName: "goforward.15")
-						.font(.system(size: 22, weight: .medium))
-						.frame(width: 44, height: 38)
-				}
-				.buttonStyle(.plain)
-				.accessibilityLabel("Forward 15 seconds")
-
-				Text(timeText)
-					.font(.system(.caption, design: .monospaced))
-					.lineLimit(1)
-					.minimumScaleFactor(0.75)
-
-				Spacer()
-
-#if !os(tvOS)
-				volumeIndicator
-
-				Button {
-					playerVM.copyCurrentFrameToPasteboard { success in
-						showActionHUD(
-							success
-								? PlayerActionHUD(systemImage: "checkmark.circle.fill", message: "Copied to Clipboard")
-								: PlayerActionHUD(systemImage: "exclamationmark.triangle.fill", message: "Screenshot Failed")
-						)
-					}
-					showControlsTemporarily()
-				} label: {
-					Image(systemName: "camera")
-						.font(.system(size: 19, weight: .medium))
-						.frame(width: 44, height: 38)
-				}
-				.buttonStyle(.plain)
-				.accessibilityLabel("Copy current frame")
-#endif
-
-				Menu {
-					ForEach(playbackRateOptions, id: \.self) { rate in
-						Button {
-							playerVM.setPlaybackRate(rate)
-							showControlsTemporarily()
-						} label: {
-							if abs(playerVM.playbackRate - rate) < 0.001 {
-								Label(rateText(rate), systemImage: "checkmark")
-							} else {
-								Text(rateText(rate))
-							}
-						}
-					}
-				} label: {
-					Text(rateText(playerVM.playbackRate))
-						.font(.system(.caption, design: .rounded).weight(.semibold))
-						.frame(minWidth: 48, minHeight: 32)
-						.padding(.horizontal, 8)
-						.background(.white.opacity(0.16), in: Capsule())
-				}
-				.buttonStyle(.plain)
-				.accessibilityLabel("Playback speed")
-
-				if isPictureInPictureSupported, let onPictureInPictureToggle {
-					Button {
-						onPictureInPictureToggle()
-						showControlsTemporarily()
-					} label: {
-						Image(systemName: isPictureInPictureActive ? "pip.exit" : "pip.enter")
-							.font(.system(size: 19, weight: .medium))
-							.frame(width: 44, height: 38)
-					}
-					.buttonStyle(.plain)
-					.accessibilityLabel("Picture in Picture")
-				}
-
-				if let onFullScreenToggle {
-					Button {
-						onFullScreenToggle()
-						showControlsTemporarily()
-					} label: {
-						Image(systemName: "arrow.up.left.and.arrow.down.right")
-							.font(.system(size: 19, weight: .medium))
-							.frame(width: 44, height: 38)
-					}
-					.buttonStyle(.plain)
-					.accessibilityLabel("Full Screen")
-				}
-			}
+			controlRows
 		}
 		.padding(.horizontal, 18)
 		.padding(.top, 12)
@@ -383,6 +275,203 @@ struct CustomPlayerControlsView: View {
 			)
 			.ignoresSafeArea(edges: .bottom)
 		)
+	}
+
+	private var controlRows: some View {
+		ViewThatFits(in: .horizontal) {
+			regularControlRow
+			compactControlRows
+		}
+	}
+
+	private var regularControlRow: some View {
+		HStack(spacing: 12) {
+			transportControls
+			timeLabel
+			Spacer(minLength: 8)
+			secondaryControls(isCompact: false)
+		}
+	}
+
+	private var compactControlRows: some View {
+		VStack(spacing: 8) {
+			HStack(spacing: 10) {
+				transportControls
+				timeLabel
+				Spacer(minLength: 6)
+				fullScreenButton
+			}
+
+			HStack(spacing: 8) {
+				#if !os(tvOS)
+				GeometryReader { geometry in
+					volumeIndicator(sliderWidth: compactVolumeSliderWidth(for: geometry.size.width), showsPercent: true)
+				}
+				.frame(height: 32)
+				#endif
+				secondaryControls(isCompact: true)
+			}
+		}
+	}
+
+	#if !os(tvOS)
+	private func compactVolumeSliderWidth(for availableWidth: CGFloat) -> CGFloat {
+		let hasPictureInPicture = isPictureInPictureSupported && onPictureInPictureToggle != nil
+		let secondaryControlsWidth: CGFloat = hasPictureInPicture ? 142 : 96
+		let volumeChromeWidth: CGFloat = 96
+		let usableWidth = availableWidth - secondaryControlsWidth - volumeChromeWidth
+		return max(82, min(160, usableWidth))
+	}
+	#endif
+
+	private var transportControls: some View {
+		HStack(spacing: 8) {
+			backwardButton
+			playPauseButton
+			forwardButton
+		}
+	}
+
+	private var backwardButton: some View {
+		Button {
+			playerVM.seek(by: -15, autoPlay: playerVM.isPlaying)
+			showControlsTemporarily()
+		} label: {
+			Image(systemName: "gobackward.15")
+				.font(.system(size: 22, weight: .medium))
+				.frame(width: 44, height: 38)
+		}
+		.buttonStyle(.plain)
+		.accessibilityLabel("Back 15 seconds")
+	}
+
+	private var playPauseButton: some View {
+		Button {
+			playerVM.togglePlayPause()
+			showControlsTemporarily()
+		} label: {
+			Image(systemName: playerVM.isPlaying ? "pause.fill" : "play.fill")
+				.font(.system(size: 22, weight: .semibold))
+				.frame(width: 44, height: 38)
+		}
+		.buttonStyle(.plain)
+		.accessibilityLabel(playerVM.isPlaying ? "Pause" : "Play")
+	}
+
+	private var forwardButton: some View {
+		Button {
+			playerVM.seek(by: 15, autoPlay: playerVM.isPlaying)
+			showControlsTemporarily()
+		} label: {
+			Image(systemName: "goforward.15")
+				.font(.system(size: 22, weight: .medium))
+				.frame(width: 44, height: 38)
+		}
+		.buttonStyle(.plain)
+		.accessibilityLabel("Forward 15 seconds")
+	}
+
+	private var timeLabel: some View {
+		Text(timeText)
+			.font(.system(.caption, design: .monospaced))
+			.lineLimit(1)
+			.minimumScaleFactor(0.7)
+			.frame(minWidth: 78, alignment: .leading)
+	}
+
+	@ViewBuilder
+	private func secondaryControls(isCompact: Bool) -> some View {
+		HStack(spacing: isCompact ? 6 : 12) {
+			#if !os(tvOS)
+			if !isCompact {
+				volumeIndicator()
+			}
+			screenshotButton
+			#endif
+			playbackRateMenu
+			pictureInPictureButton
+			if !isCompact {
+				fullScreenButton
+			}
+		}
+	}
+
+	#if !os(tvOS)
+	private var screenshotButton: some View {
+		Button {
+			playerVM.copyCurrentFrameToPasteboard { success in
+				showActionHUD(
+					success
+						? PlayerActionHUD(systemImage: "checkmark.circle.fill", message: "Copied to Clipboard")
+						: PlayerActionHUD(systemImage: "exclamationmark.triangle.fill", message: "Screenshot Failed")
+				)
+			}
+			showControlsTemporarily()
+		} label: {
+			Image(systemName: "camera")
+				.font(.system(size: 19, weight: .medium))
+				.frame(width: 40, height: 36)
+		}
+		.buttonStyle(.plain)
+		.accessibilityLabel("Copy current frame")
+	}
+	#endif
+
+	private var playbackRateMenu: some View {
+		Menu {
+			ForEach(playbackRateOptions, id: \.self) { rate in
+				Button {
+					playerVM.setPlaybackRate(rate)
+					showControlsTemporarily()
+				} label: {
+					if abs(playerVM.playbackRate - rate) < 0.001 {
+						Label(rateText(rate), systemImage: "checkmark")
+					} else {
+						Text(rateText(rate))
+					}
+				}
+			}
+		} label: {
+			Text(rateText(playerVM.playbackRate))
+				.font(.system(.caption, design: .rounded).weight(.semibold))
+				.frame(minWidth: 44, minHeight: 32)
+				.padding(.horizontal, 6)
+				.background(.white.opacity(0.16), in: Capsule())
+		}
+		.buttonStyle(.plain)
+		.accessibilityLabel("Playback speed")
+	}
+
+	@ViewBuilder
+	private var pictureInPictureButton: some View {
+		if isPictureInPictureSupported, let onPictureInPictureToggle {
+			Button {
+				onPictureInPictureToggle()
+				showControlsTemporarily()
+			} label: {
+				Image(systemName: isPictureInPictureActive ? "pip.exit" : "pip.enter")
+					.font(.system(size: 19, weight: .medium))
+					.frame(width: 40, height: 36)
+			}
+			.buttonStyle(.plain)
+			.accessibilityLabel("Picture in Picture")
+		}
+	}
+
+	@ViewBuilder
+	private var fullScreenButton: some View {
+		if let onFullScreenToggle {
+			Button {
+				onFullScreenToggle()
+				showControlsTemporarily()
+			} label: {
+				Image(systemName: "arrow.up.left.and.arrow.down.right")
+					.font(.system(size: 19, weight: .medium))
+					.frame(width: 40, height: 36)
+			}
+			.buttonStyle(.plain)
+			.accessibilityLabel("Full Screen")
+		}
 	}
 
 	private var titleBlock: some View {

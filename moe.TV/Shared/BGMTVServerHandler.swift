@@ -199,11 +199,13 @@ func getBGMTVAccessToken(code:String, completion:@escaping (Bool, String) -> Voi
         if result{
             do{
                 if let r = try jsonDecoder.decode(BGMTVOauthAccessTokenModel?.self, from: data as! Data){
-                    if let accesstoken = r.access_token{
+                    if let accesstoken = r.access_token,
+                       let refreshToken = r.refresh_token,
+                       let expiresIn = r.expires_in {
                         saveBGMLoginInfo(username: nil,
                                          accessToken: accesstoken,
-                                         refreshToken: r.refresh_token!,
-                                         expireIn: r.expires_in!)
+                                         refreshToken: refreshToken,
+                                         expireIn: expiresIn)
                         completion(true, "success")
                     }else{
                         completion(false, "get bgm.tv access token error -1")
@@ -224,6 +226,10 @@ func getBGMTVAccessToken(code:String, completion:@escaping (Bool, String) -> Voi
 func refreshBGMTVToken(completion:@escaping (Bool, String) -> Void){
     let urlString = "https://bgm.tv/oauth/access_token"
     let refreshToken = settingsHandler.getBGMTVRefreshTokenKey()
+    guard !refreshToken.isEmpty else {
+        completion(false, "bgm.tv refresh token is empty")
+        return
+    }
     let postdata = ["grant_type":"refresh_token",
                     "client_id":"\(bgmAppID)",
                     "client_secret":"\(bgmAppSecret)",
@@ -237,16 +243,17 @@ func refreshBGMTVToken(completion:@escaping (Bool, String) -> Void){
         if result{
             do{
                 if let r = try jsonDecoder.decode(BGMTVOauthAccessTokenModel?.self, from: data as! Data){
-                    if let accesstoken = r.access_token{
+                    if let accesstoken = r.access_token,
+                       let refreshToken = r.refresh_token,
+                       let expiresIn = r.expires_in {
 //                        print(r)
                         saveBGMLoginInfo(username: nil,
                                          accessToken: accesstoken,
-                                         refreshToken: r.refresh_token!,
-                                         expireIn: r.expires_in!)
+                                         refreshToken: refreshToken,
+                                         expireIn: expiresIn)
                         completion(true, "success")
                     }else{
-                        logoutBGMTV()
-                        completion(false, "refresh bgm.tv token error -1, logout")
+                        completion(false, "refresh bgm.tv token error -1")
                     }
                 }else{
                     completion(false, "json decode error -1")
@@ -290,6 +297,22 @@ func isBGMAccessTokenExpired() -> Bool{
     }
     print("bgm.tv access token \(ts - now)s left")
     return false
+}
+
+func ensureBGMTVAccessTokenValid(completion: @escaping (Bool, String) -> Void) {
+    guard isBGMTVlogined() else {
+        completion(false, "bgm.tv is not logged in")
+        return
+    }
+
+    guard isBGMAccessTokenExpired() else {
+        completion(true, "success")
+        return
+    }
+
+    refreshBGMTVToken { isSuccess, result in
+        completion(isSuccess, result)
+    }
 }
 
 //func getBGMTokenStatus(completion: @escaping (Bool, Any) -> Void){
@@ -446,14 +469,13 @@ func setBGMSBEPStatues(subject_id:Int,episode_id:Int,status:Int,completion: @esc
 
 
 func getBGMTVUserInfo(completion: @escaping (Bool, Any) -> Void){
-    if isBGMTVlogined(){
-        if isBGMAccessTokenExpired(){
-            refreshBGMTVToken(){ isSuccess, result in
-                if !isSuccess{
-                    print("failed to refresh bgm.tv token: \(result)")
-                }
-            }
+    ensureBGMTVAccessTokenValid { isTokenReady, tokenResult in
+        guard isTokenReady else {
+            print("failed to refresh bgm.tv token: \(tokenResult)")
+            completion(false, tokenResult)
+            return
         }
+
         let urlstr = "\(baseBGMTVAPIURL)/v0/me"
         getServer(urlString: urlstr) { result, data in
             if result{
@@ -477,4 +499,3 @@ func getBGMTVUserInfo(completion: @escaping (Bool, Any) -> Void){
         }
     }
 }
-

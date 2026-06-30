@@ -86,8 +86,10 @@ class SettingsViewController: ObservableObject{
 				}
 			}else{
 				print("bgm.tv oauth info invalid")
-				logoutBGMTV()
-				self.isBGMSyncEnabled = false
+				DispatchQueue.main.async {
+					self.isBGMSyncEnabled = false
+					self.isBGMUserInfoReady = false
+				}
 			}
 		})
 	}

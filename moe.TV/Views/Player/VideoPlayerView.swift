@@ -240,8 +240,7 @@ struct VideoPlayerView: View {
             PlayerPresentationState.shared.beginPresentation()
             #if os(iOS)
                 if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback() {
-                    OrientationController.shared.unlockOrientation()
-                    OrientationController.shared.currentOrientation = .landscapeRight
+                    OrientationController.shared.lockOrientation(to: .landscapeRight)
                 }
             #endif
 			playerVM.loadFromUrl(url: url, useStreamingCache: !isOffline && !url.isFileURL)
@@ -283,13 +282,8 @@ struct VideoPlayerView: View {
                 }
             }
             #if os(iOS)
-                if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback() {
-                    //					OrientationController.shared.unlockOrientation()
-                    //					OrientationController.shared.currentOrientation = .portrait
-                    if let w = SceneDelegate().window {
-                        OrientationController.shared.lockOrientation(to: .portrait,
-                                                                     onWindow: w)
-                    }
+                if UIDevice.current.userInterfaceIdiom == .phone {
+                    OrientationController.shared.restorePortraitThenUnlock()
                 }
             #endif
             if let dVM = detailVC {
