@@ -304,13 +304,25 @@ struct CustomPlayerControlsView: View {
 
 			HStack(spacing: 8) {
 				#if !os(tvOS)
-				volumeIndicator(sliderWidth: 52, showsPercent: true)
-				Spacer(minLength: 4)
+				GeometryReader { geometry in
+					volumeIndicator(sliderWidth: compactVolumeSliderWidth(for: geometry.size.width), showsPercent: true)
+				}
+				.frame(height: 32)
 				#endif
 				secondaryControls(isCompact: true)
 			}
 		}
 	}
+
+	#if !os(tvOS)
+	private func compactVolumeSliderWidth(for availableWidth: CGFloat) -> CGFloat {
+		let hasPictureInPicture = isPictureInPictureSupported && onPictureInPictureToggle != nil
+		let secondaryControlsWidth: CGFloat = hasPictureInPicture ? 142 : 96
+		let volumeChromeWidth: CGFloat = 96
+		let usableWidth = availableWidth - secondaryControlsWidth - volumeChromeWidth
+		return max(82, min(160, usableWidth))
+	}
+	#endif
 
 	private var transportControls: some View {
 		HStack(spacing: 8) {

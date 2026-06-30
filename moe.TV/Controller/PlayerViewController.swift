@@ -445,6 +445,7 @@ class PlayerViewController: ObservableObject {
 	private func configureCurrentPlayer() {
 		guard let player = avPlayer else { return }
 
+		configurePlaybackAudioSession()
 		player.currentItem?.preferredForwardBufferDuration = TimeInterval(120)
 		player.currentItem?.canUseNetworkResourcesForLiveStreamingWhilePaused = true
 		player.automaticallyWaitsToMinimizeStalling = true
@@ -468,6 +469,19 @@ class PlayerViewController: ObservableObject {
 				self?.volume = volume
 			}
 			.store(in: &cancellables)
+	}
+
+	@MainActor
+	private func configurePlaybackAudioSession() {
+		#if os(iOS) || os(tvOS)
+		let audioSession = AVAudioSession.sharedInstance()
+		do {
+			try audioSession.setCategory(.playback)
+			try audioSession.setActive(true, options: [])
+		} catch {
+			print("Setting category to AVAudioSessionCategoryPlayback failed: \(error)")
+		}
+		#endif
 	}
 
 	@MainActor
