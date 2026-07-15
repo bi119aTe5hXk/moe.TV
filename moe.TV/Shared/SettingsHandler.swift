@@ -27,6 +27,8 @@ class SettingsHandler {
 	private let kAlbireoV2ExpireTime = "kAlbireoV2ExpireTime"
 	private let kAlbireoV2AuthorizationServerURL = "kAlbireoV2AuthorizationServerURL"
 	private let kAlbireoV2APIServerURL = "kAlbireoV2APIServerURL"
+	private let kAlbireoV2ClientID = "kAlbireoV2ClientID"
+	private let kAlbireoV2RedirectHost = "kAlbireoV2RedirectHost"
 
 	private let kLandscapePlayback = "kLandscapePlayback"
 	private let kShowBgmtvWebWhilePlaying = "kShowBgmtvWebWhilePlaying"
@@ -143,6 +145,20 @@ class SettingsHandler {
 	}
 	func getAlbireoV2APIServerURL() -> String {
 		return ub.string(forKey: kAlbireoV2APIServerURL) ?? ""
+	}
+	func setAlbireoV2ClientID(_ clientID: String) {
+		ub.set(clientID, forKey: kAlbireoV2ClientID)
+		sync()
+	}
+	func getAlbireoV2ClientID() -> String {
+		return ub.string(forKey: kAlbireoV2ClientID) ?? ""
+	}
+	func setAlbireoV2RedirectHost(_ host: String) {
+		ub.set(host, forKey: kAlbireoV2RedirectHost)
+		sync()
+	}
+	func getAlbireoV2RedirectHost() -> String {
+		return ub.string(forKey: kAlbireoV2RedirectHost) ?? ""
 	}
 
 	//BGMTV Username

@@ -1560,6 +1560,50 @@
         }
       }
     },
+    "OAuth2 Client ID" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 クライアントID"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 客户端 ID"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 用戶端 ID"
+          }
+        }
+      }
+    },
+    "OAuth2 Redirect Host" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 リダイレクトホスト"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 回调 Host"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 回呼 Host"
+          }
+        }
+      }
+    },
     "Logout" : {
       "localizations" : {
         "ja" : {

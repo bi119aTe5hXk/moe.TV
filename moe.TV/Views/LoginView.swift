@@ -130,6 +130,10 @@ struct LoginView: View {
 #if os(iOS)
 				.keyboardType(.URL)
 #endif
+			TextField("OAuth2 Client ID", text: $loginVC.albireoV2OAuthClientID)
+				.loginTextFieldStyle()
+			TextField("OAuth2 Redirect Host", text: $loginVC.albireoV2OAuthRedirectHost)
+				.loginTextFieldStyle()
 			Button(action: {
 				loginVC.loginWithAlbireoV2()
 			}, label: {
@@ -137,7 +141,12 @@ struct LoginView: View {
 					.frame(maxWidth: .infinity)
 			})
 			.buttonStyle(.borderedProminent)
-			.disabled(!loginVC.isValidAlbireoV2AuthorizationServer || !loginVC.isValidAlbireoV2APIServer)
+			.disabled(
+				!loginVC.isValidAlbireoV2AuthorizationServer ||
+				!loginVC.isValidAlbireoV2APIServer ||
+				!loginVC.isValidAlbireoV2ClientID ||
+				!loginVC.isValidAlbireoV2RedirectHost
+			)
 		}
 #endif
 	}

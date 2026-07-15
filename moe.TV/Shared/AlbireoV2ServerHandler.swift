@@ -16,8 +16,20 @@ private var handledAlbireoV2OAuthCodes = Set<String>()
 private var pendingAlbireoV2OAuthState: String?
 private var pendingAlbireoV2OAuthCodeVerifier: String?
 
+private func currentAlbireoV2ClientID() -> String {
+	albireoV2SettingsHandler.registerSettings()
+	let savedClientID = albireoV2SettingsHandler.getAlbireoV2ClientID().trimmingCharacters(in: .whitespacesAndNewlines)
+	return savedClientID.isEmpty ? albireoV2ClientID : savedClientID
+}
+
+private func currentAlbireoV2RedirectHost() -> String {
+	albireoV2SettingsHandler.registerSettings()
+	let savedHost = albireoV2SettingsHandler.getAlbireoV2RedirectHost().trimmingCharacters(in: .whitespacesAndNewlines)
+	return savedHost.isEmpty ? albireoV2RedirectHost : savedHost
+}
+
 private func currentAlbireoV2RedirectURI() -> String {
-	"moetv://\(albireoV2RedirectHost)"
+	"moetv://\(currentAlbireoV2RedirectHost())"
 }
 
 private func currentAlbireoV2AuthorizationServer() -> String {
@@ -54,8 +66,13 @@ func logoutAlbireoV2() {
 }
 
 func startAlbireoV2Login(completion: @escaping (Bool, String) -> Void) {
-	guard !albireoV2ClientID.isEmpty else {
-		completion(false, "Albireo V2 client id is empty. Please set albireoV2ClientID in DONOTUPLOAD.swift.")
+	let clientID = currentAlbireoV2ClientID()
+	guard !clientID.isEmpty else {
+		completion(false, "Albireo V2 client id is empty.")
+		return
+	}
+	guard !currentAlbireoV2RedirectHost().isEmpty else {
+		completion(false, "Albireo V2 redirect host is empty.")
 		return
 	}
 
@@ -69,7 +86,7 @@ func startAlbireoV2Login(completion: @escaping (Bool, String) -> Void) {
 	let apiServer = currentAlbireoV2APIServer()
 	var components = URLComponents(string: "\(authorizationServer)/oauth2/auth")
 	components?.queryItems = [
-		URLQueryItem(name: "client_id", value: albireoV2ClientID),
+		URLQueryItem(name: "client_id", value: clientID),
 		URLQueryItem(name: "response_type", value: "code"),
 		URLQueryItem(name: "redirect_uri", value: currentAlbireoV2RedirectURI()),
 		URLQueryItem(name: "scope", value: albireoV2Scopes),
@@ -104,7 +121,7 @@ func startAlbireoV2Login(completion: @escaping (Bool, String) -> Void) {
 @discardableResult
 func handleAlbireoV2OAuthCallback(_ url: URL, completion: ((Bool, String) -> Void)? = nil) -> Bool {
 	guard url.scheme == "moetv",
-		  url.host == albireoV2RedirectHost,
+		  url.host == currentAlbireoV2RedirectHost(),
 		  let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
 		  let code = components.queryItems?.first(where: { $0.name == "code" })?.value,
 		  !code.isEmpty else {
@@ -147,7 +164,7 @@ func handleAlbireoV2OAuthCallback(_ url: URL, completion: ((Bool, String) -> Voi
 func getAlbireoV2AccessToken(code: String, codeVerifier: String, completion: @escaping (Bool, String) -> Void) {
 	let body = [
 		"grant_type": "authorization_code",
-		"client_id": albireoV2ClientID,
+		"client_id": currentAlbireoV2ClientID(),
 		"code": code,
 		"redirect_uri": currentAlbireoV2RedirectURI(),
 		"code_verifier": codeVerifier
@@ -170,7 +187,7 @@ func refreshAlbireoV2Token(completion: @escaping (Bool, String) -> Void) {
 
 	let body = [
 		"grant_type": "refresh_token",
-		"client_id": albireoV2ClientID,
+		"client_id": currentAlbireoV2ClientID(),
 		"refresh_token": refreshToken
 	]
 	postAlbireoV2TokenRequest(body: body, completion: completion)
