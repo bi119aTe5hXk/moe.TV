@@ -22,11 +22,23 @@ struct BangumiListView: View {
         if listVC.isLoading{
             ProgressView()
         }
-		List(listVC.bangumiFiltered, id: \.self, selection: $selectedItem){ item in
+		List(selection: $selectedItem) {
+			ForEach(listVC.bangumiFiltered, id: \.self) { item in
                 NavigationLink(value: item) {
                     BangumiCellView(bangumiItem: item)
                 }
+				.onAppear {
+					listVC.loadNextPageIfNeeded(currentItem: item)
+				}
+			}
+			if listVC.isLoadingNextPage {
+				HStack {
+					Spacer()
+					ProgressView()
+					Spacer()
+				}
             }
+		}
             .refreshable {
                 print("refreshable.getBGMList")
                 getBGMList()

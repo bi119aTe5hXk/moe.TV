@@ -234,19 +234,15 @@ struct EPCellView: View {
     }
 
     private func resolveLocalDownloadIfNeeded() {
-        guard localOfflineItem == nil else { return }
-        getAlbireoEPDetail(ep_id: newEPItem.ep.id) { result, data in
-            guard result,
-                  let epDetail = data as? EpisodeDetailModel,
-                  let request = downloadManager.makeDownloadRequest(epDetail: epDetail),
-                  downloadManager.getVideoFileAsset(filename: request.filename) != nil else {
-                return
-            }
-            DispatchQueue.main.async {
-                self.saveOfflineItem(epDetail: epDetail, request: request)
-                self.resolvedLocalOfflineItem = self.offlinePBM.getPlayBackStatus(filename: request.filename)
-            }
-        }
+		if let item = offlinePBM.getPlayBackStatus(epID: newEPItem.ep.id),
+		   downloadManager.getVideoFileAsset(filename: item.filename) != nil {
+			resolvedLocalOfflineItem = item
+			return
+		}
+		if let item = offlinePBM.getPlayBackStatus(bgmEpsID: newEPItem.ep.bgm_eps_id),
+		   downloadManager.getVideoFileAsset(filename: item.filename) != nil {
+			resolvedLocalOfflineItem = item
+		}
     }
 
     private func saveOfflineItem(epDetail: EpisodeDetailModel, request: DownloadRequest) {

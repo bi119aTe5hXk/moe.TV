@@ -324,7 +324,7 @@ private final class StartupLoginValidator: ObservableObject {
 	}
 
 	private func validateAlbireoLogin() {
-		guard loadAlbireoCookies() else { return }
+		guard isAlbireoAuthenticated() else { return }
 		isAlbireoLoginValid { [weak self] isValid in
 			guard !isValid else { return }
 			Task { @MainActor in

@@ -11,6 +11,8 @@ import SafariServices
 #endif
 private let settingsHandler:SettingsHandler = SettingsHandler()
 private let jsonDecoder = JSONDecoder()
+private let bgmtvOAuthCodeLock = NSLock()
+private var handledBGMTVOAuthCodes = Set<String>()
 
 private let baseBGMTVAPIURL = "https://api.bgm.tv"
 
@@ -136,7 +138,12 @@ private func postServer(urlString:String,
             }
             if let r = response as? HTTPURLResponse{
                 if r.statusCode < 200 || r.statusCode >= 300{
-                    completion(false, "Server HTTP status code \(r.statusCode) error.")
+                    let responseText = (data.flatMap { String(data: $0, encoding: .utf8) } ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+                    if responseText.isEmpty {
+                        completion(false, "Server HTTP status code \(r.statusCode) error.")
+                    } else {
+                        completion(false, "Server HTTP status code \(r.statusCode) error: \(responseText)")
+                    }
                     return
                 }
             }
@@ -160,18 +167,7 @@ func startBGMTVLogin() {
         switch result {
         case .success(let callbackURL):
             print("OAuth callback URL: \(callbackURL.absoluteString)")
-
-            if let components = URLComponents(url: callbackURL, resolvingAgainstBaseURL: false),
-               let code = components.queryItems?.first(where: { $0.name == "code" })?.value {
-                print("OAuth code: \(code)")
-                getBGMTVAccessToken(code: code) { isSuccess, result in
-                    if isSuccess {
-                        NotificationCenter.default.post(name: Notification.Name("getBGMUserInfo"), object: nil)
-                    } else {
-                        print("getBGMTVAccessToken failed: \(result)")
-                    }
-                }
-            } else {
+            if !handleBGMTVOAuthCallback(callbackURL) {
                 print("OAuth callback missing code: \(callbackURL.absoluteString)")
             }
 
@@ -180,6 +176,35 @@ func startBGMTVLogin() {
         }
     }
 #endif
+}
+
+@discardableResult
+func handleBGMTVOAuthCallback(_ url: URL) -> Bool {
+    guard url.host == "bgmtv",
+          let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+          let code = components.queryItems?.first(where: { $0.name == "code" })?.value,
+          !code.isEmpty else {
+        return false
+    }
+
+    bgmtvOAuthCodeLock.lock()
+    let isNewCode = handledBGMTVOAuthCodes.insert(code).inserted
+    bgmtvOAuthCodeLock.unlock()
+
+    guard isNewCode else {
+        print("Ignoring duplicate bgm.tv OAuth code callback")
+        return true
+    }
+
+    print("OAuth code: \(code)")
+    getBGMTVAccessToken(code: code) { isSuccess, result in
+        if isSuccess {
+            NotificationCenter.default.post(name: Notification.Name("getBGMUserInfo"), object: nil)
+        } else {
+            print("getBGMTVAccessToken failed: \(result)")
+        }
+    }
+    return true
 }
 
 func getBGMTVAccessToken(code:String, completion:@escaping (Bool, String) -> Void){
@@ -198,7 +223,12 @@ func getBGMTVAccessToken(code:String, completion:@escaping (Bool, String) -> Voi
     ) { result, data in
         if result{
             do{
-                if let r = try jsonDecoder.decode(BGMTVOauthAccessTokenModel?.self, from: data as! Data){
+                guard let responseData = data as? Data else {
+                    completion(false, "get bgm.tv access token error: response data is empty")
+                    return
+                }
+
+                if let r = try jsonDecoder.decode(BGMTVOauthAccessTokenModel?.self, from: responseData){
                     if let accesstoken = r.access_token,
                        let refreshToken = r.refresh_token,
                        let expiresIn = r.expires_in {
@@ -214,10 +244,11 @@ func getBGMTVAccessToken(code:String, completion:@escaping (Bool, String) -> Voi
                     completion(false, "json decode error -1")
                 }
             }catch{
-                completion(false, "json decode error")
+                let responseText = (data as? Data).flatMap { String(data: $0, encoding: .utf8) } ?? ""
+                completion(false, "json decode error: \(error.localizedDescription), response: \(responseText)")
             }
         }else{
-            completion(false, "get bgm.tv access token error")
+            completion(false, "get bgm.tv access token error: \(data)")
         }
     }
 }

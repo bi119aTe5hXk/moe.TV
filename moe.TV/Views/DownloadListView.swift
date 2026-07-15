@@ -64,13 +64,19 @@ struct DownloadListView: View {
 #if os(iOS)
             if !dlListVC.fileList.isEmpty {
                 ToolbarItemGroup(placement: .automatic) {
-                    EditButton()
+                    Button {
+                        editMode = editMode.isEditing ? .inactive : .active
+                    } label: {
+                        Image(systemName: editMode.isEditing ? "checkmark.circle" : "checklist")
+                    }
+                    .accessibilityLabel(editMode.isEditing ? "Done" : "Select")
                     if editMode.isEditing {
                         Button(role: .destructive) {
                             deleteSelectedFiles()
                         } label: {
-                            Label("Delete", systemImage: "trash")
+                            Image(systemName: "trash")
                         }
+                        .accessibilityLabel("Delete selected videos")
                         .disabled(selectedFiles.isEmpty)
                     }
                 }
@@ -163,16 +169,20 @@ struct DownloadListView: View {
             Button {
                 playDownloadedVideo(fileURL)
             } label: {
-                Image(systemName: "play.circle")
+                Image(systemName: "play.circle.fill")
+                    .font(.title3)
             }
             .buttonStyle(.borderless)
+            .accessibilityLabel("Play")
 #if os(tvOS)
 			Button(role: .destructive) {
 				deleteFiles([fileURL])
 			} label: {
-				Image(systemName: "trash")
+				Image(systemName: "trash.fill")
+                    .font(.title3)
 			}
 			.buttonStyle(.borderless)
+            .accessibilityLabel("Delete")
 #endif
         }
         .contentShape(Rectangle())
@@ -203,9 +213,11 @@ struct DownloadListView: View {
                 Button(role: .destructive) {
                     downloadManager.cancelDownload(filename: item.filename)
                 } label: {
-                    Image(systemName: "xmark.circle")
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title3)
                 }
                 .buttonStyle(.borderless)
+                .accessibilityLabel("Cancel download")
             }
 
             ProgressView(value: item.progress)

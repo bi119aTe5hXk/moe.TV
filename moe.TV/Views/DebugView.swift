@@ -38,6 +38,16 @@ struct DebugView: View {
                         Text(string)
                     }
                 }
+
+				Section(header: Text("Albireo V2")) {
+					debugRow(title: "Auth mode", value: debugVC.getAlbireoAuthModeDEBUG())
+					debugRow(title: "Authorization server", value: debugVC.getAlbireoV2AuthorizationServerURLDEBUG())
+					debugRow(title: "API server", value: debugVC.getAlbireoV2APIServerURLDEBUG())
+					debugRow(title: "AccessToken", value: debugVC.getAlbireoV2AccessTokenDEBUG())
+					debugRow(title: "RefreshToken", value: debugVC.getAlbireoV2RefreshTokenDEBUG())
+					debugRow(title: "IDToken", value: debugVC.getAlbireoV2IDTokenDEBUG())
+					debugRow(title: "ExpireTime", value: "\(debugVC.getAlbireoV2ExpireTimeDEBUG())")
+				}
                 
                 Section(header: Text("BGM.TV") ) {
                     Toggle("BGM.TV Logined", isOn:$syncWithBGMTV )
@@ -123,5 +133,17 @@ struct DebugView: View {
 
 	private func formatByteCount(_ byteCount: Int64) -> String {
 		ByteCountFormatter.string(fromByteCount: byteCount, countStyle: .file)
+	}
+
+	@ViewBuilder
+	private func debugRow(title: String, value: String) -> some View {
+		VStack(alignment: .leading, spacing: 6) {
+			Text(title)
+				.font(.caption)
+				.foregroundStyle(.secondary)
+			Text(value.isEmpty ? "(empty)" : value)
+				.font(.caption)
+				.textSelection(.enabled)
+		}
 	}
 }

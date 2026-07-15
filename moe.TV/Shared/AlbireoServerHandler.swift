@@ -25,6 +25,7 @@ func saveAlbireoCookies(response: HTTPURLResponse) {
     }
     if cookieArray.count > 0{
         settingsHandler.setAlbireoCookie(array: cookieArray)
+		settingsHandler.setAlbireoAuthMode(.legacyCookie)
         print("albireo cookie saved")
     }else{
         print("albireo cookie is empty, skip")
@@ -69,10 +70,28 @@ func clearCookie(){
     print("albireo cookie cleared")
 }
 
+func isAlbireoAuthenticated() -> Bool {
+	settingsHandler.registerSettings()
+	switch settingsHandler.getAlbireoAuthMode() {
+	case .albireoV2OAuth:
+		return isAlbireoV2Logined()
+	case .legacyCookie:
+		return loadAlbireoCookies()
+	}
+}
+
 func isAlbireoLoginValid(completion: @escaping (Bool) -> Void){
-    getAlbireoUserInfo { result, data in
-        completion(result)
-    }
+	settingsHandler.registerSettings()
+	switch settingsHandler.getAlbireoAuthMode() {
+	case .albireoV2OAuth:
+		getAlbireoV2UserInfo { result, _ in
+			completion(result)
+		}
+	case .legacyCookie:
+		getAlbireoUserInfo { result, data in
+			completion(result)
+		}
+	}
 }
 
 
@@ -208,8 +227,12 @@ func logoutAlbireoServer(completion: @escaping (Bool, String) -> Void) {
 //            completion(false, data as! String)
 //        }
 //    }
-    clearCookie()
-    completion(true, "logout success")
+	settingsHandler.registerSettings()
+	let authMode = settingsHandler.getAlbireoAuthMode()
+	clearCookie()
+	logoutAlbireoV2()
+	print("albireo logout success, previous auth mode: \(authMode.rawValue)")
+	completion(true, "logout success")
 }
 
 func getAlbireoUserInfo(completion: @escaping (Bool, Any?) -> Void){
@@ -368,6 +391,14 @@ func getAlbireoBangumiDetail(id: String,
 }
 func getAlbireoEPDetail(ep_id: String,
                       completion: @escaping (Bool, Any?) -> Void) {
+	settingsHandler.registerSettings()
+	if settingsHandler.getAlbireoAuthMode() == .albireoV2OAuth {
+		getAlbireoV2EpisodeDetail(epID: ep_id) { result, data in
+			completion(result, data)
+		}
+		return
+	}
+
 	if var urlstr = getAlbireoServer(){
 		urlstr.append("/api/home/episode/")
 		urlstr.append(ep_id)
@@ -401,6 +432,19 @@ func sentAlbireoEPWatchProgress(ep_id: String,
                          percentage:Double,
                          is_finished:Bool,
                          completion: @escaping (Bool, Any?) -> Void){
+	settingsHandler.registerSettings()
+	if settingsHandler.getAlbireoAuthMode() == .albireoV2OAuth {
+		syncAlbireoV2EpisodeWatchProgress(
+			epID: ep_id,
+			bangumiID: bangumi_id,
+			lastWatchPosition: last_watch_position,
+			percentage: percentage,
+			isFinished: is_finished,
+			completion: completion
+		)
+		return
+	}
+
 	if var urlstr = getAlbireoServer(){
 		urlstr.append("/api/watch/history/")
 		urlstr.append(ep_id)
@@ -430,6 +474,13 @@ func sentAlbireoEPWatchProgress(ep_id: String,
 func changeAlbireoFavStatus(bangumi_id:String,
                      status:Int,
                      completion: @escaping (Bool, Any?) -> Void){
+	let settingsHandler = SettingsHandler()
+	settingsHandler.registerSettings()
+	if settingsHandler.getAlbireoAuthMode() == .albireoV2OAuth {
+		changeAlbireoV2FavoriteStatus(bangumiID: bangumi_id, status: status, completion: completion)
+		return
+	}
+
 	if var urlstr = getAlbireoServer(){
 		urlstr.append("/api/watch/favorite/bangumi/")
 		urlstr.append(bangumi_id)
@@ -452,4 +503,3 @@ func changeAlbireoFavStatus(bangumi_id:String,
 		completion(false, "Can not get server address.")
 	}
 }
-

@@ -13,6 +13,8 @@
 		477801792FA34C77004757F4 /* TVSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477801782FA34C71004757F4 /* TVSidebar.swift */; };
 		4779043B2F2B857900EF74D5 /* PlayerViewControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779043A2F2B854500EF74D5 /* PlayerViewControllerHost.swift */; };
 		4779043F2F2B91F400EF74D5 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779043E2F2B91D000EF74D5 /* NowPlayingManager.swift */; };
+		47AA00022F30000000123456 /* AlbireoV2ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00012F30000000123456 /* AlbireoV2ServerHandler.swift */; };
+		47AA00122F30010000123456 /* AlbireoV2Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00112F30010000123456 /* AlbireoV2Model.swift */; };
 		47CC30782A371784001D3F8C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC30772A371784001D3F8C /* LoginViewController.swift */; };
 		47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */; };
 		47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */; };
@@ -115,6 +117,8 @@
 		477801782FA34C71004757F4 /* TVSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVSidebar.swift; sourceTree = "<group>"; };
 		4779043A2F2B854500EF74D5 /* PlayerViewControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewControllerHost.swift; sourceTree = "<group>"; };
 		4779043E2F2B91D000EF74D5 /* NowPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
+		47AA00012F30000000123456 /* AlbireoV2ServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbireoV2ServerHandler.swift; sourceTree = "<group>"; };
+		47AA00112F30010000123456 /* AlbireoV2Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbireoV2Model.swift; sourceTree = "<group>"; };
 		47CC30772A371784001D3F8C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiCellUnreadView.swift; sourceTree = "<group>"; };
 		47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailModel.swift; sourceTree = "<group>"; };
@@ -228,6 +232,14 @@
 			path = Albireo;
 			sourceTree = "<group>";
 		};
+		47AA00132F30010000123456 /* AlbireoV2 */ = {
+			isa = PBXGroup;
+			children = (
+				47AA00112F30010000123456 /* AlbireoV2Model.swift */,
+			);
+			path = AlbireoV2;
+			sourceTree = "<group>";
+		};
 		47CC30762A37156D001D3F8C /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,6 +270,7 @@
 			isa = PBXGroup;
 			children = (
 				477904412F2B9C7C00EF74D5 /* Albireo */,
+				47AA00132F30010000123456 /* AlbireoV2 */,
 				477904402F2B9C5000EF74D5 /* BGMTV */,
 			);
 			path = APIModel;
@@ -273,6 +286,7 @@
 				8627A9362A343DBC00A5FCAC /* SettingsHandler.swift */,
 				866E4EB12CE3AC270077D38D /* PlaybackHistoryHandler.swift */,
 				8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */,
+				47AA00012F30000000123456 /* AlbireoV2ServerHandler.swift */,
 				86112E852A3C73F60034AD97 /* BGMTVServerHandler.swift */,
 				8658C6902A50839100357761 /* OpenURL.swift */,
 				86B06C2F2C156B2400169F55 /* ViewUtils.swift */,
@@ -558,6 +572,8 @@
 				86A968FA2A7FCD4900E9BD59 /* DownloadManager.swift in Sources */,
 				86112E862A3C73F60034AD97 /* BGMTVServerHandler.swift in Sources */,
 				8627A9322A343D6500A5FCAC /* AlbireoServerHandler.swift in Sources */,
+				47AA00022F30000000123456 /* AlbireoV2ServerHandler.swift in Sources */,
+				47AA00122F30010000123456 /* AlbireoV2Model.swift in Sources */,
 				8622C61C2A9261B70099DC78 /* ProgressAlertView.swift in Sources */,
 				47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */,
 				860412132DB4C943006E4FF0 /* BGMTVUserSubjectCollectionModel.swift in Sources */,
@@ -836,7 +852,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe_TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202506042051;
+				CURRENT_PROJECT_VERSION = 202607151712;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "moe.TV/Support\\ Files/Preview\\ Content Assets.xcassets";
 				ENABLE_APP_SANDBOX = YES;
@@ -897,7 +913,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = moe.TV/moe_TV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 202506042051;
+				CURRENT_PROJECT_VERSION = 202607151712;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "moe.TV/Support\\ Files/Preview\\ Content Assets.xcassets";
 				ENABLE_APP_SANDBOX = YES;

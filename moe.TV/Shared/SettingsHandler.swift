@@ -6,6 +6,12 @@
 //
 
 import Foundation
+
+enum AlbireoAuthMode: String {
+	case legacyCookie
+	case albireoV2OAuth
+}
+
 class SettingsHandler {
 	// MARK: - Keys
     private let UD_SUITE_NAME = "group.moetv"
@@ -14,6 +20,13 @@ class SettingsHandler {
     private let kBGMTVAccessToken = "kBGMTVAccessToken"
     private let kBGMTVRefreshToken = "kBGMTVRefreshToken"
     private let kBGMTVExpireTime = "kBGMTVExpireTime"
+	private let kAlbireoAuthMode = "kAlbireoAuthMode"
+	private let kAlbireoV2AccessToken = "kAlbireoV2AccessToken"
+	private let kAlbireoV2RefreshToken = "kAlbireoV2RefreshToken"
+	private let kAlbireoV2IDToken = "kAlbireoV2IDToken"
+	private let kAlbireoV2ExpireTime = "kAlbireoV2ExpireTime"
+	private let kAlbireoV2AuthorizationServerURL = "kAlbireoV2AuthorizationServerURL"
+	private let kAlbireoV2APIServerURL = "kAlbireoV2APIServerURL"
 
 	private let kLandscapePlayback = "kLandscapePlayback"
 	private let kShowBgmtvWebWhilePlaying = "kShowBgmtvWebWhilePlaying"
@@ -69,6 +82,68 @@ class SettingsHandler {
     func getAlbireoServerAddr() -> String {
         return ub.string(forKey: kServerAddr) ?? ""
     }
+
+	// MARK: - Albireo auth mode
+	func setAlbireoAuthMode(_ mode: AlbireoAuthMode) {
+		ub.set(mode.rawValue, forKey: kAlbireoAuthMode)
+		sync()
+	}
+	func getAlbireoAuthMode() -> AlbireoAuthMode {
+		AlbireoAuthMode(rawValue: ub.string(forKey: kAlbireoAuthMode) ?? "") ?? .legacyCookie
+	}
+
+	// MARK: - Albireo V2
+	func setAlbireoV2AccessToken(_ token: String) {
+		ub.set(token, forKey: kAlbireoV2AccessToken)
+		sync()
+	}
+	func getAlbireoV2AccessToken() -> String {
+		return ub.string(forKey: kAlbireoV2AccessToken) ?? ""
+	}
+	func setAlbireoV2RefreshToken(_ token: String) {
+		ub.set(token, forKey: kAlbireoV2RefreshToken)
+		sync()
+	}
+	func getAlbireoV2RefreshToken() -> String {
+		return ub.string(forKey: kAlbireoV2RefreshToken) ?? ""
+	}
+	func setAlbireoV2IDToken(_ token: String) {
+		ub.set(token, forKey: kAlbireoV2IDToken)
+		sync()
+	}
+	func getAlbireoV2IDToken() -> String {
+		return ub.string(forKey: kAlbireoV2IDToken) ?? ""
+	}
+	func setAlbireoV2ExpireTime(_ time: Int) {
+		ub.set(Int64(time), forKey: kAlbireoV2ExpireTime)
+		sync()
+	}
+	func getAlbireoV2ExpireTime() -> Int {
+		return Int(ub.longLong(forKey: kAlbireoV2ExpireTime))
+	}
+	func clearAlbireoV2AuthInfo() {
+		setAlbireoV2AccessToken("")
+		setAlbireoV2RefreshToken("")
+		setAlbireoV2IDToken("")
+		setAlbireoV2ExpireTime(0)
+		if getAlbireoAuthMode() == .albireoV2OAuth {
+			setAlbireoAuthMode(.legacyCookie)
+		}
+	}
+	func setAlbireoV2AuthorizationServerURL(_ url: String) {
+		ub.set(url, forKey: kAlbireoV2AuthorizationServerURL)
+		sync()
+	}
+	func getAlbireoV2AuthorizationServerURL() -> String {
+		return ub.string(forKey: kAlbireoV2AuthorizationServerURL) ?? ""
+	}
+	func setAlbireoV2APIServerURL(_ url: String) {
+		ub.set(url, forKey: kAlbireoV2APIServerURL)
+		sync()
+	}
+	func getAlbireoV2APIServerURL() -> String {
+		return ub.string(forKey: kAlbireoV2APIServerURL) ?? ""
+	}
 
 	//BGMTV Username
 	func setBGMTVUsername(username: String){
@@ -230,7 +305,6 @@ class SettingsHandler {
     // MARK: - Plist handler
     func saveToPList(key:String, data:Any) {
         if let path = getSaveFilePath(key: key){
-            print("savekeyPath:\(path)")
             do{
                 let data = try PropertyListSerialization.data(fromPropertyList: data, format: .xml, options: 0)
                 try data.write(to: path)
@@ -241,7 +315,6 @@ class SettingsHandler {
     }
     func readArrayFromPList(key:String) -> [Any]? {
         if let path = getSaveFilePath(key: key){
-            print("readkeyPath:\(path)")
             guard let plistData = FileManager.default.contents(atPath: path.path) else { return nil }
             guard let plist = try? PropertyListSerialization.propertyList(from: plistData, options: .mutableContainers, format:nil) as? [Any] else { return nil }
             //print(plist)
