@@ -45,12 +45,22 @@ struct LoginView: View {
 							.lineLimit(2)
 							.fontWeight(.bold)
 							.font(.title)
+#if os(tvOS)
+						Text("Use password login on tvOS. For OAuth2 login, please log in on another device and enable iCloud sync.")
+							.font(.subheadline)
+							.foregroundColor(.secondary)
+							.multilineTextAlignment(.center)
+#else
 						Text("Choose a sign-in method")
 							.font(.subheadline)
 							.foregroundColor(.secondary)
+#endif
 					}
 
 					VStack(spacing: 16) {
+#if os(tvOS)
+						passwordLoginFields
+#else
 						Picker("Login method", selection: $loginMethod) {
 							ForEach(LoginMethod.allCases) { method in
 								Text(method.title).tag(method)
@@ -64,6 +74,7 @@ struct LoginView: View {
 						case .oauth2:
 							oauth2LoginFields
 						}
+#endif
 					}
 					.padding(20)
 					.frame(maxWidth: 520)
@@ -159,7 +170,9 @@ private extension View {
 			.textInputAutocapitalization(.never)
 #endif
 			.autocorrectionDisabled()
+#if !os(tvOS)
 			.textFieldStyle(.roundedBorder)
+#endif
 	}
 }
 

@@ -141,9 +141,11 @@ struct DebugView: View {
 			Text(title)
 				.font(.caption)
 				.foregroundStyle(.secondary)
-			Text(value.isEmpty ? "(empty)" : value)
-				.font(.caption)
-				.textSelection(.enabled)
+				Text(value.isEmpty ? "(empty)" : value)
+					.font(.caption)
+#if !os(tvOS)
+					.textSelection(.enabled)
+#endif
+			}
 		}
 	}
-}
