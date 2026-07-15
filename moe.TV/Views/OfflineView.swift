@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct OfflineView: View {
+    @EnvironmentObject var downloadManager: DownloadManager
+    @EnvironmentObject var offlinePBM: OfflinePlaybackManager
     @State private var showDownloadList = false
     
     var body: some View {
@@ -27,9 +29,10 @@ struct OfflineView: View {
                 }).padding(20)
                 Spacer()
 #endif
-            }
+			}
 			DownloadListView( dlListVC: DownloadListViewController())
-                .environmentObject(OfflinePlaybackManager())
+                .environmentObject(downloadManager)
+                .environmentObject(offlinePBM)
         })
     }
 }

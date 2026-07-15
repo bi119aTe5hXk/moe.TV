@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject var downloadManager: DownloadManager
+    @EnvironmentObject var offlinePBM: OfflinePlaybackManager
 //    @State private var syncWithBGMTV = isBGMTVlogined()
     @State private var showDownloadList: Bool = false
 	@State private var landscapePlayback: Bool = false
@@ -237,7 +239,8 @@ struct SettingsView: View {
                                         onPlayDownloadedVideo?(url, filename, position)
                                     }
 								)
-								.environmentObject(OfflinePlaybackManager())
+								.environmentObject(downloadManager)
+								.environmentObject(offlinePBM)
 							})
 					}
 

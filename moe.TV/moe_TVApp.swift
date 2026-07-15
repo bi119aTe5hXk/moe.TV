@@ -16,6 +16,7 @@ struct moe_TVApp: App {
 //    @State var bgmID:String?
     @StateObject var networkMonitor = NetworkMonitor()
 	@StateObject var downloadManager = DownloadManager()
+	@StateObject var offlinePlaybackManager = OfflinePlaybackManager()
 //	@State var selectedItem: BangumiItemModel?
 	@State private var navigationPath: [String] = []
 
@@ -39,10 +40,12 @@ struct moe_TVApp: App {
 			})
 			.environmentObject(networkMonitor)
 			.environmentObject(downloadManager)
+			.environmentObject(offlinePlaybackManager)
 #else
 			MainView()
 				.environmentObject(networkMonitor)
 				.environmentObject(downloadManager)
+				.environmentObject(offlinePlaybackManager)
 				.handlesExternalEvents(preferring: ["*"], allowing: ["*"])
 #endif
 
@@ -96,6 +99,12 @@ struct moe_TVApp: App {
 			Spacer()
                 .onOpenURL { url in
                     print(url.absoluteURL)
+                    if handleAlbireoV2OAuthCallback(url) {
+                        return
+                    }
+                    if handleBGMTVOAuthCallback(url) {
+                        return
+                    }
                     if let queryUrlComponents = URLComponents(string: url.absoluteString){
                         switch url.host{
                         case "detail":
@@ -104,19 +113,6 @@ struct moe_TVApp: App {
 //                                self.bgmID = i
 //                                self.showBGMDetailView.toggle()
 								self.navigationPath = [i]
-                            }
-                            break
-                        case "bgmtv":
-                            if let code = queryUrlComponents.queryItems?.first(where: { $0.name == "code" })?.value{
-                                print(code)
-								getBGMTVAccessToken(code: code){ isSuccess, result in
-									if isSuccess{
-										NotificationCenter.default
-											.post(name: Notification.Name("getBGMUserInfo"), object: nil)
-									}else{
-										print("getBGMTVAccessToken failed: \(result)")
-									}
-								}
                             }
                             break
                             default:

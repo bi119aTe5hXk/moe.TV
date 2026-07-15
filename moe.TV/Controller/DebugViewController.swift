@@ -22,6 +22,34 @@ class DebugViewController: ObservableObject {
     func getBGMExpireTimeDEBUG() -> Int {
         return settings.getBGMTVExpireTime()
     }
+
+	func getAlbireoAuthModeDEBUG() -> String {
+		settings.getAlbireoAuthMode().rawValue
+	}
+
+	func getAlbireoV2AuthorizationServerURLDEBUG() -> String {
+		settings.getAlbireoV2AuthorizationServerURL()
+	}
+
+	func getAlbireoV2APIServerURLDEBUG() -> String {
+		settings.getAlbireoV2APIServerURL()
+	}
+
+	func getAlbireoV2AccessTokenDEBUG() -> String {
+		settings.getAlbireoV2AccessToken()
+	}
+
+	func getAlbireoV2RefreshTokenDEBUG() -> String {
+		settings.getAlbireoV2RefreshToken()
+	}
+
+	func getAlbireoV2IDTokenDEBUG() -> String {
+		settings.getAlbireoV2IDToken()
+	}
+
+	func getAlbireoV2ExpireTimeDEBUG() -> Int {
+		settings.getAlbireoV2ExpireTime()
+	}
     
     func reSyncBGM(){
 		saveBGMLoginInfo(username: settings.getBGMTVUsername(),

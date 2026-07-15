@@ -14,6 +14,8 @@ struct NewEPItem:Decodable {
 }
 
 class BangumiDetailViewController : ObservableObject {
+	private let settingsHandler = SettingsHandler()
+
     @Published var presentVideoView = false
     @Published var presentContinuePlayAlert = false
     @Published var presentSourceSelectAlert = false
@@ -61,14 +63,15 @@ class BangumiDetailViewController : ObservableObject {
     //2 check last position
     func checkLastWatchPosition(ep:EpisodeDetailModel){
         if let watchProgress = ep.watch_progress{
-            if watchProgress.percentage != 0 ||
-                watchProgress.percentage != 1{
+			let percentage = watchProgress.percentage ?? 0
+			let lastWatchPosition = watchProgress.last_watch_position ?? 0
+			if lastWatchPosition > 0 && percentage > 0 && percentage < 0.95 {
                 print("can seek")
                 DispatchQueue.main.async {
                     self.presentContinuePlayAlert = true
                 }
             }else{
-                print("percentage 0 or 1")
+                print("no resumable progress")
                 self.checkVideoSource(ep:ep, seekTime: 0)
             }
         }else{
@@ -138,6 +141,80 @@ class BangumiDetailViewController : ObservableObject {
 		self.newEPList = []
 		self.isFinished = false
         self.favStatusLoaded = false
+		settingsHandler.registerSettings()
+		if settingsHandler.getAlbireoAuthMode() == .albireoV2OAuth {
+			getAlbireoV2BangumiDetail(id: id) { isSuccessed, data in
+				if !isSuccessed {
+					DispatchQueue.main.async {
+						self.isFinished = true
+						self.favStatusLoaded = true
+					}
+					print("Albireo V2 bangumi detail failed: \(data)")
+					completion(false)
+					return
+				}
+
+				guard let responseData = data as? Data else {
+					DispatchQueue.main.async {
+						self.isFinished = true
+						self.favStatusLoaded = true
+					}
+					print("Albireo V2 bangumi detail response is not Data: \(data)")
+					completion(false)
+					return
+				}
+
+				do {
+					let bgmItem = try decodeAlbireoV2BangumiDetail(from: responseData)
+					let episodes = bgmItem.episodes ?? []
+					DispatchQueue.main.async {
+						self.detailItem = bgmItem
+						self.albireo_favorite_status = bgmItem.favorite_status ?? 0
+					}
+
+					if isBGMTVlogined() {
+						self.getBGMTVFAVStatus(item: bgmItem) { isSuccessed, result in
+							DispatchQueue.main.async {
+								self.bgmtv_favorite_status = isSuccessed ? result : 0
+								self.favStatusLoaded = true
+							}
+						}
+
+						if let bgmID = bgmItem.bgm_id {
+							self.getBGMTVEPList(
+								bgmID: bgmID,
+								epList: episodes
+							)
+						} else {
+							print("bgmId/bgm_id is empty")
+							DispatchQueue.main.async {
+								self.showOnlyAlbireoEPs(eps: episodes)
+								self.favStatusLoaded = true
+							}
+						}
+						completion(true)
+						return
+					}
+
+					DispatchQueue.main.async {
+						self.bgmtv_favorite_status = 0
+						self.favStatusLoaded = true
+						self.showOnlyAlbireoEPs(eps: episodes)
+						completion(true)
+					}
+				} catch {
+					DispatchQueue.main.async {
+						self.isFinished = true
+						self.favStatusLoaded = true
+					}
+					let responseText = String(data: responseData, encoding: .utf8) ?? ""
+					print("Albireo V2 bangumi detail decode failed: \(error.localizedDescription), response: \(responseText)")
+					completion(false)
+				}
+			}
+			return
+		}
+
         getAlbireoBangumiDetail(id: id) { isSuccessed, data in
             if !isSuccessed{
                 self.isFinished = true
@@ -263,14 +340,19 @@ class BangumiDetailViewController : ObservableObject {
 
 	func showOnlyAlbireoEPs(eps:[BGMEpisode]){
 		print("showOnlyAlbireoEPs")
-		self.newEPList.removeAll()
-		DispatchQueue.main.async {
+		let update = {
+			self.newEPList.removeAll()
 			self.newEPList = self.combineEPList(
 				eps: eps,
 				bgmEPs: []
 			)
 			self.isFinished = true
             print("Finished: showOnlyAlbireoEPs")
+		}
+		if Thread.isMainThread {
+			update()
+		} else {
+			DispatchQueue.main.async(execute: update)
 		}
 	}
 

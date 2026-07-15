@@ -17,6 +17,8 @@ struct OfflineVideoItem: Codable{
     var episodeName:String? = nil
 }
 class OfflinePlaybackManager: ObservableObject {
+    private var cachedStatusList: [OfflineVideoItem]?
+
     // MARK: - Playback manager
 //    func isPlayBackStatsExisit(filename:String) -> Bool{
 //        if let list = getSaveStatusList(){
@@ -29,7 +31,6 @@ class OfflinePlaybackManager: ObservableObject {
     
     func getPlayBackStatus(filename:String) -> OfflineVideoItem?{
         if let list = getSaveStatusList(){
-            print(list)
             if let item = list.first(where: {$0.filename == filename}) {
                 return item
             }
@@ -54,7 +55,6 @@ class OfflinePlaybackManager: ObservableObject {
     
     func setPlayBackStatus(item:OfflineVideoItem){
         if let oldItem = getPlayBackStatus(filename: item.filename){
-            print("found oldItem:\(oldItem)")
             deletePlayBackStatus(filename: oldItem.filename)
             addPlayBackStatus(
                 item: OfflineVideoItem(
@@ -73,7 +73,6 @@ class OfflinePlaybackManager: ObservableObject {
         addPlayBackStatus(item: item)
     }
     func addPlayBackStatus(item:OfflineVideoItem){
-        print("add:\(item)")
         if var list = getSaveStatusList(){
             list.append(item)
             self.setSaveStatusList(array: list)
@@ -95,6 +94,9 @@ class OfflinePlaybackManager: ObservableObject {
     private let kOfflinePlaybackStatus = "offlinePlaybackStatus"
     
     private func getSaveStatusList() -> [OfflineVideoItem]?{
+        if let cachedStatusList {
+            return cachedStatusList.isEmpty ? nil : cachedStatusList
+        }
         let arr = settingsHandler.readArrayFromPList(key: kOfflinePlaybackStatus)
         var decodeArr = [OfflineVideoItem]()
         arr?.forEach({ item in
@@ -103,7 +105,7 @@ class OfflinePlaybackManager: ObservableObject {
                 decodeArr.append(decodeData)
                     }
         })
-        print("read(\(decodeArr.count))items:\(decodeArr)")
+        cachedStatusList = decodeArr
         if decodeArr.isEmpty{
             return nil
         }
@@ -111,7 +113,7 @@ class OfflinePlaybackManager: ObservableObject {
     }
     
     private func setSaveStatusList(array:[OfflineVideoItem]){
-        print(array)
+        cachedStatusList = array
         
         var encodeArr = [Any]()
         array.forEach { item in
@@ -119,7 +121,6 @@ class OfflinePlaybackManager: ObservableObject {
                 encodeArr.append(encoded)
             }
         }
-        print("saved(\(encodeArr.count))items:\(encodeArr)")
         settingsHandler.saveToPList(key: kOfflinePlaybackStatus, data: encodeArr)
         
     }
