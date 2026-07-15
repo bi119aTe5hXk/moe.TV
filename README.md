@@ -17,7 +17,7 @@ Watch bangumi on Apple devices
 ## Requirement
 - iOS/iPadOS 16.0 or later
 - macOS (Native & Catalyst) 13.0 or later
-- tvOS 16.0 or later
+- tvOS 26.0 or later
 - visionOS 1.0 or later
 
 ## Cloud service
