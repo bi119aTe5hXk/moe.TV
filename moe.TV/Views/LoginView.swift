@@ -45,16 +45,21 @@ struct LoginView: View {
 							.lineLimit(2)
 							.fontWeight(.bold)
 							.font(.title)
+#if os(tvOS)
+						Text("Use password login on tvOS. For OAuth2 login, please log in on another device and enable iCloud sync.")
+							.font(.subheadline)
+							.foregroundColor(.secondary)
+							.multilineTextAlignment(.center)
+#else
 						Text("Choose a sign-in method")
 							.font(.subheadline)
 							.foregroundColor(.secondary)
+#endif
 					}
 
 					VStack(spacing: 16) {
 #if os(tvOS)
-						Text("Albireo OAuth2 login is not available on tvOS. Please log in on another device and enable iCloud sync.")
-							.multilineTextAlignment(.center)
-							.padding(10)
+						passwordLoginFields
 #else
 						Picker("Login method", selection: $loginMethod) {
 							ForEach(LoginMethod.allCases) { method in
