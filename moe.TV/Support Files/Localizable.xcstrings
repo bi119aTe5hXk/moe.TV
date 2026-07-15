@@ -218,6 +218,9 @@
         }
       }
     },
+    "Albireo OAuth2 login is not available on tvOS. Please log in on another device and enable iCloud sync." : {
+
+    },
     "Albireo V2" : {
       "shouldTranslate" : false
     },
@@ -1560,50 +1563,6 @@
         }
       }
     },
-    "OAuth2 Client ID" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OAuth2 クライアントID"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OAuth2 客户端 ID"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OAuth2 用戶端 ID"
-          }
-        }
-      }
-    },
-    "OAuth2 Redirect Host" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OAuth2 リダイレクトホスト"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OAuth2 回调 Host"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OAuth2 回呼 Host"
-          }
-        }
-      }
-    },
     "Logout" : {
       "localizations" : {
         "ja" : {
@@ -1786,6 +1745,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "無影片"
+          }
+        }
+      }
+    },
+    "OAuth2 Client ID" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 クライアントID"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 客户端 ID"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 用戶端 ID"
+          }
+        }
+      }
+    },
+    "OAuth2 Redirect Host" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 リダイレクトホスト"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 回调 Host"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OAuth2 回呼 Host"
           }
         }
       }

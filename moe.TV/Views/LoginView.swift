@@ -51,6 +51,11 @@ struct LoginView: View {
 					}
 
 					VStack(spacing: 16) {
+#if os(tvOS)
+						Text("Albireo OAuth2 login is not available on tvOS. Please log in on another device and enable iCloud sync.")
+							.multilineTextAlignment(.center)
+							.padding(10)
+#else
 						Picker("Login method", selection: $loginMethod) {
 							ForEach(LoginMethod.allCases) { method in
 								Text(method.title).tag(method)
@@ -64,6 +69,7 @@ struct LoginView: View {
 						case .oauth2:
 							oauth2LoginFields
 						}
+#endif
 					}
 					.padding(20)
 					.frame(maxWidth: 520)
@@ -159,7 +165,9 @@ private extension View {
 			.textInputAutocapitalization(.never)
 #endif
 			.autocorrectionDisabled()
+#if !os(tvOS)
 			.textFieldStyle(.roundedBorder)
+#endif
 	}
 }
 
