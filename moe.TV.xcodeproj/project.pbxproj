@@ -15,6 +15,7 @@
 		4779043F2F2B91F400EF74D5 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779043E2F2B91D000EF74D5 /* NowPlayingManager.swift */; };
 		47AA00022F30000000123456 /* AlbireoV2ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00012F30000000123456 /* AlbireoV2ServerHandler.swift */; };
 		47AA00122F30010000123456 /* AlbireoV2Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00112F30010000123456 /* AlbireoV2Model.swift */; };
+		47AA00222F30020000123456 /* VideoCDNHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00212F30020000123456 /* VideoCDNHandler.swift */; };
 		47CC30782A371784001D3F8C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC30772A371784001D3F8C /* LoginViewController.swift */; };
 		47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */; };
 		47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */; };
@@ -119,6 +120,7 @@
 		4779043E2F2B91D000EF74D5 /* NowPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
 		47AA00012F30000000123456 /* AlbireoV2ServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbireoV2ServerHandler.swift; sourceTree = "<group>"; };
 		47AA00112F30010000123456 /* AlbireoV2Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbireoV2Model.swift; sourceTree = "<group>"; };
+		47AA00212F30020000123456 /* VideoCDNHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCDNHandler.swift; sourceTree = "<group>"; };
 		47CC30772A371784001D3F8C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiCellUnreadView.swift; sourceTree = "<group>"; };
 		47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailModel.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 				866E4EB12CE3AC270077D38D /* PlaybackHistoryHandler.swift */,
 				8627A9312A343D6500A5FCAC /* AlbireoServerHandler.swift */,
 				47AA00012F30000000123456 /* AlbireoV2ServerHandler.swift */,
+				47AA00212F30020000123456 /* VideoCDNHandler.swift */,
 				86112E852A3C73F60034AD97 /* BGMTVServerHandler.swift */,
 				8658C6902A50839100357761 /* OpenURL.swift */,
 				86B06C2F2C156B2400169F55 /* ViewUtils.swift */,
@@ -573,6 +576,7 @@
 				86112E862A3C73F60034AD97 /* BGMTVServerHandler.swift in Sources */,
 				8627A9322A343D6500A5FCAC /* AlbireoServerHandler.swift in Sources */,
 				47AA00022F30000000123456 /* AlbireoV2ServerHandler.swift in Sources */,
+				47AA00222F30020000123456 /* VideoCDNHandler.swift in Sources */,
 				47AA00122F30010000123456 /* AlbireoV2Model.swift in Sources */,
 				8622C61C2A9261B70099DC78 /* ProgressAlertView.swift in Sources */,
 				47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */,

@@ -23,15 +23,29 @@ class SettingsViewController: ObservableObject{
 	@Published var settingsHandler = SettingsHandler()
 
 	@Published var playbackRate:Double = 1.0
+	@Published var videoCDNGroup: String = ""
+	@Published var videoCDNOptions: [VideoCDNOption] = []
+	@Published var isRefreshingVideoCDNOptions = false
+	@Published var videoCDNStatusMessage = ""
+	private var isRefreshingVideoCDNLatencies = false
 
 	init() {
 		getBGMLoginStatus()
+		settingsHandler.registerSettings()
+		loadVideoCDNSettings()
 		
 		NotificationCenter.default
 			.addObserver(
 				self,
 				selector: #selector(getBGMUserInfo),
 				name: Notification.Name("getBGMUserInfo"),
+				object: nil
+			)
+		NotificationCenter.default
+			.addObserver(
+				self,
+				selector: #selector(handleVideoCDNSettingsDidChange),
+				name: Notification.Name("videoCDNSettingsDidChange"),
 				object: nil
 			)
 	}
@@ -99,6 +113,84 @@ class SettingsViewController: ObservableObject{
 			self.isBGMSyncEnabled = true
 		}else{
 			self.isBGMSyncEnabled = false
+		}
+	}
+
+	func saveVideoCDNGroup(_ group: String) {
+		settingsHandler.setVideoCDNGroup(group)
+		DispatchQueue.main.async {
+			self.videoCDNGroup = group
+		}
+	}
+
+	func loadVideoCDNSettings() {
+		videoCDNGroup = settingsHandler.getVideoCDNGroup()
+		videoCDNOptions = sortedVideoCDNOptions(settingsHandler.getVideoCDNOptions())
+	}
+
+	@objc private func handleVideoCDNSettingsDidChange() {
+		loadVideoCDNSettings()
+	}
+
+	func refreshVideoCDNOptions() {
+		guard !isRefreshingVideoCDNOptions else { return }
+		isRefreshingVideoCDNOptions = true
+		videoCDNStatusMessage = "Loading video CDN nodes..."
+		refreshVideoCDNOptionsFromFirstPlayableEpisode { isSuccess, data in
+			DispatchQueue.main.async {
+				self.isRefreshingVideoCDNOptions = false
+				if isSuccess, let options = data as? [VideoCDNOption] {
+					self.videoCDNOptions = self.sortedVideoCDNOptions(options)
+					self.videoCDNStatusMessage = "Video CDN nodes updated."
+					if !self.videoCDNGroup.isEmpty,
+					   !options.contains(where: { $0.name == self.videoCDNGroup && $0.isSelectable }) {
+						self.saveVideoCDNGroup("")
+						self.videoCDNStatusMessage = "Selected video CDN is unavailable. Switched to automatic CDN."
+					}
+				} else {
+					self.videoCDNStatusMessage = "\(data)"
+				}
+			}
+		}
+	}
+
+	func refreshVideoCDNLatencies() {
+		guard !isRefreshingVideoCDNLatencies else { return }
+		let currentOptions = videoCDNOptions
+		guard !currentOptions.isEmpty else { return }
+		isRefreshingVideoCDNLatencies = true
+
+		updateVideoCDNOptionLatencies(currentOptions) { options in
+			DispatchQueue.main.async {
+				self.isRefreshingVideoCDNLatencies = false
+				self.videoCDNOptions = self.sortedVideoCDNOptions(options)
+			}
+		}
+	}
+
+	private func sortedVideoCDNOptions(_ options: [VideoCDNOption]) -> [VideoCDNOption] {
+		options.sorted { lhs, rhs in
+			if lhs.isGroup != rhs.isGroup {
+				return lhs.isGroup
+			}
+
+			if lhs.isGroup && rhs.isGroup {
+				return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+			}
+
+			switch (lhs.latencyMS, rhs.latencyMS) {
+			case let (lhsLatency?, rhsLatency?) where lhsLatency != rhsLatency:
+				return lhsLatency < rhsLatency
+			case (_?, nil):
+				return true
+			case (nil, _?):
+				return false
+			default:
+				if lhs.offline != rhs.offline {
+					return !lhs.offline
+				}
+				return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+			}
 		}
 	}
 }
