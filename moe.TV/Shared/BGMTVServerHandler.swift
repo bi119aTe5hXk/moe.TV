@@ -44,7 +44,7 @@ private func patchServer(urlString:String,
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
         request.setValue("Bearer \(settingsHandler.getBGMTVAccessTokenKey())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
             //print(response)
             if let err = error {
@@ -74,7 +74,7 @@ private func putServer(urlString:String,
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
         request.setValue("Bearer \(settingsHandler.getBGMTVAccessTokenKey())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
             //print(response)
             if let err = error {
@@ -199,7 +199,7 @@ func handleBGMTVOAuthCallback(_ url: URL) -> Bool {
     print("OAuth code: \(code)")
     getBGMTVAccessToken(code: code) { isSuccess, result in
         if isSuccess {
-            NotificationCenter.default.post(name: Notification.Name("getBGMUserInfo"), object: nil)
+            NotificationCenter.default.post(name: .getBGMUserInfo, object: nil)
         } else {
             print("getBGMTVAccessToken failed: \(result)")
         }

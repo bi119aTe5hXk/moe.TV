@@ -8,7 +8,6 @@
 import Foundation
 
 private let videoCDNSettingsHandler = SettingsHandler()
-private let videoCDNSettingsDidChangeNotification = Notification.Name("videoCDNSettingsDidChange")
 
 func getVideoCDNOptions(videoURLString: String,
 						includeLatency: Bool = false,
@@ -105,7 +104,7 @@ private func switchVideoCDNToAutomatic(for url: URL?) {
 	videoCDNSettingsHandler.setVideoCDNGroup("")
 	clearVideoCDNPlaybackCookie(for: url)
 	DispatchQueue.main.async {
-		NotificationCenter.default.post(name: videoCDNSettingsDidChangeNotification, object: nil)
+		NotificationCenter.default.post(name: .videoCDNSettingsDidChange, object: nil)
 	}
 }
 
@@ -253,7 +252,7 @@ private func postVideoCDNRequest(url: URL,
 	var request = URLRequest(url: url)
 	request.httpMethod = "POST"
 	request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")
-	request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+	request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
 	if let groupName, !groupName.isEmpty {
 		request.setValue("group=\(groupName)", forHTTPHeaderField: "Cookie")
 	}

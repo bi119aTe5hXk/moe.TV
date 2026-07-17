@@ -1,17 +1,16 @@
 //
-//  ServerHandler.swift
+//  AlbireoV1ServerHandler.swift
 //  moe.TV
 //
 //  Created by bi119aTe5hXk on 2019/08/15.
 //  Copyright © 2019 bi119aTe5hXk. All rights reserved.
-//  Doc for Albireo: https://albireo.docs.apiary.io/
+//  Handles legacy Albireo V1 cookie login and API requests.
 //
 import Foundation
 
 private var serverAddr = ""
 private let settingsHandler:SettingsHandler = SettingsHandler()
 private let jsonDecoder = JSONDecoder()
-let userAgent = "bi119aTe5hXk/moe.TV/1.0 (Apple Multi-platform) (https://github.com/bi119aTe5hXk/moe.TV)"
 
 
 func saveAlbireoCookies(response: HTTPURLResponse) {
@@ -100,7 +99,7 @@ func getAlbireoServer() -> String?{
     return serverAddr
 }
 func fixPathNotCompete(path:String) -> String{
-    return "\(settingsHandler.getAlbireoServerAddr())\(path)"
+	completeServerPath(baseURL: settingsHandler.getAlbireoServerAddr(), path: path)
 }
 
 private func postServer(urlString:String,
@@ -114,7 +113,7 @@ private func postServer(urlString:String,
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
-        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
             if let err = error {
                 completion(false, err.localizedDescription)
@@ -144,7 +143,7 @@ private func getServer(urlString:String,
     var request = URLRequest(url: url)
     request.httpMethod = "GET"
     request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-    request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+    request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
     URLSession.shared.dataTask(with: request){(data, response, error) in
         if let err = error {
             completion(false, err.localizedDescription)
@@ -245,7 +244,7 @@ func getAlbireoUserInfo(completion: @escaping (Bool, Any?) -> Void){
 						//                print("d:\(String(data: d, encoding: .utf8))")
 					if !d.isEmpty{
 						do {
-							if let userInfo = try jsonDecoder.decode(AlbireoUserInfoData?.self, from: d){
+							if let userInfo = try jsonDecoder.decode(AlbireoV1UserInfoData?.self, from: d){
 								if let msg = userInfo.message{
 									completion(false, msg)
 								}else{

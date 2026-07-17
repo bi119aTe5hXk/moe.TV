@@ -152,7 +152,7 @@ func handleAlbireoV2OAuthCallback(_ url: URL, completion: ((Bool, String) -> Voi
 
 	getAlbireoV2AccessToken(code: code, codeVerifier: codeVerifier) { isSuccess, result in
 		if isSuccess {
-			NotificationCenter.default.post(name: Notification.Name("getAlbireoV2UserInfo"), object: nil)
+			NotificationCenter.default.post(name: .getAlbireoV2UserInfo, object: nil)
 		} else {
 			print("getAlbireoV2AccessToken failed: \(result)")
 		}
@@ -392,7 +392,7 @@ private func postAlbireoV2JSON(urlString: String,
 			request.httpMethod = "POST"
 			request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")
 			request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-			request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+			request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
 			request.setValue("en-US,en;q=0.9,ja-JP;q=0.8,ja;q=0.7,zh-CN;q=0.6,zh;q=0.5", forHTTPHeaderField: "Accept-Language")
 			request.setValue(currentAlbireoV2APIServer(), forHTTPHeaderField: "Origin")
 			request.setValue(currentAlbireoV2APIServer(), forHTTPHeaderField: "Referer")
@@ -443,7 +443,7 @@ private func postAlbireoV2TokenRequest(body: [String: String], completion: @esca
 	request.httpMethod = "POST"
 	request.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
 	request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")
-	request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+	request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
 	request.httpBody = formURLEncodedData(body)
 
 	URLSession.shared.dataTask(with: request) { data, response, error in
@@ -490,7 +490,7 @@ private func getAlbireoV2JSON(urlString: String, completion: @escaping (Bool, An
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
 		request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")
-		request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+		request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
 		request.setValue("en-US,en;q=0.9,ja-JP;q=0.8,ja;q=0.7,zh-CN;q=0.6,zh;q=0.5", forHTTPHeaderField: "Accept-Language")
 		request.setValue(currentAlbireoV2APIServer(), forHTTPHeaderField: "Origin")
 		request.setValue(currentAlbireoV2APIServer(), forHTTPHeaderField: "Referer")
@@ -562,51 +562,6 @@ private func makeAlbireoV2CodeChallenge(verifier: String) -> String {
 	return Data(digest).base64URLEncodedString()
 }
 
-private func formURLEncodedData(_ parameters: [String: String]) -> Data {
-	let body = parameters
-		.map { key, value in
-			"\(formURLEscape(key))=\(formURLEscape(value))"
-		}
-		.joined(separator: "&")
-	return Data(body.utf8)
-}
-
-private func formURLEscape(_ string: String) -> String {
-	var allowed = CharacterSet.urlQueryAllowed
-	allowed.remove(charactersIn: ":#[]@!$&'()*+,;=")
-	return string.addingPercentEncoding(withAllowedCharacters: allowed) ?? string
-}
-
 private func normalizedAlbireoV2ServerURL(_ rawValue: String, fallback: String) -> String {
-	var value = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
-	if value.isEmpty {
-		value = fallback
-	}
-	while value.hasSuffix("/") {
-		value.removeLast()
-	}
-	if !value.contains("://") {
-		value = "https://\(value)"
-	}
-	return value
-}
-
-private extension Data {
-	init?(base64URLString: String) {
-		var value = base64URLString
-			.replacingOccurrences(of: "-", with: "+")
-			.replacingOccurrences(of: "_", with: "/")
-		let padding = value.count % 4
-		if padding > 0 {
-			value.append(String(repeating: "=", count: 4 - padding))
-		}
-		self.init(base64Encoded: value)
-	}
-
-	func base64URLEncodedString() -> String {
-		base64EncodedString()
-			.replacingOccurrences(of: "+", with: "-")
-			.replacingOccurrences(of: "/", with: "_")
-			.replacingOccurrences(of: "=", with: "")
-	}
+	normalizedServerURL(rawValue, fallback: fallback)
 }

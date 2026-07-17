@@ -53,7 +53,7 @@ struct BangumiListView: View {
             }
             .onChange(of: selectedFunc, initial: true) {  newValue in
 				if oldValue != newValue {
-					print("onChange.selectedFunc.getBGMList \(newValue)")
+					print("onChange.selectedFunc.getBGMList \(String(describing: newValue))")
 					oldValue = newValue
 					getBGMList()
 				}
