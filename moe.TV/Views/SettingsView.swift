@@ -213,6 +213,19 @@ struct SettingsView: View {
 							//TODO: hide not-onair items switch
 					}
 
+					Section(header: Text("Video CDN")) {
+						NavigationLink {
+							VideoCDNSettingsView(settingsVC: settingsVC)
+						} label: {
+							HStack {
+								Text("Video CDN")
+								Spacer()
+								Text(settingsVC.videoCDNGroup.isEmpty ? "Automatic" : settingsVC.videoCDNGroup)
+									.foregroundStyle(.secondary)
+							}
+						}
+					}
+
 					Section(header: Text("Download")) {
 						Button {
 							self.showDownloadList.toggle()
@@ -293,7 +306,165 @@ struct SettingsView: View {
 	}
 
     
-    
+}
+
+struct VideoCDNSettingsView: View {
+	@ObservedObject var settingsVC: SettingsViewController
+
+	var body: some View {
+		List {
+			Section {
+				Button {
+					settingsVC.saveVideoCDNGroup("")
+				} label: {
+					VideoCDNRow(
+						name: "Automatic",
+						statusColor: .green,
+						detail: nil,
+						latencyMS: nil,
+						isSelected: settingsVC.videoCDNGroup.isEmpty,
+						isEnabled: true
+					)
+				}
+				.buttonStyle(.plain)
+			}
+
+			Section(header: Text("Video CDN Nodes")) {
+				if settingsVC.isRefreshingVideoCDNOptions && settingsVC.videoCDNOptions.isEmpty {
+					HStack {
+						ProgressView()
+						Text("Loading video CDN nodes...")
+					}
+				}
+
+				ForEach(settingsVC.videoCDNOptions) { option in
+					Button {
+						if option.isSelectable {
+							settingsVC.saveVideoCDNGroup(option.name)
+						}
+					} label: {
+						VideoCDNRow(
+							name: option.name,
+							statusColor: optionStatusColor(option),
+							detail: optionDetail(option),
+							latencyMS: option.latencyMS,
+							isSelected: settingsVC.videoCDNGroup == option.name,
+							isEnabled: option.isSelectable
+						)
+					}
+					.buttonStyle(.plain)
+					.disabled(!option.isSelectable)
+				}
+			}
+
+			if !settingsVC.videoCDNStatusMessage.isEmpty {
+				Section {
+					Text(settingsVC.videoCDNStatusMessage)
+						.font(.footnote)
+						.foregroundStyle(.secondary)
+				}
+			}
+		}
+		.navigationTitle("Video CDN")
+		.toolbar {
+			ToolbarItem(placement: .automatic) {
+				Button {
+					settingsVC.refreshVideoCDNOptions()
+				} label: {
+					if settingsVC.isRefreshingVideoCDNOptions {
+						ProgressView()
+					} else {
+						Label("Refresh video CDN nodes", systemImage: "arrow.clockwise")
+					}
+				}
+				.disabled(settingsVC.isRefreshingVideoCDNOptions)
+			}
+		}
+		.onAppear {
+			settingsVC.loadVideoCDNSettings()
+			settingsVC.refreshVideoCDNOptions()
+		}
+		.task {
+			while !Task.isCancelled {
+				try? await Task.sleep(nanoseconds: 5_000_000_000)
+				if Task.isCancelled {
+					break
+				}
+				settingsVC.refreshVideoCDNLatencies()
+			}
+		}
+	}
+
+	private func optionStatusColor(_ option: VideoCDNOption) -> Color {
+		if option.isGroup {
+			return .green
+		}
+		return option.offline ? .red : .green
+	}
+
+	private func optionDetail(_ option: VideoCDNOption) -> String {
+		if option.isGroup {
+			let groupLabel = NSLocalizedString("Group", comment: "Video CDN group label")
+			if let servers = option.servers, !servers.isEmpty {
+				return String(format: NSLocalizedString("Group: %@", comment: "Video CDN group server list"), servers.joined(separator: ", "))
+			}
+			return groupLabel
+		}
+		return option.offline
+			? NSLocalizedString("Offline", comment: "Video CDN offline status")
+			: NSLocalizedString("Online", comment: "Video CDN online status")
+	}
+}
+
+private struct VideoCDNRow: View {
+	let name: String
+	let statusColor: Color
+	let detail: String?
+	let latencyMS: Int?
+	let isSelected: Bool
+	let isEnabled: Bool
+
+	var body: some View {
+		HStack(spacing: 12) {
+			Circle()
+				.fill(statusColor)
+				.frame(width: 10, height: 10)
+
+			VStack(alignment: .leading, spacing: 4) {
+				Text(name)
+					.foregroundStyle(isEnabled ? .primary : .secondary)
+				if let detail {
+					Text(detail)
+						.font(.caption)
+						.foregroundStyle(.secondary)
+				}
+			}
+
+			Spacer()
+
+			if let latencyMS {
+				Text("\(latencyMS) ms")
+					.font(.subheadline.monospacedDigit())
+					.foregroundStyle(latencyColor(latencyMS))
+			}
+
+			if isSelected {
+				Image(systemName: "checkmark")
+					.foregroundColor(.accentColor)
+			}
+		}
+		.contentShape(Rectangle())
+	}
+
+	private func latencyColor(_ latencyMS: Int) -> Color {
+		if latencyMS > 1000 {
+			return .red
+		}
+		if latencyMS > 500 {
+			return .yellow
+		}
+		return .green
+	}
 }
 
 //struct SettingsView_Previews: PreviewProvider {

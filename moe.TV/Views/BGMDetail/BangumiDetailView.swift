@@ -207,7 +207,7 @@ struct BangumiDetailView: View {
 							?? [], id: \.self){ item in
 						Button(item.file_name ?? "\(item.url ?? "unknown source")"){
 							if let urlstr = item.url{
-								detailVC.showVideoView(url: fixPathNotCompete(path: urlstr).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!, seekTime: detailVC.seek)
+								detailVC.prepareAndShowVideoView(url: urlstr, seekTime: detailVC.seek)
 							}else{
 								print("item.url is empty!")
 							}
@@ -224,6 +224,13 @@ struct BangumiDetailView: View {
 					detailVC.checkVideoSource(ep: detailVC.ep!, seekTime: 0)
 				}
 
+			}
+			.alert("Playback notice", isPresented: $detailVC.presentPlaybackNoticeAlert) {
+				Button("OK", role: .cancel) {
+					detailVC.continuePendingPlaybackAfterNotice()
+				}
+			} message: {
+				Text(detailVC.playbackNoticeMessage)
 			}
             
 

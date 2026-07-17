@@ -15,10 +15,13 @@ struct NewEPItem:Decodable {
 
 class BangumiDetailViewController : ObservableObject {
 	private let settingsHandler = SettingsHandler()
+	private var pendingPlaybackAfterNotice: (url: String, seekTime: Double, isOffline: Bool, filename: String?)?
 
-    @Published var presentVideoView = false
-    @Published var presentContinuePlayAlert = false
-    @Published var presentSourceSelectAlert = false
+	    @Published var presentVideoView = false
+	    @Published var presentContinuePlayAlert = false
+	    @Published var presentSourceSelectAlert = false
+		@Published var presentPlaybackNoticeAlert = false
+		@Published var playbackNoticeMessage = ""
     
     @Published var videoURL:String = ""
     @Published var videoIsOffline = false
@@ -90,23 +93,57 @@ class BangumiDetailViewController : ObservableObject {
             }
             
         }else{
-            if let vFile = ep.video_files{
-                if let url0 = vFile[0].url{
-                    let urlstr = fixPathNotCompete(path: url0).addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
-                    self.showVideoView(url: urlstr, seekTime: seekTime)
-                }else{
-                    print("vFile[0].url is empty!")
-                }
+	            if let vFile = ep.video_files{
+	                if let url0 = vFile[0].url{
+						self.prepareAndShowVideoView(url: url0, seekTime: seekTime)
+	                }else{
+	                    print("vFile[0].url is empty!")
+	                }
             }else{
                 print("ep.video_files is empty!")
             }
         }
     }
-    
-    
-    
-    //4 start playback
-    func showVideoView(url:String, seekTime:Double, isOffline: Bool = false, filename: String? = nil) {
+		func prepareAndShowVideoView(url: String, seekTime: Double, isOffline: Bool = false, filename: String? = nil) {
+			let urlstr = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? url
+			guard !isOffline else {
+				showVideoView(url: urlstr, seekTime: seekTime, isOffline: isOffline, filename: filename)
+				return
+			}
+
+			resolveVideoCDNPlaybackURL(urlstr) { resolvedURL, notice in
+				DispatchQueue.main.async {
+					if let notice, !notice.isEmpty {
+						self.playbackNoticeMessage = notice
+						self.pendingPlaybackAfterNotice = (
+							url: resolvedURL,
+							seekTime: seekTime,
+							isOffline: isOffline,
+							filename: filename
+						)
+						self.presentPlaybackNoticeAlert = true
+						return
+					}
+					self.showVideoView(url: resolvedURL, seekTime: seekTime, isOffline: isOffline, filename: filename)
+				}
+			}
+		}
+
+		func continuePendingPlaybackAfterNotice() {
+			guard let pendingPlaybackAfterNotice else {
+				return
+			}
+			self.pendingPlaybackAfterNotice = nil
+			showVideoView(
+				url: pendingPlaybackAfterNotice.url,
+				seekTime: pendingPlaybackAfterNotice.seekTime,
+				isOffline: pendingPlaybackAfterNotice.isOffline,
+				filename: pendingPlaybackAfterNotice.filename
+			)
+		}
+
+	    //4 start playback
+	    func showVideoView(url:String, seekTime:Double, isOffline: Bool = false, filename: String? = nil) {
         DispatchQueue.main.async {
             self.presentVideoView = false
             self.seek = seekTime

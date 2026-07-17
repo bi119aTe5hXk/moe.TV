@@ -121,6 +121,9 @@ final class StreamingCacheManager: ObservableObject {
 		var request = URLRequest(url: originalURL)
 		request.setValue("bytes=0-1", forHTTPHeaderField: "Range")
 		request.setValue("identity", forHTTPHeaderField: "Accept-Encoding")
+		for (field, value) in videoCDNHTTPHeaderFields(for: originalURL) {
+			request.setValue(value, forHTTPHeaderField: field)
+		}
 
 		let (_, response) = try await session.data(for: request)
 		guard let http = response as? HTTPURLResponse else {
@@ -395,6 +398,9 @@ final class StreamingCacheManager: ObservableObject {
 		var request = URLRequest(url: originalURL)
 		request.setValue("bytes=\(range.start)-\(range.end)", forHTTPHeaderField: "Range")
 		request.setValue("identity", forHTTPHeaderField: "Accept-Encoding")
+		for (field, value) in videoCDNHTTPHeaderFields(for: originalURL) {
+			request.setValue(value, forHTTPHeaderField: field)
+		}
 
 		let (data, response) = try await session.data(for: request)
 

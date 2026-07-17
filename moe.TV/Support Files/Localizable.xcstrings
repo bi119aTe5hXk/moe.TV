@@ -38,6 +38,9 @@
     "%lld" : {
       "shouldTranslate" : false
     },
+    "%lld ms" : {
+      "shouldTranslate" : false
+    },
     "%lld. " : {
       "shouldTranslate" : false
     },
@@ -444,6 +447,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "授權伺服器地址"
+          }
+        }
+      }
+    },
+    "Automatic" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自动"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動"
           }
         }
       }
@@ -1378,6 +1403,52 @@
         }
       }
     },
+    "Group" : {
+      "comment" : "Video CDN group label",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "グループ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分组"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "群組"
+          }
+        }
+      }
+    },
+    "Group: %@" : {
+      "comment" : "Video CDN group server list",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "グループ: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分组：%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "群組：%@"
+          }
+        }
+      }
+    },
     "Hide unrelease/empty EPs" : {
       "localizations" : {
         "ja" : {
@@ -1450,6 +1521,28 @@
     "ID: %@" : {
       "shouldTranslate" : false
     },
+    "Invalid video URL. Switched to original URL." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画URLが無効です。元のURLに切り替えました。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "视频 URL 无效，已切换为原始 URL。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "影片 URL 無效，已切換為原始 URL。"
+          }
+        }
+      }
+    },
     "Later" : {
       "localizations" : {
         "ja" : {
@@ -1468,6 +1561,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "稍後"
+          }
+        }
+      }
+    },
+    "Loading video CDN nodes..." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画CDNノードを読み込み中..."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载视频 CDN 节点..."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在載入影片 CDN 節點..."
           }
         }
       }
@@ -1812,6 +1927,29 @@
         }
       }
     },
+    "Offline" : {
+      "comment" : "Video CDN offline status",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オフライン"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "离线"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "離線"
+          }
+        }
+      }
+    },
     "OK" : {
       "shouldTranslate" : false
     },
@@ -1834,6 +1972,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "推薦"
+          }
+        }
+      }
+    },
+    "Online" : {
+      "comment" : "Video CDN online status",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オンライン"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在线"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線上"
           }
         }
       }
@@ -2014,6 +2175,28 @@
         }
       }
     },
+    "Playback notice" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生のお知らせ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放提示"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放提示"
+          }
+        }
+      }
+    },
     "Playback speed" : {
       "localizations" : {
         "ja" : {
@@ -2190,6 +2373,28 @@
         }
       }
     },
+    "Refresh video CDN nodes" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画CDNノードを更新"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刷新视频 CDN 节点"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新整理影片 CDN 節點"
+          }
+        }
+      }
+    },
     "RefreshToken" : {
       "localizations" : {
         "ja" : {
@@ -2297,6 +2502,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "選擇"
+          }
+        }
+      }
+    },
+    "Selected video CDN is unavailable. Switched to automatic CDN." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択した動画CDNは利用できません。自動CDNに切り替えました。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已选择的视频 CDN 不可用，已切换为自动 CDN。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已選擇的影片 CDN 無法使用，已切換為自動 CDN。"
           }
         }
       }
@@ -2723,6 +2950,28 @@
         }
       }
     },
+    "Use password login on tvOS. For OAuth2 login, please log in on another device and enable iCloud sync." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS ではパスワードログインを使用できます。OAuth2 ログインは別のデバイスで行い、iCloud 同期を有効にしてください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS 可使用密码登录。OAuth2 登录请在其他设备完成，并开启 iCloud 同步。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS 可使用密碼登入。OAuth2 登入請在其他裝置完成，並開啟 iCloud 同步。"
+          }
+        }
+      }
+    },
     "Username" : {
       "localizations" : {
         "ja" : {
@@ -2767,28 +3016,6 @@
         }
       }
     },
-    "Use password login on tvOS. For OAuth2 login, please log in on another device and enable iCloud sync." : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "tvOS ではパスワードログインを使用できます。OAuth2 ログインは別のデバイスで行い、iCloud 同期を有効にしてください。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "tvOS 可使用密码登录。OAuth2 登录请在其他设备完成，并开启 iCloud 同步。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "tvOS 可使用密碼登入。OAuth2 登入請在其他裝置完成，並開啟 iCloud 同步。"
-          }
-        }
-      }
-    },
     "Version:%@, Build:%@" : {
       "localizations" : {
         "en" : {
@@ -2799,6 +3026,72 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "Video CDN" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画CDN"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "视频 CDN"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "影片 CDN"
+          }
+        }
+      }
+    },
+    "Video CDN Nodes" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画CDNノード"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "视频 CDN 节点"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "影片 CDN 節點"
+          }
+        }
+      }
+    },
+    "Video CDN nodes updated." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動画CDNノードを更新しました。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "视频 CDN 节点已更新。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "影片 CDN 節點已更新。"
+          }
+        }
+      }
     },
     "Volume %@" : {
       "localizations" : {
