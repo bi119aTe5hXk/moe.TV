@@ -10,34 +10,43 @@ import Foundation
 
 private let albireoV2SettingsHandler = SettingsHandler()
 private let albireoV2Scopes = "openid offline_access profile bookmark"
+private let albireoV2OIDCIssuerURL = "https://authorization.box.moe"
+private let albireoV2RedirectHost = "box.moe"
 
 private let albireoV2OAuthCodeLock = NSLock()
 private var handledAlbireoV2OAuthCodes = Set<String>()
 private var pendingAlbireoV2OAuthState: String?
 private var pendingAlbireoV2OAuthCodeVerifier: String?
+private var cachedAlbireoV2OIDCConfiguration: AlbireoV2OIDCConfiguration?
 
-private func currentAlbireoV2ClientID() -> String {
-	albireoV2SettingsHandler.registerSettings()
-	let savedClientID = albireoV2SettingsHandler.getAlbireoV2ClientID().trimmingCharacters(in: .whitespacesAndNewlines)
-	return savedClientID.isEmpty ? albireoV2ClientID : savedClientID
+private struct AlbireoV2OIDCConfiguration: Decodable {
+	let issuer: String
+	let authorizationEndpoint: String
+	let tokenEndpoint: String
+	let userinfoEndpoint: String
+	let jwksURI: String
+	let endSessionEndpoint: String?
+
+	enum CodingKeys: String, CodingKey {
+		case issuer
+		case authorizationEndpoint = "authorization_endpoint"
+		case tokenEndpoint = "token_endpoint"
+		case userinfoEndpoint = "userinfo_endpoint"
+		case jwksURI = "jwks_uri"
+		case endSessionEndpoint = "end_session_endpoint"
+	}
 }
 
-private func currentAlbireoV2RedirectHost() -> String {
-	albireoV2SettingsHandler.registerSettings()
-	let savedHost = albireoV2SettingsHandler.getAlbireoV2RedirectHost().trimmingCharacters(in: .whitespacesAndNewlines)
-	return savedHost.isEmpty ? albireoV2RedirectHost : savedHost
+private func currentAlbireoV2ClientID() -> String {
+	albireoV2ClientID.trimmingCharacters(in: .whitespacesAndNewlines)
 }
 
 private func currentAlbireoV2RedirectURI() -> String {
-	"moetv://\(currentAlbireoV2RedirectHost())"
+	"moetv://\(albireoV2RedirectHost)"
 }
 
 private func currentAlbireoV2AuthorizationServer() -> String {
-	albireoV2SettingsHandler.registerSettings()
-	return normalizedAlbireoV2ServerURL(
-		albireoV2SettingsHandler.getAlbireoV2AuthorizationServerURL(),
-		fallback: albireoV2DefaultAuthorizationServerURL
-	)
+	albireoV2OIDCIssuerURL
 }
 
 private func currentAlbireoV2APIServer() -> String {
@@ -62,17 +71,49 @@ func isAlbireoV2Logined() -> Bool {
 }
 
 func logoutAlbireoV2() {
+	albireoV2SettingsHandler.registerSettings()
+	let idToken = albireoV2SettingsHandler.getAlbireoV2IDToken()
 	albireoV2SettingsHandler.clearAlbireoV2AuthInfo()
+
+	#if !os(tvOS)
+	guard !idToken.isEmpty else {
+		return
+	}
+
+	loadAlbireoV2OIDCConfiguration { result in
+		switch result {
+		case .success(let oidcConfiguration):
+			guard let endSessionEndpoint = oidcConfiguration.endSessionEndpoint,
+				  var components = URLComponents(string: endSessionEndpoint) else {
+				return
+			}
+			components.queryItems = [
+				URLQueryItem(name: "id_token_hint", value: idToken),
+				URLQueryItem(name: "post_logout_redirect_uri", value: currentAlbireoV2RedirectURI())
+			]
+
+			guard let urlString = components.url?.absoluteString else {
+				return
+			}
+			OAuthSessionManager.shared.start(urlString: urlString, callbackScheme: "moetv") { result in
+				switch result {
+				case .success:
+					print("Albireo V2 provider logout completed.")
+				case .failure(let error):
+					print("Albireo V2 provider logout failed or canceled: \(error.localizedDescription)")
+				}
+			}
+		case .failure(let error):
+			print("Albireo V2 provider logout skipped: \(error.localizedDescription)")
+		}
+	}
+	#endif
 }
 
 func startAlbireoV2Login(completion: @escaping (Bool, String) -> Void) {
 	let clientID = currentAlbireoV2ClientID()
 	guard !clientID.isEmpty else {
 		completion(false, "Albireo V2 client id is empty.")
-		return
-	}
-	guard !currentAlbireoV2RedirectHost().isEmpty else {
-		completion(false, "Albireo V2 redirect host is empty.")
 		return
 	}
 
@@ -82,46 +123,52 @@ func startAlbireoV2Login(completion: @escaping (Bool, String) -> Void) {
 	pendingAlbireoV2OAuthState = state
 	pendingAlbireoV2OAuthCodeVerifier = codeVerifier
 
-	let authorizationServer = currentAlbireoV2AuthorizationServer()
-	let apiServer = currentAlbireoV2APIServer()
-	var components = URLComponents(string: "\(authorizationServer)/oauth2/auth")
-	components?.queryItems = [
-		URLQueryItem(name: "client_id", value: clientID),
-		URLQueryItem(name: "response_type", value: "code"),
-		URLQueryItem(name: "redirect_uri", value: currentAlbireoV2RedirectURI()),
-		URLQueryItem(name: "scope", value: albireoV2Scopes),
-		URLQueryItem(name: "state", value: state),
-		URLQueryItem(name: "audience", value: apiServer),
-		URLQueryItem(name: "code_challenge", value: codeChallenge),
-		URLQueryItem(name: "code_challenge_method", value: "S256")
-	]
-
-	guard let urlString = components?.url?.absoluteString else {
-		completion(false, "Failed to build Albireo V2 OAuth URL.")
-		return
-	}
-
-	#if os(tvOS)
-	completion(false, "Albireo V2 OAuth login is not available on tvOS.")
-	#else
-	OAuthSessionManager.shared.start(urlString: urlString, callbackScheme: "moetv") { result in
+	loadAlbireoV2OIDCConfiguration { result in
 		switch result {
-		case .success(let callbackURL):
-			print("Albireo V2 OAuth callback URL: \(callbackURL.absoluteString)")
-			if !handleAlbireoV2OAuthCallback(callbackURL, completion: completion) {
-				completion(false, "Albireo V2 OAuth callback missing code.")
+		case .success(let oidcConfiguration):
+			let apiServer = currentAlbireoV2APIServer()
+			var components = URLComponents(string: oidcConfiguration.authorizationEndpoint)
+			components?.queryItems = [
+				URLQueryItem(name: "client_id", value: clientID),
+				URLQueryItem(name: "response_type", value: "code"),
+				URLQueryItem(name: "redirect_uri", value: currentAlbireoV2RedirectURI()),
+				URLQueryItem(name: "scope", value: albireoV2Scopes),
+				URLQueryItem(name: "state", value: state),
+				URLQueryItem(name: "audience", value: apiServer),
+				URLQueryItem(name: "code_challenge", value: codeChallenge),
+				URLQueryItem(name: "code_challenge_method", value: "S256")
+			]
+
+			guard let urlString = components?.url?.absoluteString else {
+				completion(false, "Failed to build Albireo V2 OAuth URL.")
+				return
 			}
+
+			#if os(tvOS)
+			completion(false, "Albireo V2 OAuth login is not available on tvOS.")
+			#else
+			OAuthSessionManager.shared.start(urlString: urlString, callbackScheme: "moetv") { result in
+				switch result {
+				case .success(let callbackURL):
+					print("Albireo V2 OAuth callback URL: \(callbackURL.absoluteString)")
+					if !handleAlbireoV2OAuthCallback(callbackURL, completion: completion) {
+						completion(false, "Albireo V2 OAuth callback missing code.")
+					}
+				case .failure(let error):
+					completion(false, error.localizedDescription)
+				}
+			}
+			#endif
 		case .failure(let error):
 			completion(false, error.localizedDescription)
 		}
 	}
-	#endif
 }
 
 @discardableResult
 func handleAlbireoV2OAuthCallback(_ url: URL, completion: ((Bool, String) -> Void)? = nil) -> Bool {
 	guard url.scheme == "moetv",
-		  url.host == currentAlbireoV2RedirectHost(),
+		  url.host == albireoV2RedirectHost,
 		  let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
 		  let code = components.queryItems?.first(where: { $0.name == "code" })?.value,
 		  !code.isEmpty else {
@@ -210,7 +257,14 @@ func ensureAlbireoV2AccessTokenValid(completion: @escaping (Bool, String) -> Voi
 }
 
 func getAlbireoV2UserInfo(completion: @escaping (Bool, Any) -> Void) {
-	getAlbireoV2JSON(urlString: "\(currentAlbireoV2AuthorizationServer())/userinfo", completion: completion)
+	loadAlbireoV2OIDCConfiguration { result in
+		switch result {
+		case .success(let oidcConfiguration):
+			getAlbireoV2JSON(urlString: oidcConfiguration.userinfoEndpoint, completion: completion)
+		case .failure(let error):
+			completion(false, error.localizedDescription)
+		}
+	}
 }
 
 func getAlbireoV2AccountInfo(completion: @escaping (Bool, Any) -> Void) {
@@ -434,43 +488,106 @@ private func albireoV2CurrentISOString() -> String {
 }
 
 private func postAlbireoV2TokenRequest(body: [String: String], completion: @escaping (Bool, String) -> Void) {
-	guard let url = URL(string: "\(currentAlbireoV2AuthorizationServer())/oauth2/token") else {
-		completion(false, "Invalid Albireo V2 token endpoint.")
+	loadAlbireoV2OIDCConfiguration { result in
+		switch result {
+		case .success(let oidcConfiguration):
+			guard let url = URL(string: oidcConfiguration.tokenEndpoint) else {
+				completion(false, "Invalid Albireo V2 token endpoint.")
+				return
+			}
+
+			var request = URLRequest(url: url)
+			request.httpMethod = "POST"
+			request.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
+			request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")
+			request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
+			request.httpBody = formURLEncodedData(body)
+
+			URLSession.shared.dataTask(with: request) { data, response, error in
+				if let error {
+					completion(false, error.localizedDescription)
+					return
+				}
+
+				if let httpResponse = response as? HTTPURLResponse,
+				   httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
+					let responseText = data.flatMap { String(data: $0, encoding: .utf8) } ?? ""
+					completion(false, "Albireo V2 token HTTP \(httpResponse.statusCode): \(responseText)")
+					return
+				}
+
+				guard let data else {
+					completion(false, "Albireo V2 token response is empty.")
+					return
+				}
+
+				do {
+					let token = try JSONDecoder().decode(AlbireoV2OAuthTokenResponse.self, from: data)
+					saveAlbireoV2Token(token)
+					completion(true, "Albireo V2 OAuth token saved.")
+				} catch {
+					let responseText = String(data: data, encoding: .utf8) ?? ""
+					completion(false, "Albireo V2 token decode error: \(error.localizedDescription), response: \(responseText)")
+				}
+			}.resume()
+		case .failure(let error):
+			completion(false, error.localizedDescription)
+		}
+	}
+}
+
+private func loadAlbireoV2OIDCConfiguration(completion: @escaping (Result<AlbireoV2OIDCConfiguration, Error>) -> Void) {
+	if let cachedAlbireoV2OIDCConfiguration {
+		completion(.success(cachedAlbireoV2OIDCConfiguration))
+		return
+	}
+
+	guard let url = URL(string: "\(albireoV2OIDCIssuerURL)/.well-known/openid-configuration") else {
+		completion(.failure(NSError(domain: "moe.TV.AlbireoV2OIDC", code: -1, userInfo: [
+			NSLocalizedDescriptionKey: "Invalid Albireo V2 OIDC discovery URL."
+		])))
 		return
 	}
 
 	var request = URLRequest(url: url)
-	request.httpMethod = "POST"
-	request.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
+	request.httpMethod = "GET"
 	request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")
 	request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
-	request.httpBody = formURLEncodedData(body)
 
 	URLSession.shared.dataTask(with: request) { data, response, error in
 		if let error {
-			completion(false, error.localizedDescription)
+			completion(.failure(error))
 			return
 		}
 
 		if let httpResponse = response as? HTTPURLResponse,
 		   httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
 			let responseText = data.flatMap { String(data: $0, encoding: .utf8) } ?? ""
-			completion(false, "Albireo V2 token HTTP \(httpResponse.statusCode): \(responseText)")
+			completion(.failure(NSError(domain: "moe.TV.AlbireoV2OIDC", code: httpResponse.statusCode, userInfo: [
+				NSLocalizedDescriptionKey: "Albireo V2 OIDC discovery HTTP \(httpResponse.statusCode): \(responseText)"
+			])))
 			return
 		}
 
 		guard let data else {
-			completion(false, "Albireo V2 token response is empty.")
+			completion(.failure(NSError(domain: "moe.TV.AlbireoV2OIDC", code: -2, userInfo: [
+				NSLocalizedDescriptionKey: "Albireo V2 OIDC discovery response is empty."
+			])))
 			return
 		}
 
 		do {
-			let token = try JSONDecoder().decode(AlbireoV2OAuthTokenResponse.self, from: data)
-			saveAlbireoV2Token(token)
-			completion(true, "Albireo V2 OAuth token saved.")
+			let configuration = try JSONDecoder().decode(AlbireoV2OIDCConfiguration.self, from: data)
+			guard configuration.issuer == albireoV2OIDCIssuerURL else {
+				completion(.failure(NSError(domain: "moe.TV.AlbireoV2OIDC", code: -3, userInfo: [
+					NSLocalizedDescriptionKey: "Albireo V2 OIDC issuer mismatch."
+				])))
+				return
+			}
+			cachedAlbireoV2OIDCConfiguration = configuration
+			completion(.success(configuration))
 		} catch {
-			let responseText = String(data: data, encoding: .utf8) ?? ""
-			completion(false, "Albireo V2 token decode error: \(error.localizedDescription), response: \(responseText)")
+			completion(.failure(error))
 		}
 	}.resume()
 }

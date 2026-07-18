@@ -41,7 +41,8 @@ struct DebugView: View {
 
 				Section(header: Text("Albireo V2")) {
 					debugRow(title: "Auth mode", value: debugVC.getAlbireoAuthModeDEBUG())
-					debugRow(title: "Authorization server", value: debugVC.getAlbireoV2AuthorizationServerURLDEBUG())
+					debugRow(title: "OIDC issuer", value: debugVC.getAlbireoV2OIDCIssuerDEBUG())
+					debugRow(title: "OIDC discovery", value: debugVC.getAlbireoV2OIDCDiscoveryURLDEBUG())
 					debugRow(title: "API server", value: debugVC.getAlbireoV2APIServerURLDEBUG())
 					debugRow(title: "AccessToken", value: debugVC.getAlbireoV2AccessTokenDEBUG())
 					debugRow(title: "RefreshToken", value: debugVC.getAlbireoV2RefreshTokenDEBUG())

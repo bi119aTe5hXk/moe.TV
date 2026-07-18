@@ -8,9 +8,7 @@ echo "Stage: PRE-Xcode Build is activated .... "
 	printf "let bgmAppSecret = \"%s\"\n" "$bgmAppSecret"
 	printf "let testURL = \"%s\"\n" "$testURL"
 	printf "let albireoV2ClientID = \"%s\"\n" "$albireoV2ClientID"
-	printf "let albireoV2DefaultAuthorizationServerURL = \"%s\"\n" "$albireoV2DefaultAuthorizationServerURL"
 	printf "let albireoV2DefaultAPIServerURL = \"%s\"\n" "$albireoV2DefaultAPIServerURL"
-	printf "let albireoV2RedirectHost = \"%s\"\n" "$albireoV2RedirectHost"
 } >> ../moe.TV/DONOTUPLOAD.swift
 
 echo "Wrote swift file."

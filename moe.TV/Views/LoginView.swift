@@ -18,7 +18,7 @@ private enum LoginMethod: String, CaseIterable, Identifiable {
 		case .password:
 			return "Password"
 		case .oauth2:
-			return "OAuth2"
+			return "box.moe"
 		}
 	}
 }
@@ -46,7 +46,7 @@ struct LoginView: View {
 							.fontWeight(.bold)
 							.font(.title)
 #if os(tvOS)
-						Text("Use password login on tvOS. For OAuth2 login, please log in on another device and enable iCloud sync.")
+						Text("Use password login on tvOS. For box.moe login, please log in on another device and enable iCloud sync.")
 							.font(.subheadline)
 							.foregroundColor(.secondary)
 							.multilineTextAlignment(.center)
@@ -126,37 +126,26 @@ struct LoginView: View {
 	@ViewBuilder
 	private var oauth2LoginFields: some View {
 #if os(tvOS)
-		Text("Albireo OAuth2 login is not available on tvOS. Please log in on another device and enable iCloud sync.")
+		Text("box.moe login is not available on tvOS. Please log in on another device and enable iCloud sync.")
 			.multilineTextAlignment(.center)
 			.padding(10)
 #else
 		VStack(spacing: 12) {
-			TextField("Authorization Server URL", text: $loginVC.albireoV2AuthorizationServer)
-				.loginTextFieldStyle()
-#if os(iOS)
-				.keyboardType(.URL)
-#endif
 			TextField("API Server URL", text: $loginVC.albireoV2APIServer)
 				.loginTextFieldStyle()
 #if os(iOS)
 				.keyboardType(.URL)
 #endif
-			TextField("OAuth2 Client ID", text: $loginVC.albireoV2OAuthClientID)
-				.loginTextFieldStyle()
-			TextField("OAuth2 Redirect Host", text: $loginVC.albireoV2OAuthRedirectHost)
-				.loginTextFieldStyle()
 			Button(action: {
 				loginVC.loginWithAlbireoV2()
 			}, label: {
-				Label("Login with OAuth2", systemImage: "key.fill")
+				Label("Login with box.moe", systemImage: "key.fill")
 					.frame(maxWidth: .infinity)
 			})
 			.buttonStyle(.borderedProminent)
 			.disabled(
-				!loginVC.isValidAlbireoV2AuthorizationServer ||
 				!loginVC.isValidAlbireoV2APIServer ||
-				!loginVC.isValidAlbireoV2ClientID ||
-				!loginVC.isValidAlbireoV2RedirectHost
+				!loginVC.isAlbireoV2ClientConfigured
 			)
 		}
 #endif

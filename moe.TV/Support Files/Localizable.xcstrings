@@ -222,6 +222,7 @@
       }
     },
     "Albireo OAuth2 login is not available on tvOS. Please log in on another device and enable iCloud sync." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -430,6 +431,7 @@
       }
     },
     "Authorization Server URL" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -585,6 +587,31 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "tvOS上不支持bgm.tv相關設定。您可以在iOS/macOS上登入後通過雲端同步帳戶信息到tvOS"
+          }
+        }
+      }
+    },
+    "box.moe" : {
+      "shouldTranslate" : false
+    },
+    "box.moe login is not available on tvOS. Please log in on another device and enable iCloud sync." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS では box.moe ログインを利用できません。別のデバイスでログインし、iCloud 同期を有効にしてください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS 不支持 box.moe 登录。请在其他设备登录并开启 iCloud 同步。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS 不支援 box.moe 登入。請在其他裝置登入並開啟 iCloud 同步。"
           }
         }
       }
@@ -1675,7 +1702,30 @@
         }
       }
     },
+    "Login with box.moe" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "box.moeでログイン"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用 box.moe 登录"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用 box.moe 登入"
+          }
+        }
+      }
+    },
     "Login with OAuth2" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1884,6 +1934,7 @@
       }
     },
     "OAuth2 Client ID" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1906,6 +1957,7 @@
       }
     },
     "OAuth2 Redirect Host" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -2950,7 +3002,30 @@
         }
       }
     },
+    "Use password login on tvOS. For box.moe login, please log in on another device and enable iCloud sync." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS ではパスワードログインを使用できます。box.moe ログインは別のデバイスで行い、iCloud 同期を有効にしてください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS 可使用密码登录。box.moe 登录请在其他设备完成，并开启 iCloud 同步。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS 可使用密碼登入。box.moe 登入請在其他裝置完成，並開啟 iCloud 同步。"
+          }
+        }
+      }
+    },
     "Use password login on tvOS. For OAuth2 login, please log in on another device and enable iCloud sync." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {

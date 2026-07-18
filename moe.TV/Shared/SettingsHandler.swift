@@ -86,10 +86,7 @@ class SettingsHandler {
 	private let kAlbireoV2RefreshToken = "kAlbireoV2RefreshToken"
 	private let kAlbireoV2IDToken = "kAlbireoV2IDToken"
 	private let kAlbireoV2ExpireTime = "kAlbireoV2ExpireTime"
-	private let kAlbireoV2AuthorizationServerURL = "kAlbireoV2AuthorizationServerURL"
 	private let kAlbireoV2APIServerURL = "kAlbireoV2APIServerURL"
-	private let kAlbireoV2ClientID = "kAlbireoV2ClientID"
-	private let kAlbireoV2RedirectHost = "kAlbireoV2RedirectHost"
 	private let kVideoCDNGroup = "kVideoCDNGroup"
 	private let kVideoCDNOptions = "kVideoCDNOptions"
 
@@ -195,33 +192,12 @@ class SettingsHandler {
 			setAlbireoAuthMode(.legacyCookie)
 		}
 	}
-	func setAlbireoV2AuthorizationServerURL(_ url: String) {
-		ub.set(url, forKey: kAlbireoV2AuthorizationServerURL)
-		sync()
-	}
-	func getAlbireoV2AuthorizationServerURL() -> String {
-		return ub.string(forKey: kAlbireoV2AuthorizationServerURL) ?? ""
-	}
 	func setAlbireoV2APIServerURL(_ url: String) {
 		ub.set(url, forKey: kAlbireoV2APIServerURL)
 		sync()
 	}
 	func getAlbireoV2APIServerURL() -> String {
 		return ub.string(forKey: kAlbireoV2APIServerURL) ?? ""
-	}
-	func setAlbireoV2ClientID(_ clientID: String) {
-		ub.set(clientID, forKey: kAlbireoV2ClientID)
-		sync()
-	}
-	func getAlbireoV2ClientID() -> String {
-		return ub.string(forKey: kAlbireoV2ClientID) ?? ""
-	}
-	func setAlbireoV2RedirectHost(_ host: String) {
-		ub.set(host, forKey: kAlbireoV2RedirectHost)
-		sync()
-	}
-	func getAlbireoV2RedirectHost() -> String {
-		return ub.string(forKey: kAlbireoV2RedirectHost) ?? ""
 	}
 	func setVideoCDNGroup(_ group: String) {
 		ub.set(group, forKey: kVideoCDNGroup)
