@@ -72,7 +72,10 @@ class LoginViewController: ObservableObject {
 			toggleErrorView(msg: "Albireo V2 API server URL is invalid.")
 			return
 		}
-		saveAlbireoV2OAuthSettings()
+		guard saveAlbireoV2OAuthSettings() else {
+			toggleErrorView(msg: "Albireo V2 API server URL is invalid.")
+			return
+		}
 		startAlbireoV2Login { result, message in
 			if result {
 				getAlbireoV2UserInfo { accountResult, accountData in
@@ -97,10 +100,16 @@ class LoginViewController: ObservableObject {
 		#endif
 	}
 
-	private func saveAlbireoV2OAuthSettings() {
+	@discardableResult
+	private func saveAlbireoV2OAuthSettings() -> Bool {
+		guard let normalizedURL = validatedHTTPServerURL(albireoV2APIServer) else {
+			return false
+		}
+		albireoV2APIServer = normalizedURL
 		let settingsHandler = SettingsHandler()
 		settingsHandler.registerSettings()
-		settingsHandler.setAlbireoV2APIServerURL(normalizedAlbireoV2LoginURL(albireoV2APIServer))
+		settingsHandler.setAlbireoV2APIServerURL(normalizedURL)
+		return true
 	}
     
     init(){
@@ -111,14 +120,14 @@ class LoginViewController: ObservableObject {
 		}
 		let savedAlbireoV2APIServer = settingsHandler.getAlbireoV2APIServerURL()
 		self.albireoV2APIServer = savedAlbireoV2APIServer.isEmpty ? albireoV2DefaultAPIServerURL : savedAlbireoV2APIServer
-		self.isValidAlbireoV2APIServer = normalizedAlbireoV2LoginURL(self.albireoV2APIServer).isValidURL && !self.albireoV2APIServer.isEmpty
+		self.isValidAlbireoV2APIServer = isValidHTTPServerURL(self.albireoV2APIServer)
 		self.isAlbireoV2ClientConfigured = !albireoV2ClientID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         $server.sink(receiveValue: {
-            self.isValidServer = $0.isValidURL && !$0.isEmpty ? true : false
+            self.isValidServer = isValidHTTPServerURL($0)
         }).store(in: &disposables)
 
 		$albireoV2APIServer.sink(receiveValue: {
-			self.isValidAlbireoV2APIServer = normalizedAlbireoV2LoginURL($0).isValidURL && !$0.isEmpty
+			self.isValidAlbireoV2APIServer = isValidHTTPServerURL($0)
 		}).store(in: &disposables)
         
         $username.sink(receiveValue: {
@@ -133,7 +142,13 @@ class LoginViewController: ObservableObject {
         
         $isLoginButtonTapped.sink(receiveValue: { isTapped in
                         if isTapped == true {
-                            loginAlbireoServer(server:self.server,
+							guard let normalizedServerURL = validatedHTTPServerURL(self.server) else {
+								self.toggleErrorView(msg: "Server URL or Username / Password error.")
+								self.isLoginButtonTapped = false
+								return
+							}
+							self.server = normalizedServerURL
+                            loginAlbireoServer(server: normalizedServerURL,
                                       username: self.username,
                                       password: self.password)
                             { result, data in
@@ -152,15 +167,4 @@ class LoginViewController: ObservableObject {
                     })
                     .store(in: &disposables)
     }
-}
-
-private func normalizedAlbireoV2LoginURL(_ rawValue: String) -> String {
-	var value = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
-	while value.hasSuffix("/") {
-		value.removeLast()
-	}
-	if !value.contains("://") {
-		value = "https://\(value)"
-	}
-	return value
 }
