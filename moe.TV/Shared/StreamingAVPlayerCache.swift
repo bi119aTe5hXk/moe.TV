@@ -30,11 +30,12 @@ struct StreamingCacheState: Equatable {
 }
 
 struct StreamingCacheConfiguration {
-	var prefetchLength: Int64 = 64 * 1024 * 1024
-	var requestChunkSize: Int64 = 1024 * 1024
+	var prefetchLength: Int64 = 128 * 1024 * 1024
+	var pausedPrefetchLength: Int64 = 500 * 1024 * 1024
+	var requestChunkSize: Int64 = 10 * 1024 * 1024
 	var maxRetryCount = 2
-	var retryBaseDelay: TimeInterval = 0.4
-	var maxCacheBytes: Int64 = 3 * 1024 * 1024 * 1024
+	var retryBaseDelay: TimeInterval = 0.5
+	var maxCacheBytes: Int64 = 5 * 1024 * 1024 * 1024
 	var maxCacheAge: TimeInterval = 7 * 24 * 60 * 60
 	var removesCacheOnStop = false
 }
@@ -111,6 +112,27 @@ final class StreamingCacheManager: ObservableObject {
 		contentType
 	}
 
+	var cachedTimeRanges: [ClosedRange<Double>] {
+		cachedTimeRanges(duration: nil)
+	}
+
+	func cachedTimeRanges(duration: Double?) -> [ClosedRange<Double>] {
+		guard state.contentLength > 0,
+			  let duration,
+			  duration.isFinite,
+			  duration > 0 else {
+			return []
+		}
+
+		let contentLength = Double(state.contentLength)
+		return state.cachedRanges.compactMap { range in
+			let start = max(0, min(duration, Double(range.start) / contentLength * duration))
+			let end = max(start, min(duration, Double(range.end + 1) / contentLength * duration))
+			guard end > start else { return nil }
+			return start...end
+		}
+	}
+
 	func prepare() async throws {
 		guard !isStopped else { throw CancellationError() }
 		guard !state.isPrepared else {
@@ -149,7 +171,7 @@ final class StreamingCacheManager: ObservableObject {
 		saveMetadataToDisk()
 	}
 
-	func data(for requestedRange: CachedRange) async throws -> Data {
+	func data(for requestedRange: CachedRange, updatesLastRequestedRange: Bool = true) async throws -> Data {
 		guard !isStopped else { throw CancellationError() }
 		try validate(range: requestedRange)
 		try await prepare()
@@ -159,8 +181,10 @@ final class StreamingCacheManager: ObservableObject {
 			end: min(requestedRange.end, state.contentLength - 1)
 		)
 
-		state.lastRequestedOffset = cappedRange.start
-		state.lastRequestedEndOffset = cappedRange.end
+		if updatesLastRequestedRange {
+			state.lastRequestedOffset = cappedRange.start
+			state.lastRequestedEndOffset = cappedRange.end
+		}
 
 		let missingRanges = missingRanges(in: cappedRange)
 		for range in missingRanges {
@@ -181,11 +205,15 @@ final class StreamingCacheManager: ObservableObject {
 		let prefetchLength = length ?? configuration.prefetchLength
 		let safeStart = max(0, min(start, state.contentLength - 1))
 		let safeEnd = max(safeStart, min(state.contentLength - 1, safeStart + prefetchLength - 1))
-		let requestedPrefetchRange = CachedRange(start: safeStart, end: safeEnd)
+		let firstNeededOffset = firstUncachedOffset(atOrAfter: safeStart)
+		guard firstNeededOffset <= safeEnd else { return }
+
+		let requestedPrefetchRange = CachedRange(start: firstNeededOffset, end: safeEnd)
 
 		if let activePrefetchRange,
-		   activePrefetchRange.start <= safeStart,
-		   activePrefetchRange.end >= min(safeEnd, safeStart + configuration.requestChunkSize - 1) {
+		   activePrefetchRange.start <= firstNeededOffset,
+		   activePrefetchRange.end >= firstNeededOffset,
+		   activePrefetchRange.end >= min(safeEnd, firstNeededOffset + configuration.requestChunkSize - 1) {
 			return
 		}
 
@@ -211,16 +239,14 @@ final class StreamingCacheManager: ObservableObject {
 			do {
 				try await self.prepare()
 
-				var offset = await MainActor.run {
-					self.firstUncachedOffset(atOrAfter: safeStart)
-				}
+				var offset = firstNeededOffset
 
 				while offset <= safeEnd {
 					try Task.checkCancellation()
 
 					let chunkEnd = min(safeEnd, offset + self.configuration.requestChunkSize - 1)
 					let range = CachedRange(start: offset, end: chunkEnd)
-					_ = try await self.data(for: range)
+					_ = try await self.data(for: range, updatesLastRequestedRange: false)
 
 					offset = await MainActor.run {
 						self.firstUncachedOffset(atOrAfter: chunkEnd + 1)
@@ -240,6 +266,20 @@ final class StreamingCacheManager: ObservableObject {
 
 	func prefetchFromLastRequestedOffset(length: Int64? = nil) {
 		prefetchAfterCachedRange(containing: state.lastRequestedEndOffset, length: length)
+	}
+
+	func prefetchForwardBuffer(currentTime: Double? = nil, duration: Double? = nil, length: Int64? = nil) {
+		let playbackOffset = byteOffset(currentTime: currentTime, duration: duration)
+		let anchorOffset = max(state.lastRequestedEndOffset, playbackOffset ?? 0)
+		prefetchAfterCachedRange(containing: anchorOffset, length: length)
+	}
+
+	func prefetchPausedForwardBuffer(currentTime: Double? = nil, duration: Double? = nil) {
+		prefetchForwardBuffer(
+			currentTime: currentTime,
+			duration: duration,
+			length: configuration.pausedPrefetchLength
+		)
 	}
 
 	func prefetchAfterCachedRange(containing offset: Int64, length: Int64? = nil) {
@@ -488,6 +528,20 @@ final class StreamingCacheManager: ObservableObject {
 		return cursor
 	}
 
+	private func byteOffset(currentTime: Double?, duration: Double?) -> Int64? {
+		guard state.contentLength > 0,
+			  let currentTime,
+			  let duration,
+			  currentTime.isFinite,
+			  duration.isFinite,
+			  duration > 0 else {
+			return nil
+		}
+
+		let progress = max(0, min(1, currentTime / duration))
+		return min(state.contentLength - 1, max(0, Int64(Double(state.contentLength) * progress)))
+	}
+
 	private func missingRanges(in requestedRange: CachedRange) -> [CachedRange] {
 		var missing: [CachedRange] = []
 		var cursor = requestedRange.start
@@ -679,9 +733,6 @@ final class StreamingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDele
 			guard let self, let loadingRequest else { return }
 
 			do {
-				await MainActor.run {
-					self.cacheManager.cancelPrefetch()
-				}
 				try await self.fill(loadingRequest)
 				loadingRequest.finishLoading()
 			} catch is CancellationError {

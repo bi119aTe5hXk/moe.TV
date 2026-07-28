@@ -31,6 +31,7 @@ class PlayerViewController: ObservableObject {
 	private var timeObserverToken: Any?
 	private var stallRecoveryTask: Task<Void, Never>?
 	private var shouldResumeAfterStall = false
+	private var lastStreamingPrefetchMaintenanceDate: Date?
 	private var cancellables = Set<AnyCancellable>()
 
 	let offlinePBM = OfflinePlaybackManager()
@@ -83,6 +84,7 @@ class PlayerViewController: ObservableObject {
 		stallRecoveryTask?.cancel()
 		stallRecoveryTask = nil
 		shouldResumeAfterStall = false
+		lastStreamingPrefetchMaintenanceDate = nil
 		cancellables.removeAll()
 	}
 
@@ -90,13 +92,14 @@ class PlayerViewController: ObservableObject {
 	func play() {
 		applyPlaybackRate()
 		isPlaying = true
+		prefetchStreamingForwardBuffer()
 	}
 
 	@MainActor
 	func pause() {
 		avPlayer?.pause()
 		isPlaying = false
-		streamingCacheManager?.prefetchFromLastRequestedOffset()
+		prefetchStreamingForwardBufferForPausedPlayback()
 	}
 
 	@MainActor
@@ -142,7 +145,11 @@ class PlayerViewController: ObservableObject {
 					self.play()
 				}
 
-				self.streamingCacheManager?.prefetchFromLastRequestedOffset()
+				if self.isPlaying || autoPlay {
+					self.prefetchStreamingForwardBuffer()
+				} else {
+					self.prefetchStreamingForwardBufferForPausedPlayback()
+				}
 			}
 		}
 	}
@@ -233,7 +240,7 @@ class PlayerViewController: ObservableObject {
 			print("waiting")
 			let shouldRecover = isPlaying || (avPlayer?.rate ?? 0) > 0
 			isPlaying = false
-			streamingCacheManager?.prefetchFromLastRequestedOffset()
+			prefetchStreamingForwardBufferForPausedPlayback()
 			if shouldRecover {
 				scheduleStallRecovery()
 			}
@@ -251,13 +258,14 @@ class PlayerViewController: ObservableObject {
 					isBGMTVWatched: isBGMTVWatched
 				)
 			}
-			streamingCacheManager?.prefetchFromLastRequestedOffset()
+			prefetchStreamingForwardBufferForPausedPlayback()
 		case .playing:
 			print("playing")
 			shouldResumeAfterStall = true
 			stallRecoveryTask?.cancel()
 			stallRecoveryTask = nil
 			isPlaying = true
+			prefetchStreamingForwardBuffer()
 		case .some:
 			print("unknown player status:\(String(describing: status))")
 		@unknown default:
@@ -438,6 +446,7 @@ class PlayerViewController: ObservableObject {
 		stallRecoveryTask?.cancel()
 		stallRecoveryTask = nil
 		shouldResumeAfterStall = false
+		lastStreamingPrefetchMaintenanceDate = nil
 		cancellables.removeAll()
 	}
 
@@ -540,11 +549,21 @@ class PlayerViewController: ObservableObject {
 			}
 
 			self.updateLoadedTimeRanges()
+			self.maintainStreamingForwardBufferIfNeeded()
 		}
 	}
 
 	@MainActor
 	private func updateLoadedTimeRanges() {
+		if let streamingCacheManager {
+			let cacheDuration = playerDuration()
+			let ranges = streamingCacheManager.cachedTimeRanges(duration: cacheDuration)
+			if !ranges.isEmpty {
+				loadedTimeRanges = ranges
+				return
+			}
+		}
+
 		guard let item = avPlayer?.currentItem else {
 			loadedTimeRanges = []
 			return
@@ -566,10 +585,63 @@ class PlayerViewController: ObservableObject {
 	@MainActor
 	private func handlePlaybackStalled() {
 		print("playback stalled")
-		streamingCacheManager?.prefetchFromLastRequestedOffset(length: 16 * 1024 * 1024)
+		prefetchStreamingForwardBufferForPausedPlayback()
 		if shouldResumeAfterStall {
 			scheduleStallRecovery()
 		}
+	}
+
+	@MainActor
+	private func prefetchStreamingForwardBuffer() {
+		streamingCacheManager?.prefetchForwardBuffer(
+			currentTime: playerCurrentTime(),
+			duration: playerDuration()
+		)
+	}
+
+	@MainActor
+	private func prefetchStreamingForwardBufferForPausedPlayback() {
+		streamingCacheManager?.prefetchPausedForwardBuffer(
+			currentTime: playerCurrentTime(),
+			duration: playerDuration()
+		)
+	}
+
+	@MainActor
+	private func maintainStreamingForwardBufferIfNeeded() {
+		guard streamingCacheManager != nil else { return }
+
+		let now = Date()
+		if let lastStreamingPrefetchMaintenanceDate,
+		   now.timeIntervalSince(lastStreamingPrefetchMaintenanceDate) < 2 {
+			return
+		}
+
+		lastStreamingPrefetchMaintenanceDate = now
+		if isPlaying || avPlayer?.timeControlStatus == .playing {
+			prefetchStreamingForwardBuffer()
+		}
+	}
+
+	@MainActor
+	private func playerCurrentTime() -> Double? {
+		guard let player = avPlayer else { return nil }
+		let seconds = CMTimeGetSeconds(player.currentTime())
+		return seconds.isFinite ? seconds : nil
+	}
+
+	@MainActor
+	private func playerDuration() -> Double? {
+		if duration.isFinite, duration > 0 {
+			return duration
+		}
+
+		guard let itemDuration = avPlayer?.currentItem?.duration else {
+			return nil
+		}
+
+		let seconds = CMTimeGetSeconds(itemDuration)
+		return seconds.isFinite && seconds > 0 ? seconds : nil
 	}
 
 	@MainActor
