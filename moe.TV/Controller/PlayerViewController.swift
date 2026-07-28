@@ -557,7 +557,10 @@ class PlayerViewController: ObservableObject {
 	private func updateLoadedTimeRanges() {
 		if let streamingCacheManager {
 			let cacheDuration = playerDuration()
-			let ranges = streamingCacheManager.cachedTimeRanges(duration: cacheDuration)
+			let ranges = streamingCacheManager.cachedTimeRanges(
+				currentTime: playerCurrentTime(),
+				duration: cacheDuration
+			)
 			if !ranges.isEmpty {
 				loadedTimeRanges = ranges
 				return
@@ -585,6 +588,11 @@ class PlayerViewController: ObservableObject {
 	@MainActor
 	private func handlePlaybackStalled() {
 		print("playback stalled")
+		if let streamingCacheManager {
+			print(
+				"Streaming cache stalled snapshot: \(streamingCacheManager.debugSummary(currentTime: playerCurrentTime(), duration: playerDuration()))"
+			)
+		}
 		prefetchStreamingForwardBufferForPausedPlayback()
 		if shouldResumeAfterStall {
 			scheduleStallRecovery()

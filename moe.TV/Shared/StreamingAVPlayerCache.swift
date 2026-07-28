@@ -116,7 +116,7 @@ final class StreamingCacheManager: ObservableObject {
 		cachedTimeRanges(duration: nil)
 	}
 
-	func cachedTimeRanges(duration: Double?) -> [ClosedRange<Double>] {
+	func cachedTimeRanges(currentTime: Double? = nil, duration: Double?) -> [ClosedRange<Double>] {
 		guard state.contentLength > 0,
 			  let duration,
 			  duration.isFinite,
@@ -125,12 +125,63 @@ final class StreamingCacheManager: ObservableObject {
 		}
 
 		let contentLength = Double(state.contentLength)
+		let displayOffset = cacheDisplayOffset(currentTime: currentTime, duration: duration, contentLength: contentLength)
 		return state.cachedRanges.compactMap { range in
-			let start = max(0, min(duration, Double(range.start) / contentLength * duration))
-			let end = max(start, min(duration, Double(range.end + 1) / contentLength * duration))
+			let rawStart = Double(range.start) / contentLength * duration
+			let rawEnd = Double(range.end + 1) / contentLength * duration
+			let start = max(0, min(duration, rawStart + displayOffset))
+			let end = max(start, min(duration, rawEnd + displayOffset))
 			guard end > start else { return nil }
 			return start...end
 		}
+	}
+
+	private func cacheDisplayOffset(currentTime: Double?, duration: Double, contentLength: Double) -> Double {
+		guard let currentTime,
+			  currentTime.isFinite,
+			  currentTime >= 0,
+			  contentLength > 0 else {
+			return 0
+		}
+
+		let anchorOffset = state.lastRequestedOffset > 0 ? state.lastRequestedOffset : state.lastRequestedEndOffset
+		guard anchorOffset > 0 else { return 0 }
+
+		let anchorTime = Double(anchorOffset) / contentLength * duration
+		let offset = currentTime - anchorTime
+		guard offset.isFinite else { return 0 }
+		return max(-duration, min(duration, offset))
+	}
+
+	func debugSummary(currentTime: Double? = nil, duration: Double? = nil) -> String {
+		let cachedBytes = state.cachedRanges.reduce(Int64(0)) { $0 + $1.length }
+		let cachedSeconds = cachedTimeRanges(currentTime: currentTime, duration: duration).reduce(Double(0)) { $0 + ($1.upperBound - $1.lowerBound) }
+		let currentDescription: String
+		if let currentTime, currentTime.isFinite {
+			currentDescription = String(format: "%.2fs", currentTime)
+		} else {
+			currentDescription = "unknown"
+		}
+
+		let durationDescription: String
+		if let duration, duration.isFinite, duration > 0 {
+			durationDescription = String(format: "%.2fs", duration)
+		} else {
+			durationDescription = "unknown"
+		}
+
+		return [
+			"contentLength=\(Self.formatBytes(state.contentLength))",
+			"cachedBytes=\(Self.formatBytes(cachedBytes))",
+			"cachedApproxTime=\(String(format: "%.2fs", cachedSeconds))",
+			"currentTime=\(currentDescription)",
+			"duration=\(durationDescription)",
+			"lastRequested=\(state.lastRequestedOffset)-\(state.lastRequestedEndOffset)",
+			"isPrepared=\(state.isPrepared)",
+			"isPrefetching=\(state.isPrefetching)",
+			"activePrefetch=\(activePrefetchRange.map { "\($0.start)-\($0.end)" } ?? "none")",
+			"ranges=\(state.cachedRanges.prefix(8).map { "\($0.start)-\($0.end)" }.joined(separator: ", "))\(state.cachedRanges.count > 8 ? ", ..." : "")"
+		].joined(separator: " | ")
 	}
 
 	func prepare() async throws {
@@ -213,7 +264,7 @@ final class StreamingCacheManager: ObservableObject {
 		if let activePrefetchRange,
 		   activePrefetchRange.start <= firstNeededOffset,
 		   activePrefetchRange.end >= firstNeededOffset,
-		   activePrefetchRange.end >= min(safeEnd, firstNeededOffset + configuration.requestChunkSize - 1) {
+		   activePrefetchRange.end >= safeEnd - configuration.requestChunkSize {
 			return
 		}
 
@@ -269,9 +320,7 @@ final class StreamingCacheManager: ObservableObject {
 	}
 
 	func prefetchForwardBuffer(currentTime: Double? = nil, duration: Double? = nil, length: Int64? = nil) {
-		let playbackOffset = byteOffset(currentTime: currentTime, duration: duration)
-		let anchorOffset = max(state.lastRequestedEndOffset, playbackOffset ?? 0)
-		prefetchAfterCachedRange(containing: anchorOffset, length: length)
+		prefetchAfterCachedRange(containing: state.lastRequestedEndOffset, length: length)
 	}
 
 	func prefetchPausedForwardBuffer(currentTime: Double? = nil, duration: Double? = nil) {
@@ -528,20 +577,6 @@ final class StreamingCacheManager: ObservableObject {
 		return cursor
 	}
 
-	private func byteOffset(currentTime: Double?, duration: Double?) -> Int64? {
-		guard state.contentLength > 0,
-			  let currentTime,
-			  let duration,
-			  currentTime.isFinite,
-			  duration.isFinite,
-			  duration > 0 else {
-			return nil
-		}
-
-		let progress = max(0, min(1, currentTime / duration))
-		return min(state.contentLength - 1, max(0, Int64(Double(state.contentLength) * progress)))
-	}
-
 	private func missingRanges(in requestedRange: CachedRange) -> [CachedRange] {
 		var missing: [CachedRange] = []
 		var cursor = requestedRange.start
@@ -709,6 +744,17 @@ final class StreamingCacheManager: ObservableObject {
 	private static func cacheKey(for string: String) -> String {
 		let digest = SHA256.hash(data: Data(string.utf8))
 		return digest.map { String(format: "%02x", $0) }.joined()
+	}
+
+	private static func formatBytes(_ bytes: Int64) -> String {
+		let units = ["B", "KB", "MB", "GB", "TB"]
+		var value = Double(max(0, bytes))
+		var unitIndex = 0
+		while value >= 1024, unitIndex < units.count - 1 {
+			value /= 1024
+			unitIndex += 1
+		}
+		return String(format: "%.2f%@", value, units[unitIndex])
 	}
 }
 
