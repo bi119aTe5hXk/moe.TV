@@ -279,22 +279,19 @@ struct VideoPlayerView: View {
                         isOffline: isOffline,
                         filename: filename,
                         isBGMTVWatched: isBGMTVWatched,
-						isFinalEpisode: isFinalEpisode
+							isFinalEpisode: isFinalEpisode
                     )
-					streamingFactory.stop(deleteCache: false)
+						streamingFactory.stop(deleteCache: false)
                 }
+				if let detailVC, let item = bgmItem {
+					detailVC.getBGMDetail(id: item.id) { _ in }
+				}
             }
             #if os(iOS)
                 if UIDevice.current.userInterfaceIdiom == .phone {
                     OrientationController.shared.restorePortraitThenUnlock()
                 }
             #endif
-            if let dVM = detailVC {
-                if let item = bgmItem {
-                    dVM.getBGMDetail(id: item.id) { _ in
-                    }
-                }
-            }
         }
     }
 }

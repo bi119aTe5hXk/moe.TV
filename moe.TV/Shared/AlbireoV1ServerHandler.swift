@@ -11,48 +11,183 @@ import Foundation
 private var serverAddr = ""
 private let settingsHandler:SettingsHandler = SettingsHandler()
 private let jsonDecoder = JSONDecoder()
+private let albireoCookieQueue = DispatchQueue(label: "net.bi119aTe5hXk.moetv.albireo-v1-cookies")
+private let albireoV1RequestQueue = AlbireoV1RequestQueue()
 
+private final class AlbireoV1RequestQueue {
+	typealias Operation = (@escaping () -> Void) -> Void
+
+	private let stateQueue = DispatchQueue(label: "net.bi119aTe5hXk.moetv.albireo-v1-requests")
+	private var pendingOperations: [Operation] = []
+	private var isRunning = false
+
+	func enqueue(_ operation: @escaping Operation) {
+		stateQueue.async {
+			self.pendingOperations.append(operation)
+			self.startNextIfNeeded()
+		}
+	}
+
+	private func startNextIfNeeded() {
+		guard !isRunning, !pendingOperations.isEmpty else { return }
+		isRunning = true
+		let operation = pendingOperations.removeFirst()
+		operation { [weak self] in
+			self?.stateQueue.async {
+				guard let self else { return }
+				self.isRunning = false
+				self.startNextIfNeeded()
+			}
+		}
+	}
+}
+
+private struct AlbireoCookieKey: Hashable {
+	let name: String
+	let domain: String
+	let path: String
+
+	init(_ cookie: HTTPCookie) {
+		name = cookie.name
+		domain = cookie.domain.lowercased()
+		path = cookie.path
+	}
+}
+
+private func isAlbireoAPICookie(_ cookie: HTTPCookie) -> Bool {
+	// The video CDN selector uses a host-wide cookie named "group". It must
+	// never be persisted or sent as part of the legacy API authentication.
+	cookie.name.caseInsensitiveCompare("group") != .orderedSame
+}
+
+private func storedAlbireoCookies() -> [HTTPCookie] {
+	guard let cookieArray = settingsHandler.getAlbireoCookie() else { return [] }
+	return cookieArray.compactMap { item in
+		guard let properties = item as? [HTTPCookiePropertyKey: Any] else { return nil }
+		return HTTPCookie(properties: properties)
+	}.filter(isAlbireoAPICookie)
+}
+
+private func isCookie(_ cookie: HTTPCookie, forHost host: String) -> Bool {
+	let normalizedDomain = cookie.domain.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: "."))
+	let normalizedHost = host.lowercased()
+	return normalizedHost == normalizedDomain || normalizedHost.hasSuffix(".\(normalizedDomain)")
+}
+
+private func albireoServerHost() -> String? {
+	URL(string: settingsHandler.getAlbireoServerAddr())?.host
+}
+
+private func cookieFingerprint(_ cookies: [HTTPCookie]) -> String {
+	cookies
+		.sorted { AlbireoCookieKey($0).name < AlbireoCookieKey($1).name }
+		.map { cookie in
+			let valueFingerprint = String(cookie.value.hashValue, radix: 16)
+			return "\(cookie.name)=\(valueFingerprint)"
+		}
+		.joined(separator: ",")
+}
+
+private func cookieFingerprint(for url: URL) -> String {
+	cookieFingerprint(albireoAPICookies(for: url))
+}
+
+private func albireoAPICookies(for url: URL) -> [HTTPCookie] {
+	(HTTPCookieStorage.shared.cookies(for: url) ?? []).filter(isAlbireoAPICookie)
+}
+
+private func applyAlbireoCookies(to request: inout URLRequest, for url: URL) {
+	let cookies = albireoAPICookies(for: url)
+	let headerFields = HTTPCookie.requestHeaderFields(with: cookies)
+	for (field, value) in headerFields {
+		request.setValue(value, forHTTPHeaderField: field)
+	}
+	// Cookie persistence is handled below after validating the HTTP response.
+	request.httpShouldHandleCookies = false
+}
+
+private func albireoErrorMessage(statusCode: Int, data: Data?) -> String {
+	guard let data, let body = String(data: data, encoding: .utf8), !body.isEmpty else {
+		return "Server HTTP status code \(statusCode) error."
+	}
+	let limitedBody = String(body.prefix(2_000))
+	return "Server HTTP status code \(statusCode) error: \(limitedBody)"
+}
 
 func saveAlbireoCookies(response: HTTPURLResponse) {
-    let headerFields = response.allHeaderFields as! [String: String]
-    let url = response.url
-    
-    let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url!)
-    var cookieArray = [[HTTPCookiePropertyKey: Any]]()
-    for cookie in cookies {
-        cookieArray.append(cookie.properties!)
-    }
-    if cookieArray.count > 0{
-        settingsHandler.setAlbireoCookie(array: cookieArray)
-		settingsHandler.setAlbireoAuthMode(.legacyCookie)
-        print("albireo cookie saved")
-    }else{
-        print("albireo cookie is empty, skip")
-    }
-    
+	guard let responseURL = response.url, let host = responseURL.host else { return }
+	let headerFields = response.allHeaderFields.reduce(into: [String: String]()) { fields, entry in
+		fields[String(describing: entry.key)] = String(describing: entry.value)
+	}
+	let responseCookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: responseURL)
+	guard !responseCookies.isEmpty else { return }
+
+	albireoCookieQueue.sync {
+		var merged: [AlbireoCookieKey: HTTPCookie] = [:]
+		for cookie in storedAlbireoCookies() where isCookie(cookie, forHost: host) {
+			merged[AlbireoCookieKey(cookie)] = cookie
+		}
+
+		for cookie in HTTPCookieStorage.shared.cookies ?? []
+			where isCookie(cookie, forHost: host) && isAlbireoAPICookie(cookie) {
+			merged[AlbireoCookieKey(cookie)] = cookie
+		}
+
+		for cookie in responseCookies where isAlbireoAPICookie(cookie) {
+			let key = AlbireoCookieKey(cookie)
+			if let expiresDate = cookie.expiresDate, expiresDate <= Date() {
+				merged.removeValue(forKey: key)
+				HTTPCookieStorage.shared.deleteCookie(cookie)
+			} else {
+				merged[key] = cookie
+				HTTPCookieStorage.shared.setCookie(cookie)
+			}
+		}
+
+		let cookies = Array(merged.values)
+		let properties = cookies.compactMap(\.properties)
+		settingsHandler.setAlbireoCookie(array: properties)
+		print("Albireo V1 cookies updated: names=\(cookies.map(\.name).sorted()), fingerprint=\(cookieFingerprint(cookies))")
+	}
 }
 
 //return true if have cookie result
 func loadAlbireoCookies() -> Bool {
-    settingsHandler.registerSettings()
-    if let cookieArray = settingsHandler.getAlbireoCookie(), !cookieArray.isEmpty {
-        for cookieProperties in cookieArray {
-            if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any]) {
-                HTTPCookieStorage.shared.setCookie(cookie)
-            }
-        }
-        print("albireo cookie loaded")
-        return true
-    }else {
-        //print("albireo cookie is nil")
-        return false
-    }
+	settingsHandler.registerSettings()
+	guard let host = albireoServerHost() else { return false }
+
+	return albireoCookieQueue.sync {
+		let currentCookies = (HTTPCookieStorage.shared.cookies ?? []).filter {
+			isCookie($0, forHost: host)
+				&& isAlbireoAPICookie($0)
+				&& ($0.expiresDate == nil || $0.expiresDate! > Date())
+		}
+		var currentKeys = Set(currentCookies.map(AlbireoCookieKey.init))
+		var availableCookies = currentCookies
+
+		for cookie in storedAlbireoCookies() where isCookie(cookie, forHost: host) {
+			guard cookie.expiresDate == nil || cookie.expiresDate! > Date() else { continue }
+			let key = AlbireoCookieKey(cookie)
+			// Never overwrite a newer in-memory session with a stale iCloud copy.
+			guard !currentKeys.contains(key) else { continue }
+			HTTPCookieStorage.shared.setCookie(cookie)
+			currentKeys.insert(key)
+			availableCookies.append(cookie)
+		}
+
+		if !availableCookies.isEmpty {
+			print("Albireo V1 cookies loaded: names=\(availableCookies.map(\.name).sorted()), fingerprint=\(cookieFingerprint(availableCookies))")
+			return true
+		}
+		return false
+	}
 }
 func getAllCookies(completion: @escaping (Array<String>) -> Void){
-    if let cookieArray = settingsHandler.getAlbireoCookie(){
-        var newArr:Array<String> = []
-        for cookieProperties in cookieArray {
-            if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any]) {
+	    if let cookieArray = settingsHandler.getAlbireoCookie(){
+	        var newArr:Array<String> = []
+	        for cookieProperties in cookieArray {
+	            if let cookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey : Any]),
+				   isAlbireoAPICookie(cookie) {
                 print("\(cookie)")
                 newArr.append("\(cookie)")
             }
@@ -62,11 +197,15 @@ func getAllCookies(completion: @escaping (Array<String>) -> Void){
     }
 }
 func clearCookie(){
-    settingsHandler.setAlbireoCookie(array: [])
-    HTTPCookieStorage.shared.cookies?.forEach { cookie in
-        HTTPCookieStorage.shared.deleteCookie(cookie)
-    }
-    print("albireo cookie cleared")
+	albireoCookieQueue.sync {
+		settingsHandler.setAlbireoCookie(array: [])
+		if let host = albireoServerHost() {
+			HTTPCookieStorage.shared.cookies?
+				.filter { isCookie($0, forHost: host) }
+				.forEach(HTTPCookieStorage.shared.deleteCookie)
+		}
+	}
+	print("Albireo V1 cookies cleared")
 }
 
 func isAlbireoAuthenticated() -> Bool {
@@ -105,60 +244,102 @@ func fixPathNotCompete(path:String) -> String{
 private func postServer(urlString:String,
                 postdata:Dictionary<String,Any>,
                 completion: @escaping (Bool, Any) -> Void) {
-    //print("connecting server via POST")
-    do{
-        print(urlString)
-        guard let url = URL(string: urlString) else {return}
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
-        request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
-        URLSession.shared.dataTask(with: request){(data, response, error) in
-            if let err = error {
-                completion(false, err.localizedDescription)
-            }
-            guard let data = data else{return}
+	do {
+		guard let url = URL(string: urlString) else {
+			completion(false, "Invalid server URL.")
+			return
+		}
+		let body = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
 
-			if let r = response as? HTTPURLResponse{
-				if r.statusCode < 200 || r.statusCode >= 300{
-					completion(false, "Server HTTP status code \(r.statusCode) error.")
+		albireoV1RequestQueue.enqueue { finish in
+			var request = URLRequest(url: url)
+			request.httpMethod = "POST"
+			request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+			request.httpBody = body
+			request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
+			applyAlbireoCookies(to: &request, for: url)
+			let requestID = String(UUID().uuidString.prefix(8))
+			print("Albireo V1 POST [\(requestID)] \(url.path), cookieHeader=\(request.value(forHTTPHeaderField: "Cookie") != nil), cookies=\(cookieFingerprint(for: url))")
+
+			URLSession.shared.dataTask(with: request) { data, response, error in
+				if let error {
+					print("Albireo V1 POST [\(requestID)] transport error: \(error.localizedDescription)")
+					completion(false, error.localizedDescription)
+					finish()
 					return
-				}else{
-					saveAlbireoCookies(response: r)
 				}
-			}
-            completion(true, data)
-        }.resume()
-    }catch{
-        completion(false, "Cannot convert postdata to json")
-    }
-    
+
+				if let response = response as? HTTPURLResponse {
+					print("Albireo V1 POST [\(requestID)] status=\(response.statusCode)")
+					if response.statusCode < 200 || response.statusCode >= 300 {
+						let message = albireoErrorMessage(statusCode: response.statusCode, data: data)
+						print("Albireo V1 POST [\(requestID)] response: \(message)")
+						completion(false, message)
+						finish()
+						return
+					}
+					saveAlbireoCookies(response: response)
+				}
+
+				guard let data else {
+					completion(false, "Server returned no data.")
+					finish()
+					return
+				}
+				completion(true, data)
+				finish()
+			}.resume()
+		}
+	} catch {
+		completion(false, "Cannot convert postdata to json")
+	}
 }
 
 private func getServer(urlString:String,
                completion: @escaping (Bool, Any) -> Void) {
-    //print("connecting server via GET:\(urlString)")
-    guard let url = URL(string: urlString) else {return}
-    var request = URLRequest(url: url)
-    request.httpMethod = "GET"
-    request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-    request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
-    URLSession.shared.dataTask(with: request){(data, response, error) in
-        if let err = error {
-            completion(false, err.localizedDescription)
-        }
-		if let r = response as? HTTPURLResponse{
-			if r.statusCode < 200 || r.statusCode >= 300{
-				completion(false, "Server HTTP status code \(r.statusCode) error.")
+	guard let url = URL(string: urlString) else {
+		completion(false, "Invalid server URL.")
+		return
+	}
+
+	albireoV1RequestQueue.enqueue { finish in
+		var request = URLRequest(url: url)
+		request.httpMethod = "GET"
+		request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+		request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
+		applyAlbireoCookies(to: &request, for: url)
+		let requestID = String(UUID().uuidString.prefix(8))
+		print("Albireo V1 GET [\(requestID)] \(url.path), cookieHeader=\(request.value(forHTTPHeaderField: "Cookie") != nil), cookies=\(cookieFingerprint(for: url))")
+
+		URLSession.shared.dataTask(with: request) { data, response, error in
+			if let error {
+				print("Albireo V1 GET [\(requestID)] transport error: \(error.localizedDescription)")
+				completion(false, error.localizedDescription)
+				finish()
 				return
-			}else{
-				saveAlbireoCookies(response: r)
 			}
-		}
-        guard let data = data else{return}
-        completion(true, data)
-    }.resume()
+
+			if let response = response as? HTTPURLResponse {
+				print("Albireo V1 GET [\(requestID)] status=\(response.statusCode)")
+				if response.statusCode < 200 || response.statusCode >= 300 {
+					let message = albireoErrorMessage(statusCode: response.statusCode, data: data)
+					print("Albireo V1 GET [\(requestID)] response: \(message)")
+					completion(false, message)
+					finish()
+					return
+				}
+				saveAlbireoCookies(response: response)
+			}
+
+			guard let data else {
+				completion(false, "Server returned no data.")
+				finish()
+				return
+			}
+			completion(true, data)
+			finish()
+		}.resume()
+	}
 }
 
 // MARK: - Albireo Server APIs
@@ -180,6 +361,7 @@ func loginAlbireoServer(server:String,
 					if let JSON = try jsonDecoder.decode([String: String]?.self, from: data as! Data){
 						if let status = JSON["msg"] {
 							print(status)
+							settingsHandler.setAlbireoAuthMode(.legacyCookie)
 							completion(true, status)
 						}
 						if let status = JSON["message"] {
@@ -282,7 +464,11 @@ func getAlbireoMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
 				if result{
 					do {
 						if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
-							completion(true, list.data)
+							var items = list.data ?? []
+							for index in items.indices {
+								items[index].applyCoverImageFallback()
+							}
+							completion(true, items)
 						}else{
 							completion(false, data as! String)
 						}
@@ -308,7 +494,11 @@ func getAlbireoOnAirList(completion: @escaping (Bool, Any?) -> Void) {
 				if result{
 					do {
 						if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
-							completion(true, list.data)
+							var items = list.data ?? []
+							for index in items.indices {
+								items[index].applyCoverImageFallback()
+							}
+							completion(true, items)
 						}else{
 							completion(false, data as! String)
 						}
@@ -344,7 +534,11 @@ func getAlbireoAllBangumiList(page: Int,
 					do {
 							//Use OnAir model for temp
 						if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
-							completion(true, list.data)
+							var items = list.data ?? []
+							for index in items.indices {
+								items[index].applyCoverImageFallback()
+							}
+							completion(true, items)
 						}else{
 							completion(false, data as! String)
 						}
@@ -372,7 +566,9 @@ func getAlbireoBangumiDetail(id: String,
 				if result{
 					do {
 						if let detail = try jsonDecoder.decode(BGMDetailDataModel?.self, from: data as! Data){
-							completion(true, detail.data)
+							var normalizedDetail = detail.data
+							normalizedDetail.applyCoverImageFallback()
+							completion(true, normalizedDetail)
 						}else{
 							completion(false, data as! String)
 						}
@@ -406,7 +602,12 @@ func getAlbireoEPDetail(ep_id: String,
 				if result{
 					do {
 						if let epDetail = try jsonDecoder.decode(EpisodeDetailModel?.self, from: data as! Data){
-							completion(true, epDetail)
+							var normalizedEpisode = epDetail
+							if var bangumi = normalizedEpisode.bangumi {
+								bangumi.applyCoverImageFallback()
+								normalizedEpisode.bangumi = bangumi
+							}
+							completion(true, normalizedEpisode)
 						}else{
 							completion(false, data as! String)
 						}

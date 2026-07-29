@@ -123,7 +123,7 @@ private func applyVideoCDNPlaybackCookie(groupName: String, for url: URL) {
 
 	let properties: [HTTPCookiePropertyKey: Any] = [
 		.domain: host,
-		.path: "/",
+		.path: "/video",
 		.name: "group",
 		.value: groupName,
 		.secure: url.scheme == "https",

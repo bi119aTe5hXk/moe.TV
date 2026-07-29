@@ -79,7 +79,7 @@ private struct BangumiDetailCoverMainContent: View {
 
     var body: some View {
         Group {
-            if let coverURL = item.image {
+            if let coverURL = item.resolvedCoverImageURL {
                 WebImage(url: URL(string: coverURL)) { image in
                     image.resizable()
                 } placeholder: {
