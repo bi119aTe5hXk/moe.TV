@@ -38,6 +38,9 @@ struct BangumiDetailCoverTextView: View {
             }
         }
         .padding(10)
+		.onAppear {
+			dctVC.setDetailVC(dVC: detailVC)
+		}
         .onChange(of: favStatusFinished, initial: false) { finished in
             guard finished else { return }
             dctVC.checkFavConflict(a: albireo_favorite_status, b: bgmtv_favorite_status)
@@ -219,12 +222,12 @@ private struct BangumiDetailCoverAlerts: View {
             ) {
                 Button("Albireo") {
                     if let s = albireo_favorite_status {
-                        dctVC.setAlbreoFavStatus(idstr: item.id, status: s)
+                        dctVC.setBGMFavStatus(bgmid: item.bgm_id, status: s)
                     }
                 }
                 Button("Bgm.tv") {
                     if let s = bgmtv_favorite_status{
-                        dctVC.setBGMFavStatus(bgmid: item.bgm_id, status: s)
+                        dctVC.setAlbreoFavStatus(idstr: item.id, status: s)
                     }
                 }
                 Button("Custom status") {

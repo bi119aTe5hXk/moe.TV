@@ -74,6 +74,7 @@ final class StreamingCacheManager: ObservableObject {
 	private var contentType = AVFileType.mp4.rawValue
 	private var activePrefetchTask: Task<Void, Never>?
 	private var activePrefetchRange: CachedRange?
+	private var resolvedContentURL: URL?
 	private var isStopped = false
 
 	init(
@@ -186,7 +187,7 @@ final class StreamingCacheManager: ObservableObject {
 
 	func prepare() async throws {
 		guard !isStopped else { throw CancellationError() }
-		guard !state.isPrepared else {
+		guard resolvedContentURL == nil else {
 			touchMetadata()
 			return
 		}
@@ -212,10 +213,15 @@ final class StreamingCacheManager: ObservableObject {
 			throw StreamingCacheError.missingContentLength
 		}
 
+		if state.contentLength > 0, state.contentLength != length {
+			deleteCacheFiles()
+		}
+
 		if let mimeType = http.mimeType, !mimeType.isEmpty {
 			contentType = mimeType
 		}
 
+		resolvedContentURL = http.url ?? originalURL
 		state.contentLength = length
 		state.isPrepared = true
 		try createCacheFileIfNeeded(length: length)
@@ -342,6 +348,52 @@ final class StreamingCacheManager: ObservableObject {
 		activePrefetchTask = nil
 		activePrefetchRange = nil
 		state.isPrefetching = false
+	}
+
+	func invalidateCachedDataAroundLastRequest(
+		padding: Int64 = 32 * 1024 * 1024
+	) -> CachedRange? {
+		guard state.contentLength > 0,
+			  state.lastRequestedEndOffset >= state.lastRequestedOffset else {
+			return nil
+		}
+
+		let requestedRange = CachedRange(
+			start: state.lastRequestedOffset,
+			end: state.lastRequestedEndOffset
+		)
+		guard state.cachedRanges.contains(where: { $0.contains(requestedRange) }) else {
+			return nil
+		}
+
+		cancelPrefetch()
+
+		let invalidatedRange = CachedRange(
+			start: max(0, requestedRange.start - padding),
+			end: min(state.contentLength - 1, requestedRange.end + padding)
+		)
+
+		state.cachedRanges = state.cachedRanges.flatMap { cachedRange -> [CachedRange] in
+			guard cachedRange.end >= invalidatedRange.start,
+				  cachedRange.start <= invalidatedRange.end else {
+				return [cachedRange]
+			}
+
+			var remaining: [CachedRange] = []
+			if cachedRange.start < invalidatedRange.start {
+				remaining.append(
+					CachedRange(start: cachedRange.start, end: invalidatedRange.start - 1)
+				)
+			}
+			if cachedRange.end > invalidatedRange.end {
+				remaining.append(
+					CachedRange(start: invalidatedRange.end + 1, end: cachedRange.end)
+				)
+			}
+			return remaining
+		}
+		saveMetadataToDisk()
+		return invalidatedRange
 	}
 
 	func stop(deleteCache: Bool? = nil) {
@@ -484,7 +536,7 @@ final class StreamingCacheManager: ObservableObject {
 	}
 
 	private func downloadOnce(range: CachedRange) async throws -> Data {
-		var request = URLRequest(url: originalURL)
+		var request = URLRequest(url: resolvedContentURL ?? originalURL)
 		request.setValue("bytes=\(range.start)-\(range.end)", forHTTPHeaderField: "Range")
 		request.setValue("identity", forHTTPHeaderField: "Accept-Encoding")
 		for (field, value) in videoCDNHTTPHeaderFields(for: originalURL) {
@@ -552,7 +604,8 @@ final class StreamingCacheManager: ObservableObject {
 		}
 
 		guard parsedRange.start == requestedRange.start,
-			  parsedRange.end == requestedRange.end else {
+			  parsedRange.end == requestedRange.end,
+			  parsedRange.total == state.contentLength else {
 			throw StreamingCacheError.unexpectedContentRange(contentRange)
 		}
 	}
@@ -890,19 +943,19 @@ final class StreamingPlayerItemFactory {
 		)
 
 		let cacheManager = try StreamingCacheManager(originalURL: url, configuration: configuration)
-		let delegate = StreamingResourceLoaderDelegate(
-			cacheManager: cacheManager,
-			responseChunkSize: configuration.requestChunkSize
-		)
-
-		let assetURL = try Self.resourceLoaderURL(for: url)
-		let asset = AVURLAsset(url: assetURL)
-		asset.resourceLoader.setDelegate(delegate, queue: loaderQueue)
-
 		self.cacheManager = cacheManager
-		self.resourceLoaderDelegate = delegate
+		return try makePlayerItem(for: url, cacheManager: cacheManager)
+	}
 
-		return AVPlayerItem(asset: asset)
+	@MainActor
+	func makeReplacementPlayerItem(for url: URL) throws -> AVPlayerItem {
+		guard let cacheManager else {
+			throw StreamingCacheError.cacheFileInvalid
+		}
+
+		resourceLoaderDelegate?.cancelAllLoadingRequests()
+		resourceLoaderDelegate = nil
+		return try makePlayerItem(for: url, cacheManager: cacheManager)
 	}
 
 	@MainActor
@@ -926,5 +979,21 @@ final class StreamingPlayerItemFactory {
 		}
 
 		return url
+	}
+
+	@MainActor
+	private func makePlayerItem(
+		for url: URL,
+		cacheManager: StreamingCacheManager
+	) throws -> AVPlayerItem {
+		let delegate = StreamingResourceLoaderDelegate(
+			cacheManager: cacheManager,
+			responseChunkSize: configuration.requestChunkSize
+		)
+		let assetURL = try Self.resourceLoaderURL(for: url)
+		let asset = AVURLAsset(url: assetURL)
+		asset.resourceLoader.setDelegate(delegate, queue: loaderQueue)
+		resourceLoaderDelegate = delegate
+		return AVPlayerItem(asset: asset)
 	}
 }

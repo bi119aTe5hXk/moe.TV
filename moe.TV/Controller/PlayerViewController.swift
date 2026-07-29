@@ -33,6 +33,9 @@ class PlayerViewController: ObservableObject {
 	private var shouldResumeAfterStall = false
 	private var lastStreamingPrefetchMaintenanceDate: Date?
 	private var cancellables = Set<AnyCancellable>()
+	private var itemCancellables = Set<AnyCancellable>()
+	private var isRecoveringFromStall = false
+	private var currentStreamingURL: URL?
 
 	let offlinePBM = OfflinePlaybackManager()
 	var settingsHandler = SettingsHandler()
@@ -53,14 +56,17 @@ class PlayerViewController: ObservableObject {
 			do {
 				let item = try streamingFactory.makePlayerItem(for: url)
 				streamingCacheManager = streamingFactory.cacheManager
+				currentStreamingURL = url
 				avPlayer = AVPlayer(playerItem: item)
 			} catch {
 				print("Streaming cache player failed, fallback to AVPlayer(url:): \(error)")
 				streamingCacheManager = nil
+				currentStreamingURL = nil
 				avPlayer = AVPlayer(url: url)
 			}
 		} else {
 			streamingCacheManager = nil
+			currentStreamingURL = nil
 			avPlayer = AVPlayer(url: url)
 		}
 
@@ -86,10 +92,14 @@ class PlayerViewController: ObservableObject {
 		shouldResumeAfterStall = false
 		lastStreamingPrefetchMaintenanceDate = nil
 		cancellables.removeAll()
+		itemCancellables.removeAll()
+		isRecoveringFromStall = false
+		currentStreamingURL = nil
 	}
 
 	@MainActor
 	func play() {
+		shouldResumeAfterStall = true
 		applyPlaybackRate()
 		isPlaying = true
 		prefetchStreamingForwardBuffer()
@@ -97,6 +107,9 @@ class PlayerViewController: ObservableObject {
 
 	@MainActor
 	func pause() {
+		shouldResumeAfterStall = false
+		stallRecoveryTask?.cancel()
+		stallRecoveryTask = nil
 		avPlayer?.pause()
 		isPlaying = false
 		prefetchStreamingForwardBufferForPausedPlayback()
@@ -231,7 +244,8 @@ class PlayerViewController: ObservableObject {
 		filename: String?,
 		ep: EpisodeDetailModel?,
 		isOffline: Bool,
-		isBGMTVWatched: Bool
+		isBGMTVWatched: Bool,
+		isFinalEpisode: Bool = false
 	) {
 		switch status {
 		case nil:
@@ -246,6 +260,10 @@ class PlayerViewController: ObservableObject {
 			}
 		case .paused:
 			print("paused")
+			if isRecoveringFromStall {
+				isPlaying = false
+				return
+			}
 			shouldResumeAfterStall = false
 			isPlaying = false
 			if let player = avPlayer {
@@ -255,7 +273,8 @@ class PlayerViewController: ObservableObject {
 					ep: ep,
 					isOffline: isOffline,
 					filename: filename,
-					isBGMTVWatched: isBGMTVWatched
+					isBGMTVWatched: isBGMTVWatched,
+					isFinalEpisode: isFinalEpisode
 				)
 			}
 			prefetchStreamingForwardBufferForPausedPlayback()
@@ -279,7 +298,8 @@ class PlayerViewController: ObservableObject {
 		ep: EpisodeDetailModel?,
 		isOffline: Bool,
 		filename: String?,
-		isBGMTVWatched: Bool
+		isBGMTVWatched: Bool,
+		isFinalEpisode: Bool = false
 	) {
 		guard let currentItem = player.currentItem else { return }
 
@@ -331,22 +351,16 @@ class PlayerViewController: ObservableObject {
 				if let item = bgmItem {
 					savePlaybackHistory(item)
 
-					if settingsHandler.getSetWatchedWhenFinishedFinalEP() && isFinished {
-						if let episode_no = theEP.episode_no {
-							if let eps = theEP.bangumi?.eps {
-								if episode_no == eps {
-									print("should set the subject/collection as watched: episode_no:\(episode_no),eps:\(eps)")
-									if item.favorite_status == 3 {
-										changeFavStatus(
-											idstr: item.id,
-											bgmid: item.bgm_id,
-											status: 2
-										)
-									} else {
-										print("fav status is not watching. skip set as watched")
-									}
-								}
-							}
+					if settingsHandler.getSetWatchedWhenFinishedFinalEP() && isFinished && isFinalEpisode {
+						print("should set the subject/collection as watched: final episode finished")
+						if item.favorite_status == 3 {
+							changeFavStatus(
+								idstr: item.id,
+								bgmid: item.bgm_id ?? theEP.bangumi?.bgm_id,
+								status: 2
+							)
+						} else {
+							print("fav status is not watching. skip set as watched")
 						}
 					}
 				}
@@ -448,6 +462,9 @@ class PlayerViewController: ObservableObject {
 		shouldResumeAfterStall = false
 		lastStreamingPrefetchMaintenanceDate = nil
 		cancellables.removeAll()
+		itemCancellables.removeAll()
+		isRecoveringFromStall = false
+		currentStreamingURL = nil
 	}
 
 	@MainActor
@@ -502,6 +519,7 @@ class PlayerViewController: ObservableObject {
 
 	@MainActor
 	private func observePlayerItem(_ item: AVPlayerItem?) {
+		itemCancellables.removeAll()
 		guard let item else { return }
 
 		item.publisher(for: \.duration)
@@ -512,21 +530,21 @@ class PlayerViewController: ObservableObject {
 					self?.duration = seconds
 				}
 			}
-			.store(in: &cancellables)
+			.store(in: &itemCancellables)
 
 		item.publisher(for: \.loadedTimeRanges)
 			.receive(on: RunLoop.main)
 			.sink { [weak self] _ in
 				self?.updateLoadedTimeRanges()
 			}
-			.store(in: &cancellables)
+			.store(in: &itemCancellables)
 
 		NotificationCenter.default.publisher(for: .AVPlayerItemPlaybackStalled, object: item)
 			.receive(on: RunLoop.main)
 			.sink { [weak self] _ in
 				self?.handlePlaybackStalled()
 			}
-			.store(in: &cancellables)
+			.store(in: &itemCancellables)
 	}
 
 	@MainActor
@@ -654,19 +672,73 @@ class PlayerViewController: ObservableObject {
 
 	@MainActor
 	private func scheduleStallRecovery() {
+		guard stallRecoveryTask == nil, !isRecoveringFromStall else { return }
+
 		stallRecoveryTask?.cancel()
 		stallRecoveryTask = Task { @MainActor [weak self] in
 			try? await Task.sleep(nanoseconds: 900_000_000)
-			guard let self, self.shouldResumeAfterStall, let player = self.avPlayer else { return }
+			guard let self else { return }
+			self.stallRecoveryTask = nil
+			guard self.shouldResumeAfterStall, let player = self.avPlayer else { return }
 			guard player.timeControlStatus != .playing else { return }
 
-			let current = player.currentTime()
-			player.seek(to: current, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
+			self.rebuildStreamingPlayerItem(afterStallAt: player.currentTime())
+		}
+	}
+
+	@MainActor
+	private func rebuildStreamingPlayerItem(afterStallAt stalledTime: CMTime) {
+		guard !isRecoveringFromStall,
+			  let player = avPlayer,
+			  let currentStreamingURL,
+			  let streamingCacheManager else {
+			applyPlaybackRate()
+			return
+		}
+
+		isRecoveringFromStall = true
+		let stalledSeconds = max(0, CMTimeGetSeconds(stalledTime))
+		let resumeSeconds = stalledSeconds.isFinite ? max(0, stalledSeconds - 2) : 0
+		let resumeTime = CMTime(
+			seconds: resumeSeconds,
+			preferredTimescale: Int32(NSEC_PER_SEC)
+		)
+		let metadata = player.currentItem?.externalMetadata ?? []
+		let invalidatedRange = streamingCacheManager.invalidateCachedDataAroundLastRequest()
+
+		if let invalidatedRange {
+			print(
+				"Streaming stall recovery invalidated cached bytes: \(invalidatedRange.start)-\(invalidatedRange.end)"
+			)
+		}
+
+		do {
+			let replacementItem = try streamingFactory.makeReplacementPlayerItem(for: currentStreamingURL)
+			replacementItem.externalMetadata = metadata
+			replacementItem.preferredForwardBufferDuration = TimeInterval(120)
+			replacementItem.canUseNetworkResourcesForLiveStreamingWhilePaused = true
+
+			itemCancellables.removeAll()
+			player.pause()
+			player.replaceCurrentItem(with: replacementItem)
+			observePlayerItem(replacementItem)
+
+			isSeeking = true
+			player.seek(to: resumeTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
 				Task { @MainActor in
-					guard let self, self.shouldResumeAfterStall else { return }
+					guard let self else { return }
+					self.isSeeking = false
+					self.isRecoveringFromStall = false
+					self.currentTime = resumeSeconds
+					guard finished, self.shouldResumeAfterStall else { return }
+					self.prefetchStreamingForwardBuffer()
 					self.applyPlaybackRate()
 				}
 			}
+		} catch {
+			isRecoveringFromStall = false
+			print("Streaming stall recovery could not rebuild player item: \(error)")
+			applyPlaybackRate()
 		}
 	}
 

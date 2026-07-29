@@ -75,6 +75,7 @@ class BangumiDetailCoverTextViewController: ObservableObject {
             if isSuccess {
                 print(result as Any)
                 DispatchQueue.main.async {
+                    self.detailVC?.albireo_favorite_status = status
                     self.presentAlbireoFavChangeResultDone.toggle()
                 }
             }
@@ -87,6 +88,7 @@ class BangumiDetailCoverTextViewController: ObservableObject {
                 print(result as Any)
                 if isSuccess {
                     DispatchQueue.main.async {
+                        self.detailVC?.bgmtv_favorite_status = status
                         self.presentBGMFavChangeResultDone.toggle()
                     }
                 }else{

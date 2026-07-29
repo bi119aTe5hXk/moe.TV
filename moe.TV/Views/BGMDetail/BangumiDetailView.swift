@@ -131,7 +131,8 @@ struct BangumiDetailView: View {
 										isOffline: detailVC.videoIsOffline,
 										filename: detailVC.videoFileName,
 										detailVC: detailVC,
-										isBGMTVWatched: detailVC.isBGMEPWatched())
+										isBGMTVWatched: detailVC.isBGMEPWatched(),
+										isFinalEpisode: detailVC.isSelectedFinalEpisode)
 						if shouldShowPresentedPlayerCloseButton {
 							Button(action: {
 								detailVC.closePlayer()
@@ -172,7 +173,8 @@ struct BangumiDetailView: View {
 										isOffline: detailVC.videoIsOffline,
 										filename: detailVC.videoFileName,
 										detailVC: detailVC,
-										isBGMTVWatched: detailVC.isBGMEPWatched())
+										isBGMTVWatched: detailVC.isBGMEPWatched(),
+										isFinalEpisode: detailVC.isSelectedFinalEpisode)
 						.frame(width: NSApp.keyWindow?.contentView?.bounds.width ?? 500, height: NSApp.keyWindow?.contentView?.bounds.height ?? 500)
 							//TODO: better close button for macOS
 //						Button(action: {
