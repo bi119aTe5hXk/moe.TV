@@ -30,8 +30,8 @@ struct StreamingCacheState: Equatable {
 }
 
 struct StreamingCacheConfiguration {
-	var prefetchLength: Int64 = 128 * 1024 * 1024
-	var pausedPrefetchLength: Int64 = 500 * 1024 * 1024
+	var prefetchLength: Int64 = 512 * 1024 * 1024
+	var pausedPrefetchLength: Int64 = 1024 * 1024 * 1024
 	var requestChunkSize: Int64 = 10 * 1024 * 1024
 	var maxRetryCount = 2
 	var retryBaseDelay: TimeInterval = 0.5
