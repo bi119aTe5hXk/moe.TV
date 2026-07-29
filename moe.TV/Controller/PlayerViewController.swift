@@ -36,6 +36,9 @@ class PlayerViewController: ObservableObject {
 	private var itemCancellables = Set<AnyCancellable>()
 	private var isRecoveringFromStall = false
 	private var currentStreamingURL: URL?
+	private var lastPlaybackLogKey: String?
+	private var lastPlaybackLogPosition: Double = -.infinity
+	private var lastPlaybackLogDate = Date.distantPast
 
 	let offlinePBM = OfflinePlaybackManager()
 	var settingsHandler = SettingsHandler()
@@ -292,6 +295,7 @@ class PlayerViewController: ObservableObject {
 		}
 	}
 
+	@MainActor
 	func logPlaybackPosition(
 		player: AVPlayer,
 		bgmItem: BangumiItemModel?,
@@ -304,10 +308,24 @@ class PlayerViewController: ObservableObject {
 		guard let currentItem = player.currentItem else { return }
 
 		let currentTime = CMTimeGetSeconds(currentItem.currentTime())
-		var percent = currentTime / CMTimeGetSeconds(currentItem.duration)
-		if percent.isNaN {
+		guard currentTime.isFinite else { return }
+		let duration = CMTimeGetSeconds(currentItem.duration)
+		var percent = duration.isFinite && duration > 0 ? currentTime / duration : 0
+		if !percent.isFinite {
 			percent = 0
 		}
+
+		let playbackLogKey = ep?.id ?? filename ?? "unknown"
+		let now = Date()
+		if lastPlaybackLogKey == playbackLogKey,
+		   abs(lastPlaybackLogPosition - currentTime) < 1,
+		   now.timeIntervalSince(lastPlaybackLogDate) < 5 {
+			print("Skip duplicate playback progress log for \(playbackLogKey)")
+			return
+		}
+		lastPlaybackLogKey = playbackLogKey
+		lastPlaybackLogPosition = currentTime
+		lastPlaybackLogDate = now
 		print("logprogress:\(currentTime),\(percent)")
 
 		let isFinished = percent > 0.95
