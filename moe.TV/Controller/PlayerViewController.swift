@@ -703,7 +703,9 @@ class PlayerViewController: ObservableObject {
 			seconds: resumeSeconds,
 			preferredTimescale: Int32(NSEC_PER_SEC)
 		)
+		#if os(iOS) || os(tvOS) || os(visionOS)
 		let metadata = player.currentItem?.externalMetadata ?? []
+		#endif
 		let invalidatedRange = streamingCacheManager.invalidateCachedDataAroundLastRequest()
 
 		if let invalidatedRange {
@@ -714,7 +716,9 @@ class PlayerViewController: ObservableObject {
 
 		do {
 			let replacementItem = try streamingFactory.makeReplacementPlayerItem(for: currentStreamingURL)
+			#if os(iOS) || os(tvOS) || os(visionOS)
 			replacementItem.externalMetadata = metadata
+			#endif
 			replacementItem.preferredForwardBufferDuration = TimeInterval(120)
 			replacementItem.canUseNetworkResourcesForLiveStreamingWhilePaused = true
 
