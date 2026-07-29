@@ -35,8 +35,9 @@ class BangumiDetailViewController : ObservableObject {
 	@Published var bgmtv_favorite_status:Int?
 
 	@Published var isFinished:Bool = true
-    @Published var favStatusLoaded:Bool = false
+	@Published var favStatusLoaded:Bool = false
 	@Published var selectedID: String? = nil
+	@Published var isSelectedFinalEpisode = false
     
     var playbackURL: URL? {
         guard !videoURL.isEmpty else { return nil }
@@ -59,9 +60,17 @@ class BangumiDetailViewController : ObservableObject {
     func setSelectedEP(ep:EpisodeDetailModel){
         DispatchQueue.main.async {
             self.ep = ep
+            self.isSelectedFinalEpisode = self.isFinalEpisode(ep)
             self.checkLastWatchPosition(ep: ep)
         }
     }
+
+	private func isFinalEpisode(_ episode: EpisodeDetailModel) -> Bool {
+		guard let episodeNumber = episode.episode_no else { return false }
+		let knownEpisodeNumbers = newEPList.compactMap(\.ep.episode_no)
+		guard let finalEpisodeNumber = knownEpisodeNumbers.max() else { return false }
+		return episodeNumber == finalEpisodeNumber
+	}
     
     //2 check last position
     func checkLastWatchPosition(ep:EpisodeDetailModel){

@@ -44,7 +44,7 @@ private func patchServer(urlString:String,
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
         request.setValue("Bearer \(settingsHandler.getBGMTVAccessTokenKey())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
             //print(response)
             if let err = error {
@@ -74,7 +74,7 @@ private func putServer(urlString:String,
         request.httpBody = try JSONSerialization.data(withJSONObject: postdata, options: .prettyPrinted)
         request.setValue("Bearer \(settingsHandler.getBGMTVAccessTokenKey())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request){(data, response, error) in
             //print(response)
             if let err = error {
@@ -199,7 +199,7 @@ func handleBGMTVOAuthCallback(_ url: URL) -> Bool {
     print("OAuth code: \(code)")
     getBGMTVAccessToken(code: code) { isSuccess, result in
         if isSuccess {
-            NotificationCenter.default.post(name: Notification.Name("getBGMUserInfo"), object: nil)
+            NotificationCenter.default.post(name: .getBGMUserInfo, object: nil)
         } else {
             print("getBGMTVAccessToken failed: \(result)")
         }
@@ -447,13 +447,10 @@ func getBGMCollectionEpisodeList(subject_id:Int, completion: @escaping (Bool, An
     }
 }
 func setBGMCollectionStatus(subject_id:Int, status:Int, completion: @escaping (Bool, Any) -> Void){
-    if isBGMTVlogined(){
-        if isBGMAccessTokenExpired(){
-            refreshBGMTVToken(){ isSuccess, result in
-                if !isSuccess{
-                    print("failed to refresh bgm.tv token: \(result)")
-                }
-            }
+    ensureBGMTVAccessTokenValid { isTokenReady, tokenResult in
+        guard isTokenReady else {
+            completion(false, tokenResult)
+            return
         }
         let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)"
         postServer(urlString: urlStr,
@@ -466,13 +463,10 @@ func setBGMCollectionStatus(subject_id:Int, status:Int, completion: @escaping (B
 }
 
 func setBGMEPWatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
-    if isBGMTVlogined(){
-        if isBGMAccessTokenExpired(){
-            refreshBGMTVToken(){ isSuccess, result in
-                if !isSuccess{
-                    print("failed to refresh bgm.tv token: \(result)")
-                }
-            }
+    ensureBGMTVAccessTokenValid { isTokenReady, tokenResult in
+        guard isTokenReady else {
+            completion(false, tokenResult)
+            return
         }
         let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/-/episodes/\(epID)"
         putServer(urlString: urlStr,
@@ -482,13 +476,10 @@ func setBGMEPWatched(epID:Int, completion: @escaping (Bool, Any) -> Void){
     }
 }
 func setBGMSBEPStatues(subject_id:Int,episode_id:Int,status:Int,completion: @escaping (Bool, Any) -> Void){
-    if isBGMTVlogined(){
-        if isBGMAccessTokenExpired(){
-            refreshBGMTVToken(){ isSuccess, result in
-                if !isSuccess{
-                    print("failed to refresh bgm.tv token: \(result)")
-                }
-            }
+    ensureBGMTVAccessTokenValid { isTokenReady, tokenResult in
+        guard isTokenReady else {
+            completion(false, tokenResult)
+            return
         }
         let urlstr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)/episodes"
         patchServer(urlString: urlstr, postdata: ["episode_id":[episode_id],"type":status]) { result, data in

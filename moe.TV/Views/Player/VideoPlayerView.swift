@@ -28,6 +28,7 @@ struct VideoPlayerView: View {
 	private let streamingFactory = StreamingPlayerItemFactory()
 
     var isBGMTVWatched: Bool
+	var isFinalEpisode: Bool = false
 
     private let settingsHandler = SettingsHandler()
     
@@ -72,7 +73,8 @@ struct VideoPlayerView: View {
             filename: filename,
             ep: ep,
             isOffline: isOffline,
-            isBGMTVWatched: isBGMTVWatched
+            isBGMTVWatched: isBGMTVWatched,
+			isFinalEpisode: isFinalEpisode
         )
     }
 
@@ -276,7 +278,8 @@ struct VideoPlayerView: View {
                         ep: ep,
                         isOffline: isOffline,
                         filename: filename,
-                        isBGMTVWatched: isBGMTVWatched
+                        isBGMTVWatched: isBGMTVWatched,
+						isFinalEpisode: isFinalEpisode
                     )
 					streamingFactory.stop(deleteCache: false)
                 }

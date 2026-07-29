@@ -31,12 +31,10 @@ Watch bangumi on Apple devices
 let bgmAppID = "<Your AppID from bgm.tv>"
 let bgmAppSecret = "<Your AppSecret from bgm.tv>"
 let testURL = "<Your Albreo server URL, optional>"
-let albireoV2ClientID = "<Your Albireo V2 OAuth2 Client ID, optional>"
-let albireoV2DefaultAuthorizationServerURL = "<Your Albireo V2 authorization server URL, optional>"
+let albireoV2ClientID = "<Your Albireo V2 box.moe OAuth client ID>"
 let albireoV2DefaultAPIServerURL = "<Your Albireo V2 API server URL, optional>"
-let albireoV2RedirectHost = "<Your OAuth2 redirect host for moetv://, optional>"
 ```
-These constants must exist even if you leave the optional values empty. `albireoV2ClientID` and `albireoV2RedirectHost` can also be entered from the OAuth2 login screen at runtime.
+These constants must exist even if you leave the optional API server value empty. Albireo V2 uses the fixed OIDC issuer `box.moe` and redirect URI `moetv://box.moe`; these are not runtime settings.
 4. Open Xcode, build & run.
 
 ## URL Schemes

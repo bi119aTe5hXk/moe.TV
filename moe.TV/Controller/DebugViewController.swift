@@ -27,8 +27,12 @@ class DebugViewController: ObservableObject {
 		settings.getAlbireoAuthMode().rawValue
 	}
 
-	func getAlbireoV2AuthorizationServerURLDEBUG() -> String {
-		settings.getAlbireoV2AuthorizationServerURL()
+	func getAlbireoV2OIDCIssuerDEBUG() -> String {
+		"https://authorization.box.moe"
+	}
+
+	func getAlbireoV2OIDCDiscoveryURLDEBUG() -> String {
+		"https://authorization.box.moe/.well-known/openid-configuration"
 	}
 
 	func getAlbireoV2APIServerURLDEBUG() -> String {

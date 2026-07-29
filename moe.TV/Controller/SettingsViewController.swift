@@ -38,14 +38,14 @@ class SettingsViewController: ObservableObject{
 			.addObserver(
 				self,
 				selector: #selector(getBGMUserInfo),
-				name: Notification.Name("getBGMUserInfo"),
+				name: .getBGMUserInfo,
 				object: nil
 			)
 		NotificationCenter.default
 			.addObserver(
 				self,
 				selector: #selector(handleVideoCDNSettingsDidChange),
-				name: Notification.Name("videoCDNSettingsDidChange"),
+				name: .videoCDNSettingsDidChange,
 				object: nil
 			)
 	}

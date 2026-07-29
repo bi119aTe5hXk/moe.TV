@@ -30,11 +30,12 @@ struct StreamingCacheState: Equatable {
 }
 
 struct StreamingCacheConfiguration {
-	var prefetchLength: Int64 = 64 * 1024 * 1024
-	var requestChunkSize: Int64 = 1024 * 1024
+	var prefetchLength: Int64 = 512 * 1024 * 1024
+	var pausedPrefetchLength: Int64 = 1024 * 1024 * 1024
+	var requestChunkSize: Int64 = 10 * 1024 * 1024
 	var maxRetryCount = 2
-	var retryBaseDelay: TimeInterval = 0.4
-	var maxCacheBytes: Int64 = 3 * 1024 * 1024 * 1024
+	var retryBaseDelay: TimeInterval = 0.5
+	var maxCacheBytes: Int64 = 5 * 1024 * 1024 * 1024
 	var maxCacheAge: TimeInterval = 7 * 24 * 60 * 60
 	var removesCacheOnStop = false
 }
@@ -73,6 +74,7 @@ final class StreamingCacheManager: ObservableObject {
 	private var contentType = AVFileType.mp4.rawValue
 	private var activePrefetchTask: Task<Void, Never>?
 	private var activePrefetchRange: CachedRange?
+	private var resolvedContentURL: URL?
 	private var isStopped = false
 
 	init(
@@ -111,9 +113,81 @@ final class StreamingCacheManager: ObservableObject {
 		contentType
 	}
 
+	var cachedTimeRanges: [ClosedRange<Double>] {
+		cachedTimeRanges(duration: nil)
+	}
+
+	func cachedTimeRanges(currentTime: Double? = nil, duration: Double?) -> [ClosedRange<Double>] {
+		guard state.contentLength > 0,
+			  let duration,
+			  duration.isFinite,
+			  duration > 0 else {
+			return []
+		}
+
+		let contentLength = Double(state.contentLength)
+		let displayOffset = cacheDisplayOffset(currentTime: currentTime, duration: duration, contentLength: contentLength)
+		return state.cachedRanges.compactMap { range in
+			let rawStart = Double(range.start) / contentLength * duration
+			let rawEnd = Double(range.end + 1) / contentLength * duration
+			let start = max(0, min(duration, rawStart + displayOffset))
+			let end = max(start, min(duration, rawEnd + displayOffset))
+			guard end > start else { return nil }
+			return start...end
+		}
+	}
+
+	private func cacheDisplayOffset(currentTime: Double?, duration: Double, contentLength: Double) -> Double {
+		guard let currentTime,
+			  currentTime.isFinite,
+			  currentTime >= 0,
+			  contentLength > 0 else {
+			return 0
+		}
+
+		let anchorOffset = state.lastRequestedOffset > 0 ? state.lastRequestedOffset : state.lastRequestedEndOffset
+		guard anchorOffset > 0 else { return 0 }
+
+		let anchorTime = Double(anchorOffset) / contentLength * duration
+		let offset = currentTime - anchorTime
+		guard offset.isFinite else { return 0 }
+		return max(-duration, min(duration, offset))
+	}
+
+	func debugSummary(currentTime: Double? = nil, duration: Double? = nil) -> String {
+		let cachedBytes = state.cachedRanges.reduce(Int64(0)) { $0 + $1.length }
+		let cachedSeconds = cachedTimeRanges(currentTime: currentTime, duration: duration).reduce(Double(0)) { $0 + ($1.upperBound - $1.lowerBound) }
+		let currentDescription: String
+		if let currentTime, currentTime.isFinite {
+			currentDescription = String(format: "%.2fs", currentTime)
+		} else {
+			currentDescription = "unknown"
+		}
+
+		let durationDescription: String
+		if let duration, duration.isFinite, duration > 0 {
+			durationDescription = String(format: "%.2fs", duration)
+		} else {
+			durationDescription = "unknown"
+		}
+
+		return [
+			"contentLength=\(Self.formatBytes(state.contentLength))",
+			"cachedBytes=\(Self.formatBytes(cachedBytes))",
+			"cachedApproxTime=\(String(format: "%.2fs", cachedSeconds))",
+			"currentTime=\(currentDescription)",
+			"duration=\(durationDescription)",
+			"lastRequested=\(state.lastRequestedOffset)-\(state.lastRequestedEndOffset)",
+			"isPrepared=\(state.isPrepared)",
+			"isPrefetching=\(state.isPrefetching)",
+			"activePrefetch=\(activePrefetchRange.map { "\($0.start)-\($0.end)" } ?? "none")",
+			"ranges=\(state.cachedRanges.prefix(8).map { "\($0.start)-\($0.end)" }.joined(separator: ", "))\(state.cachedRanges.count > 8 ? ", ..." : "")"
+		].joined(separator: " | ")
+	}
+
 	func prepare() async throws {
 		guard !isStopped else { throw CancellationError() }
-		guard !state.isPrepared else {
+		guard resolvedContentURL == nil else {
 			touchMetadata()
 			return
 		}
@@ -139,17 +213,22 @@ final class StreamingCacheManager: ObservableObject {
 			throw StreamingCacheError.missingContentLength
 		}
 
+		if state.contentLength > 0, state.contentLength != length {
+			deleteCacheFiles()
+		}
+
 		if let mimeType = http.mimeType, !mimeType.isEmpty {
 			contentType = mimeType
 		}
 
+		resolvedContentURL = http.url ?? originalURL
 		state.contentLength = length
 		state.isPrepared = true
 		try createCacheFileIfNeeded(length: length)
 		saveMetadataToDisk()
 	}
 
-	func data(for requestedRange: CachedRange) async throws -> Data {
+	func data(for requestedRange: CachedRange, updatesLastRequestedRange: Bool = true) async throws -> Data {
 		guard !isStopped else { throw CancellationError() }
 		try validate(range: requestedRange)
 		try await prepare()
@@ -159,8 +238,10 @@ final class StreamingCacheManager: ObservableObject {
 			end: min(requestedRange.end, state.contentLength - 1)
 		)
 
-		state.lastRequestedOffset = cappedRange.start
-		state.lastRequestedEndOffset = cappedRange.end
+		if updatesLastRequestedRange {
+			state.lastRequestedOffset = cappedRange.start
+			state.lastRequestedEndOffset = cappedRange.end
+		}
 
 		let missingRanges = missingRanges(in: cappedRange)
 		for range in missingRanges {
@@ -181,11 +262,15 @@ final class StreamingCacheManager: ObservableObject {
 		let prefetchLength = length ?? configuration.prefetchLength
 		let safeStart = max(0, min(start, state.contentLength - 1))
 		let safeEnd = max(safeStart, min(state.contentLength - 1, safeStart + prefetchLength - 1))
-		let requestedPrefetchRange = CachedRange(start: safeStart, end: safeEnd)
+		let firstNeededOffset = firstUncachedOffset(atOrAfter: safeStart)
+		guard firstNeededOffset <= safeEnd else { return }
+
+		let requestedPrefetchRange = CachedRange(start: firstNeededOffset, end: safeEnd)
 
 		if let activePrefetchRange,
-		   activePrefetchRange.start <= safeStart,
-		   activePrefetchRange.end >= min(safeEnd, safeStart + configuration.requestChunkSize - 1) {
+		   activePrefetchRange.start <= firstNeededOffset,
+		   activePrefetchRange.end >= firstNeededOffset,
+		   activePrefetchRange.end >= safeEnd - configuration.requestChunkSize {
 			return
 		}
 
@@ -211,16 +296,14 @@ final class StreamingCacheManager: ObservableObject {
 			do {
 				try await self.prepare()
 
-				var offset = await MainActor.run {
-					self.firstUncachedOffset(atOrAfter: safeStart)
-				}
+				var offset = firstNeededOffset
 
 				while offset <= safeEnd {
 					try Task.checkCancellation()
 
 					let chunkEnd = min(safeEnd, offset + self.configuration.requestChunkSize - 1)
 					let range = CachedRange(start: offset, end: chunkEnd)
-					_ = try await self.data(for: range)
+					_ = try await self.data(for: range, updatesLastRequestedRange: false)
 
 					offset = await MainActor.run {
 						self.firstUncachedOffset(atOrAfter: chunkEnd + 1)
@@ -242,6 +325,18 @@ final class StreamingCacheManager: ObservableObject {
 		prefetchAfterCachedRange(containing: state.lastRequestedEndOffset, length: length)
 	}
 
+	func prefetchForwardBuffer(currentTime: Double? = nil, duration: Double? = nil, length: Int64? = nil) {
+		prefetchAfterCachedRange(containing: state.lastRequestedEndOffset, length: length)
+	}
+
+	func prefetchPausedForwardBuffer(currentTime: Double? = nil, duration: Double? = nil) {
+		prefetchForwardBuffer(
+			currentTime: currentTime,
+			duration: duration,
+			length: configuration.pausedPrefetchLength
+		)
+	}
+
 	func prefetchAfterCachedRange(containing offset: Int64, length: Int64? = nil) {
 		guard state.contentLength > 0 else { return }
 		let start = firstUncachedOffset(atOrAfter: offset)
@@ -253,6 +348,52 @@ final class StreamingCacheManager: ObservableObject {
 		activePrefetchTask = nil
 		activePrefetchRange = nil
 		state.isPrefetching = false
+	}
+
+	func invalidateCachedDataAroundLastRequest(
+		padding: Int64 = 32 * 1024 * 1024
+	) -> CachedRange? {
+		guard state.contentLength > 0,
+			  state.lastRequestedEndOffset >= state.lastRequestedOffset else {
+			return nil
+		}
+
+		let requestedRange = CachedRange(
+			start: state.lastRequestedOffset,
+			end: state.lastRequestedEndOffset
+		)
+		guard state.cachedRanges.contains(where: { $0.contains(requestedRange) }) else {
+			return nil
+		}
+
+		cancelPrefetch()
+
+		let invalidatedRange = CachedRange(
+			start: max(0, requestedRange.start - padding),
+			end: min(state.contentLength - 1, requestedRange.end + padding)
+		)
+
+		state.cachedRanges = state.cachedRanges.flatMap { cachedRange -> [CachedRange] in
+			guard cachedRange.end >= invalidatedRange.start,
+				  cachedRange.start <= invalidatedRange.end else {
+				return [cachedRange]
+			}
+
+			var remaining: [CachedRange] = []
+			if cachedRange.start < invalidatedRange.start {
+				remaining.append(
+					CachedRange(start: cachedRange.start, end: invalidatedRange.start - 1)
+				)
+			}
+			if cachedRange.end > invalidatedRange.end {
+				remaining.append(
+					CachedRange(start: invalidatedRange.end + 1, end: cachedRange.end)
+				)
+			}
+			return remaining
+		}
+		saveMetadataToDisk()
+		return invalidatedRange
 	}
 
 	func stop(deleteCache: Bool? = nil) {
@@ -395,7 +536,7 @@ final class StreamingCacheManager: ObservableObject {
 	}
 
 	private func downloadOnce(range: CachedRange) async throws -> Data {
-		var request = URLRequest(url: originalURL)
+		var request = URLRequest(url: resolvedContentURL ?? originalURL)
 		request.setValue("bytes=\(range.start)-\(range.end)", forHTTPHeaderField: "Range")
 		request.setValue("identity", forHTTPHeaderField: "Accept-Encoding")
 		for (field, value) in videoCDNHTTPHeaderFields(for: originalURL) {
@@ -463,7 +604,8 @@ final class StreamingCacheManager: ObservableObject {
 		}
 
 		guard parsedRange.start == requestedRange.start,
-			  parsedRange.end == requestedRange.end else {
+			  parsedRange.end == requestedRange.end,
+			  parsedRange.total == state.contentLength else {
 			throw StreamingCacheError.unexpectedContentRange(contentRange)
 		}
 	}
@@ -656,6 +798,17 @@ final class StreamingCacheManager: ObservableObject {
 		let digest = SHA256.hash(data: Data(string.utf8))
 		return digest.map { String(format: "%02x", $0) }.joined()
 	}
+
+	private static func formatBytes(_ bytes: Int64) -> String {
+		let units = ["B", "KB", "MB", "GB", "TB"]
+		var value = Double(max(0, bytes))
+		var unitIndex = 0
+		while value >= 1024, unitIndex < units.count - 1 {
+			value /= 1024
+			unitIndex += 1
+		}
+		return String(format: "%.2f%@", value, units[unitIndex])
+	}
 }
 
 final class StreamingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
@@ -679,9 +832,6 @@ final class StreamingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDele
 			guard let self, let loadingRequest else { return }
 
 			do {
-				await MainActor.run {
-					self.cacheManager.cancelPrefetch()
-				}
 				try await self.fill(loadingRequest)
 				loadingRequest.finishLoading()
 			} catch is CancellationError {
@@ -793,19 +943,19 @@ final class StreamingPlayerItemFactory {
 		)
 
 		let cacheManager = try StreamingCacheManager(originalURL: url, configuration: configuration)
-		let delegate = StreamingResourceLoaderDelegate(
-			cacheManager: cacheManager,
-			responseChunkSize: configuration.requestChunkSize
-		)
-
-		let assetURL = try Self.resourceLoaderURL(for: url)
-		let asset = AVURLAsset(url: assetURL)
-		asset.resourceLoader.setDelegate(delegate, queue: loaderQueue)
-
 		self.cacheManager = cacheManager
-		self.resourceLoaderDelegate = delegate
+		return try makePlayerItem(for: url, cacheManager: cacheManager)
+	}
 
-		return AVPlayerItem(asset: asset)
+	@MainActor
+	func makeReplacementPlayerItem(for url: URL) throws -> AVPlayerItem {
+		guard let cacheManager else {
+			throw StreamingCacheError.cacheFileInvalid
+		}
+
+		resourceLoaderDelegate?.cancelAllLoadingRequests()
+		resourceLoaderDelegate = nil
+		return try makePlayerItem(for: url, cacheManager: cacheManager)
 	}
 
 	@MainActor
@@ -829,5 +979,21 @@ final class StreamingPlayerItemFactory {
 		}
 
 		return url
+	}
+
+	@MainActor
+	private func makePlayerItem(
+		for url: URL,
+		cacheManager: StreamingCacheManager
+	) throws -> AVPlayerItem {
+		let delegate = StreamingResourceLoaderDelegate(
+			cacheManager: cacheManager,
+			responseChunkSize: configuration.requestChunkSize
+		)
+		let assetURL = try Self.resourceLoaderURL(for: url)
+		let asset = AVURLAsset(url: assetURL)
+		asset.resourceLoader.setDelegate(delegate, queue: loaderQueue)
+		resourceLoaderDelegate = delegate
+		return AVPlayerItem(asset: asset)
 	}
 }
