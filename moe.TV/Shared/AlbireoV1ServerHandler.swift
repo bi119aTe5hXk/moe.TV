@@ -282,7 +282,11 @@ func getAlbireoMyBangumiList(completion: @escaping (Bool, Any?) -> Void) {
 				if result{
 					do {
 						if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
-							completion(true, list.data)
+							var items = list.data ?? []
+							for index in items.indices {
+								items[index].applyCoverImageFallback()
+							}
+							completion(true, items)
 						}else{
 							completion(false, data as! String)
 						}
@@ -308,7 +312,11 @@ func getAlbireoOnAirList(completion: @escaping (Bool, Any?) -> Void) {
 				if result{
 					do {
 						if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
-							completion(true, list.data)
+							var items = list.data ?? []
+							for index in items.indices {
+								items[index].applyCoverImageFallback()
+							}
+							completion(true, items)
 						}else{
 							completion(false, data as! String)
 						}
@@ -344,7 +352,11 @@ func getAlbireoAllBangumiList(page: Int,
 					do {
 							//Use OnAir model for temp
 						if let list = try jsonDecoder.decode(BangumiList?.self, from: data as! Data){
-							completion(true, list.data)
+							var items = list.data ?? []
+							for index in items.indices {
+								items[index].applyCoverImageFallback()
+							}
+							completion(true, items)
 						}else{
 							completion(false, data as! String)
 						}
@@ -372,7 +384,9 @@ func getAlbireoBangumiDetail(id: String,
 				if result{
 					do {
 						if let detail = try jsonDecoder.decode(BGMDetailDataModel?.self, from: data as! Data){
-							completion(true, detail.data)
+							var normalizedDetail = detail.data
+							normalizedDetail.applyCoverImageFallback()
+							completion(true, normalizedDetail)
 						}else{
 							completion(false, data as! String)
 						}
@@ -406,7 +420,12 @@ func getAlbireoEPDetail(ep_id: String,
 				if result{
 					do {
 						if let epDetail = try jsonDecoder.decode(EpisodeDetailModel?.self, from: data as! Data){
-							completion(true, epDetail)
+							var normalizedEpisode = epDetail
+							if var bangumi = normalizedEpisode.bangumi {
+								bangumi.applyCoverImageFallback()
+								normalizedEpisode.bangumi = bangumi
+							}
+							completion(true, normalizedEpisode)
 						}else{
 							completion(false, data as! String)
 						}
