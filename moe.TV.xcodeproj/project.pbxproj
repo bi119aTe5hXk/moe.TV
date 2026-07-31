@@ -18,6 +18,7 @@
 		47AA00222F30020000123456 /* VideoCDNHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00212F30020000123456 /* VideoCDNHandler.swift */; };
 		47AA00322F30030000123456 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00312F30030000123456 /* AppConstants.swift */; };
 		47AA00342F30040000123456 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00332F30040000123456 /* URLUtilities.swift */; };
+		47AA00352F30040000123456 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00332F30040000123456 /* URLUtilities.swift */; };
 		47CC30782A371784001D3F8C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC30772A371784001D3F8C /* LoginViewController.swift */; };
 		47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */; };
 		47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */; };
@@ -559,6 +560,7 @@
 				866728002A39C8C1009E0104 /* BangumiDetailModel.swift in Sources */,
 				866728012A39C8C4009E0104 /* BangumiItemModel.swift in Sources */,
 				866727F32A39C776009E0104 /* ContentProvider.swift in Sources */,
+				47AA00352F30040000123456 /* URLUtilities.swift in Sources */,
 				8624D34F2DBD40D400140F4B /* BGMTVCollectionEpisodesModel.swift in Sources */,
 				866727FD2A39C8B9009E0104 /* SettingsHandler.swift in Sources */,
 			);

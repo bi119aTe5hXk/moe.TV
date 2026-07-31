@@ -112,6 +112,43 @@ func completeServerPath(baseURL: String, path: String) -> String {
 	return "\(normalizedBase)/\(path)"
 }
 
+func resizedImageURL(
+	_ rawURL: String,
+	pixelWidth: Int,
+	pixelHeight: Int
+) -> URL? {
+	guard pixelWidth > 0,
+		  pixelHeight > 0,
+		  var components = URLComponents(string: rawURL) else {
+		return URL(string: rawURL)
+	}
+
+	let host = components.host?.lowercased()
+	let isImageKit = host == "ik.imagekit.io"
+	let isLegacyPicture = components.path.hasPrefix("/pic/")
+	guard isImageKit || isLegacyPicture else {
+		return components.url
+	}
+
+	var queryItems = components.queryItems ?? []
+	queryItems.removeAll { item in
+		let name = item.name.lowercased()
+		return name == "size" || name == "tr"
+	}
+
+	if isImageKit {
+		queryItems.append(
+			URLQueryItem(name: "tr", value: "w-\(pixelWidth),h-\(pixelHeight)")
+		)
+	} else {
+		queryItems.append(
+			URLQueryItem(name: "size", value: "\(pixelWidth)x\(pixelHeight)")
+		)
+	}
+	components.queryItems = queryItems
+	return components.url
+}
+
 func formURLEncodedData(_ parameters: [String: String]) -> Data {
 	let body = parameters
 		.map { key, value in

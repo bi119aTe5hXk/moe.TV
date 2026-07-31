@@ -64,7 +64,13 @@ struct EPCellView: View {
                     } else {
                         ZStack {
                             if let thumbnail = newEPItem.ep.thumbnail {
-                                WebImage(url: URL(string: fixPathNotCompete(path: thumbnail))) { image in
+                                WebImage(
+                                    url: resizedImageURL(
+                                        fixPathNotCompete(path: thumbnail),
+                                        pixelWidth: 600,
+                                        pixelHeight: 338
+                                    )
+                                ) { image in
                                     image.resizable()
                                 } placeholder: {
                                     ZStack {
