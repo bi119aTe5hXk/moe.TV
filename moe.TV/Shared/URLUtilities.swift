@@ -115,7 +115,8 @@ func completeServerPath(baseURL: String, path: String) -> String {
 func resizedImageURL(
 	_ rawURL: String,
 	pixelWidth: Int,
-	pixelHeight: Int
+	pixelHeight: Int,
+	preserveAspectRatio: Bool = false
 ) -> URL? {
 	guard pixelWidth > 0,
 		  pixelHeight > 0,
@@ -137,8 +138,12 @@ func resizedImageURL(
 	}
 
 	if isImageKit {
+		let cropMode = preserveAspectRatio ? ",c-at_max" : ""
 		queryItems.append(
-			URLQueryItem(name: "tr", value: "w-\(pixelWidth),h-\(pixelHeight)")
+			URLQueryItem(
+				name: "tr",
+				value: "w-\(pixelWidth),h-\(pixelHeight)\(cropMode)"
+			)
 		)
 	} else {
 		queryItems.append(
@@ -146,6 +151,7 @@ func resizedImageURL(
 		)
 	}
 	components.queryItems = queryItems
+	print("imageurl:\(String(describing: components.url))")
 	return components.url
 }
 

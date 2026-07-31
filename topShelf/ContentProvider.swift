@@ -25,11 +25,21 @@ class ContentProvider: TVTopShelfContentProvider {
                         path: coverPath
                     )
                     tsItem.setImageURL(
-                        resizedImageURL(coverURL, pixelWidth: 202, pixelHeight: 304),
+                        resizedImageURL(
+                            coverURL,
+                            pixelWidth: 202,
+                            pixelHeight: 304,
+                            preserveAspectRatio: true
+                        ),
                         for: .screenScale1x
                     )
                     tsItem.setImageURL(
-                        resizedImageURL(coverURL, pixelWidth: 404, pixelHeight: 608),
+                        resizedImageURL(
+                            coverURL,
+                            pixelWidth: 404,
+                            pixelHeight: 608,
+                            preserveAspectRatio: true
+                        ),
                         for: .screenScale2x
                     )
                 }
