@@ -62,8 +62,8 @@ struct EPCellView: View {
             Button(
                 action: playEpisode,
                 label: {
-                    if loadFailed {
-                        Text("No Picture")
+					if newEPItem.ep.status != 2 || loadFailed {
+						Text("No Picture")
                     } else {
                         ZStack {
 							if let thumbnail = newEPItem.ep.thumbnail,
