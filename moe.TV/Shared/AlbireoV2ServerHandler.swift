@@ -11,7 +11,7 @@ import Foundation
 private let albireoV2SettingsHandler = SettingsHandler()
 private let albireoV2Scopes = "openid offline_access profile bookmark"
 private let albireoV2OIDCIssuerURL = "https://authorization.box.moe"
-private let albireoV2RedirectHost = "box.moe"
+private let albireoV2RedirectHost = "boxmoe"
 
 private let albireoV2OAuthCodeLock = NSLock()
 private var handledAlbireoV2OAuthCodes = Set<String>()
