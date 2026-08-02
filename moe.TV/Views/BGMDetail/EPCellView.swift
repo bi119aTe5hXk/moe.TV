@@ -10,8 +10,7 @@ import SDWebImage
 import SDWebImageSwiftUI
 
 struct EPCellView: View {
-    @State var isEmptyEP: Bool = false
-    @State var newEPItem: NewEPItem
+	@State var newEPItem: NewEPItem
     @State var showVideoFileExisitAlert = false
     @State var showNotDownloadableAlert = false
     @State private var loadFailed = false
@@ -50,21 +49,33 @@ struct EPCellView: View {
         return "Download"
     }
 
-    private var isDownloadButtonDisabled: Bool {
-        isEmptyEP || activeDownload != nil || localOfflineItem != nil
-    }
+	private var isDownloadButtonDisabled: Bool {
+		isEmptyEP || activeDownload != nil || localOfflineItem != nil
+	}
+
+	private var isEmptyEP: Bool {
+		newEPItem.ep.status != 2 && activeDownload == nil && localOfflineItem == nil
+	}
 
     var body: some View {
         HStack {
             Button(
                 action: playEpisode,
                 label: {
-                    if loadFailed {
-                        Text("No Picture")
+					if newEPItem.ep.status != 2 || loadFailed {
+						Text("No Picture")
                     } else {
                         ZStack {
-                            if let thumbnail = newEPItem.ep.thumbnail {
-                                WebImage(url: URL(string: fixPathNotCompete(path: thumbnail))) { image in
+							if let thumbnail = newEPItem.ep.thumbnail,
+							   let thumbnailURL = resizedImageURL(
+								fixPathNotCompete(path: thumbnail),
+								pixelWidth: 600,
+								pixelHeight: 338
+							   ) {
+								WebImage(
+									url: thumbnailURL,
+									options: [.retryFailed]
+								) { image in
                                     image.resizable()
                                 } placeholder: {
                                     ZStack {
@@ -75,12 +86,11 @@ struct EPCellView: View {
                                         }
                                     }
                                 }
-                                .onFailure { error in
-                                    print("error \(error)")
-                                    DispatchQueue.main.async {
-                                        self.isEmptyEP = true
-                                        loadFailed = true
-                                    }
+								.onFailure { error in
+									print("Episode thumbnail failed: \(thumbnailURL.absoluteString), error: \(error)")
+									DispatchQueue.main.async {
+										loadFailed = true
+									}
                                 }
                                 .resizable()
                                 .scaledToFit()

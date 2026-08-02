@@ -19,7 +19,30 @@ class ContentProvider: TVTopShelfContentProvider {
             j.forEach { bgmItem in
                 let tsItem  = TVTopShelfSectionedItem(identifier:bgmItem.id)
                 tsItem.imageShape = .poster
-                tsItem.setImageURL(URL(string: bgmItem.image ?? "")!, for: .screenScale2x)
+                if let coverPath = bgmItem.resolvedCoverImageURL {
+                    let coverURL = completeServerPath(
+                        baseURL: save.getAlbireoServerAddr(),
+                        path: coverPath
+                    )
+                    tsItem.setImageURL(
+                        resizedImageURL(
+                            coverURL,
+                            pixelWidth: 202,
+                            pixelHeight: 304,
+                            preserveAspectRatio: true
+                        ),
+                        for: .screenScale1x
+                    )
+                    tsItem.setImageURL(
+                        resizedImageURL(
+                            coverURL,
+                            pixelWidth: 404,
+                            pixelHeight: 608,
+                            preserveAspectRatio: true
+                        ),
+                        for: .screenScale2x
+                    )
+                }
                 tsItem.title = bgmItem.name
                 
                 if let unwatchCount = bgmItem.unwatched_count{
@@ -43,4 +66,3 @@ class ContentProvider: TVTopShelfContentProvider {
     }
 
 }
-

@@ -127,7 +127,8 @@ final class NowPlayingManager {
         }()
 
         // If no artwork URL, remove existing artwork.
-        guard let urlString, let url = URL(string: urlString) else {
+        guard let urlString,
+              let url = resizedImageURL(urlString, pixelWidth: 1200, pixelHeight: 675) else {
             var info = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
             info.removeValue(forKey: MPMediaItemPropertyArtwork)
             MPNowPlayingInfoCenter.default().nowPlayingInfo = info
@@ -138,8 +139,9 @@ final class NowPlayingManager {
         }
 
         // Avoid refetching the same artwork repeatedly.
-        if lastArtworkURLString == urlString { return }
-        lastArtworkURLString = urlString
+        let resizedURLString = url.absoluteString
+        if lastArtworkURLString == resizedURLString { return }
+        lastArtworkURLString = resizedURLString
 
         artworkTask?.cancel()
         artworkTask = Task { [weak self] in

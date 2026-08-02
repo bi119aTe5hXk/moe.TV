@@ -412,8 +412,12 @@ class PlayerViewController: ObservableObject {
 		if let summary = ep.summary {
 			metadata.append(createMetadataItem(for: .commonIdentifierDescription, value: summary))
 		}
-		if let imageURL = ep.thumbnail {
-			let url = URL(string: imageURL)!
+		if let imageURL = ep.thumbnail,
+		   let url = resizedImageURL(
+			fixPathNotCompete(path: imageURL),
+			pixelWidth: 1200,
+			pixelHeight: 675
+		   ) {
 			let rdata = try? Data(contentsOf: url)
 			metadata.append(
 				createMetadataItem(

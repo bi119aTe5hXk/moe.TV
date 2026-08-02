@@ -80,7 +80,14 @@ private struct BangumiDetailCoverMainContent: View {
     var body: some View {
         Group {
             if let coverURL = item.resolvedCoverImageURL {
-                WebImage(url: URL(string: coverURL)) { image in
+                WebImage(
+					url: resizedImageURL(
+						fixPathNotCompete(path: coverURL),
+						pixelWidth: 600,
+						pixelHeight: 848,
+						preserveAspectRatio: true
+					)
+                ) { image in
                     image.resizable()
                 } placeholder: {
                     ZStack {
