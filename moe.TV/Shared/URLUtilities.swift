@@ -101,15 +101,25 @@ private func isLikelyIPv6Host(_ host: String) -> Bool {
 }
 
 func completeServerPath(baseURL: String, path: String) -> String {
-	if let url = URL(string: path), url.scheme != nil {
-		return path
+	let trimmedPath = path.trimmingCharacters(in: .whitespacesAndNewlines)
+	let withoutLeadingSlashes = String(trimmedPath.drop(while: { $0 == "/" }))
+	let absolutePath: String
+	if withoutLeadingSlashes.lowercased().hasPrefix("http://")
+		|| withoutLeadingSlashes.lowercased().hasPrefix("https://") {
+		absolutePath = withoutLeadingSlashes
+	} else {
+		absolutePath = trimmedPath
+	}
+
+	if let url = URL(string: absolutePath), url.scheme != nil {
+		return absolutePath
 	}
 
 	let normalizedBase = normalizedServerURL(baseURL)
-	if path.hasPrefix("/") {
-		return "\(normalizedBase)\(path)"
+	if trimmedPath.hasPrefix("/") {
+		return "\(normalizedBase)\(trimmedPath)"
 	}
-	return "\(normalizedBase)/\(path)"
+	return "\(normalizedBase)/\(trimmedPath)"
 }
 
 func resizedImageURL(
