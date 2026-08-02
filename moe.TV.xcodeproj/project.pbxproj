@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		47222CE52B3F267500085EBD /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47222CE42B3F267500085EBD /* DebugView.swift */; };
 		47222CE72B3F291200085EBD /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47222CE62B3F291200085EBD /* DebugViewController.swift */; };
+		47261ED5301F824F0019DC10 /* MiraStreamingSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 47261ED4301F824F0019DC10 /* MiraStreamingSDK */; };
 		476F6EB72FD0120700140C2D /* StreamingAVPlayerCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476F6EB62FD0120700140C2D /* StreamingAVPlayerCache.swift */; };
 		477801792FA34C77004757F4 /* TVSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477801782FA34C71004757F4 /* TVSidebar.swift */; };
 		4779043B2F2B857900EF74D5 /* PlayerViewControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4779043A2F2B854500EF74D5 /* PlayerViewControllerHost.swift */; };
@@ -210,6 +211,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47261ED5301F824F0019DC10 /* MiraStreamingSDK in Frameworks */,
 				862CF4E72E23A9EF00624C04 /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -477,6 +479,7 @@
 			);
 			name = moe.TV;
 			packageProductDependencies = (
+				47261ED4301F824F0019DC10 /* MiraStreamingSDK */,
 				862CF4E62E23A9EF00624C04 /* SDWebImageSwiftUI */,
 			);
 			productName = moe.TV;
@@ -515,6 +518,7 @@
 			mainGroup = 86A9C3D92A3306BC00FD0B44;
 			packageReferences = (
 				862CF4E52E23A9EF00624C04 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				47261ED3301F824F0019DC10 /* XCLocalSwiftPackageReference "../../irohalab/mira-sdk/streaming-sdk/MiraStreamingSDK" */,
 			);
 			productRefGroup = 86A9C3E32A3306BC00FD0B44 /* Products */;
 			projectDirPath = "";
@@ -909,7 +913,7 @@
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TARGETED_DEVICE_FAMILY = "1,2,3,6,7";
 				TVOS_DEPLOYMENT_TARGET = 26.0;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 				XROS_DEPLOYMENT_TARGET = 1.0;
@@ -969,7 +973,7 @@
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TARGETED_DEVICE_FAMILY = "1,2,3,6,7";
 				TVOS_DEPLOYMENT_TARGET = 26.0;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 				XROS_DEPLOYMENT_TARGET = 1.0;
@@ -1008,6 +1012,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		47261ED3301F824F0019DC10 /* XCLocalSwiftPackageReference "../../irohalab/mira-sdk/streaming-sdk/MiraStreamingSDK" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../irohalab/mira-sdk/streaming-sdk/MiraStreamingSDK";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		862CF4E52E23A9EF00624C04 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1020,6 +1031,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		47261ED4301F824F0019DC10 /* MiraStreamingSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 47261ED3301F824F0019DC10 /* XCLocalSwiftPackageReference "../../irohalab/mira-sdk/streaming-sdk/MiraStreamingSDK" */;
+			productName = MiraStreamingSDK;
+		};
 		862CF4E62E23A9EF00624C04 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 862CF4E52E23A9EF00624C04 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;

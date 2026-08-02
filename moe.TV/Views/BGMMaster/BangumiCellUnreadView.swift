@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct BangumiCellUnreadView: View {
-    @State var unreadCount:Int
+    let unreadCount: Int
+
     var body: some View {
-        if unreadCount >= 1{
+        if unreadCount >= 1 {
             Text(String(unreadCount))
                 .padding(8)
                 .foregroundColor(.white)

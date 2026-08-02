@@ -9,7 +9,7 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct BangumiCellView: View {
-    @State var bangumiItem: BangumiItemModel
+    let bangumiItem: BangumiItemModel
     
     var body: some View {
 //        HStack{

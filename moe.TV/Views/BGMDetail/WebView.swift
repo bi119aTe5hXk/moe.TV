@@ -57,14 +57,48 @@ extension View {
 
 // MARK: - Inline WKWebView (embeddable)
 
+#if !os(tvOS) && !os(visionOS)
+private func makeInlineWebView() -> WKWebView {
+    let controller = WKUserContentController()
+    controller.addUserScript(
+        WKUserScript(
+            source: """
+                (() => {
+                    const playbackKeys = new Set([
+                        'Space',
+                        'ArrowLeft',
+                        'ArrowRight',
+                        'ArrowUp',
+                        'ArrowDown'
+                    ]);
+                    const blockPlaybackKey = event => {
+                        if (!playbackKeys.has(event.code)) return;
+                        event.preventDefault();
+                        event.stopImmediatePropagation();
+                    };
+                    window.addEventListener('keydown', blockPlaybackKey, true);
+                    window.addEventListener('keyup', blockPlaybackKey, true);
+                })();
+                """,
+            injectionTime: .atDocumentStart,
+            forMainFrameOnly: false
+        )
+    )
+
+    let configuration = WKWebViewConfiguration()
+    configuration.userContentController = controller
+    let webView = WKWebView(frame: .zero, configuration: configuration)
+    webView.allowsBackForwardNavigationGestures = true
+    return webView
+}
+#endif
+
 #if os(iOS)
 private struct WKInlineWebView: UIViewRepresentable {
     let url: URL
 
     func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView(frame: .zero)
-        webView.allowsBackForwardNavigationGestures = true
-        return webView
+        makeInlineWebView()
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
@@ -93,9 +127,7 @@ private struct WKInlineWebView: NSViewRepresentable {
     let url: URL
 
     func makeNSView(context: Context) -> WKWebView {
-        let webView = WKWebView(frame: .zero)
-        webView.allowsBackForwardNavigationGestures = true
-        return webView
+        makeInlineWebView()
     }
 
     func updateNSView(_ nsView: WKWebView, context: Context) {

@@ -35,11 +35,13 @@ class BangumiListViewController: ObservableObject{
     func getBGMList(funcType:FuncViewModel?, searchKeyword:String){
         if let type = funcType{
 			settingsHandler.registerSettings()
+			DispatchQueue.main.async {
+				self.isLoading = true
+				self.isLoadingNextPage = false
+				self.bgmList = []
+			}
             isAlbireoLoginValid { result in
                 if result{
-					DispatchQueue.main.async {
-						self.isLoading = true
-					}
 					if self.settingsHandler.getAlbireoAuthMode() == .albireoV2OAuth {
 						self.resetAlbireoV2Pagination(funcType: type, searchKeyword: searchKeyword)
 						self.getAlbireoV2DebugList(funcType: type, searchKeyword: searchKeyword)
@@ -79,7 +81,11 @@ class BangumiListViewController: ObservableObject{
                     }
                 }else{
                     print("Albireo login info error. Cookie expired?")
-                    self.showLogoutAlert.toggle()
+					DispatchQueue.main.async {
+						self.isLoading = false
+						self.bgmList = []
+						self.showLogoutAlert = true
+					}
                 }
             }
             
@@ -110,36 +116,34 @@ class BangumiListViewController: ObservableObject{
     
 	private func getAlbireoV2DebugList(funcType: FuncViewModel, searchKeyword: String) {
 		let completion: (Bool, Any) -> Void = { result, data in
-			guard result else {
-				DispatchQueue.main.async {
-					self.isLoading = false
+			DispatchQueue.main.async {
+				guard self.albireoV2CurrentFunc == funcType,
+					  self.albireoV2CurrentSearchKeyword == searchKeyword else {
+					print("Ignoring stale Albireo V2 \(funcType) list response")
+					return
 				}
-				print("Albireo V2 list request failed: \(data)")
-				return
-			}
 
-			guard let responseData = data as? Data else {
-				DispatchQueue.main.async {
+				guard result else {
 					self.isLoading = false
+					self.bgmList = []
+					print("Albireo V2 list request failed: \(data)")
+					return
 				}
-				print("Albireo V2 list response is not Data: \(data)")
-				return
-			}
 
-			do {
-				let list = try decodeAlbireoV2BangumiItems(from: responseData)
+				guard let list = data as? [BangumiItemModel] else {
+					self.isLoading = false
+					self.bgmList = []
+					print("Albireo V2 list response has unexpected type: \(type(of: data))")
+					return
+				}
+
 				if let firstItem = list.first {
-					print("Albireo V2 decoded list count: \(list.count), first: \(firstItem.id), \(firstItem.name ?? ""), favorite_status: \(String(describing: firstItem.favorite_status))")
+					print("Albireo V2 decoded list count: \(list.count), first: \(firstItem.id), \(firstItem.name ?? ""), favorite_status: \(String(describing: firstItem.favorite_status)), unwatched: \(firstItem.unwatched_count ?? 0)")
 				} else {
 					print("Albireo V2 decoded list count: 0")
 				}
-				self.updateBGMList(list: list)
-			} catch {
-				DispatchQueue.main.async {
-					self.isLoading = false
-				}
-				let responseText = String(data: responseData, encoding: .utf8) ?? ""
-				print("Albireo V2 list decode failed: \(error.localizedDescription), response: \(responseText)")
+				self.isLoading = false
+				self.bgmList = list
 			}
 		}
 
@@ -180,37 +184,27 @@ class BangumiListViewController: ObservableObject{
 				return
 			}
 
-			guard let responseData = data as? Data else {
+			guard let list = data as? [BangumiItemModel] else {
 				DispatchQueue.main.async {
 					self.isLoading = false
 					self.isLoadingNextPage = false
 				}
-				print("Albireo V2 paged bangumi response is not Data: \(data)")
+				print("Albireo V2 paged bangumi response has unexpected type: \(data)")
 				return
 			}
 
-			do {
-				let list = try decodeAlbireoV2BangumiItems(from: responseData)
-				DispatchQueue.main.async {
-					if append {
-						let existingIDs = Set(self.bgmList.map { $0.id })
-						self.bgmList.append(contentsOf: list.filter { existingIDs.contains($0.id) == false })
-					} else {
-						self.bgmList = list
-					}
-					self.albireoV2NextOffset = (append ? self.albireoV2NextOffset : 0) + list.count
-					self.albireoV2CanLoadMore = list.count >= self.albireoV2PageSize
-					self.isLoading = false
-					self.isLoadingNextPage = false
-					print("Albireo V2 loaded page count: \(list.count), total: \(self.bgmList.count), canLoadMore: \(self.albireoV2CanLoadMore)")
+			DispatchQueue.main.async {
+				if append {
+					let existingIDs = Set(self.bgmList.map { $0.id })
+					self.bgmList.append(contentsOf: list.filter { existingIDs.contains($0.id) == false })
+				} else {
+					self.bgmList = list
 				}
-			} catch {
-				DispatchQueue.main.async {
-					self.isLoading = false
-					self.isLoadingNextPage = false
-				}
-				let responseText = String(data: responseData, encoding: .utf8) ?? ""
-				print("Albireo V2 paged bangumi decode failed: \(error.localizedDescription), response: \(responseText)")
+				self.albireoV2NextOffset = (append ? self.albireoV2NextOffset : 0) + list.count
+				self.albireoV2CanLoadMore = list.count >= self.albireoV2PageSize
+				self.isLoading = false
+				self.isLoadingNextPage = false
+				print("Albireo V2 loaded page count: \(list.count), total: \(self.bgmList.count), canLoadMore: \(self.albireoV2CanLoadMore)")
 			}
 		}
 	}

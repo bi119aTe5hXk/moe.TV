@@ -7,6 +7,7 @@
 
 import CryptoKit
 import Foundation
+import MiraStreamingSDK
 
 private let albireoV2SettingsHandler = SettingsHandler()
 private let albireoV2Scopes = "openid offline_access profile bookmark"
@@ -260,7 +261,7 @@ func getAlbireoV2UserInfo(completion: @escaping (Bool, Any) -> Void) {
 	loadAlbireoV2OIDCConfiguration { result in
 		switch result {
 		case .success(let oidcConfiguration):
-			getAlbireoV2JSON(urlString: oidcConfiguration.userinfoEndpoint, completion: completion)
+			getAlbireoV2OIDCJSON(urlString: oidcConfiguration.userinfoEndpoint, completion: completion)
 		case .failure(let error):
 			completion(false, error.localizedDescription)
 		}
@@ -268,123 +269,130 @@ func getAlbireoV2UserInfo(completion: @escaping (Bool, Any) -> Void) {
 }
 
 func getAlbireoV2AccountInfo(completion: @escaping (Bool, Any) -> Void) {
-	getAlbireoV2JSON(urlString: "\(currentAlbireoV2APIBaseURL())/account/info", completion: completion)
+	performAlbireoV2SDKRequest(
+		label: "account info",
+		operation: { configuration in
+			try await AccountAPI(apiConfiguration: configuration).getAccountInfo()
+		},
+		completion: completion
+	)
 }
 
 func getAlbireoV2BangumiDetail(id: String, completion: @escaping (Bool, Any) -> Void) {
-	var components = URLComponents(string: "\(currentAlbireoV2APIBaseURL())/bangumi/\(id)")
-	components?.queryItems = [
-		URLQueryItem(name: "loadEpisodes", value: "true"),
-		URLQueryItem(name: "loadBangumiEpisodes", value: "true"),
-		URLQueryItem(name: "loadFavorite", value: "true")
-	]
-	guard let urlString = components?.url?.absoluteString else {
-		completion(false, "Failed to build Albireo V2 bangumi detail URL.")
+	guard let bangumiID = UUID(uuidString: id) else {
+		completion(false, "Invalid Albireo V2 bangumi id: \(id)")
 		return
 	}
-	print("Albireo V2 bangumi detail request: \(urlString)")
-	getAlbireoV2JSON(urlString: urlString) { result, data in
-		if let responseData = data as? Data,
-		   let responseText = String(data: responseData, encoding: .utf8) {
-			print("Albireo V2 bangumi detail response: \(responseText)")
-			print("Albireo V2 bangumi detail top-level keys: \(albireoV2TopLevelKeys(from: responseData))")
-		} else {
-			print("Albireo V2 bangumi detail response: \(data)")
-		}
-		completion(result, data)
-	}
+
+	performAlbireoV2SDKRequest(
+		label: "bangumi detail \(id)",
+		operation: { configuration in
+			let detail = try await BangumiAPI(apiConfiguration: configuration).getBangumi(id: bangumiID)
+			return detail.toBangumiDetailModel()
+		},
+		completion: completion
+	)
 }
 
 func getAlbireoV2EpisodeDetail(epID: String, defaultBangumiID: String? = nil, completion: @escaping (Bool, Any) -> Void) {
-	var components = URLComponents(string: "\(currentAlbireoV2APIBaseURL())/episode/\(epID)")
-	components?.queryItems = [
-		URLQueryItem(name: "loadBangumiEpisodes", value: "true"),
-		URLQueryItem(name: "loadFavorite", value: "true")
-	]
-	guard let urlString = components?.url?.absoluteString else {
-		completion(false, "Failed to build Albireo V2 episode detail URL.")
+	guard let episodeID = UUID(uuidString: epID) else {
+		completion(false, "Invalid Albireo V2 episode id: \(epID)")
 		return
 	}
-	print("Albireo V2 episode detail request: \(urlString)")
-	getAlbireoV2JSON(urlString: urlString) { result, data in
-		if let responseData = data as? Data,
-		   let responseText = String(data: responseData, encoding: .utf8) {
-			print("Albireo V2 episode detail response: \(responseText)")
-			if result {
-				do {
-					let episode = try decodeAlbireoV2EpisodeDetail(from: responseData, defaultBangumiId: defaultBangumiID ?? "")
-					completion(true, episode)
-				} catch {
-					completion(false, "Albireo V2 episode detail decode failed: \(error.localizedDescription)")
-				}
-				return
-			}
-		} else {
-			print("Albireo V2 episode detail response: \(data)")
-		}
-		completion(result, data)
-	}
+
+	performAlbireoV2SDKRequest(
+		label: "episode detail \(epID)",
+		operation: { configuration in
+			let detail = try await EpisodeAPI(apiConfiguration: configuration).getEpisode(
+				id: episodeID,
+				loadBangumiEpisodes: true,
+				loadFavorite: true
+			)
+			return detail.toEpisodeDetailModel()
+		},
+		completion: completion
+	)
 }
 
-func getAlbireoV2FavoriteList(status: AlbireoV2FavoriteStatus,
+func getAlbireoV2FavoriteList(status: FavoriteStatus,
 						   offset: Int = 0,
 						   limit: Int = -1,
 						   completion: @escaping (Bool, Any) -> Void) {
-	var components = URLComponents(string: "\(currentAlbireoV2APIBaseURL())/favorite")
-	components?.queryItems = [
-		URLQueryItem(name: "status", value: status.rawValue),
-		URLQueryItem(name: "offset", value: String(offset)),
-		URLQueryItem(name: "limit", value: String(limit)),
-		URLQueryItem(name: "countUnwatched", value: "false"),
-		URLQueryItem(name: "enableEpsUpdateTime", value: "false"),
-		URLQueryItem(name: "orderBy", value: "updateTime"),
-		URLQueryItem(name: "sort", value: "desc"),
-		URLQueryItem(name: "coverImage", value: "false")
-	]
-	performAlbireoV2DebugListRequest(label: "favorite \(status.rawValue)", components: components, completion: completion)
+	performAlbireoV2SDKRequest(
+		label: "favorite \(status.rawValue)",
+		operation: { configuration in
+			let response = try await FavoriteAPI(apiConfiguration: configuration).listFavorites(
+				status: status,
+				enableEpsUpdateTime: false,
+				countUnwatched: true,
+				coverImage: false,
+				offset: offset,
+				limit: limit,
+				orderBy: .updatetime,
+				sort: .desc
+			)
+			return response.toBangumiItemModels()
+		},
+		completion: completion
+	)
 }
 
 func getAlbireoV2OnAirList(completion: @escaping (Bool, Any) -> Void) {
-	var components = URLComponents(string: "\(currentAlbireoV2APIBaseURL())/bangumi/on-air")
-	components?.queryItems = [
-		URLQueryItem(name: "type", value: "anime")
-	]
-	performAlbireoV2DebugListRequest(label: "on-air", components: components, completion: completion)
+	performAlbireoV2SDKRequest(
+		label: "on-air",
+		operation: { configuration in
+			let response = try await BangumiAPI(apiConfiguration: configuration).listOnAirBangumi(type: .anime)
+			return response.toBangumiItemModels()
+		},
+		completion: completion
+	)
 }
 
 func getAlbireoV2BangumiList(keyword: String = "",
 						   offset: Int = 0,
 						   limit: Int = 23,
 						   completion: @escaping (Bool, Any) -> Void) {
-	var components = URLComponents(string: "\(currentAlbireoV2APIBaseURL())/bangumi")
-	var queryItems = [
-		URLQueryItem(name: "offset", value: String(offset)),
-		URLQueryItem(name: "limit", value: String(limit)),
-		URLQueryItem(name: "orderBy", value: keyword.isEmpty ? "air_date" : "airDate"),
-		URLQueryItem(name: "sort", value: "desc")
-	]
-	if keyword.isEmpty == false {
-		queryItems.insert(URLQueryItem(name: "keyword", value: keyword), at: 0)
-	}
-	components?.queryItems = queryItems
-	performAlbireoV2DebugListRequest(label: keyword.isEmpty ? "bangumi" : "search", components: components, completion: completion)
+	performAlbireoV2SDKRequest(
+		label: keyword.isEmpty ? "bangumi" : "search",
+		operation: { configuration in
+			let response = try await BangumiAPI(apiConfiguration: configuration).listBangumi(
+				offset: offset,
+				limit: limit,
+				orderBy: .airdate,
+				sort: .desc,
+				keyword: keyword.isEmpty ? nil : keyword
+			)
+			return response.toBangumiItemModels()
+		},
+		completion: completion
+	)
 }
 
 func changeAlbireoV2FavoriteStatus(bangumiID: String,
 								   status: Int,
 								   completion: @escaping (Bool, Any?) -> Void) {
-	guard let favoriteStatus = AlbireoV2FavoriteStatus(legacyValue: status) else {
+	guard let favoriteStatus = FavoriteStatus(legacyValue: status),
+		  let bangumiUUID = UUID(uuidString: bangumiID) else {
 		completion(false, "Unsupported Albireo V2 favorite status: \(status)")
 		return
 	}
 
-	let body: [String: Any] = [
-		"bangumiId": bangumiID,
-		"status": favoriteStatus.rawValue,
-		"review": "",
-		"syncToUpstream": true
-	]
-	postAlbireoV2JSON(urlString: "\(currentAlbireoV2APIBaseURL())/favorite", body: body, completion: completion)
+	performAlbireoV2SDKRequest(
+		label: "change favorite status",
+		operation: { configuration in
+			try await FavoriteAPI(apiConfiguration: configuration).createOrUpdateFavorite(
+				favoriteCreateRequest: FavoriteCreateRequest(
+					status: favoriteStatus,
+					bangumiId: bangumiUUID,
+					review: "",
+					syncToUpstream: true
+				)
+			)
+		},
+		completion: { success, result in
+			completion(success, result)
+		}
+	)
 }
 
 func syncAlbireoV2EpisodeWatchProgress(epID: String,
@@ -393,98 +401,131 @@ func syncAlbireoV2EpisodeWatchProgress(epID: String,
 									   percentage: Double,
 									   isFinished: Bool,
 									   completion: @escaping (Bool, Any?) -> Void) {
-	let record: [String: Any] = [
-		"bangumiId": bangumiID,
-		"episodeId": epID,
-		"lastWatchPosition": lastWatchPosition,
-		"lastWatchTime": albireoV2CurrentISOString(),
-		"isFinished": isFinished,
-		"percentage": percentage,
-		"version": 2
-	]
-	let body: [String: Any] = [
-		"records": [record]
-	]
-	postAlbireoV2JSON(urlString: "\(currentAlbireoV2APIBaseURL())/episode/watch/sync", body: body, completion: completion)
-}
-
-private func performAlbireoV2DebugListRequest(label: String,
-										components: URLComponents?,
-										completion: @escaping (Bool, Any) -> Void) {
-	guard let urlString = components?.url?.absoluteString else {
-		completion(false, "Failed to build Albireo V2 \(label) URL.")
+	guard let episodeUUID = UUID(uuidString: epID),
+		  let bangumiUUID = UUID(uuidString: bangumiID) else {
+		completion(false, "Invalid Albireo V2 episode or bangumi id.")
 		return
 	}
-	print("Albireo V2 \(label) request: \(urlString)")
-	getAlbireoV2JSON(urlString: urlString) { result, data in
-		if let responseData = data as? Data,
-		   let responseText = String(data: responseData, encoding: .utf8) {
-			print("Albireo V2 \(label) response: \(responseText)")
-		} else {
-			print("Albireo V2 \(label) response: \(data)")
+
+	let record = WatchHistoryRecord(
+		bangumiId: bangumiUUID,
+		episodeId: episodeUUID,
+		lastWatchPosition: lastWatchPosition,
+		lastWatchTime: Date(),
+		percentage: percentage,
+		isFinished: isFinished
+	)
+	performAlbireoV2SDKRequest(
+		label: "sync watch progress",
+		operation: { configuration in
+			try await EpisodeAPI(apiConfiguration: configuration).syncWatchProgress(
+				batchWatchProgressRequest: BatchWatchProgressRequest(records: [record]),
+				syncToUpstream: true
+			)
+		},
+		completion: { success, result in
+			completion(success, result)
 		}
-		completion(result, data)
-	}
+	)
 }
 
-private func postAlbireoV2JSON(urlString: String,
-							   body: [String: Any],
-							   completion: @escaping (Bool, Any?) -> Void) {
+private func performAlbireoV2SDKRequest<T: Sendable>(
+	label: String,
+	operation: @escaping @Sendable (MiraStreamingSDKAPIConfiguration) async throws -> T,
+	completion: @escaping (Bool, Any) -> Void
+) {
 	ensureAlbireoV2AccessTokenValid { isTokenReady, tokenResult in
 		guard isTokenReady else {
 			completion(false, tokenResult)
 			return
 		}
 
-		guard let url = URL(string: urlString) else {
-			completion(false, "Invalid Albireo V2 URL: \(urlString)")
-			return
-		}
-
-		do {
-			var request = URLRequest(url: url)
-			request.httpMethod = "POST"
-			request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")
-			request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-			request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
-			request.setValue("en-US,en;q=0.9,ja-JP;q=0.8,ja;q=0.7,zh-CN;q=0.6,zh;q=0.5", forHTTPHeaderField: "Accept-Language")
-			request.setValue(currentAlbireoV2APIServer(), forHTTPHeaderField: "Origin")
-			request.setValue(currentAlbireoV2APIServer(), forHTTPHeaderField: "Referer")
-			request.setValue("Bearer \(albireoV2SettingsHandler.getAlbireoV2AccessToken())", forHTTPHeaderField: "Authorization")
-			request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-
-			print("Albireo V2 POST request: \(urlString), body: \(body)")
-			URLSession.shared.dataTask(with: request) { data, response, error in
-				if let error {
-					completion(false, error.localizedDescription)
-					return
-				}
-
-				if let httpResponse = response as? HTTPURLResponse,
-				   httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
-					let responseText = data.flatMap { String(data: $0, encoding: .utf8) } ?? ""
-					completion(false, "Albireo V2 API HTTP \(httpResponse.statusCode): \(responseText)")
-					return
-				}
-
-				if let data,
-				   let responseText = String(data: data, encoding: .utf8) {
-					completion(true, responseText)
-				} else {
-					completion(true, "success")
-				}
-			}.resume()
-		} catch {
-			completion(false, "Cannot convert Albireo V2 JSON body: \(error.localizedDescription)")
+		print("Albireo V2 SDK request: \(label)")
+		Task {
+			do {
+				let result = try await operation(makeAlbireoV2SDKConfiguration())
+				print("Albireo V2 SDK response: \(label) succeeded")
+				completion(true, result)
+			} catch {
+				let message = albireoV2SDKErrorMessage(error)
+				print("Albireo V2 SDK response: \(label) failed: \(message)")
+				completion(false, message)
+			}
 		}
 	}
 }
 
-private func albireoV2CurrentISOString() -> String {
-	let formatter = ISO8601DateFormatter()
-	formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+private func makeAlbireoV2SDKConfiguration() -> MiraStreamingSDKAPIConfiguration {
+	let apiServer = currentAlbireoV2APIServer()
+	return MiraStreamingSDKAPIConfiguration(
+		basePath: currentAlbireoV2APIBaseURL(),
+		customHeaders: [
+			"Accept": "application/json, text/plain, */*",
+			"Accept-Language": "en-US,en;q=0.9,ja-JP;q=0.8,ja;q=0.7,zh-CN;q=0.6,zh;q=0.5",
+			"Authorization": "Bearer \(albireoV2SettingsHandler.getAlbireoV2AccessToken())",
+			"Origin": apiServer,
+			"Referer": apiServer,
+			"User-Agent": AppConstants.userAgent
+		],
+		codableHelper: makeAlbireoV2CodableHelper()
+	)
+}
+
+private func makeAlbireoV2CodableHelper() -> CodableHelper {
+	let helper = CodableHelper()
+	let decoder = JSONDecoder()
+	decoder.dateDecodingStrategy = .custom { decoder in
+		let container = try decoder.singleValueContainer()
+		let value = try container.decode(String.self)
+		guard let date = decodeAlbireoV2Date(value) else {
+			throw DecodingError.dataCorruptedError(
+				in: container,
+				debugDescription: "Unsupported Albireo V2 date: \(value)"
+			)
+		}
+		return date
+	}
+	helper.jsonDecoder = decoder
+	return helper
+}
+
+private func decodeAlbireoV2Date(_ value: String) -> Date? {
+	let iso8601WithFractionalSeconds = ISO8601DateFormatter()
+	iso8601WithFractionalSeconds.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+	if let date = iso8601WithFractionalSeconds.date(from: value) {
+		return date
+	}
+
+	let iso8601 = ISO8601DateFormatter()
+	if let date = iso8601.date(from: value) {
+		return date
+	}
+
+	let formatter = DateFormatter()
+	formatter.calendar = Calendar(identifier: .iso8601)
+	formatter.locale = Locale(identifier: "en_US_POSIX")
 	formatter.timeZone = TimeZone(secondsFromGMT: 0)
-	return formatter.string(from: Date())
+	for format in ["yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd"] {
+		formatter.dateFormat = format
+		if let date = formatter.date(from: value) {
+			return date
+		}
+	}
+	return nil
+}
+
+private func albireoV2SDKErrorMessage(_ error: Error) -> String {
+	guard case let ErrorResponse.error(statusCode, data, _, underlyingError) = error else {
+		return error.localizedDescription
+	}
+	if statusCode == 401 {
+		printAlbireoV2AccessTokenPayload(
+			label: "Albireo V2 current access token payload after 401",
+			accessToken: albireoV2SettingsHandler.getAlbireoV2AccessToken()
+		)
+	}
+	let responseText = data.flatMap { String(data: $0, encoding: .utf8) } ?? ""
+	return "Albireo V2 API HTTP \(statusCode): \(responseText.isEmpty ? underlyingError.localizedDescription : responseText)"
 }
 
 private func postAlbireoV2TokenRequest(body: [String: String], completion: @escaping (Bool, String) -> Void) {
@@ -592,7 +633,7 @@ private func loadAlbireoV2OIDCConfiguration(completion: @escaping (Result<Albire
 	}.resume()
 }
 
-private func getAlbireoV2JSON(urlString: String, completion: @escaping (Bool, Any) -> Void) {
+private func getAlbireoV2OIDCJSON(urlString: String, completion: @escaping (Bool, Any) -> Void) {
 	ensureAlbireoV2AccessTokenValid { isTokenReady, tokenResult in
 		guard isTokenReady else {
 			completion(false, tokenResult)

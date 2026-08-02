@@ -152,24 +152,19 @@ private func clearVideoCDNPlaybackCookie(for url: URL?) {
 
 private func refreshVideoCDNOptionsFromAlbireoV2Sample(completion: @escaping (Bool, Any) -> Void) {
 	getAlbireoV2OnAirList { isSuccess, data in
-		guard isSuccess, let responseData = data as? Data else {
+		guard isSuccess, let bangumiList = data as? [BangumiItemModel] else {
 			failVideoCDNRefresh("Failed to load Albireo V2 on-air list: \(data)", completion: completion)
 			return
 		}
-		do {
-			let bangumiList = try decodeAlbireoV2BangumiItems(from: responseData)
-			guard !bangumiList.isEmpty else {
-				failVideoCDNRefresh("Albireo V2 on-air list is empty.", completion: completion)
-				return
-			}
-			tryAlbireoV2BangumiForVideoCDN(
-				bangumiList,
-				bangumiIndex: 0,
-				completion: completion
-			)
-		} catch {
-			failVideoCDNRefresh("Albireo V2 on-air list decode failed: \(error.localizedDescription)", completion: completion)
+		guard !bangumiList.isEmpty else {
+			failVideoCDNRefresh("Albireo V2 on-air list is empty.", completion: completion)
+			return
 		}
+		tryAlbireoV2BangumiForVideoCDN(
+			bangumiList,
+			bangumiIndex: 0,
+			completion: completion
+		)
 	}
 }
 
@@ -186,9 +181,8 @@ private func tryAlbireoV2BangumiForVideoCDN(
 	let bangumi = bangumiList[bangumiIndex]
 	print("Video CDN refresh checking Albireo V2 bangumi [\(bangumiIndex + 1)/\(bangumiList.count)]: \(bangumi.id)")
 	getAlbireoV2BangumiDetail(id: bangumi.id) { isSuccess, data in
-		guard isSuccess, let responseData = data as? Data,
-			  let detail = try? decodeAlbireoV2BangumiDetail(from: responseData) else {
-			print("Video CDN refresh skipped Albireo V2 bangumi \(bangumi.id): detail request or decode failed.")
+		guard isSuccess, let detail = data as? BangumiDetailModel else {
+			print("Video CDN refresh skipped Albireo V2 bangumi \(bangumi.id): detail request failed.")
 			tryAlbireoV2BangumiForVideoCDN(
 				bangumiList,
 				bangumiIndex: bangumiIndex + 1,

@@ -15,6 +15,12 @@ import UIKit
 import AppKit
 #endif
 
+struct PlaybackProgressSnapshot {
+	let position: Double
+	let percentage: Double
+	let isFinished: Bool
+}
+
 class PlayerViewController: ObservableObject {
 	@Published var avPlayer: AVPlayer?
 	@Published var streamingCacheManager: StreamingCacheManager?
@@ -295,6 +301,7 @@ class PlayerViewController: ObservableObject {
 		}
 	}
 
+	@discardableResult
 	@MainActor
 	func logPlaybackPosition(
 		player: AVPlayer,
@@ -304,16 +311,23 @@ class PlayerViewController: ObservableObject {
 		filename: String?,
 		isBGMTVWatched: Bool,
 		isFinalEpisode: Bool = false
-	) {
-		guard let currentItem = player.currentItem else { return }
+	) -> PlaybackProgressSnapshot? {
+		guard let currentItem = player.currentItem else { return nil }
 
 		let currentTime = CMTimeGetSeconds(currentItem.currentTime())
-		guard currentTime.isFinite else { return }
+		guard currentTime.isFinite else { return nil }
 		let duration = CMTimeGetSeconds(currentItem.duration)
 		var percent = duration.isFinite && duration > 0 ? currentTime / duration : 0
 		if !percent.isFinite {
 			percent = 0
 		}
+
+		let isFinished = percent > 0.95
+		let snapshot = PlaybackProgressSnapshot(
+			position: currentTime,
+			percentage: percent,
+			isFinished: isFinished
+		)
 
 		let playbackLogKey = ep?.id ?? filename ?? "unknown"
 		let now = Date()
@@ -321,14 +335,12 @@ class PlayerViewController: ObservableObject {
 		   abs(lastPlaybackLogPosition - currentTime) < 1,
 		   now.timeIntervalSince(lastPlaybackLogDate) < 5 {
 			print("Skip duplicate playback progress log for \(playbackLogKey)")
-			return
+			return snapshot
 		}
 		lastPlaybackLogKey = playbackLogKey
 		lastPlaybackLogPosition = currentTime
 		lastPlaybackLogDate = now
 		print("logprogress:\(currentTime),\(percent)")
-
-		let isFinished = percent > 0.95
 
 		if !isOffline {
 			if let theEP = ep {
@@ -400,6 +412,8 @@ class PlayerViewController: ObservableObject {
 				)
 			}
 		}
+
+		return snapshot
 	}
 
 	func setMatadata(ep: EpisodeDetailModel?) -> [AVMetadataItem] {
