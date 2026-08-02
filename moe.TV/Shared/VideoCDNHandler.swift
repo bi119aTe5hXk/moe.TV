@@ -52,12 +52,20 @@ func updateVideoCDNOptionLatencies(_ options: [VideoCDNOption],
 
 func refreshVideoCDNOptionsFromFirstPlayableEpisode(completion: @escaping (Bool, Any) -> Void) {
 	videoCDNSettingsHandler.registerSettings()
-	switch videoCDNSettingsHandler.getAlbireoAuthMode() {
+	let authMode = videoCDNSettingsHandler.getAlbireoAuthMode()
+	print("Video CDN refresh started, auth mode: \(authMode)")
+	switch authMode {
 	case .albireoV2OAuth:
 		refreshVideoCDNOptionsFromAlbireoV2Sample(completion: completion)
 	case .legacyCookie:
 		refreshVideoCDNOptionsFromLegacyAlbireoSample(completion: completion)
 	}
+}
+
+private func failVideoCDNRefresh(_ message: String,
+								 completion: @escaping (Bool, Any) -> Void) {
+	print("Video CDN refresh failed: \(message)")
+	completion(false, message)
 }
 
 func resolveVideoCDNPlaybackURL(_ videoURLString: String,
@@ -145,70 +153,200 @@ private func clearVideoCDNPlaybackCookie(for url: URL?) {
 private func refreshVideoCDNOptionsFromAlbireoV2Sample(completion: @escaping (Bool, Any) -> Void) {
 	getAlbireoV2OnAirList { isSuccess, data in
 		guard isSuccess, let responseData = data as? Data else {
-			completion(false, "Failed to load Albireo V2 on-air list for CDN refresh: \(data)")
+			failVideoCDNRefresh("Failed to load Albireo V2 on-air list: \(data)", completion: completion)
 			return
 		}
 		do {
 			let bangumiList = try decodeAlbireoV2BangumiItems(from: responseData)
-			guard let bangumi = bangumiList.first else {
-				completion(false, "Albireo V2 on-air list is empty.")
+			guard !bangumiList.isEmpty else {
+				failVideoCDNRefresh("Albireo V2 on-air list is empty.", completion: completion)
 				return
 			}
-			getAlbireoV2BangumiDetail(id: bangumi.id) { isDetailSuccess, detailData in
-				guard isDetailSuccess, let detailResponseData = detailData as? Data else {
-					completion(false, "Failed to load Albireo V2 bangumi detail for CDN refresh: \(detailData)")
-					return
-				}
-				do {
-					let detail = try decodeAlbireoV2BangumiDetail(from: detailResponseData)
-					guard let episode = detail.episodes?.first else {
-						completion(false, "Albireo V2 bangumi detail has no episodes for CDN refresh.")
-						return
-					}
-					getAlbireoV2EpisodeDetail(epID: episode.id, defaultBangumiID: detail.id) { isEpisodeSuccess, episodeData in
-						guard isEpisodeSuccess, let episodeDetail = episodeData as? EpisodeDetailModel else {
-							completion(false, "Failed to load Albireo V2 episode detail for CDN refresh: \(episodeData)")
-							return
-						}
-						guard let videoURL = episodeDetail.video_files?.first?.url, !videoURL.isEmpty else {
-							completion(false, "Albireo V2 episode detail has no video URL for CDN refresh.")
-							return
-						}
-						getVideoCDNOptions(videoURLString: fixPathNotCompete(path: videoURL), includeLatency: true, completion: completion)
-					}
-				} catch {
-					completion(false, "Albireo V2 bangumi detail decode failed for CDN refresh: \(error.localizedDescription)")
-				}
-			}
+			tryAlbireoV2BangumiForVideoCDN(
+				bangumiList,
+				bangumiIndex: 0,
+				completion: completion
+			)
 		} catch {
-			completion(false, "Albireo V2 on-air list decode failed for CDN refresh: \(error.localizedDescription)")
+			failVideoCDNRefresh("Albireo V2 on-air list decode failed: \(error.localizedDescription)", completion: completion)
 		}
+	}
+}
+
+private func tryAlbireoV2BangumiForVideoCDN(
+	_ bangumiList: [BangumiItemModel],
+	bangumiIndex: Int,
+	completion: @escaping (Bool, Any) -> Void
+) {
+	guard bangumiIndex < bangumiList.count else {
+		failVideoCDNRefresh("No playable episode with a video URL was found in the Albireo V2 on-air list.", completion: completion)
+		return
+	}
+
+	let bangumi = bangumiList[bangumiIndex]
+	print("Video CDN refresh checking Albireo V2 bangumi [\(bangumiIndex + 1)/\(bangumiList.count)]: \(bangumi.id)")
+	getAlbireoV2BangumiDetail(id: bangumi.id) { isSuccess, data in
+		guard isSuccess, let responseData = data as? Data,
+			  let detail = try? decodeAlbireoV2BangumiDetail(from: responseData) else {
+			print("Video CDN refresh skipped Albireo V2 bangumi \(bangumi.id): detail request or decode failed.")
+			tryAlbireoV2BangumiForVideoCDN(
+				bangumiList,
+				bangumiIndex: bangumiIndex + 1,
+				completion: completion
+			)
+			return
+		}
+
+		let episodes = detail.episodes?.filter { $0.status == 2 } ?? []
+		guard !episodes.isEmpty else {
+			print("Video CDN refresh skipped Albireo V2 bangumi \(bangumi.id): no episode with status == 2.")
+			tryAlbireoV2BangumiForVideoCDN(
+				bangumiList,
+				bangumiIndex: bangumiIndex + 1,
+				completion: completion
+			)
+			return
+		}
+
+		tryAlbireoV2EpisodeForVideoCDN(
+			episodes,
+			episodeIndex: 0,
+			bangumiID: detail.id
+		) { videoURL in
+			guard let videoURL else {
+				print("Video CDN refresh skipped Albireo V2 bangumi \(bangumi.id): playable episodes have no video URL.")
+				tryAlbireoV2BangumiForVideoCDN(
+					bangumiList,
+					bangumiIndex: bangumiIndex + 1,
+					completion: completion
+				)
+				return
+			}
+			print("Video CDN refresh resolved Albireo V2 video URL: \(videoURL)")
+			getVideoCDNOptions(videoURLString: videoURL, includeLatency: true, completion: completion)
+		}
+	}
+}
+
+private func tryAlbireoV2EpisodeForVideoCDN(
+	_ episodes: [BGMEpisode],
+	episodeIndex: Int,
+	bangumiID: String,
+	completion: @escaping (String?) -> Void
+) {
+	guard episodeIndex < episodes.count else {
+		completion(nil)
+		return
+	}
+
+	let episode = episodes[episodeIndex]
+	print("Video CDN refresh checking Albireo V2 episode: \(episode.id), status: \(episode.status)")
+	getAlbireoV2EpisodeDetail(epID: episode.id, defaultBangumiID: bangumiID) { isSuccess, data in
+		if isSuccess,
+		   let detail = data as? EpisodeDetailModel,
+		   let videoURL = detail.video_files?.first?.url,
+		   !videoURL.isEmpty {
+			completion(fixPathNotCompete(path: videoURL))
+			return
+		}
+		tryAlbireoV2EpisodeForVideoCDN(
+			episodes,
+			episodeIndex: episodeIndex + 1,
+			bangumiID: bangumiID,
+			completion: completion
+		)
 	}
 }
 
 private func refreshVideoCDNOptionsFromLegacyAlbireoSample(completion: @escaping (Bool, Any) -> Void) {
 	getAlbireoOnAirList { isSuccess, data in
-		guard isSuccess, let bangumiList = data as? [BangumiItemModel], let bangumi = bangumiList.first else {
-			completion(false, "Failed to load Albireo on-air list for CDN refresh: \(String(describing: data))")
+		guard isSuccess, let bangumiList = data as? [BangumiItemModel], !bangumiList.isEmpty else {
+			failVideoCDNRefresh("Failed to load Albireo V1 on-air list: \(String(describing: data))", completion: completion)
 			return
 		}
-		getAlbireoBangumiDetail(id: bangumi.id) { isDetailSuccess, detailData in
-			guard isDetailSuccess, let detail = detailData as? BangumiDetailModel, let episode = detail.episodes?.first else {
-				completion(false, "Failed to load Albireo bangumi detail for CDN refresh: \(String(describing: detailData))")
+		tryLegacyAlbireoBangumiForVideoCDN(
+			bangumiList,
+			bangumiIndex: 0,
+			completion: completion
+		)
+	}
+}
+
+private func tryLegacyAlbireoBangumiForVideoCDN(
+	_ bangumiList: [BangumiItemModel],
+	bangumiIndex: Int,
+	completion: @escaping (Bool, Any) -> Void
+) {
+	guard bangumiIndex < bangumiList.count else {
+		failVideoCDNRefresh("No playable episode with a video URL was found in the Albireo V1 on-air list.", completion: completion)
+		return
+	}
+
+	let bangumi = bangumiList[bangumiIndex]
+	print("Video CDN refresh checking Albireo V1 bangumi [\(bangumiIndex + 1)/\(bangumiList.count)]: \(bangumi.id)")
+	getAlbireoBangumiDetail(id: bangumi.id) { isSuccess, data in
+		guard isSuccess, let detail = data as? BangumiDetailModel else {
+			print("Video CDN refresh skipped Albireo V1 bangumi \(bangumi.id): detail request failed.")
+			tryLegacyAlbireoBangumiForVideoCDN(
+				bangumiList,
+				bangumiIndex: bangumiIndex + 1,
+				completion: completion
+			)
+			return
+		}
+
+		let episodes = detail.episodes?.filter { $0.status == 2 } ?? []
+		guard !episodes.isEmpty else {
+			print("Video CDN refresh skipped Albireo V1 bangumi \(bangumi.id): no episode with status == 2.")
+			tryLegacyAlbireoBangumiForVideoCDN(
+				bangumiList,
+				bangumiIndex: bangumiIndex + 1,
+				completion: completion
+			)
+			return
+		}
+
+		tryLegacyAlbireoEpisodeForVideoCDN(episodes, episodeIndex: 0) { videoURL in
+			guard let videoURL else {
+				print("Video CDN refresh skipped Albireo V1 bangumi \(bangumi.id): playable episodes have no video URL.")
+				tryLegacyAlbireoBangumiForVideoCDN(
+					bangumiList,
+					bangumiIndex: bangumiIndex + 1,
+					completion: completion
+				)
 				return
 			}
-			getAlbireoEPDetail(ep_id: episode.id) { isEpisodeSuccess, episodeData in
-				guard isEpisodeSuccess, let episodeDetail = episodeData as? EpisodeDetailModel else {
-					completion(false, "Failed to load Albireo episode detail for CDN refresh: \(String(describing: episodeData))")
-					return
-				}
-				guard let videoURL = episodeDetail.video_files?.first?.url, !videoURL.isEmpty else {
-					completion(false, "Albireo episode detail has no video URL for CDN refresh.")
-					return
-				}
-				getVideoCDNOptions(videoURLString: fixPathNotCompete(path: videoURL), includeLatency: true, completion: completion)
-			}
+			print("Video CDN refresh resolved Albireo V1 video URL: \(videoURL)")
+			getVideoCDNOptions(videoURLString: videoURL, includeLatency: true, completion: completion)
 		}
+	}
+}
+
+private func tryLegacyAlbireoEpisodeForVideoCDN(
+	_ episodes: [BGMEpisode],
+	episodeIndex: Int,
+	completion: @escaping (String?) -> Void
+) {
+	guard episodeIndex < episodes.count else {
+		completion(nil)
+		return
+	}
+
+	let episode = episodes[episodeIndex]
+	print("Video CDN refresh checking Albireo V1 episode: \(episode.id), status: \(episode.status)")
+	getAlbireoEPDetail(ep_id: episode.id) { isSuccess, data in
+		if isSuccess,
+		   let detail = data as? EpisodeDetailModel,
+		   let videoURL = detail.video_files?.first?.url,
+		   !videoURL.isEmpty {
+			completion(fixPathNotCompete(path: videoURL))
+			return
+		}
+		tryLegacyAlbireoEpisodeForVideoCDN(
+			episodes,
+			episodeIndex: episodeIndex + 1,
+			completion: completion
+		)
 	}
 }
 
@@ -220,6 +358,25 @@ private struct VideoCDNPOSTResponse {
 private enum VideoCDNPOSTResult {
 	case success(VideoCDNPOSTResponse)
 	case failure(String)
+}
+
+private func logVideoCDNPOSTRequest(_ request: URLRequest, requestID: String) {
+	print("Video CDN POST [\(requestID)] URL: \(request.url?.absoluteString ?? "<invalid>")")
+
+	guard let body = request.httpBody, !body.isEmpty else {
+		print("Video CDN POST [\(requestID)] body: <empty>")
+		return
+	}
+
+	if let object = try? JSONSerialization.jsonObject(with: body),
+	   let formattedData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys]),
+	   let formattedBody = String(data: formattedData, encoding: .utf8) {
+		print("Video CDN POST [\(requestID)] body (JSON):\n\(formattedBody)")
+	} else if let bodyText = String(data: body, encoding: .utf8) {
+		print("Video CDN POST [\(requestID)] body:\n\(bodyText)")
+	} else {
+		print("Video CDN POST [\(requestID)] body: <\(body.count) non-text bytes>")
+	}
 }
 
 private final class VideoCDNRedirectBlocker: NSObject, URLSessionTaskDelegate {
@@ -261,24 +418,30 @@ private func postVideoCDNRequest(url: URL,
 	if !accessToken.isEmpty {
 		request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
 	}
+	let requestID = String(UUID().uuidString.prefix(8))
+	logVideoCDNPOSTRequest(request, requestID: requestID)
 
 	session.dataTask(with: request) { data, response, error in
 		defer {
 			session.finishTasksAndInvalidate()
 		}
 		if let error {
+			print("Video CDN POST [\(requestID)] transport error: \(error.localizedDescription)")
 			completion(.failure(error.localizedDescription))
 			return
 		}
 		if let redirectURL {
+			print("Video CDN POST [\(requestID)] redirect: \(redirectURL.absoluteString)")
 			completion(.success(VideoCDNPOSTResponse(data: data, redirectURL: redirectURL)))
 			return
 		}
-		if let httpResponse = response as? HTTPURLResponse,
-		   httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
-			let responseText = data.flatMap { String(data: $0, encoding: .utf8) } ?? ""
-			completion(.failure("Video CDN POST HTTP \(httpResponse.statusCode): \(responseText)"))
-			return
+		if let httpResponse = response as? HTTPURLResponse {
+			print("Video CDN POST [\(requestID)] status: \(httpResponse.statusCode)")
+			if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
+				let responseText = data.flatMap { String(data: $0, encoding: .utf8) } ?? ""
+				completion(.failure("Video CDN POST HTTP \(httpResponse.statusCode): \(responseText)"))
+				return
+			}
 		}
 		completion(.success(VideoCDNPOSTResponse(data: data, redirectURL: nil)))
 	}.resume()
