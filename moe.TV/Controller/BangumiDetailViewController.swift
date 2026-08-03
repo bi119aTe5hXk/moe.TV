@@ -13,6 +13,11 @@ struct NewEPItem:Decodable {
 	var bgmEP:BGMTVUserEpisodeCollectionModel?
 }
 
+struct EpisodeScrollRequest: Equatable {
+	let id = UUID()
+	let episodeID: String
+}
+
 class BangumiDetailViewController : ObservableObject {
 	private let settingsHandler = SettingsHandler()
 	private var pendingPlaybackAfterNotice: (url: String, seekTime: Double, isOffline: Bool, filename: String?)?
@@ -38,6 +43,7 @@ class BangumiDetailViewController : ObservableObject {
 	@Published var favStatusLoaded:Bool = false
 	@Published var selectedID: String? = nil
 	@Published var isSelectedFinalEpisode = false
+	@Published private(set) var episodeScrollRequest: EpisodeScrollRequest?
     
     var playbackURL: URL? {
         guard !videoURL.isEmpty else { return nil }
@@ -169,18 +175,28 @@ class BangumiDetailViewController : ObservableObject {
     
     
     
-	func closePlayer(){
-        DispatchQueue.main.async {
-            self.presentVideoView = false
-            self.videoURL = ""
-            self.videoIsOffline = false
-            self.videoFileName = nil
-        }
-    }
-    
+	func closePlayer() {
+		DispatchQueue.main.async {
+			self.presentVideoView = false
+			self.videoURL = ""
+			self.videoIsOffline = false
+			self.videoFileName = nil
+		}
+	}
+
+	func playerDidDismiss() {
+		if let selectedID {
+			episodeScrollRequest = EpisodeScrollRequest(episodeID: selectedID)
+		}
+		videoURL = ""
+		videoIsOffline = false
+		videoFileName = nil
+	}
+
 	// MARK: - Bangumi Detail
-    func getBGMDetail(id:String, completion: @escaping (Bool) -> Void) {
-        print("getBGMDetail:\(id)")
+	func getBGMDetail(id:String, completion: @escaping (Bool) -> Void) {
+		print("getBGMDetail:\(id)")
+		self.selectedID = nil
 		self.detailItem = nil
         self.albireo_favorite_status = nil
         self.bgmtv_favorite_status = nil

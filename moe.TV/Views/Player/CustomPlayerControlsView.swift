@@ -14,6 +14,14 @@ import UIKit
 import AppKit
 #endif
 
+#if os(tvOS)
+private enum TVPlayerFocusTarget: Hashable {
+	case wakeSurface
+	case timeline
+	case backward
+}
+#endif
+
 struct CustomPlayerControlsView: View {
 	@ObservedObject var playerVM: PlayerViewController
 	var isPictureInPictureSupported = false
@@ -32,25 +40,13 @@ struct CustomPlayerControlsView: View {
 	@State private var hideVolumeHUDTask: Task<Void, Never>?
 	@State private var actionHUD: PlayerActionHUD?
 	@State private var hideActionHUDTask: Task<Void, Never>?
+	#if os(tvOS)
+	@FocusState private var tvFocusedControl: TVPlayerFocusTarget?
+	#endif
 
 	var body: some View {
 		ZStack {
-			Color.clear
-				.contentShape(Rectangle())
-				.onTapGesture(count: 2) {
-					playerVM.togglePlayPause()
-					showControlsTemporarily()
-				}
-				.onTapGesture {
-					if isControlsVisible {
-						hideControlsTask?.cancel()
-						withAnimation(.easeInOut(duration: 0.18)) {
-							isControlsVisible = false
-						}
-					} else {
-						scheduleControlsAutoHide()
-					}
-				}
+			interactionSurface
 
 				if isControlsVisible {
 					VStack(spacing: 0) {
@@ -78,6 +74,12 @@ struct CustomPlayerControlsView: View {
 		}
 		.overlay(keyboardInput)
 		.foregroundStyle(.white)
+		#if os(tvOS)
+		.onPlayPauseCommand {
+			playerVM.togglePlayPause()
+			showControlsTemporarily()
+		}
+		#endif
 		.onChange(of: playerVM.currentTime) { newValue in
 			if !isScrubbing {
 				scrubTime = newValue
@@ -86,6 +88,9 @@ struct CustomPlayerControlsView: View {
 		.onAppear {
 			scrubTime = playerVM.currentTime
 			scheduleControlsAutoHide()
+			#if os(tvOS)
+			focusTVTimeline()
+			#endif
 		}
 		.onChange(of: playerVM.isPlaying) { isPlaying in
 			if isPlaying {
@@ -95,6 +100,9 @@ struct CustomPlayerControlsView: View {
 				withAnimation(.easeInOut(duration: 0.18)) {
 					isControlsVisible = true
 				}
+				#if os(tvOS)
+				focusTVTimeline()
+				#endif
 			}
 		}
 		.onDisappear {
@@ -102,6 +110,39 @@ struct CustomPlayerControlsView: View {
 			hideVolumeHUDTask?.cancel()
 			hideActionHUDTask?.cancel()
 		}
+	}
+
+	@ViewBuilder
+	private var interactionSurface: some View {
+		#if os(tvOS)
+		Color.clear
+			.contentShape(Rectangle())
+			.focusable(!isControlsVisible)
+			.focused($tvFocusedControl, equals: .wakeSurface)
+			.onTapGesture {
+				revealTVControls()
+			}
+			.onMoveCommand { _ in
+				revealTVControls()
+			}
+		#else
+		Color.clear
+			.contentShape(Rectangle())
+			.onTapGesture(count: 2) {
+				playerVM.togglePlayPause()
+				showControlsTemporarily()
+			}
+			.onTapGesture {
+				if isControlsVisible {
+					hideControlsTask?.cancel()
+					withAnimation(.easeInOut(duration: 0.18)) {
+						isControlsVisible = false
+					}
+				} else {
+					scheduleControlsAutoHide()
+				}
+			}
+		#endif
 	}
 
 	private var topBar: some View {
@@ -224,7 +265,16 @@ struct CustomPlayerControlsView: View {
 	}
 #endif
 
+	@ViewBuilder
 	private var centerButton: some View {
+		#if os(tvOS)
+		Image(systemName: playerVM.isPlaying ? "pause.fill" : "play.fill")
+			.font(.system(size: 34, weight: .semibold))
+			.frame(width: 76, height: 76)
+			.background(.black.opacity(0.42), in: Circle())
+			.allowsHitTesting(false)
+			.accessibilityLabel(playerVM.isPlaying ? "Playing" : "Paused")
+		#else
 		Button {
 			playerVM.togglePlayPause()
 			showControlsTemporarily()
@@ -236,6 +286,7 @@ struct CustomPlayerControlsView: View {
 		}
 		.buttonStyle(.plain)
 		.accessibilityLabel(playerVM.isPlaying ? "Pause" : "Play")
+		#endif
 	}
 
 	private var bottomControls: some View {
@@ -261,6 +312,22 @@ struct CustomPlayerControlsView: View {
 				}
 			)
 			.frame(height: 28)
+			#if os(tvOS)
+			.focusable()
+			.focused($tvFocusedControl, equals: .timeline)
+			.onMoveCommand(perform: handleTVTimelineMove)
+			.onTapGesture {
+				playerVM.togglePlayPause()
+				showControlsTemporarily()
+			}
+			.overlay {
+				if tvFocusedControl == .timeline {
+					RoundedRectangle(cornerRadius: 6)
+						.stroke(.white.opacity(0.9), lineWidth: 2)
+						.padding(.horizontal, -6)
+				}
+			}
+			#endif
 
 			controlRows
 		}
@@ -327,22 +394,29 @@ struct CustomPlayerControlsView: View {
 	private var transportControls: some View {
 		HStack(spacing: 8) {
 			backwardButton
+			#if !os(tvOS)
 			playPauseButton
+			#endif
 			forwardButton
 		}
 	}
 
 	private var backwardButton: some View {
 		Button {
-			playerVM.seek(by: -15, autoPlay: playerVM.isPlaying)
+			playerVM.seek(by: -seekInterval, autoPlay: playerVM.isPlaying)
 			showControlsTemporarily()
 		} label: {
-			Image(systemName: "gobackward.15")
+			Image(systemName: backwardSystemImage)
 				.font(.system(size: 22, weight: .medium))
 				.frame(width: 44, height: 38)
 		}
 		.buttonStyle(.plain)
+		#if os(tvOS)
+		.accessibilityLabel("Back 5 seconds")
+		.focused($tvFocusedControl, equals: .backward)
+		#else
 		.accessibilityLabel("Back 15 seconds")
+		#endif
 	}
 
 	private var playPauseButton: some View {
@@ -360,15 +434,43 @@ struct CustomPlayerControlsView: View {
 
 	private var forwardButton: some View {
 		Button {
-			playerVM.seek(by: 15, autoPlay: playerVM.isPlaying)
+			playerVM.seek(by: seekInterval, autoPlay: playerVM.isPlaying)
 			showControlsTemporarily()
 		} label: {
-			Image(systemName: "goforward.15")
+			Image(systemName: forwardSystemImage)
 				.font(.system(size: 22, weight: .medium))
 				.frame(width: 44, height: 38)
 		}
 		.buttonStyle(.plain)
+		#if os(tvOS)
+		.accessibilityLabel("Forward 5 seconds")
+		#else
 		.accessibilityLabel("Forward 15 seconds")
+		#endif
+	}
+
+	private var seekInterval: Double {
+		#if os(tvOS)
+		return 5
+		#else
+		return 15
+		#endif
+	}
+
+	private var backwardSystemImage: String {
+		#if os(tvOS)
+		return "gobackward.5"
+		#else
+		return "gobackward.15"
+		#endif
+	}
+
+	private var forwardSystemImage: String {
+		#if os(tvOS)
+		return "goforward.5"
+		#else
+		return "goforward.15"
+		#endif
 	}
 
 	private var timeLabel: some View {
@@ -564,7 +666,15 @@ struct CustomPlayerControlsView: View {
 	}
 
 	private func showControlsTemporarily() {
+		#if os(tvOS)
+		let shouldRestoreTimelineFocus = !isControlsVisible || tvFocusedControl == .wakeSurface
+		#endif
 		scheduleControlsAutoHide()
+		#if os(tvOS)
+		if shouldRestoreTimelineFocus {
+			focusTVTimeline()
+		}
+		#endif
 	}
 
 	private func scheduleControlsAutoHide() {
@@ -582,9 +692,53 @@ struct CustomPlayerControlsView: View {
 				withAnimation(.easeInOut(duration: 0.18)) {
 					isControlsVisible = false
 				}
+				#if os(tvOS)
+				await Task.yield()
+				tvFocusedControl = .wakeSurface
+				#endif
 			}
 		}
 	}
+
+	#if os(tvOS)
+	private func revealTVControls() {
+		guard !isControlsVisible else {
+			showControlsTemporarily()
+			return
+		}
+		scheduleControlsAutoHide()
+		focusTVTimeline()
+	}
+
+	private func focusTVTimeline() {
+		Task { @MainActor in
+			await Task.yield()
+			tvFocusedControl = .timeline
+		}
+	}
+
+	private func handleTVTimelineMove(_ direction: MoveCommandDirection) {
+		let seekStep = playerVM.isPlaying ? 5.0 : 1.0
+		switch direction {
+		case .left:
+			seekTVTimeline(by: -seekStep)
+		case .right:
+			seekTVTimeline(by: seekStep)
+		case .down:
+			tvFocusedControl = .backward
+		default:
+			break
+		}
+	}
+
+	private func seekTVTimeline(by offset: Double) {
+		let upperBound = playerVM.duration.isFinite ? max(0, playerVM.duration) : 0
+		let target = min(max(0, playerVM.currentTime + offset), upperBound)
+		scrubTime = target
+		playerVM.seek(to: target, autoPlay: playerVM.isPlaying)
+		showControlsTemporarily()
+	}
+	#endif
 
 #if !os(tvOS)
 	private func showVolumeHUD() {

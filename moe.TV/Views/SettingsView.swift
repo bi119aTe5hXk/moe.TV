@@ -179,7 +179,7 @@ struct SettingsView: View {
 							})
 
 #endif
-#if !os(tvOS)
+						#if !os(tvOS)
 						Toggle("Use custom player UI", isOn: $useCustomPlayerUI)
 							.onAppear(){
 								self.useCustomPlayerUI = settingsVC.settingsHandler.getUseCustomPlayerUI()
@@ -187,7 +187,7 @@ struct SettingsView: View {
 							.onChange(of: useCustomPlayerUI, initial: false) { newValue in
 								settingsVC.settingsHandler.setUseCustomPlayerUI(isEnabled: newValue)
 							}
-#endif
+						#endif
 
 						Picker(
 							"Default playbck speed",

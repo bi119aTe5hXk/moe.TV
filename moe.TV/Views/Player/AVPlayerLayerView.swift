@@ -76,9 +76,9 @@ final class PlayerLayerNSView: NSView {
 #endif
 
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 @MainActor
-final class PlayerPictureInPictureController: NSObject, ObservableObject, AVPictureInPictureControllerDelegate {
+final class PlayerPictureInPictureController: NSObject, ObservableObject, @preconcurrency AVPictureInPictureControllerDelegate {
 	@Published private(set) var isPictureInPictureSupported = false
 	@Published private(set) var isPictureInPictureActive = false
 
@@ -116,7 +116,7 @@ final class PlayerPictureInPictureController: NSObject, ObservableObject, AVPict
 	private func startPictureInPictureAfterPriming() {
 		guard !isStartingPictureInPicture,
 		      isPictureInPictureSupported,
-		      let currentLayer else { return }
+		      currentLayer != nil else { return }
 
 		isStartingPictureInPicture = true
 		startRetryCount = 0
@@ -131,7 +131,9 @@ final class PlayerPictureInPictureController: NSObject, ObservableObject, AVPict
 	private func makePictureInPictureController(for playerLayer: AVPlayerLayer) -> AVPictureInPictureController? {
 		let controller = AVPictureInPictureController(playerLayer: playerLayer)
 		controller?.delegate = self
+		#if os(iOS)
 		controller?.canStartPictureInPictureAutomaticallyFromInline = true
+		#endif
 		return controller
 	}
 
@@ -206,4 +208,3 @@ final class PlayerPictureInPictureController: NSObject, ObservableObject, AVPict
 	}
 }
 #endif
-

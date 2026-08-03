@@ -22,7 +22,7 @@ struct BangumiDetailView: View {
 	}
 
 	private var isDetailToolbarReady: Bool {
-		detailVC.detailItem != nil && detailVC.isFinished && detailVC.favStatusLoaded
+		detailVC.detailItem != nil && detailVC.isFinished
 	}
 
 	var body: some View {
@@ -81,24 +81,11 @@ struct BangumiDetailView: View {
 
 				}
 			}
-			.onChange(of: detailVC.isFinished, initial: true) { newValue in
-				if newValue {
-					print("BangumiDetailView onchange by isFinished")
-					if let id = detailVC.selectedID {
-						print("should scroll to \(id)")
-						DispatchQueue.main.async {
-							withAnimation {
-								proxy.scrollTo(id, anchor: .top)
-							}
-						}
-					}
-				}
-			}
-			.onChange(of: detailVC.presentVideoView) { isPresented in
-				guard !isPresented, let id = detailVC.selectedID else { return }
+			.onChange(of: detailVC.episodeScrollRequest) { request in
+				guard let request else { return }
 				DispatchQueue.main.async {
 					withAnimation {
-						proxy.scrollTo(id, anchor: .top)
+						proxy.scrollTo(request.episodeID, anchor: .top)
 					}
 				}
 			}
@@ -126,7 +113,7 @@ struct BangumiDetailView: View {
 			.padding(0)
 #if os(iOS) || os(tvOS)
 			.fullScreenCover(isPresented:$detailVC.presentVideoView,
-							 onDismiss: { },
+							 onDismiss: detailVC.playerDidDismiss,
 							 content: {
 				if let url = detailVC.playbackURL{
 					ZStack(alignment: .topLeading) {
@@ -170,7 +157,7 @@ struct BangumiDetailView: View {
 			})
 #endif
 #if os(macOS)
-			.sheet(isPresented:$detailVC.presentVideoView ) {
+			.sheet(isPresented: $detailVC.presentVideoView, onDismiss: detailVC.playerDidDismiss) {
 				if let url = detailVC.playbackURL{
 					ZStack(alignment: .topLeading){
 						VideoPlayerView(url: url,

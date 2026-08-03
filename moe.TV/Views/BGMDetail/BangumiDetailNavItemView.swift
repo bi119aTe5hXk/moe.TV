@@ -9,44 +9,38 @@ import SwiftUI
 
 struct BangumiDetailNavItemView: View {
     @EnvironmentObject var downloadManager: DownloadManager
-    @Binding var bgmItem:BangumiDetailModel?
-#if !os(tvOS)
+    @Binding var bgmItem: BangumiDetailModel?
+
     var body: some View {
         Menu {
-            //TODO:  download status
-            Button("Download All", action: startDwonloadAll)
+            Button("Download All", action: startDownloadAll)
+#if !os(tvOS)
             Button("Show in bgm.tv", action: openBangumi)
-
+#endif
         } label: {
             Image(systemName: "ellipsis")
         }
-        
-        .alert("All video download failed.",isPresented: $downloadManager.isAllDownloadFailed) {
-                
-            }
+        .alert("All video download failed.", isPresented: $downloadManager.isAllDownloadFailed) {
+        }
     }
-    private  func openBangumi(){
-        if let i = bgmItem{
-            if let bgm_id = i.bgm_id{
-                let urlString = "https://bgm.tv/subject/\(String(bgm_id))"
+
+#if !os(tvOS)
+    private func openBangumi() {
+        if let item = bgmItem {
+            if let bgmID = item.bgm_id {
+                let urlString = "https://bgm.tv/subject/\(String(bgmID))"
                 openURLInApp(urlString: urlString)
             }
         }
     }
 #endif
-#if os(tvOS)
-    var body: some View {
-		//TODO: temp rm DL-all btn for fix scroll issues on tvOS
-        //Button("Download All", action: startDwonloadAll)
-    }
-#endif
-    private func startDwonloadAll(){
+
+    private func startDownloadAll() {
         if let item = bgmItem {
             downloadManager.downloadAllEPs(bgmItem: item)
         }
     }
 }
-
 
 //struct BangumiDetailNavItemView_Previews: PreviewProvider {
 //    static var previews: some View {

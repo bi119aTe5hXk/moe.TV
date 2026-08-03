@@ -39,6 +39,8 @@ struct VideoPlayerView: View {
     
     private var playerSurfaceMode: PlayerSurfaceMode {
         #if os(tvOS)
+        // Keep the custom streaming/cache pipeline, but use AVPlayerViewController
+        // for native Siri Remote scrubbing and transport controls.
         return .system
         #else
         return settingsHandler.getUseCustomPlayerUI() ? .custom : .system

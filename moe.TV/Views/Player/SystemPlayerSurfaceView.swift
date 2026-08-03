@@ -68,11 +68,11 @@ struct CustomPlayerSurfaceView: View {
 	var subtitle: String?
 	var onClose: (() -> Void)?
 
-	#if os(iOS) || os(tvOS)
+	#if os(iOS)
 	@State private var presentsFullscreenPlayer = false
 	#endif
 
-	#if os(iOS)
+	#if os(iOS) || os(tvOS)
 	@StateObject private var pictureInPicture = PlayerPictureInPictureController()
 	#endif
 
@@ -88,7 +88,7 @@ struct CustomPlayerSurfaceView: View {
 			.onDisappear {
 				NowPlayingManager.shared.stop()
 			}
-			#if os(iOS) || os(tvOS)
+			#if os(iOS)
 			.fullScreenCover(isPresented: $presentsFullscreenPlayer) {
 				ZStack(alignment: .topLeading) {
 					customPlayerContent
@@ -124,9 +124,9 @@ struct CustomPlayerSurfaceView: View {
 	private var customPlayerContent: some View {
 		ZStack {
 			Color.black.ignoresSafeArea()
-			#if os(iOS)
-			AVPlayerLayerView(player: player) { layer in
-				pictureInPicture.attach(to: layer)
+				#if os(iOS) || os(tvOS)
+				AVPlayerLayerView(player: player) { layer in
+					pictureInPicture.attach(to: layer)
 			}
 			.ignoresSafeArea()
 			#else
@@ -152,9 +152,13 @@ struct CustomPlayerSurfaceView: View {
 			#elseif os(tvOS)
 			CustomPlayerControlsView(
 				playerVM: playerVM,
-				onFullScreenToggle: {
-					presentsFullscreenPlayer.toggle()
-				}
+				isPictureInPictureSupported: pictureInPicture.isPictureInPictureSupported,
+				isPictureInPictureActive: pictureInPicture.isPictureInPictureActive,
+				onPictureInPictureToggle: {
+					pictureInPicture.toggle()
+				},
+				title: title,
+				subtitle: subtitle
 			)
 			#else
 			CustomPlayerControlsView(
@@ -180,8 +184,6 @@ struct CustomPlayerSurfaceView: View {
 		} else {
 			presentsFullscreenPlayer.toggle()
 		}
-		#elseif os(tvOS)
-		presentsFullscreenPlayer.toggle()
 		#endif
 	}
 }
