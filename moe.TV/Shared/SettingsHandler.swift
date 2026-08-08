@@ -13,64 +13,14 @@ enum AlbireoAuthMode: String {
 }
 
 struct VideoCDNOption: Identifiable, Hashable, Codable {
-	let name: String
-	let url: String?
-	let servers: [String]?
-	let offline: Bool
-	let check: Bool?
-	let lastOnline: String?
-	let count: Int?
-	let type: String?
-	var latencyMS: Int?
+	let id: String
+	let label: String
+	let region: String?
+	let availability: String
+	let selectable: Bool
 
-	var id: String { name }
-	var isGroup: Bool { servers?.isEmpty == false }
-	var isSelectable: Bool { isGroup || !offline }
-
-	enum CodingKeys: String, CodingKey {
-		case name = "Name"
-		case url = "URL"
-		case servers = "Servers"
-		case offline = "Offline"
-		case check = "Check"
-		case lastOnline = "LastOnline"
-		case count = "Count"
-		case type = "Type"
-		case latencyMS
-	}
-
-	init(name: String,
-		 url: String?,
-		 servers: [String]?,
-		 offline: Bool,
-		 check: Bool?,
-		 lastOnline: String?,
-		 count: Int?,
-		 type: String?,
-		 latencyMS: Int? = nil) {
-		self.name = name
-		self.url = url
-		self.servers = servers
-		self.offline = offline
-		self.check = check
-		self.lastOnline = lastOnline
-		self.count = count
-		self.type = type
-		self.latencyMS = latencyMS
-	}
-
-	init(from decoder: Decoder) throws {
-		let container = try decoder.container(keyedBy: CodingKeys.self)
-		name = try container.decode(String.self, forKey: .name)
-		url = try container.decodeIfPresent(String.self, forKey: .url)
-		servers = try container.decodeIfPresent([String].self, forKey: .servers)
-		offline = try container.decodeIfPresent(Bool.self, forKey: .offline) ?? false
-		check = try container.decodeIfPresent(Bool.self, forKey: .check)
-		lastOnline = try container.decodeIfPresent(String.self, forKey: .lastOnline)
-		count = try container.decodeIfPresent(Int.self, forKey: .count)
-		type = try container.decodeIfPresent(String.self, forKey: .type)
-		latencyMS = try container.decodeIfPresent(Int.self, forKey: .latencyMS)
-	}
+	var isHealthy: Bool { availability.lowercased() == "healthy" }
+	var isSelectable: Bool { selectable && isHealthy }
 }
 
 class SettingsHandler {
@@ -87,7 +37,7 @@ class SettingsHandler {
 	private let kAlbireoV2IDToken = "kAlbireoV2IDToken"
 	private let kAlbireoV2ExpireTime = "kAlbireoV2ExpireTime"
 	private let kAlbireoV2APIServerURL = "kAlbireoV2APIServerURL"
-	private let kVideoCDNGroup = "kVideoCDNGroup"
+	private let kVideoCDNBackendID = "kVideoCDNBackendID"
 	private let kVideoCDNOptions = "kVideoCDNOptions"
 
 	private let kLandscapePlayback = "kLandscapePlayback"
@@ -199,15 +149,12 @@ class SettingsHandler {
 	func getAlbireoV2APIServerURL() -> String {
 		return ub.string(forKey: kAlbireoV2APIServerURL) ?? ""
 	}
-	func setVideoCDNGroup(_ group: String) {
-		ub.set(group, forKey: kVideoCDNGroup)
+	func setVideoCDNBackendID(_ backendID: String) {
+		ub.set(backendID, forKey: kVideoCDNBackendID)
 		sync()
 	}
-	func getVideoCDNGroup() -> String {
-		if let group = ub.string(forKey: kVideoCDNGroup), !group.isEmpty {
-			return group
-		}
-		return ub.string(forKey: "kAlbireoV2VideoCDNGroup") ?? ""
+	func getVideoCDNBackendID() -> String {
+		ub.string(forKey: kVideoCDNBackendID) ?? ""
 	}
 	func setVideoCDNOptions(_ options: [VideoCDNOption]) {
 		if let data = try? JSONEncoder().encode(options) {

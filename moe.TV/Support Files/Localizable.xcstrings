@@ -38,9 +38,6 @@
     "%lld" : {
       "shouldTranslate" : false
     },
-    "%lld ms" : {
-      "shouldTranslate" : false
-    },
     "%lld. " : {
       "shouldTranslate" : false
     },
@@ -454,6 +451,7 @@
       }
     },
     "Automatic" : {
+      "comment" : "Automatic video CDN selection",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1520,6 +1518,7 @@
     },
     "Group" : {
       "comment" : "Video CDN group label",
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1543,6 +1542,7 @@
     },
     "Group: %@" : {
       "comment" : "Video CDN group server list",
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {

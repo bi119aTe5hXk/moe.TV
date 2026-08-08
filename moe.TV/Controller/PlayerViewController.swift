@@ -57,7 +57,7 @@ class PlayerViewController: ObservableObject {
 
 	@MainActor
 	func loadFromUrl(url: URL, useStreamingCache: Bool = false) {
-		print("url:\(url)")
+		print("url:\(redactedVideoCDNURLDescription(url))")
 
 		resetPlayerState()
 
@@ -642,6 +642,14 @@ class PlayerViewController: ObservableObject {
 	@MainActor
 	private func handlePlaybackStalled() {
 		print("playback stalled")
+		if let player = avPlayer, let item = player.currentItem {
+			let waitingReason = player.reasonForWaitingToPlay?.rawValue ?? "none"
+			let itemError = item.error?.localizedDescription ?? "none"
+			print(
+				"AVPlayer stalled snapshot: timeControlStatus=\(player.timeControlStatus.rawValue), " +
+				"waitingReason=\(waitingReason), itemStatus=\(item.status.rawValue), itemError=\(itemError)"
+			)
+		}
 		if let streamingCacheManager {
 			print(
 				"Streaming cache stalled snapshot: \(streamingCacheManager.debugSummary(currentTime: playerCurrentTime(), duration: playerDuration()))"
@@ -727,14 +735,14 @@ class PlayerViewController: ObservableObject {
 		guard !isRecoveringFromStall,
 			  let player = avPlayer,
 			  let currentStreamingURL,
-			  let streamingCacheManager else {
+			  streamingCacheManager != nil else {
 			applyPlaybackRate()
 			return
 		}
 
 		isRecoveringFromStall = true
 		let stalledSeconds = max(0, CMTimeGetSeconds(stalledTime))
-		let resumeSeconds = stalledSeconds.isFinite ? max(0, stalledSeconds - 2) : 0
+		let resumeSeconds = stalledSeconds.isFinite ? max(0, stalledSeconds - 10) : 0
 		let resumeTime = CMTime(
 			seconds: resumeSeconds,
 			preferredTimescale: Int32(NSEC_PER_SEC)
@@ -742,13 +750,6 @@ class PlayerViewController: ObservableObject {
 		#if os(iOS) || os(tvOS) || os(visionOS)
 		let metadata = player.currentItem?.externalMetadata ?? []
 		#endif
-		let invalidatedRange = streamingCacheManager.invalidateCachedDataAroundLastRequest()
-
-		if let invalidatedRange {
-			print(
-				"Streaming stall recovery invalidated cached bytes: \(invalidatedRange.start)-\(invalidatedRange.end)"
-			)
-		}
 
 		do {
 			let replacementItem = try streamingFactory.makeReplacementPlayerItem(for: currentStreamingURL)
@@ -760,21 +761,52 @@ class PlayerViewController: ObservableObject {
 
 			itemCancellables.removeAll()
 			player.pause()
+			player.cancelPendingPrerolls()
 			player.replaceCurrentItem(with: replacementItem)
 			observePlayerItem(replacementItem)
 
-			isSeeking = true
-			player.seek(to: resumeTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
-				Task { @MainActor in
-					guard let self else { return }
-					self.isSeeking = false
-					self.isRecoveringFromStall = false
-					self.currentTime = resumeSeconds
-					guard finished, self.shouldResumeAfterStall else { return }
-					self.prefetchStreamingForwardBuffer()
-					self.applyPlaybackRate()
+			replacementItem.publisher(for: \.status)
+				.receive(on: RunLoop.main)
+				.filter { $0 != .unknown }
+				.prefix(1)
+				.sink { [weak self, weak player, weak replacementItem] status in
+					guard let self, let player, let replacementItem,
+						  player.currentItem === replacementItem else { return }
+					guard status == .readyToPlay else {
+						self.isRecoveringFromStall = false
+						print("Streaming stall recovery item failed: \(replacementItem.error?.localizedDescription ?? "unknown")")
+						return
+					}
+
+					self.isSeeking = true
+					let toleranceBefore = CMTime(seconds: 5, preferredTimescale: 600)
+					let toleranceAfter = CMTime(seconds: 2, preferredTimescale: 600)
+					player.seek(
+						to: resumeTime,
+						toleranceBefore: toleranceBefore,
+						toleranceAfter: toleranceAfter
+					) { [weak self, weak player] finished in
+						Task { @MainActor in
+							guard let self, let player else { return }
+							self.isSeeking = false
+							self.currentTime = CMTimeGetSeconds(player.currentTime())
+							guard finished, self.shouldResumeAfterStall else {
+								self.isRecoveringFromStall = false
+								return
+							}
+							self.prefetchStreamingForwardBuffer()
+							player.preroll(atRate: Float(self.playbackRate)) { [weak self] _ in
+								Task { @MainActor in
+									guard let self else { return }
+									self.isRecoveringFromStall = false
+									guard self.shouldResumeAfterStall else { return }
+									self.applyPlaybackRate()
+								}
+							}
+						}
+					}
 				}
-			}
+				.store(in: &itemCancellables)
 		} catch {
 			isRecoveringFromStall = false
 			print("Streaming stall recovery could not rebuild player item: \(error)")
