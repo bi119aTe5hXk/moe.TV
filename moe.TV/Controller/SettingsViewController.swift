@@ -23,11 +23,10 @@ class SettingsViewController: ObservableObject{
 	@Published var settingsHandler = SettingsHandler()
 
 	@Published var playbackRate:Double = 1.0
-	@Published var videoCDNGroup: String = ""
+	@Published var videoCDNBackendID: String = ""
 	@Published var videoCDNOptions: [VideoCDNOption] = []
 	@Published var isRefreshingVideoCDNOptions = false
 	@Published var videoCDNStatusMessage = ""
-	private var isRefreshingVideoCDNLatencies = false
 
 	init() {
 		getBGMLoginStatus()
@@ -116,15 +115,15 @@ class SettingsViewController: ObservableObject{
 		}
 	}
 
-	func saveVideoCDNGroup(_ group: String) {
-		settingsHandler.setVideoCDNGroup(group)
+	func saveVideoCDNBackendID(_ backendID: String) {
+		settingsHandler.setVideoCDNBackendID(backendID)
 		DispatchQueue.main.async {
-			self.videoCDNGroup = group
+			self.videoCDNBackendID = backendID
 		}
 	}
 
 	func loadVideoCDNSettings() {
-		videoCDNGroup = settingsHandler.getVideoCDNGroup()
+		videoCDNBackendID = settingsHandler.getVideoCDNBackendID()
 		videoCDNOptions = sortedVideoCDNOptions(settingsHandler.getVideoCDNOptions())
 	}
 
@@ -142,9 +141,9 @@ class SettingsViewController: ObservableObject{
 				if isSuccess, let options = data as? [VideoCDNOption] {
 					self.videoCDNOptions = self.sortedVideoCDNOptions(options)
 					self.videoCDNStatusMessage = "Video CDN nodes updated."
-					if !self.videoCDNGroup.isEmpty,
-					   !options.contains(where: { $0.name == self.videoCDNGroup && $0.isSelectable }) {
-						self.saveVideoCDNGroup("")
+					if !self.videoCDNBackendID.isEmpty,
+					   !options.contains(where: { $0.id == self.videoCDNBackendID && $0.isSelectable }) {
+						self.saveVideoCDNBackendID("")
 						self.videoCDNStatusMessage = "Selected video CDN is unavailable. Switched to automatic CDN."
 					}
 				} else {
@@ -154,43 +153,17 @@ class SettingsViewController: ObservableObject{
 		}
 	}
 
-	func refreshVideoCDNLatencies() {
-		guard !isRefreshingVideoCDNLatencies else { return }
-		let currentOptions = videoCDNOptions
-		guard !currentOptions.isEmpty else { return }
-		isRefreshingVideoCDNLatencies = true
-
-		updateVideoCDNOptionLatencies(currentOptions) { options in
-			DispatchQueue.main.async {
-				self.isRefreshingVideoCDNLatencies = false
-				self.videoCDNOptions = self.sortedVideoCDNOptions(options)
-			}
-		}
-	}
-
 	private func sortedVideoCDNOptions(_ options: [VideoCDNOption]) -> [VideoCDNOption] {
 		options.sorted { lhs, rhs in
-			if lhs.isGroup != rhs.isGroup {
-				return lhs.isGroup
+			if lhs.isHealthy != rhs.isHealthy {
+				return lhs.isHealthy
 			}
-
-			if lhs.isGroup && rhs.isGroup {
-				return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+			let lhsRegion = lhs.region ?? ""
+			let rhsRegion = rhs.region ?? ""
+			if lhsRegion != rhsRegion {
+				return lhsRegion.localizedStandardCompare(rhsRegion) == .orderedAscending
 			}
-
-			switch (lhs.latencyMS, rhs.latencyMS) {
-			case let (lhsLatency?, rhsLatency?) where lhsLatency != rhsLatency:
-				return lhsLatency < rhsLatency
-			case (_?, nil):
-				return true
-			case (nil, _?):
-				return false
-			default:
-				if lhs.offline != rhs.offline {
-					return !lhs.offline
-				}
-				return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
-			}
+			return lhs.label.localizedStandardCompare(rhs.label) == .orderedAscending
 		}
 	}
 }

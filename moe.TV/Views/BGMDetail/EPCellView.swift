@@ -10,7 +10,7 @@ import SDWebImage
 import SDWebImageSwiftUI
 
 struct EPCellView: View {
-	@State var newEPItem: NewEPItem
+	let newEPItem: NewEPItem
     @State var showVideoFileExisitAlert = false
     @State var showNotDownloadableAlert = false
     @State private var loadFailed = false

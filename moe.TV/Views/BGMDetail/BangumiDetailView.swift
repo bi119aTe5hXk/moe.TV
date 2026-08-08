@@ -21,6 +21,10 @@ struct BangumiDetailView: View {
 		return false
 	}
 
+	private var isDetailToolbarReady: Bool {
+		detailVC.detailItem != nil && detailVC.isFinished
+	}
+
 	var body: some View {
 		ScrollViewReader { proxy in
 			ScrollView{
@@ -69,13 +73,6 @@ struct BangumiDetailView: View {
 
 
 			}
-			.onAppear(){
-				print("BangumiDetailView onAppear")
-				if let item = selectedItem{
-					detailVC.getBGMDetail(id: item.id){	_ in
-					}
-				}
-			}
 			.onChange(of: selectedItem, initial: true) { newValue in
 				if let item = newValue{
 					print("BangumiDetailView onchange by selectedItem")
@@ -84,16 +81,11 @@ struct BangumiDetailView: View {
 
 				}
 			}
-			.onChange(of: detailVC.isFinished, initial: true) { newValue in
-				if !newValue {
-					print("BangumiDetailView onchange by isFinished")
-					if let id = detailVC.selectedID {
-						print("should scroll to \(id)")
-						DispatchQueue.main.async {
-							withAnimation {
-								proxy.scrollTo(id, anchor: .top)
-							}
-						}
+			.onChange(of: detailVC.episodeScrollRequest) { request in
+				guard let request else { return }
+				DispatchQueue.main.async {
+					withAnimation {
+						proxy.scrollTo(request.episodeID, anchor: .top)
 					}
 				}
 			}
@@ -106,20 +98,22 @@ struct BangumiDetailView: View {
 				}
 			}
 
-			.toolbar(content:{
+			.toolbar {
 				ToolbarItem(placement: .principal) {
-					HStack{
-						Spacer()
+					if isDetailToolbarReady {
 						BangumiDetailNavTitleView(item: $detailVC.detailItem)
-						Spacer()
+					}
+				}
+				ToolbarItem(placement: .primaryAction) {
+					if isDetailToolbarReady {
 						BangumiDetailNavItemView(bgmItem: $detailVC.detailItem)
 					}
 				}
-			})
+			}
 			.padding(0)
 #if os(iOS) || os(tvOS)
 			.fullScreenCover(isPresented:$detailVC.presentVideoView,
-							 onDismiss: { },
+							 onDismiss: detailVC.playerDidDismiss,
 							 content: {
 				if let url = detailVC.playbackURL{
 					ZStack(alignment: .topLeading) {
@@ -163,7 +157,7 @@ struct BangumiDetailView: View {
 			})
 #endif
 #if os(macOS)
-			.sheet(isPresented:$detailVC.presentVideoView ) {
+			.sheet(isPresented: $detailVC.presentVideoView, onDismiss: detailVC.playerDidDismiss) {
 				if let url = detailVC.playbackURL{
 					ZStack(alignment: .topLeading){
 						VideoPlayerView(url: url,

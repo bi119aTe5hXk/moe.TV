@@ -38,9 +38,6 @@
     "%lld" : {
       "shouldTranslate" : false
     },
-    "%lld ms" : {
-      "shouldTranslate" : false
-    },
     "%lld. " : {
       "shouldTranslate" : false
     },
@@ -454,6 +451,7 @@
       }
     },
     "Automatic" : {
+      "comment" : "Automatic video CDN selection",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -471,6 +469,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自動"
+          }
+        }
+      }
+    },
+    "Back" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "戻る"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "后退"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "返回"
+          }
+        }
+      }
+    },
+    "Back 5 seconds" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5秒戻し"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回退5秒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快退5秒"
           }
         }
       }
@@ -1364,6 +1406,50 @@
         }
       }
     },
+    "Forward" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "進む"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前进"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前進"
+          }
+        }
+      }
+    },
+    "Forward 5 seconds" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5秒進む"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快进5秒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快進5秒"
+          }
+        }
+      }
+    },
     "Forward 15 seconds" : {
       "localizations" : {
         "ja" : {
@@ -1432,6 +1518,7 @@
     },
     "Group" : {
       "comment" : "Video CDN group label",
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1455,6 +1542,7 @@
     },
     "Group: %@" : {
       "comment" : "Video CDN group server list",
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -2139,6 +2227,9 @@
         }
       }
     },
+    "Paused" : {
+
+    },
     "Pending" : {
       "localizations" : {
         "ja" : {
@@ -2270,6 +2361,9 @@
           }
         }
       }
+    },
+    "Playing" : {
+
     },
     "Please select a source:" : {
       "localizations" : {
@@ -2465,6 +2559,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重新整理權杖"
+          }
+        }
+      }
+    },
+    "Reload" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再読み込み"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新加载"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新載入"
           }
         }
       }
@@ -2718,6 +2834,28 @@
         }
       }
     },
+    "Share" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享"
+          }
+        }
+      }
+    },
     "Show Bgm.tv while playing (may result in spoilers!)" : {
       "localizations" : {
         "en" : {
@@ -2876,6 +3014,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "維持登錄"
+          }
+        }
+      }
+    },
+    "Stop" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停止"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停止"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停止"
           }
         }
       }

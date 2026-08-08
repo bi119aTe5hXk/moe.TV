@@ -179,7 +179,7 @@ struct SettingsView: View {
 							})
 
 #endif
-#if !os(tvOS)
+						#if !os(tvOS)
 						Toggle("Use custom player UI", isOn: $useCustomPlayerUI)
 							.onAppear(){
 								self.useCustomPlayerUI = settingsVC.settingsHandler.getUseCustomPlayerUI()
@@ -187,7 +187,7 @@ struct SettingsView: View {
 							.onChange(of: useCustomPlayerUI, initial: false) { newValue in
 								settingsVC.settingsHandler.setUseCustomPlayerUI(isEnabled: newValue)
 							}
-#endif
+						#endif
 
 						Picker(
 							"Default playbck speed",
@@ -220,7 +220,7 @@ struct SettingsView: View {
 							HStack {
 								Text("Video CDN")
 								Spacer()
-								Text(settingsVC.videoCDNGroup.isEmpty ? "Automatic" : settingsVC.videoCDNGroup)
+								Text(selectedVideoCDNLabel)
 									.foregroundStyle(.secondary)
 							}
 						}
@@ -305,7 +305,15 @@ struct SettingsView: View {
 		}
 	}
 
-    
+	private var selectedVideoCDNLabel: String {
+		guard !settingsVC.videoCDNBackendID.isEmpty else {
+			return NSLocalizedString("Automatic", comment: "Automatic video CDN selection")
+		}
+		return settingsVC.videoCDNOptions
+			.first(where: { $0.id == settingsVC.videoCDNBackendID })?
+			.label ?? settingsVC.videoCDNBackendID
+	}
+
 }
 
 struct VideoCDNSettingsView: View {
@@ -315,14 +323,13 @@ struct VideoCDNSettingsView: View {
 		List {
 			Section {
 				Button {
-					settingsVC.saveVideoCDNGroup("")
+					settingsVC.saveVideoCDNBackendID("")
 				} label: {
 					VideoCDNRow(
 						name: "Automatic",
 						statusColor: .green,
 						detail: nil,
-						latencyMS: nil,
-						isSelected: settingsVC.videoCDNGroup.isEmpty,
+						isSelected: settingsVC.videoCDNBackendID.isEmpty,
 						isEnabled: true
 					)
 				}
@@ -340,15 +347,14 @@ struct VideoCDNSettingsView: View {
 				ForEach(settingsVC.videoCDNOptions) { option in
 					Button {
 						if option.isSelectable {
-							settingsVC.saveVideoCDNGroup(option.name)
+							settingsVC.saveVideoCDNBackendID(option.id)
 						}
 					} label: {
 						VideoCDNRow(
-							name: option.name,
+							name: option.label,
 							statusColor: optionStatusColor(option),
 							detail: optionDetail(option),
-							latencyMS: option.latencyMS,
-							isSelected: settingsVC.videoCDNGroup == option.name,
+							isSelected: settingsVC.videoCDNBackendID == option.id,
 							isEnabled: option.isSelectable
 						)
 					}
@@ -384,35 +390,33 @@ struct VideoCDNSettingsView: View {
 			settingsVC.loadVideoCDNSettings()
 			settingsVC.refreshVideoCDNOptions()
 		}
-		.task {
-			while !Task.isCancelled {
-				try? await Task.sleep(nanoseconds: 5_000_000_000)
-				if Task.isCancelled {
-					break
-				}
-				settingsVC.refreshVideoCDNLatencies()
-			}
-		}
 	}
 
 	private func optionStatusColor(_ option: VideoCDNOption) -> Color {
-		if option.isGroup {
+		switch option.availability.lowercased() {
+		case "healthy":
 			return .green
+		case "offline":
+			return .red
+		default:
+			return .yellow
 		}
-		return option.offline ? .red : .green
 	}
 
 	private func optionDetail(_ option: VideoCDNOption) -> String {
-		if option.isGroup {
-			let groupLabel = NSLocalizedString("Group", comment: "Video CDN group label")
-			if let servers = option.servers, !servers.isEmpty {
-				return String(format: NSLocalizedString("Group: %@", comment: "Video CDN group server list"), servers.joined(separator: ", "))
-			}
-			return groupLabel
+		let status: String
+		switch option.availability.lowercased() {
+		case "healthy":
+			status = NSLocalizedString("Online", comment: "Video CDN online status")
+		case "offline":
+			status = NSLocalizedString("Offline", comment: "Video CDN offline status")
+		default:
+			status = option.availability.capitalized
 		}
-		return option.offline
-			? NSLocalizedString("Offline", comment: "Video CDN offline status")
-			: NSLocalizedString("Online", comment: "Video CDN online status")
+		guard let region = option.region, !region.isEmpty else {
+			return status
+		}
+		return "\(region) - \(status)"
 	}
 }
 
@@ -420,7 +424,6 @@ private struct VideoCDNRow: View {
 	let name: String
 	let statusColor: Color
 	let detail: String?
-	let latencyMS: Int?
 	let isSelected: Bool
 	let isEnabled: Bool
 
@@ -442,28 +445,12 @@ private struct VideoCDNRow: View {
 
 			Spacer()
 
-			if let latencyMS {
-				Text("\(latencyMS) ms")
-					.font(.subheadline.monospacedDigit())
-					.foregroundStyle(latencyColor(latencyMS))
-			}
-
 			if isSelected {
 				Image(systemName: "checkmark")
 					.foregroundColor(.accentColor)
 			}
 		}
 		.contentShape(Rectangle())
-	}
-
-	private func latencyColor(_ latencyMS: Int) -> Color {
-		if latencyMS > 1000 {
-			return .red
-		}
-		if latencyMS > 500 {
-			return .yellow
-		}
-		return .green
 	}
 }
 

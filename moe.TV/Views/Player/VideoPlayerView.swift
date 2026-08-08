@@ -39,6 +39,8 @@ struct VideoPlayerView: View {
     
     private var playerSurfaceMode: PlayerSurfaceMode {
         #if os(tvOS)
+        // Keep the custom streaming/cache pipeline, but use AVPlayerViewController
+        // for native Siri Remote scrubbing and transport controls.
         return .system
         #else
         return settingsHandler.getUseCustomPlayerUI() ? .custom : .system
@@ -137,14 +139,12 @@ struct VideoPlayerView: View {
                                         .background(Color.secondary)
 
                                     if let theEP = ep {
-                                        if UIDevice.current.userInterfaceIdiom == .pad {
-                                            if let bgm_eps_id = theEP.bgm_eps_id {
-                                                let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
+                                        if let bgm_eps_id = theEP.bgm_eps_id {
+                                            let urlString = "https://bgm.tv/ep/\(String(bgm_eps_id))"
 
-                                                WebView(url: URL(string: urlString)!, mode:.inlineWK)
-                                                    .ignoresSafeArea()
-                                                    .frame(width: totalWidth - leftWidth - 10)
-                                            }
+                                            WebView(url: URL(string: urlString)!, mode: .inlineWK)
+                                                .ignoresSafeArea()
+                                                .frame(width: totalWidth - leftWidth - 10)
                                         }
                                     }
                                 }
@@ -272,20 +272,20 @@ struct VideoPlayerView: View {
             Task {
                 if let player = playerVM.avPlayer {
                     player.pause()
-                    playerVM.logPlaybackPosition(
+                    let snapshot = playerVM.logPlaybackPosition(
                         player: player,
                         bgmItem: bgmItem,
                         ep: ep,
                         isOffline: isOffline,
                         filename: filename,
                         isBGMTVWatched: isBGMTVWatched,
-							isFinalEpisode: isFinalEpisode
+                        isFinalEpisode: isFinalEpisode
                     )
-						streamingFactory.stop(deleteCache: false)
+                    if let snapshot, let epID = ep?.id {
+                        detailVC?.updatePlaybackProgress(epID: epID, snapshot: snapshot)
+                    }
+                    streamingFactory.stop(deleteCache: false)
                 }
-				if let detailVC, let item = bgmItem {
-					detailVC.getBGMDetail(id: item.id) { _ in }
-				}
             }
             #if os(iOS)
                 if UIDevice.current.userInterfaceIdiom == .phone {

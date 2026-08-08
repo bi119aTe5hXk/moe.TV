@@ -13,6 +13,11 @@ struct NewEPItem:Decodable {
 	var bgmEP:BGMTVUserEpisodeCollectionModel?
 }
 
+struct EpisodeScrollRequest: Equatable {
+	let id = UUID()
+	let episodeID: String
+}
+
 class BangumiDetailViewController : ObservableObject {
 	private let settingsHandler = SettingsHandler()
 	private var pendingPlaybackAfterNotice: (url: String, seekTime: Double, isOffline: Bool, filename: String?)?
@@ -38,6 +43,7 @@ class BangumiDetailViewController : ObservableObject {
 	@Published var favStatusLoaded:Bool = false
 	@Published var selectedID: String? = nil
 	@Published var isSelectedFinalEpisode = false
+	@Published private(set) var episodeScrollRequest: EpisodeScrollRequest?
     
     var playbackURL: URL? {
         guard !videoURL.isEmpty else { return nil }
@@ -169,18 +175,28 @@ class BangumiDetailViewController : ObservableObject {
     
     
     
-    func closePlayer(){
-        DispatchQueue.main.async {
-            self.presentVideoView = false
-            self.videoURL = ""
-            self.videoIsOffline = false
-            self.videoFileName = nil
-        }
-    }
-    
+	func closePlayer() {
+		DispatchQueue.main.async {
+			self.presentVideoView = false
+			self.videoURL = ""
+			self.videoIsOffline = false
+			self.videoFileName = nil
+		}
+	}
+
+	func playerDidDismiss() {
+		if let selectedID {
+			episodeScrollRequest = EpisodeScrollRequest(episodeID: selectedID)
+		}
+		videoURL = ""
+		videoIsOffline = false
+		videoFileName = nil
+	}
+
 	// MARK: - Bangumi Detail
-    func getBGMDetail(id:String, completion: @escaping (Bool) -> Void) {
-        print("getBGMDetail:\(id)")
+	func getBGMDetail(id:String, completion: @escaping (Bool) -> Void) {
+		print("getBGMDetail:\(id)")
+		self.selectedID = nil
 		self.detailItem = nil
         self.albireo_favorite_status = nil
         self.bgmtv_favorite_status = nil
@@ -200,62 +216,51 @@ class BangumiDetailViewController : ObservableObject {
 					return
 				}
 
-				guard let responseData = data as? Data else {
+				guard let bgmItem = data as? BangumiDetailModel else {
 					DispatchQueue.main.async {
 						self.isFinished = true
 						self.favStatusLoaded = true
 					}
-					print("Albireo V2 bangumi detail response is not Data: \(data)")
+					print("Albireo V2 bangumi detail response has unexpected type: \(data)")
 					completion(false)
 					return
 				}
 
-				do {
-					let bgmItem = try decodeAlbireoV2BangumiDetail(from: responseData)
-					let episodes = bgmItem.episodes ?? []
-					DispatchQueue.main.async {
-						self.detailItem = bgmItem
-						self.albireo_favorite_status = bgmItem.favorite_status ?? 0
-					}
+				let episodes = bgmItem.episodes ?? []
+				DispatchQueue.main.async {
+					self.detailItem = bgmItem
+					self.albireo_favorite_status = bgmItem.favorite_status ?? 0
+				}
 
-					if isBGMTVlogined() {
-						self.getBGMTVFAVStatus(item: bgmItem) { isSuccessed, result in
-							DispatchQueue.main.async {
-								self.bgmtv_favorite_status = isSuccessed ? result : 0
-								self.favStatusLoaded = true
-							}
+				if isBGMTVlogined() {
+					self.getBGMTVFAVStatus(item: bgmItem) { isSuccessed, result in
+						DispatchQueue.main.async {
+							self.bgmtv_favorite_status = isSuccessed ? result : 0
+							self.favStatusLoaded = true
 						}
+					}
 
-						if let bgmID = bgmItem.bgm_id {
-							self.getBGMTVEPList(
-								bgmID: bgmID,
-								epList: episodes
-							)
-						} else {
-							print("bgmId/bgm_id is empty")
-							DispatchQueue.main.async {
-								self.showOnlyAlbireoEPs(eps: episodes)
-								self.favStatusLoaded = true
-							}
+					if let bgmID = bgmItem.bgm_id {
+						self.getBGMTVEPList(
+							bgmID: bgmID,
+							epList: episodes
+						)
+					} else {
+						print("bgmId/bgm_id is empty")
+						DispatchQueue.main.async {
+							self.showOnlyAlbireoEPs(eps: episodes)
+							self.favStatusLoaded = true
 						}
-						completion(true)
-						return
 					}
+					completion(true)
+					return
+				}
 
-					DispatchQueue.main.async {
-						self.bgmtv_favorite_status = 0
-						self.favStatusLoaded = true
-						self.showOnlyAlbireoEPs(eps: episodes)
-						completion(true)
-					}
-				} catch {
-					DispatchQueue.main.async {
-						self.isFinished = true
-						self.favStatusLoaded = true
-					}
-					let responseText = String(data: responseData, encoding: .utf8) ?? ""
-					print("Albireo V2 bangumi detail decode failed: \(error.localizedDescription), response: \(responseText)")
-					completion(false)
+				DispatchQueue.main.async {
+					self.bgmtv_favorite_status = 0
+					self.favStatusLoaded = true
+					self.showOnlyAlbireoEPs(eps: episodes)
+					completion(true)
 				}
 			}
 			return
@@ -303,7 +308,11 @@ class BangumiDetailViewController : ObservableObject {
 					}
 				}else{
 					//only albireo eps
-					self.showOnlyAlbireoEPs(eps: bgmItem.episodes ?? [])
+					DispatchQueue.main.async {
+						self.bgmtv_favorite_status = 0
+						self.favStatusLoaded = true
+						self.showOnlyAlbireoEPs(eps: bgmItem.episodes ?? [])
+					}
 				}
 
 
@@ -334,6 +343,37 @@ class BangumiDetailViewController : ObservableObject {
 				print("bgm_id is nil")
 				completion(false , 0)
 			}
+	}
+
+	@MainActor
+	func updatePlaybackProgress(epID: String, snapshot: PlaybackProgressSnapshot) {
+		guard let index = newEPList.firstIndex(where: { $0.ep.id == epID }) else { return }
+
+		var item = newEPList[index]
+		var progress = item.ep.watch_progress ?? watchProgress(
+			id: epID,
+			user_id: nil,
+			last_watch_position: nil,
+			bangumi_id: item.ep.bangumi_id,
+			watch_status: nil,
+			episode_id: epID,
+			percentage: nil
+		)
+		progress.last_watch_position = snapshot.position
+		progress.percentage = Float(snapshot.percentage)
+		progress.watch_status = snapshot.isFinished ? 2 : 3
+		item.ep.watch_progress = progress
+		if snapshot.isFinished, let bgmEP = item.bgmEP {
+			item.bgmEP = BGMTVUserEpisodeCollectionModel(
+				episode: bgmEP.episode,
+				type: 2
+			)
+		}
+		newEPList[index] = item
+
+		if ep?.id == epID {
+			ep?.watch_progress = progress
+		}
 	}
 
 	func getBGMTVEPList(bgmID:Int,epList:[BGMEpisode]){

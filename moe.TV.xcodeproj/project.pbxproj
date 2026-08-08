@@ -19,6 +19,7 @@
 		47AA00322F30030000123456 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00312F30030000123456 /* AppConstants.swift */; };
 		47AA00342F30040000123456 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00332F30040000123456 /* URLUtilities.swift */; };
 		47AA00352F30040000123456 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AA00332F30040000123456 /* URLUtilities.swift */; };
+		47AC07CB3027853D001AAB7B /* MiraStreamingSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 47AC07CA3027853D001AAB7B /* MiraStreamingSDK */; };
 		47CC30782A371784001D3F8C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC30772A371784001D3F8C /* LoginViewController.swift */; };
 		47CC307B2A38952A001D3F8C /* BangumiCellUnreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307A2A38952A001D3F8C /* BangumiCellUnreadView.swift */; };
 		47CC307D2A389AE7001D3F8C /* BangumiDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CC307C2A389AE7001D3F8C /* BangumiDetailModel.swift */; };
@@ -211,6 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				862CF4E72E23A9EF00624C04 /* SDWebImageSwiftUI in Frameworks */,
+				47AC07CB3027853D001AAB7B /* MiraStreamingSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,6 +480,7 @@
 			name = moe.TV;
 			packageProductDependencies = (
 				862CF4E62E23A9EF00624C04 /* SDWebImageSwiftUI */,
+				47AC07CA3027853D001AAB7B /* MiraStreamingSDK */,
 			);
 			productName = moe.TV;
 			productReference = 86A9C3E22A3306BC00FD0B44 /* moe.TV.app */;
@@ -515,6 +518,7 @@
 			mainGroup = 86A9C3D92A3306BC00FD0B44;
 			packageReferences = (
 				862CF4E52E23A9EF00624C04 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				47AC07C93027853D001AAB7B /* XCRemoteSwiftPackageReference "mira-streaming-ios-sdk" */,
 			);
 			productRefGroup = 86A9C3E32A3306BC00FD0B44 /* Products */;
 			projectDirPath = "";
@@ -909,7 +913,7 @@
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TARGETED_DEVICE_FAMILY = "1,2,3,6,7";
 				TVOS_DEPLOYMENT_TARGET = 26.0;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 				XROS_DEPLOYMENT_TARGET = 1.0;
@@ -969,7 +973,7 @@
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TARGETED_DEVICE_FAMILY = "1,2,3,6,7";
 				TVOS_DEPLOYMENT_TARGET = 26.0;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 				XROS_DEPLOYMENT_TARGET = 1.0;
@@ -1009,6 +1013,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		47AC07C93027853D001AAB7B /* XCRemoteSwiftPackageReference "mira-streaming-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/irohalab/mira-streaming-ios-sdk";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		862CF4E52E23A9EF00624C04 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
@@ -1020,6 +1032,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		47AC07CA3027853D001AAB7B /* MiraStreamingSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 47AC07C93027853D001AAB7B /* XCRemoteSwiftPackageReference "mira-streaming-ios-sdk" */;
+			productName = MiraStreamingSDK;
+		};
 		862CF4E62E23A9EF00624C04 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 862CF4E52E23A9EF00624C04 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
