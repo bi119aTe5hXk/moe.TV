@@ -322,7 +322,11 @@ class PlayerViewController: ObservableObject {
 			percent = 0
 		}
 
-		let isFinished = percent > 0.95
+		let wasAlreadyFinished = ep?.watch_progress?.watch_status == 2
+		let isFinished = wasAlreadyFinished || percent >= 0.95
+		if wasAlreadyFinished, percent < 0.95 {
+			print("Preserve watched episode status while updating replay progress: \(ep?.id ?? "unknown")")
+		}
 		let snapshot = PlaybackProgressSnapshot(
 			position: currentTime,
 			percentage: percent,

@@ -361,7 +361,8 @@ class BangumiDetailViewController : ObservableObject {
 		)
 		progress.last_watch_position = snapshot.position
 		progress.percentage = Float(snapshot.percentage)
-		progress.watch_status = snapshot.isFinished ? 2 : 3
+		let wasAlreadyFinished = progress.watch_status == 2
+		progress.watch_status = wasAlreadyFinished || snapshot.isFinished ? 2 : 3
 		item.ep.watch_progress = progress
 		if snapshot.isFinished, let bgmEP = item.bgmEP {
 			item.bgmEP = BGMTVUserEpisodeCollectionModel(

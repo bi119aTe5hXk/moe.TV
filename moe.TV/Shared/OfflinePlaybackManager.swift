@@ -62,7 +62,7 @@ class OfflinePlaybackManager: ObservableObject {
                     bgm_eps_id: item.bgm_eps_id ?? oldItem.bgm_eps_id,
                     filename: item.filename,
                     position: item.position,
-                    isFinished: item.isFinished,
+                    isFinished: oldItem.isFinished || item.isFinished,
                     bangumiName: item.bangumiName ?? oldItem.bangumiName,
                     episodeNo: item.episodeNo ?? oldItem.episodeNo,
                     episodeName: item.episodeName ?? oldItem.episodeName
