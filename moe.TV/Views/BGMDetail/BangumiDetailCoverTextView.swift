@@ -7,6 +7,10 @@
 
 import SDWebImageSwiftUI
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
+
 struct BangumiDetailCoverTextView: View {
     @Binding var item: BangumiDetailModel?
     @Binding var albireo_favorite_status: Int?
@@ -17,34 +21,57 @@ struct BangumiDetailCoverTextView: View {
     var detailVC: BangumiDetailViewController
 
     var body: some View {
-        HStack {
-            Spacer()
-            if let i = item {
-                BangumiDetailCoverMainContent(
-                    item: i,
-                    albireo_favorite_status: $albireo_favorite_status,
-                    bgmtv_favorite_status: $bgmtv_favorite_status,
-                    dctVC: dctVC,
-                    detailVC: detailVC
-                )
-
-                // Attach alerts in a dedicated lightweight view to avoid compiler blowups.
-                BangumiDetailCoverAlerts(
-                    item: i,
-                    albireo_favorite_status: $albireo_favorite_status,
-                    bgmtv_favorite_status: $bgmtv_favorite_status,
-                    dctVC: dctVC
-                )
+        Group {
+            if let item {
+#if os(iOS)
+                if UIDevice.current.userInterfaceIdiom == .phone {
+                    VStack(spacing: 0) {
+                        mainContent(for: item)
+                    }
+                } else {
+                    regularContent(for: item)
+                }
+#else
+                regularContent(for: item)
+#endif
             }
         }
-        .padding(10)
-		.onAppear {
-			dctVC.setDetailVC(dVC: detailVC)
-		}
+        .padding(.horizontal, 10)
+        .padding(.bottom, 10)
+        .onAppear {
+            dctVC.setDetailVC(dVC: detailVC)
+        }
         .onChange(of: favStatusFinished, initial: false) { finished in
             guard finished else { return }
             dctVC.checkFavConflict(a: albireo_favorite_status, b: bgmtv_favorite_status)
         }
+    }
+
+    @ViewBuilder
+    private func regularContent(for item: BangumiDetailModel) -> some View {
+        HStack {
+            Spacer(minLength: 0)
+            mainContent(for: item)
+        }
+    }
+
+    @ViewBuilder
+    private func mainContent(for item: BangumiDetailModel) -> some View {
+        BangumiDetailCoverMainContent(
+            item: item,
+            albireo_favorite_status: $albireo_favorite_status,
+            bgmtv_favorite_status: $bgmtv_favorite_status,
+            dctVC: dctVC,
+            detailVC: detailVC
+        )
+
+        // Attach alerts in a dedicated lightweight view to avoid compiler blowups.
+        BangumiDetailCoverAlerts(
+            item: item,
+            albireo_favorite_status: $albireo_favorite_status,
+            bgmtv_favorite_status: $bgmtv_favorite_status,
+            dctVC: dctVC
+        )
     }
 }
 
@@ -132,17 +159,18 @@ private struct BangumiDetailCoverMainContent: View {
                         minHeight: 100,
                         maxHeight: 600)
 
-                Spacer()
+                if !isPhone {
+                    Spacer()
+                }
             }
         }
     }
 
     @ViewBuilder
     private var favoriteStatusLayout: some View {
-        #if os(iOS)
+#if os(iOS)
         if UIDevice.current.userInterfaceIdiom == .phone {
             VStack {
-                Spacer()
                 FavoriteStatusView(
                     albireo_favorite_status: $albireo_favorite_status,
                     bgmtv_favorite_status: $bgmtv_favorite_status
@@ -157,7 +185,7 @@ private struct BangumiDetailCoverMainContent: View {
                 )
             }
         }
-        #else
+#else
         HStack {
             Spacer()
             FavoriteStatusView(
@@ -165,7 +193,15 @@ private struct BangumiDetailCoverMainContent: View {
                 bgmtv_favorite_status: $bgmtv_favorite_status
             )
         }
-        #endif
+#endif
+    }
+
+    private var isPhone: Bool {
+#if os(iOS)
+        UIDevice.current.userInterfaceIdiom == .phone
+#else
+        false
+#endif
     }
 }
 

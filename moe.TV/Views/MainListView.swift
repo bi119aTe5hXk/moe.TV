@@ -96,7 +96,13 @@ struct MainListView: View {
                     .navigationTitle(dest.localizedName)
             }
         } detail: {
+			#if targetEnvironment(macCatalyst)
+			NavigationStack {
+				BangumiDetailView(selectedItem: guardedSelectedItem)
+			}
+			#else
 			BangumiDetailView(selectedItem: guardedSelectedItem)
+			#endif
         }
 		.navigationSplitViewStyle(.automatic)
 		.onAppear {
