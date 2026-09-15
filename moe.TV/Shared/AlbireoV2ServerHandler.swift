@@ -437,19 +437,19 @@ func syncAlbireoV2EpisodeWatchProgress(epID: String,
 		return
 	}
 
-	let record = WatchHistoryRecord(
-		bangumiId: bangumiUUID,
-		episodeId: episodeUUID,
+	let request = WatchProgressUpdateRequest(
+		episode: IdReference(id: episodeUUID),
+		bangumi: IdReference(id: bangumiUUID),
+		watchStatus: isFinished ? ._2 : ._3,
 		lastWatchPosition: lastWatchPosition,
 		lastWatchTime: Date(),
-		percentage: percentage,
-		isFinished: isFinished
+		percentage: percentage
 	)
 	performAlbireoV2SDKRequest(
-		label: "sync watch progress",
+		label: "update watch progress",
 		operation: { configuration in
-			try await EpisodeAPI(apiConfiguration: configuration).syncWatchProgress(
-				batchWatchProgressRequest: BatchWatchProgressRequest(records: [record]),
+			try await EpisodeAPI(apiConfiguration: configuration).updateWatchProgress(
+				watchProgressUpdateRequest: request,
 				syncToUpstream: true
 			)
 		},
