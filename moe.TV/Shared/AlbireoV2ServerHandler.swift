@@ -26,7 +26,7 @@ private struct AlbireoV2OIDCConfiguration: Decodable {
 	let tokenEndpoint: String
 	let userinfoEndpoint: String
 	let jwksURI: String
-	let endSessionEndpoint: String?
+	let revocationEndpoint: String?
 
 	enum CodingKeys: String, CodingKey {
 		case issuer
@@ -34,7 +34,7 @@ private struct AlbireoV2OIDCConfiguration: Decodable {
 		case tokenEndpoint = "token_endpoint"
 		case userinfoEndpoint = "userinfo_endpoint"
 		case jwksURI = "jwks_uri"
-		case endSessionEndpoint = "end_session_endpoint"
+		case revocationEndpoint = "revocation_endpoint"
 	}
 }
 
@@ -73,42 +73,71 @@ func isAlbireoV2Logined() -> Bool {
 
 func logoutAlbireoV2() {
 	albireoV2SettingsHandler.registerSettings()
-	let idToken = albireoV2SettingsHandler.getAlbireoV2IDToken()
+	let refreshToken = albireoV2SettingsHandler.getAlbireoV2RefreshToken()
+	let accessToken = albireoV2SettingsHandler.getAlbireoV2AccessToken()
 	albireoV2SettingsHandler.clearAlbireoV2AuthInfo()
 
-	#if !os(tvOS)
-	guard !idToken.isEmpty else {
+	let tokens = [
+		(token: refreshToken, hint: "refresh_token"),
+		(token: accessToken, hint: "access_token")
+	].filter { !$0.token.isEmpty }
+	guard !tokens.isEmpty else {
 		return
 	}
 
 	loadAlbireoV2OIDCConfiguration { result in
 		switch result {
 		case .success(let oidcConfiguration):
-			guard let endSessionEndpoint = oidcConfiguration.endSessionEndpoint,
-				  var components = URLComponents(string: endSessionEndpoint) else {
+			guard let revocationEndpoint = oidcConfiguration.revocationEndpoint else {
+				print("Albireo V2 token revocation skipped: provider has no revocation endpoint.")
 				return
 			}
-			components.queryItems = [
-				URLQueryItem(name: "id_token_hint", value: idToken),
-				URLQueryItem(name: "post_logout_redirect_uri", value: currentAlbireoV2RedirectURI())
-			]
-
-			guard let urlString = components.url?.absoluteString else {
-				return
-			}
-			OAuthSessionManager.shared.start(urlString: urlString, callbackScheme: "moetv") { result in
-				switch result {
-				case .success:
-					print("Albireo V2 provider logout completed.")
-				case .failure(let error):
-					print("Albireo V2 provider logout failed or canceled: \(error.localizedDescription)")
-				}
+			for token in tokens {
+				revokeAlbireoV2Token(
+					token.token,
+					tokenTypeHint: token.hint,
+					endpoint: revocationEndpoint
+				)
 			}
 		case .failure(let error):
-			print("Albireo V2 provider logout skipped: \(error.localizedDescription)")
+			print("Albireo V2 token revocation skipped: \(error.localizedDescription)")
 		}
 	}
-	#endif
+}
+
+private func revokeAlbireoV2Token(_ token: String, tokenTypeHint: String, endpoint: String) {
+	guard let url = URL(string: endpoint) else {
+		print("Albireo V2 token revocation skipped: invalid endpoint.")
+		return
+	}
+
+	var request = URLRequest(url: url)
+	request.httpMethod = "POST"
+	request.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
+	request.setValue("application/json, text/plain, */*", forHTTPHeaderField: "Accept")
+	request.setValue(AppConstants.userAgent, forHTTPHeaderField: "User-Agent")
+	request.httpBody = formURLEncodedData([
+		"token": token,
+		"token_type_hint": tokenTypeHint,
+		"client_id": currentAlbireoV2ClientID()
+	])
+
+	URLSession.shared.dataTask(with: request) { data, response, error in
+		if let error {
+			print("Albireo V2 \(tokenTypeHint) revocation failed: \(error.localizedDescription)")
+			return
+		}
+		guard let httpResponse = response as? HTTPURLResponse else {
+			print("Albireo V2 \(tokenTypeHint) revocation failed: invalid response.")
+			return
+		}
+		if (200..<300).contains(httpResponse.statusCode) {
+			print("Albireo V2 \(tokenTypeHint) revoked.")
+		} else {
+			let responseText = data.flatMap { String(data: $0, encoding: .utf8) } ?? ""
+			print("Albireo V2 \(tokenTypeHint) revocation HTTP \(httpResponse.statusCode): \(responseText)")
+		}
+	}.resume()
 }
 
 func startAlbireoV2Login(completion: @escaping (Bool, String) -> Void) {
