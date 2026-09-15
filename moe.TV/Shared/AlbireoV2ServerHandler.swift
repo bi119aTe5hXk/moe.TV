@@ -12,7 +12,7 @@ import MiraStreamingSDK
 private let albireoV2SettingsHandler = SettingsHandler()
 private let albireoV2Scopes = "openid offline_access profile bookmark"
 private let albireoV2OIDCIssuerURL = "https://authorization.box.moe"
-private let albireoV2RedirectHost = "box.moe"
+private let albireoV2RedirectHost = "boxmoe"
 
 private let albireoV2OAuthCodeLock = NSLock()
 private var handledAlbireoV2OAuthCodes = Set<String>()
@@ -128,6 +128,7 @@ func startAlbireoV2Login(completion: @escaping (Bool, String) -> Void) {
 		switch result {
 		case .success(let oidcConfiguration):
 			let apiServer = currentAlbireoV2APIServer()
+			print("Albireo V2 OAuth redirect URI: \(currentAlbireoV2RedirectURI())")
 			var components = URLComponents(string: oidcConfiguration.authorizationEndpoint)
 			components?.queryItems = [
 				URLQueryItem(name: "client_id", value: clientID),
