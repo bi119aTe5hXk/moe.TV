@@ -23,8 +23,9 @@ struct moe_TVApp: App {
 
     var body: some Scene {
         WindowGroup {
+            Group {
 #if os(tvOS)
-			NavigationStack(path: $navigationPath) {
+				NavigationStack(path: $navigationPath) {
 				MainView()
 					.navigationDestination(for: String.self) { bgmID in
 						BangumiDetailView(
@@ -45,9 +46,10 @@ struct moe_TVApp: App {
 			MainView()
 				.environmentObject(networkMonitor)
 				.environmentObject(downloadManager)
-				.environmentObject(offlinePlaybackManager)
-				.handlesExternalEvents(preferring: ["*"], allowing: ["*"])
+					.environmentObject(offlinePlaybackManager)
+					.handlesExternalEvents(preferring: ["*"], allowing: ["*"])
 #endif
+            }
 
                 //for URI scheme
 //#if os(tvOS)
@@ -96,8 +98,7 @@ struct moe_TVApp: App {
 //#endif
 
 
-			Spacer()
-                .onOpenURL { url in
+            .onOpenURL { url in
                     print(url.absoluteURL)
                     if handleAlbireoV2OAuthCallback(url) {
                         return

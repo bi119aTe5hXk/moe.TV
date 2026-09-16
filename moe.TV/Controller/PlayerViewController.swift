@@ -45,6 +45,7 @@ class PlayerViewController: ObservableObject {
 	private var lastPlaybackLogKey: String?
 	private var lastPlaybackLogPosition: Double = -.infinity
 	private var lastPlaybackLogDate = Date.distantPast
+	private var hasStartedPlayback = false
 
 	let offlinePBM = OfflinePlaybackManager()
 	var settingsHandler = SettingsHandler()
@@ -92,6 +93,7 @@ class PlayerViewController: ObservableObject {
 		currentTime = 0
 		duration = 0
 		isPlaying = false
+		hasStartedPlayback = false
 		isSeeking = false
 		playbackRate = settingsHandler.getPlaybackRate()
 		loadedTimeRanges = []
@@ -289,6 +291,7 @@ class PlayerViewController: ObservableObject {
 			prefetchStreamingForwardBufferForPausedPlayback()
 		case .playing:
 			print("playing")
+			hasStartedPlayback = true
 			shouldResumeAfterStall = true
 			stallRecoveryTask?.cancel()
 			stallRecoveryTask = nil
@@ -313,9 +316,17 @@ class PlayerViewController: ObservableObject {
 		isFinalEpisode: Bool = false
 	) -> PlaybackProgressSnapshot? {
 		guard let currentItem = player.currentItem else { return nil }
+		guard hasStartedPlayback else {
+			print("Skip playback progress log: playback has not started")
+			return nil
+		}
 
 		let currentTime = CMTimeGetSeconds(currentItem.currentTime())
 		guard currentTime.isFinite else { return nil }
+		guard currentTime >= 5 else {
+			print("Skip playback progress log: position \(currentTime)s is below 5s")
+			return nil
+		}
 		let duration = CMTimeGetSeconds(currentItem.duration)
 		var percent = duration.isFinite && duration > 0 ? currentTime / duration : 0
 		if !percent.isFinite {
@@ -493,6 +504,7 @@ class PlayerViewController: ObservableObject {
 		currentTime = 0
 		duration = 0
 		isPlaying = false
+		hasStartedPlayback = false
 		isSeeking = false
 		playbackRate = settingsHandler.getPlaybackRate()
 		loadedTimeRanges = []
@@ -525,7 +537,11 @@ class PlayerViewController: ObservableObject {
 		player.publisher(for: \.timeControlStatus)
 			.receive(on: RunLoop.main)
 			.sink { [weak self] status in
-				self?.isPlaying = status == .playing
+				guard let self else { return }
+				self.isPlaying = status == .playing
+				if status == .playing {
+					self.hasStartedPlayback = true
+				}
 			}
 			.store(in: &cancellables)
 

@@ -27,16 +27,11 @@ struct BangumiDetailView: View {
 
 	var body: some View {
 		ScrollViewReader { proxy in
-			ScrollView{
-				BangumiDetailCoverTextView(
-					item: $detailVC.detailItem,
-					albireo_favorite_status: $detailVC.albireo_favorite_status,
-                    bgmtv_favorite_status: $detailVC.bgmtv_favorite_status, favStatusFinished: $detailVC.favStatusLoaded,
-					detailVC: detailVC
-				)
-				.frame(minHeight: 300,maxHeight: 600)
-
-				Divider()
+			ScrollView {
+				if detailVC.detailItem != nil {
+					detailHeader
+					Divider()
+				}
 				if !detailVC.newEPList.isEmpty{
 					ForEach(detailVC.newEPList, id: \.ep.id){ item in
 						let e = item.ep
@@ -99,11 +94,19 @@ struct BangumiDetailView: View {
 			}
 
 			.toolbar {
+#if targetEnvironment(macCatalyst)
+				ToolbarItem(placement: .navigationBarLeading) {
+					if isDetailToolbarReady {
+						BangumiDetailNavTitleView(item: $detailVC.detailItem)
+					}
+				}
+#else
 				ToolbarItem(placement: .principal) {
 					if isDetailToolbarReady {
 						BangumiDetailNavTitleView(item: $detailVC.detailItem)
 					}
 				}
+#endif
 				ToolbarItem(placement: .primaryAction) {
 					if isDetailToolbarReady {
 						BangumiDetailNavItemView(bgmItem: $detailVC.detailItem)
@@ -231,6 +234,27 @@ struct BangumiDetailView: View {
             
 
 		}
+	}
+
+	@ViewBuilder
+	private var detailHeader: some View {
+		let header = BangumiDetailCoverTextView(
+			item: $detailVC.detailItem,
+			albireo_favorite_status: $detailVC.albireo_favorite_status,
+			bgmtv_favorite_status: $detailVC.bgmtv_favorite_status,
+			favStatusFinished: $detailVC.favStatusLoaded,
+			detailVC: detailVC
+		)
+
+#if os(iOS)
+		if UIDevice.current.userInterfaceIdiom == .phone {
+			header
+		} else {
+			header.frame(minHeight: 300, maxHeight: 600)
+		}
+#else
+		header.frame(minHeight: 300, maxHeight: 600)
+#endif
 	}
 }
 

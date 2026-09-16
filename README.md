@@ -34,7 +34,7 @@ let testURL = "<Your Albreo server URL, optional>"
 let albireoV2ClientID = "<Your Albireo V2 box.moe OAuth client ID>"
 let albireoV2DefaultAPIServerURL = "<Your Albireo V2 API server URL, optional>"
 ```
-These constants must exist even if you leave the optional API server value empty. Albireo V2 uses the fixed OIDC issuer `box.moe` and redirect URI `moetv://box.moe`; these are not runtime settings.
+These constants must exist even if you leave the optional API server value empty. Albireo V2 uses the fixed OIDC issuer `box.moe` and redirect URI `moetv://boxmoe`; these are not runtime settings.
 4. Open Xcode, build & run.
 
 ## URL Schemes
