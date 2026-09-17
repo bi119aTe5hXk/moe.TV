@@ -4,6 +4,9 @@
     "" : {
 
     },
+    "/ 10" : {
+
+    },
     "%@" : {
       "shouldTranslate" : false
     },
@@ -40,9 +43,6 @@
     },
     "%lld. " : {
       "shouldTranslate" : false
-    },
-    "%lld/10" : {
-
     },
     "%lld%%" : {
       "shouldTranslate" : false
@@ -1372,6 +1372,28 @@
         }
       }
     },
+    "Edit review" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レビューを編集"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑评价"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編輯評價"
+          }
+        }
+      }
+    },
     "Error: Video URL is empty" : {
       "localizations" : {
         "ja" : {
@@ -1958,6 +1980,27 @@
     "moe.TV" : {
       "shouldTranslate" : false
     },
+    "My Review" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自分の評価"
+          }
+        },
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我的评价"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我的評價"
+          }
+        }
+      }
+    },
     "MyBangumi" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2005,6 +2048,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "暱稱: %@"
+          }
+        }
+      }
+    },
+    "No comment yet" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "感想はまだありません"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有评语"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還沒有評語"
           }
         }
       }
@@ -2115,6 +2180,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "無影片"
+          }
+        }
+      }
+    },
+    "Not rated" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未評価"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未评分"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未評分"
           }
         }
       }
@@ -3216,6 +3303,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "串流影片快取"
+          }
+        }
+      }
+    },
+    "Summary" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "あらすじ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "简介"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "簡介"
           }
         }
       }

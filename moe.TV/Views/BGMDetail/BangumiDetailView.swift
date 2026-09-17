@@ -255,10 +255,10 @@ struct BangumiDetailView: View {
 		if UIDevice.current.userInterfaceIdiom == .phone {
 			header
 		} else {
-			header.frame(minHeight: 300, maxHeight: 600)
+			header.frame(minHeight: 300)
 		}
 #else
-		header.frame(minHeight: 300, maxHeight: 600)
+		header.frame(minHeight: 300)
 #endif
 	}
 }

@@ -11,23 +11,22 @@ struct FavoriteStatusView: View {
 	@Binding var bgmtv_favorite_status:Int?
 	
 	var body: some View {
-		VStack{
-			Text("Albireo")
-			BGMStatusTextView(status: $albireo_favorite_status)
-				.padding(10)
-		}
-		Spacer()
-		if isBGMTVlogined() {
-			Divider()
-			Spacer()
-			VStack{
-				Text("Bgm.tv")
-				BGMStatusTextView(
-					status:$bgmtv_favorite_status
-				)
-				.padding(10)
+		HStack(alignment: .top, spacing: 18) {
+			statusColumn("Albireo", status: $albireo_favorite_status)
+			if isBGMTVlogined() {
+				statusColumn("Bgm.tv", status: $bgmtv_favorite_status)
 			}
-			Spacer()
 		}
+		.frame(maxWidth: .infinity, alignment: .leading)
+	}
+
+	private func statusColumn(_ title: LocalizedStringKey, status: Binding<Int?>) -> some View {
+		VStack(alignment: .leading, spacing: 4) {
+			Text(title)
+				.font(.caption)
+				.foregroundStyle(.secondary)
+			BGMStatusTextView(status: status)
+		}
+		.frame(maxWidth: .infinity, alignment: .leading)
 	}
 }

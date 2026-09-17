@@ -49,7 +49,7 @@ struct BangumiDetailCoverTextView: View {
 
     @ViewBuilder
     private func regularContent(for item: BangumiDetailModel) -> some View {
-        HStack {
+        HStack(alignment: .top) {
             Spacer(minLength: 0)
             mainContent(for: item)
         }
@@ -137,83 +137,99 @@ private struct BangumiDetailCoverMainContent: View {
 
             Divider()
 
-            VStack {
-                Button(
-                    action: {
-                        dctVC.setDetailVC(dVC: detailVC)
-                        detailVC.showCollectionEditor(defaultStatus: detailVC.preferredCollectionStatus)
-                    },
-                    label: {
-                        favoriteStatusLayout
+            VStack(alignment: .leading, spacing: 14) {
+                Button(action: openCollectionEditor) {
+                    HStack(spacing: 12) {
+                        FavoriteStatusView(
+                            albireo_favorite_status: $albireo_favorite_status,
+                            bgmtv_favorite_status: $bgmtv_favorite_status
+                        )
+                        Image(systemName: "square.and.pencil")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
                     }
-                )
+                    .contentShape(Rectangle())
+                }
                 .disabled(!detailVC.favStatusLoaded)
-
-				if let rating = detailVC.collectionRating, rating > 0 {
-					HStack {
-						Text("Rating")
-						Text("\(rating)/10")
-						Spacer(minLength: 0)
-					}
-					.frame(maxWidth: 600)
-				}
-				if let comment = detailVC.collectionComment, !comment.isEmpty {
-					VStack(alignment: .leading, spacing: 4) {
-						Text("Comment")
-							.font(.caption)
-							.foregroundStyle(.secondary)
-						Text(comment)
-							.frame(maxWidth: .infinity, alignment: .leading)
-					}
-					.frame(maxWidth: 600, alignment: .leading)
-				}
+#if !os(tvOS)
+                .buttonStyle(.plain)
+#endif
 
                 Divider()
 
-                Text(item.summary ?? "")
-                    .lineLimit(10)
-                    .padding(10)
-                    .frame(
-                        minWidth: 100,
-                        maxWidth: 600,
-                        minHeight: 100,
-                        maxHeight: 600)
+                if supportsReview {
+                    reviewSection
+                    Divider()
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Summary")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text(item.summary ?? "")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
 
                 if !isPhone {
                     Spacer()
                 }
             }
+			.frame(maxWidth: 600, alignment: .leading)
+			.padding(.horizontal, 10)
         }
     }
 
-    @ViewBuilder
-    private var favoriteStatusLayout: some View {
-#if os(iOS)
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            VStack {
-                FavoriteStatusView(
-                    albireo_favorite_status: $albireo_favorite_status,
-                    bgmtv_favorite_status: $bgmtv_favorite_status
-                )
-            }
-        } else {
-            HStack {
-                Spacer()
-                FavoriteStatusView(
-                    albireo_favorite_status: $albireo_favorite_status,
-                    bgmtv_favorite_status: $bgmtv_favorite_status
-                )
-            }
-        }
-#else
-        HStack {
-            Spacer()
-            FavoriteStatusView(
-                albireo_favorite_status: $albireo_favorite_status,
-                bgmtv_favorite_status: $bgmtv_favorite_status
-            )
-        }
-#endif
+	private var reviewSection: some View {
+		VStack(alignment: .leading, spacing: 10) {
+			HStack {
+				Text("My Review")
+					.font(.subheadline.weight(.semibold))
+				Spacer()
+				Button(action: openCollectionEditor) {
+					Image(systemName: "pencil")
+				}
+				.disabled(!detailVC.favStatusLoaded)
+				.help("Edit review")
+			}
+			if let rating = detailVC.collectionRating, rating > 0 {
+				HStack(alignment: .firstTextBaseline, spacing: 8) {
+					Text("\(rating)")
+						.font(.system(size: 30, weight: .semibold, design: .rounded))
+					Text("/ 10")
+						.font(.subheadline)
+						.foregroundStyle(.secondary)
+					HStack(spacing: 2) {
+						ForEach(0..<5, id: \.self) { index in
+							let units = rating - index * 2
+							Image(systemName: units >= 2 ? "star.fill" : units == 1 ? "star.leadinghalf.filled" : "star")
+								.foregroundStyle(units > 0 ? Color.yellow : Color.secondary)
+						}
+					}
+					.font(.caption)
+					.padding(.leading, 4)
+				}
+			} else {
+				Text("Not rated")
+					.foregroundStyle(.secondary)
+			}
+			if let comment = detailVC.collectionComment, !comment.isEmpty {
+				Text(comment)
+					.frame(maxWidth: .infinity, alignment: .leading)
+			} else {
+				Text("No comment yet")
+					.foregroundStyle(.secondary)
+			}
+		}
+		.frame(maxWidth: .infinity, alignment: .leading)
+	}
+
+	private var supportsReview: Bool {
+		SettingsHandler().getAlbireoAuthMode() == .albireoV2OAuth || isBGMTVlogined()
+	}
+
+	private func openCollectionEditor() {
+		dctVC.setDetailVC(dVC: detailVC)
+		detailVC.showCollectionEditor(defaultStatus: detailVC.preferredCollectionStatus)
     }
 
     private var isPhone: Bool {

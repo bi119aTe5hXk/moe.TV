@@ -12,32 +12,23 @@ struct BGMStatusTextView: View {
     
     
     var body: some View {
-//        Text("\(status)")
-
-        if let s = status{
-            Text(statusText(status: s))
-                .padding(8)
-                .foregroundStyle(statusColor(status: s))
-                .bold()
-#if !os(tvOS)
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(statusColor(status: s), lineWidth:1))
-#endif
-                
-        }else{
-            Text("No Record")
-                .padding(8)
-#if !os(macOS)
-                .foregroundStyle(Color(UIColor.label))
-#endif
-                .bold()
-#if os(iOS)
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color(UIColor.label), lineWidth:1))
-#endif
+        HStack(spacing: 6) {
+            Circle()
+                .fill(status.map(statusColor) ?? .secondary)
+                .frame(width: 7, height: 7)
+            if let status {
+                Text(statusText(status: status))
+                    .foregroundStyle(statusColor(status: status))
+            } else {
+                Text("No Record")
+                    .foregroundStyle(.secondary)
+            }
         }
-
+        .font(.subheadline.weight(.semibold))
+        .lineLimit(1)
     }
     
-    func statusText(status:Int) -> LocalizedStringKey {
+    private func statusText(status:Int) -> LocalizedStringKey {
         switch status {
         case 1:
             return "Wish"
@@ -53,7 +44,7 @@ struct BGMStatusTextView: View {
             return "UNKNOW_STATUS"
         }
     }
-    func statusColor(status:Int) -> Color {
+    private func statusColor(status:Int) -> Color {
         switch status {
         case 1:
             return .pink
