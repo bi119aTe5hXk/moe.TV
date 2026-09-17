@@ -256,7 +256,8 @@ class PlayerViewController: ObservableObject {
 		ep: EpisodeDetailModel?,
 		isOffline: Bool,
 		isBGMTVWatched: Bool,
-		isFinalEpisode: Bool = false
+		isFinalEpisode: Bool = false,
+		detailVC: BangumiDetailViewController? = nil
 	) {
 		switch status {
 		case nil:
@@ -285,7 +286,8 @@ class PlayerViewController: ObservableObject {
 					isOffline: isOffline,
 					filename: filename,
 					isBGMTVWatched: isBGMTVWatched,
-					isFinalEpisode: isFinalEpisode
+					isFinalEpisode: isFinalEpisode,
+					detailVC: detailVC
 				)
 			}
 			prefetchStreamingForwardBufferForPausedPlayback()
@@ -313,7 +315,8 @@ class PlayerViewController: ObservableObject {
 		isOffline: Bool,
 		filename: String?,
 		isBGMTVWatched: Bool,
-		isFinalEpisode: Bool = false
+		isFinalEpisode: Bool = false,
+		detailVC: BangumiDetailViewController? = nil
 	) -> PlaybackProgressSnapshot? {
 		guard let currentItem = player.currentItem else { return nil }
 		guard hasStartedPlayback else {
@@ -395,18 +398,26 @@ class PlayerViewController: ObservableObject {
 
 				if let item = bgmItem {
 					savePlaybackHistory(item)
+				}
 
-					if settingsHandler.getSetWatchedWhenFinishedFinalEP() && isFinished && isFinalEpisode {
-						print("should set the subject/collection as watched: final episode finished")
-						if item.favorite_status == 3 {
-							changeFavStatus(
-								idstr: item.id,
-								bgmid: item.bgm_id ?? theEP.bangumi?.bgm_id,
-								status: 2
-							)
-						} else {
-							print("fav status is not watching. skip set as watched")
-						}
+				if settingsHandler.getSetWatchedWhenFinishedFinalEP() && isFinished && isFinalEpisode {
+					let albireoStatus = detailVC?.albireo_favorite_status
+						?? detailVC?.detailItem?.favorite_status
+						?? bgmItem?.favorite_status
+					let bgmTVStatus = detailVC?.bgmtv_favorite_status
+					let updateAlbireo = albireoStatus == 3
+					let updateBGMTV = bgmTVStatus == 3 || (updateAlbireo && bgmTVStatus != 2)
+					if updateAlbireo || updateBGMTV {
+						changeFavStatus(
+							idstr: detailVC?.detailItem?.id ?? bgmItem?.id ?? theEP.bangumi_id,
+							bgmid: detailVC?.detailItem?.bgm_id ?? bgmItem?.bgm_id ?? theEP.bangumi?.bgm_id,
+							status: 2,
+							updateAlbireo: updateAlbireo,
+							updateBGMTV: updateBGMTV,
+							detailVC: detailVC
+						)
+					} else {
+						print("Neither collection is watching; skip automatic watched status")
 					}
 				}
 			}
@@ -470,27 +481,40 @@ class PlayerViewController: ObservableObject {
 		return item.copy() as! AVMetadataItem
 	}
 
-	func changeFavStatus(idstr: String?, bgmid: Int?, status: Int) {
-		if let idstr1 = idstr {
+	func changeFavStatus(
+		idstr: String?,
+		bgmid: Int?,
+		status: Int,
+		updateAlbireo: Bool,
+		updateBGMTV: Bool,
+		detailVC: BangumiDetailViewController?
+	) {
+		if updateAlbireo, let idstr1 = idstr {
 			print("changing fav status to \(status)")
 			changeAlbireoFavStatus(bangumi_id: idstr1, status: status, completion: { isSuccess, result in
 				print(result as Any)
 				if isSuccess {
 					print("albireo fav status change success")
+					DispatchQueue.main.async {
+						detailVC?.albireo_favorite_status = status
+					}
 				}
 			})
 		}
 
-		if let bgm_id = bgmid {
+		if updateBGMTV, let bgm_id = bgmid {
 			setBGMCollectionStatus(subject_id: bgm_id, status: status) { isSuccess, result in
 				print(result as Any)
 				if isSuccess {
 					print("setBGMCollectionStatus success")
+					DispatchQueue.main.async {
+						detailVC?.bgmtv_favorite_status = status
+					}
 				} else {
-					print("setBGMCollectionStatus retrun false")
+					print("setBGMCollectionStatus returned false")
 				}
 			}
-		} else {
+		} else if updateBGMTV {
 			print("bgmid not found")
 		}
 	}

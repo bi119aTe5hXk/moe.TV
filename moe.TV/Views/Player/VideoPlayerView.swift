@@ -76,7 +76,8 @@ struct VideoPlayerView: View {
             ep: ep,
             isOffline: isOffline,
             isBGMTVWatched: isBGMTVWatched,
-			isFinalEpisode: isFinalEpisode
+			isFinalEpisode: isFinalEpisode,
+			detailVC: detailVC
         )
     }
 
@@ -279,7 +280,8 @@ struct VideoPlayerView: View {
                         isOffline: isOffline,
                         filename: filename,
                         isBGMTVWatched: isBGMTVWatched,
-                        isFinalEpisode: isFinalEpisode
+                        isFinalEpisode: isFinalEpisode,
+                        detailVC: detailVC
                     )
                     if let snapshot, let epID = ep?.id {
                         detailVC?.updatePlaybackProgress(epID: epID, snapshot: snapshot)
