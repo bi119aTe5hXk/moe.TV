@@ -1988,6 +1988,7 @@
             "value" : "自分の評価"
           }
         },
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "我的评价"
