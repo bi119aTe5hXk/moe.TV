@@ -25,6 +25,7 @@ private enum LoginMethod: String, CaseIterable, Identifiable {
 
 struct LoginView: View {
 	@ObservedObject var loginVC: LoginViewController
+	@Environment(\.scenePhase) private var scenePhase
 //	@Binding var selectedItem: BangumiItemModel?
 //	@Binding var navigationPath:[AnyHashable]
 	
@@ -33,6 +34,7 @@ struct LoginView: View {
 	
 
     var body: some View {
+		Group {
         if isAlbireoAuthenticated() || loginVC.isLoginSuccessd{
 			MainListView(selectedFunc: $selectedFunc, loginVC: loginVC)
         }else{
@@ -96,6 +98,15 @@ struct LoginView: View {
 				}
 			}
         }
+		}
+		.onReceive(NotificationCenter.default.publisher(for: .cloudSettingsDidChange)) { _ in
+			loginVC.reloadSavedServers()
+		}
+		.onChange(of: scenePhase) { phase in
+			if phase == .active {
+				SettingsHandler.refreshCloudSettings()
+			}
+		}
     }
 
 	private var passwordLoginFields: some View {
