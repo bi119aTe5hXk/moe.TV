@@ -141,12 +141,32 @@ private struct BangumiDetailCoverMainContent: View {
                 Button(
                     action: {
                         dctVC.setDetailVC(dVC: detailVC)
-                        dctVC.toggleChangeFavStatusAlert()
+                        detailVC.showCollectionEditor(defaultStatus: detailVC.preferredCollectionStatus)
                     },
                     label: {
                         favoriteStatusLayout
                     }
                 )
+                .disabled(!detailVC.favStatusLoaded)
+
+				if let rating = detailVC.collectionRating, rating > 0 {
+					HStack {
+						Text("Rating")
+						Text("\(rating)/10")
+						Spacer(minLength: 0)
+					}
+					.frame(maxWidth: 600)
+				}
+				if let comment = detailVC.collectionComment, !comment.isEmpty {
+					VStack(alignment: .leading, spacing: 4) {
+						Text("Comment")
+							.font(.caption)
+							.foregroundStyle(.secondary)
+						Text(comment)
+							.frame(maxWidth: .infinity, alignment: .leading)
+					}
+					.frame(maxWidth: 600, alignment: .leading)
+				}
 
                 Divider()
 
@@ -215,14 +235,6 @@ private struct BangumiDetailCoverAlerts: View {
         // A lightweight anchor for alert modifiers.
         Color.clear
             .frame(width: 0, height: 0)
-            .alert("Change favorite status", isPresented: $dctVC.presentFavStatusSelecter) {
-                Button("Wish") { dctVC.changeFavStatusAll(idstr: item.id, bgmid: item.bgm_id, status: 1) }
-                Button("Watched") { dctVC.changeFavStatusAll(idstr: item.id, bgmid: item.bgm_id, status: 2) }
-                Button("Watching") { dctVC.changeFavStatusAll(idstr: item.id, bgmid: item.bgm_id, status: 3) }
-                Button("Pause") { dctVC.changeFavStatusAll(idstr: item.id, bgmid: item.bgm_id, status: 4) }
-                Button("Abandoned") { dctVC.changeFavStatusAll(idstr: item.id, bgmid: item.bgm_id, status: 5) }
-                Button("Cancel") { dctVC.presentFavStatusSelecter.toggle() }
-            }
             .alert(
                 "Albireo favorite status has changed",
                 isPresented: $dctVC.presentAlbireoFavChangeResultDone
@@ -274,9 +286,115 @@ private struct BangumiDetailCoverAlerts: View {
                     }
                 }
                 Button("Custom status") {
-                    dctVC.presentFavStatusSelecter.toggle()
+                    if let detailVC = dctVC.detailVC {
+                        detailVC.showCollectionEditor(defaultStatus: detailVC.preferredCollectionStatus)
+                    }
                 }
                 Button("Cancel") { dctVC.presentFavStatusConflictAlert.toggle() }
             }
+    }
+}
+
+struct BangumiCollectionEditorView: View {
+    let item: BangumiDetailModel
+    @ObservedObject var detailVC: BangumiDetailViewController
+    @Environment(\.dismiss) private var dismiss
+    @State private var status: Int
+    @State private var rating: Int
+    @State private var comment: String
+    @State private var commentWasEdited = false
+    @State private var isSaving = false
+    @State private var errorMessage: String?
+
+    init(item: BangumiDetailModel, detailVC: BangumiDetailViewController) {
+        self.item = item
+        self.detailVC = detailVC
+        _status = State(initialValue: detailVC.collectionEditorInitialStatus)
+		_rating = State(initialValue: detailVC.collectionRating ?? 0)
+		_comment = State(initialValue: detailVC.collectionComment ?? "")
+    }
+
+    private var supportsReview: Bool {
+        SettingsHandler().getAlbireoAuthMode() == .albireoV2OAuth || isBGMTVlogined()
+    }
+
+    private var editableComment: Binding<String> {
+        Binding(
+            get: { comment },
+            set: { comment = $0; commentWasEdited = true }
+        )
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    Text(item.name ?? item.name_cn ?? "")
+                        .font(.headline)
+                        .lineLimit(2)
+                }
+                Section {
+                    Picker("Status", selection: $status) {
+                        Text("Wish").tag(1)
+                        Text("Watched").tag(2)
+                        Text("Watching").tag(3)
+                        Text("Pause").tag(4)
+                        Text("Abandoned").tag(5)
+                    }
+                }
+
+                if supportsReview {
+                    Section("Rating") {
+                        Picker("Rating", selection: $rating) {
+                            Text("Leave rating unchanged").tag(0)
+                            ForEach(1...10, id: \.self) { value in
+                                Text("\(value)").tag(value)
+                            }
+                        }
+                    }
+                    Section("Comment") {
+                        #if os(tvOS)
+                        TextField("Comment", text: editableComment)
+                        #else
+                        TextEditor(text: editableComment)
+                            .frame(minHeight: 100)
+                        #endif
+                    }
+                }
+
+                if let errorMessage {
+                    Text(errorMessage)
+                        .foregroundStyle(.red)
+                }
+            }
+            .navigationTitle("Collection")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") { save() }
+                        .disabled(isSaving)
+                }
+            }
+        }
+    }
+
+    private func save() {
+        isSaving = true
+        errorMessage = nil
+        let trimmedComment = comment.trimmingCharacters(in: .whitespacesAndNewlines)
+        detailVC.saveCollection(
+            status: status,
+            rating: supportsReview && rating > 0 ? rating : nil,
+            comment: supportsReview && (commentWasEdited || !trimmedComment.isEmpty) ? trimmedComment : nil
+        ) { success, message in
+            isSaving = false
+            if success {
+                dismiss()
+            } else {
+                errorMessage = message
+            }
+        }
     }
 }

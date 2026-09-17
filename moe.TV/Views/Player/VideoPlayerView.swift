@@ -75,9 +75,7 @@ struct VideoPlayerView: View {
             filename: filename,
             ep: ep,
             isOffline: isOffline,
-            isBGMTVWatched: isBGMTVWatched,
-			isFinalEpisode: isFinalEpisode,
-			detailVC: detailVC
+            isBGMTVWatched: isBGMTVWatched
         )
     }
 
@@ -270,6 +268,21 @@ struct VideoPlayerView: View {
         }
         .onDisappear {
             PlayerPresentationState.shared.endPresentation()
+            if !isOffline,
+               isFinalEpisode,
+               settingsHandler.getSetWatchedWhenFinishedFinalEP(),
+               let item = playerVM.avPlayer?.currentItem {
+                let position = CMTimeGetSeconds(item.currentTime())
+                let duration = CMTimeGetSeconds(item.duration)
+                let albireoStatus = detailVC?.albireo_favorite_status
+                    ?? detailVC?.detailItem?.favorite_status
+                    ?? bgmItem?.favorite_status
+                if position.isFinite, duration.isFinite, duration > 0,
+                   position >= 5, position / duration >= 0.95,
+                   albireoStatus == 3 || detailVC?.bgmtv_favorite_status == 3 {
+                    detailVC?.queueCollectionEditorAfterPlayback()
+                }
+            }
             Task {
                 if let player = playerVM.avPlayer {
                     player.pause()
@@ -279,9 +292,7 @@ struct VideoPlayerView: View {
                         ep: ep,
                         isOffline: isOffline,
                         filename: filename,
-                        isBGMTVWatched: isBGMTVWatched,
-                        isFinalEpisode: isFinalEpisode,
-                        detailVC: detailVC
+                        isBGMTVWatched: isBGMTVWatched
                     )
                     if let snapshot, let epID = ep?.id {
                         detailVC?.updatePlaybackProgress(epID: epID, snapshot: snapshot)

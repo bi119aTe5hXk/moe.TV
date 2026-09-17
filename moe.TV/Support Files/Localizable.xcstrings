@@ -41,6 +41,9 @@
     "%lld. " : {
       "shouldTranslate" : false
     },
+    "%lld/10" : {
+
+    },
     "%lld%%" : {
       "shouldTranslate" : false
     },
@@ -427,6 +430,34 @@
         }
       }
     },
+    "Ask to mark watched after the final EP" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask to update collection status after the final episode"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終回の視聴後に視聴状態の変更を確認する"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "看完最后一话后询问是否标记为“看过”"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "看完最後一話後詢問是否標記為「看過」"
+          }
+        }
+      }
+    },
     "Authorization Server URL" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -769,6 +800,7 @@
       }
     },
     "Change favorite status" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -940,6 +972,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "關閉"
+          }
+        }
+      }
+    },
+    "Collection" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作品の視聴状態"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收藏状态"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收藏狀態"
+          }
+        }
+      }
+    },
+    "Comment" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "感想"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "评语"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "評語"
           }
         }
       }
@@ -1676,6 +1752,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "稍後"
+          }
+        }
+      }
+    },
+    "Leave rating unchanged" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "評価を変更しない"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不修改评分"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不修改評分"
           }
         }
       }
@@ -2431,6 +2529,28 @@
         }
       }
     },
+    "Rating" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "評価"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "评分"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "評分"
+          }
+        }
+      }
+    },
     "Re-login" : {
       "localizations" : {
         "ja" : {
@@ -2581,6 +2701,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重新載入"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存"
           }
         }
       }
@@ -2784,34 +2926,6 @@
         }
       }
     },
-    "Set watched when finished the final EP" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatically changes status to watched after the last episode is played"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最終回が再生終わると、自動的にステータスが「視聴済み」に変更する"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "看完最后一话时自动标记为“看过”"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "播完最後一話時自動標記為“看過”"
-          }
-        }
-      }
-    },
     "Settings" : {
       "localizations" : {
         "ja" : {
@@ -2928,6 +3042,28 @@
         }
       }
     },
+    "Show in box.moe" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "box.moeを開く"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在box.moe查看"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在box.moe裡查看"
+          }
+        }
+      }
+    },
     "Sign out" : {
       "localizations" : {
         "ja" : {
@@ -2990,6 +3126,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "從最初開始"
+          }
+        }
+      }
+    },
+    "Status" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状態"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状态"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "狀態"
           }
         }
       }

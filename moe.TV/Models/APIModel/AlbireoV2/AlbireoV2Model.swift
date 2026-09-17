@@ -139,7 +139,8 @@ extension BangumiDetail {
 			air_weekday: airWeekday,
 			eps: episodeModels.count,
 			favorite_status: favorite?.status.legacyValue,
-			episodes: episodeModels
+			episodes: episodeModels,
+			item_id: itemId?.uuidString
 		)
 	}
 

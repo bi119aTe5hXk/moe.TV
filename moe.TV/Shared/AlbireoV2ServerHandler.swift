@@ -400,6 +400,8 @@ func getAlbireoV2BangumiList(keyword: String = "",
 
 func changeAlbireoV2FavoriteStatus(bangumiID: String,
 								   status: Int,
+								   rating: Int? = nil,
+								   review: String? = nil,
 								   completion: @escaping (Bool, Any?) -> Void) {
 	guard let favoriteStatus = FavoriteStatus(legacyValue: status),
 		  let bangumiUUID = UUID(uuidString: bangumiID) else {
@@ -414,7 +416,8 @@ func changeAlbireoV2FavoriteStatus(bangumiID: String,
 				favoriteCreateRequest: FavoriteCreateRequest(
 					status: favoriteStatus,
 					bangumiId: bangumiUUID,
-					review: "",
+					review: review,
+					rating: rating.map(Double.init),
 					syncToUpstream: true
 				)
 			)

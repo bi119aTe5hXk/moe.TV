@@ -673,11 +673,13 @@ func sentAlbireoEPWatchProgress(ep_id: String,
 
 func changeAlbireoFavStatus(bangumi_id:String,
                      status:Int,
+                     rating: Int? = nil,
+                     review: String? = nil,
                      completion: @escaping (Bool, Any?) -> Void){
 	let settingsHandler = SettingsHandler()
 	settingsHandler.registerSettings()
 	if settingsHandler.getAlbireoAuthMode() == .albireoV2OAuth {
-		changeAlbireoV2FavoriteStatus(bangumiID: bangumi_id, status: status, completion: completion)
+		changeAlbireoV2FavoriteStatus(bangumiID: bangumi_id, status: status, rating: rating, review: review, completion: completion)
 		return
 	}
 
@@ -689,15 +691,15 @@ func changeAlbireoFavStatus(bangumi_id:String,
 
 			postServer(urlString: urlstr, postdata: postdata) { result, data in
 				if result{
-					if let d = data as? Data{
-						let s = String(data: d, encoding: .utf8)
-						completion(true, s)
-					}
+					let message = (data as? Data).flatMap { String(data: $0, encoding: .utf8) }
+					completion(true, message)
 				}else{
-					completion(false, data as! String)
+					completion(false, data)
 				}
 			}
 
+		} else {
+			completion(false, "Albireo V1 cookies are unavailable.")
 		}
 	}else{
 		completion(false, "Can not get server address.")

@@ -7,7 +7,6 @@
 
 import Foundation
 class BangumiDetailCoverTextViewController: ObservableObject {
-    @Published var presentFavStatusSelecter = false
     @Published var presentAlbireoFavChangeResultDone = false
 	@Published var presentBGMFavChangeResultDone = false
     
@@ -25,9 +24,6 @@ class BangumiDetailCoverTextViewController: ObservableObject {
     
     var settingsHandler = SettingsHandler()
 
-    func toggleChangeFavStatusAlert() {
-        self.presentFavStatusSelecter.toggle()
-    }
 	func setDetailVC(dVC:BangumiDetailViewController){
 		self.detailVC = dVC
 	}
@@ -105,9 +101,4 @@ class BangumiDetailCoverTextViewController: ObservableObject {
         //        }
     }
 
-    func changeFavStatusAll(idstr:String, bgmid:Int?, status:Int) {
-        setAlbreoFavStatus(idstr: idstr, status: status)
-        setBGMFavStatus(bgmid: bgmid, status: status)
-        
-    }
 }

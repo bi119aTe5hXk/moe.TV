@@ -16,6 +16,8 @@ struct BangumiDetailNavItemView: View {
             Button("Download All", action: startDownloadAll)
 #if !os(tvOS)
             Button("Show in bgm.tv", action: openBangumi)
+			Button("Show in box.moe", action: openBoxItem)
+				.disabled(bgmItem?.item_id.flatMap(UUID.init(uuidString:)) == nil)
 #endif
         } label: {
             Image(systemName: "ellipsis")
@@ -33,6 +35,11 @@ struct BangumiDetailNavItemView: View {
             }
         }
     }
+
+	private func openBoxItem() {
+		guard let itemID = bgmItem?.item_id, let uuid = UUID(uuidString: itemID) else { return }
+		openURLInApp(urlString: "https://box.moe/item/\(uuid.uuidString.lowercased())")
+	}
 #endif
 
     private func startDownloadAll() {
