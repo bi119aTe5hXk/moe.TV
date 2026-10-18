@@ -446,15 +446,18 @@ func getBGMCollectionEpisodeList(subject_id:Int, completion: @escaping (Bool, An
 
     }
 }
-func setBGMCollectionStatus(subject_id:Int, status:Int, completion: @escaping (Bool, Any) -> Void){
+func setBGMCollectionStatus(subject_id:Int, status:Int, rating: Int? = nil, comment: String? = nil, completion: @escaping (Bool, Any) -> Void){
     ensureBGMTVAccessTokenValid { isTokenReady, tokenResult in
         guard isTokenReady else {
             completion(false, tokenResult)
             return
         }
         let urlStr = "\(baseBGMTVAPIURL)/v0/users/-/collections/\(subject_id)"
+        var payload: [String: Any] = ["type": status]
+        if let rating { payload["rate"] = rating }
+        if let comment { payload["comment"] = comment }
         postServer(urlString: urlStr,
-                   postdata: ["type":status],
+                   postdata: payload,
                    withAccessToken: true
         ) { result, data in
             completion(result,data)

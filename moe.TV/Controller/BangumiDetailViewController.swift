@@ -38,6 +38,26 @@ class BangumiDetailViewController : ObservableObject {
 	@Published var newEPList:[NewEPItem] = []
     @Published var albireo_favorite_status:Int?
 	@Published var bgmtv_favorite_status:Int?
+	@Published var bgmtvCollection: BGMTVUserSubjectCollectionModel?
+	@Published private(set) var albireoV2Rating: Int?
+	@Published private(set) var albireoV2Comment: String?
+	var collectionRating: Int? {
+		let bgmRating = bgmtvCollection?.rate ?? 0
+		return bgmRating > 0 ? bgmRating : albireoV2Rating
+	}
+	var collectionComment: String? {
+		let bgmComment = bgmtvCollection?.comment?.trimmingCharacters(in: .whitespacesAndNewlines)
+		return bgmComment?.isEmpty == false ? bgmComment : albireoV2Comment
+	}
+	@Published var presentCollectionEditor = false
+	@Published private(set) var collectionEditorInitialStatus = 3
+	private var pendingCollectionEditorStatus: Int?
+	private var playerDismissalComplete = false
+	var preferredCollectionStatus: Int {
+		[albireo_favorite_status, bgmtv_favorite_status]
+			.compactMap { $0 }
+			.first(where: { (1...5).contains($0) }) ?? 3
+	}
 
 	@Published var isFinished:Bool = true
 	@Published var favStatusLoaded:Bool = false
@@ -160,6 +180,7 @@ class BangumiDetailViewController : ObservableObject {
 	    //4 start playback
 	    func showVideoView(url:String, seekTime:Double, isOffline: Bool = false, filename: String? = nil) {
         DispatchQueue.main.async {
+			self.playerDismissalComplete = false
             self.presentVideoView = false
             self.seek = seekTime
             self.videoURL = url
@@ -185,12 +206,92 @@ class BangumiDetailViewController : ObservableObject {
 	}
 
 	func playerDidDismiss() {
+		playerDismissalComplete = true
 		if let selectedID {
 			episodeScrollRequest = EpisodeScrollRequest(episodeID: selectedID)
 		}
 		videoURL = ""
 		videoIsOffline = false
 		videoFileName = nil
+		if let status = pendingCollectionEditorStatus {
+			pendingCollectionEditorStatus = nil
+			DispatchQueue.main.async {
+				self.showCollectionEditor(defaultStatus: status)
+			}
+		}
+	}
+
+	func showCollectionEditor(defaultStatus: Int) {
+		collectionEditorInitialStatus = (1...5).contains(defaultStatus) ? defaultStatus : 3
+		presentCollectionEditor = true
+	}
+
+	func queueCollectionEditorAfterPlayback() {
+		if playerDismissalComplete {
+			DispatchQueue.main.async {
+				self.showCollectionEditor(defaultStatus: 2)
+			}
+		} else {
+			pendingCollectionEditorStatus = 2
+		}
+	}
+
+	func saveCollection(
+		status: Int,
+		rating: Int?,
+		comment: String?,
+		completion: @escaping (Bool, String?) -> Void
+	) {
+		guard let item = detailItem else {
+			completion(false, "Bangumi detail is unavailable.")
+			return
+		}
+
+		settingsHandler.registerSettings()
+		let isV2 = settingsHandler.getAlbireoAuthMode() == .albireoV2OAuth
+		let shouldUpdateBGMTV = isBGMTVlogined()
+		let review = comment?.trimmingCharacters(in: .whitespacesAndNewlines)
+		changeAlbireoFavStatus(
+			bangumi_id: item.id,
+			status: status,
+			rating: isV2 ? rating : nil,
+			review: isV2 ? review : nil
+		) { albireoSuccess, albireoResult in
+			DispatchQueue.main.async {
+				if albireoSuccess {
+					self.albireo_favorite_status = status
+					if isV2 {
+						if let rating { self.albireoV2Rating = rating }
+						if let review { self.albireoV2Comment = review.isEmpty ? nil : review }
+					}
+				}
+			}
+			guard shouldUpdateBGMTV else {
+				DispatchQueue.main.async {
+					completion(albireoSuccess, albireoSuccess ? nil : "Albireo: \(String(describing: albireoResult))")
+				}
+				return
+			}
+			guard let bgmID = item.bgm_id else {
+				DispatchQueue.main.async {
+					completion(false, "bgm.tv subject ID is unavailable.")
+				}
+				return
+			}
+			setBGMCollectionStatus(subject_id: bgmID, status: status, rating: rating, comment: review) { bgmSuccess, bgmResult in
+				DispatchQueue.main.async {
+					if bgmSuccess {
+						self.bgmtv_favorite_status = status
+						self.getBGMTVFAVStatus(item: item) { _, _ in }
+					}
+					let failures = [
+						albireoSuccess ? nil : "Albireo: \(String(describing: albireoResult))",
+						bgmSuccess ? nil : "bgm.tv: \(String(describing: bgmResult))"
+					].compactMap { $0 }
+					completion(failures.isEmpty, failures.isEmpty ? nil : failures.joined(separator: "\n"))
+				}
+			}
+		}
 	}
 
 	// MARK: - Bangumi Detail
@@ -200,6 +301,9 @@ class BangumiDetailViewController : ObservableObject {
 		self.detailItem = nil
         self.albireo_favorite_status = nil
         self.bgmtv_favorite_status = nil
+		self.bgmtvCollection = nil
+		self.albireoV2Rating = nil
+		self.albireoV2Comment = nil
 		self.newEPList = []
 		self.isFinished = false
         self.favStatusLoaded = false
@@ -272,9 +376,12 @@ class BangumiDetailViewController : ObservableObject {
                 print("Finished: no bangumi detail")
                 return
             }
-            if let bgmItem = data as? BangumiDetailModel{
+			if let bgmItem = data as? BangumiDetailModel{
 				DispatchQueue.main.async {
 					self.detailItem = bgmItem
+					if bgmItem.item_id == nil {
+						self.resolveBoxItemID(for: bgmItem.id)
+					}
 					if let favStatus = bgmItem.favorite_status{
 						self.albireo_favorite_status = favStatus
 					}else{
@@ -323,12 +430,42 @@ class BangumiDetailViewController : ObservableObject {
 
     }
 
+	private struct BoxItemReference: Decodable {
+		let itemId: UUID?
+	}
+
+	private func resolveBoxItemID(for bangumiID: String) {
+		guard UUID(uuidString: bangumiID) != nil,
+			let server = validatedHTTPServerURL(settingsHandler.getAlbireoServerAddr()),
+			let baseURL = URL(string: server) else { return }
+		let url = baseURL
+			.appendingPathComponent("api")
+			.appendingPathComponent("v2")
+			.appendingPathComponent("bangumi")
+			.appendingPathComponent(bangumiID)
+		URLSession.shared.dataTask(with: url) { data, response, _ in
+			guard let response = response as? HTTPURLResponse,
+				response.statusCode == 200,
+				let data,
+				let itemID = try? JSONDecoder().decode(BoxItemReference.self, from: data).itemId else { return }
+			DispatchQueue.main.async {
+				guard self.detailItem?.id == bangumiID else { return }
+				self.detailItem?.item_id = itemID.uuidString
+			}
+		}.resume()
+	}
+
 	func getBGMTVFAVStatus(item:BangumiDetailModel ,completion: @escaping (Bool, Int) -> Void){
 			if let bgmid = item.bgm_id{
 				getBGMCollectionStatus(subject_id: bgmid) { result, data in
 					print("getBGMTVFAVStatus:\(data)")
 					if result{
 						if let r = data as? BGMTVUserSubjectCollectionModel{
+							DispatchQueue.main.async {
+								if self.detailItem?.id == item.id {
+									self.bgmtvCollection = r
+								}
+							}
 							completion(true , r.type)
 						}else {
 							print("result is not BGMTVUserSubjectCollectionModel")

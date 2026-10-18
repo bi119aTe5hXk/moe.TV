@@ -123,7 +123,7 @@ struct SettingsView: View {
 								settingsVC.settingsHandler.setHideUnreleaseEPs(isEnabled: newValue)
 							}
 
-						Toggle("Set watched when finished the final EP",isOn: $setWatchedWhenFinishedFinalEP)
+						Toggle("Ask to mark watched after the final EP",isOn: $setWatchedWhenFinishedFinalEP)
 							.onAppear(){
 								self.setWatchedWhenFinishedFinalEP = settingsVC.settingsHandler.getSetWatchedWhenFinishedFinalEP()
 							}

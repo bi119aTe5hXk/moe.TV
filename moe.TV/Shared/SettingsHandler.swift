@@ -7,6 +7,85 @@
 
 import Foundation
 
+extension Notification.Name {
+    static let cloudSettingsDidChange = Notification.Name("cloudSettingsDidChange")
+}
+
+private final class CloudSettingsStore {
+    static let shared = CloudSettingsStore()
+
+    private let mirror = UserDefaults(suiteName: "group.moetv") ?? .standard
+    private let queue = DispatchQueue(label: "moe.TV.cloudSettings", qos: .utility)
+    private let writeQueue = DispatchQueue(label: "moe.TV.cloudSettingsWrites", qos: .utility)
+    private let mirrorPrefix = "cloudMirror."
+    private var observer: NSObjectProtocol?
+    private var lastRefresh = Date.distantPast
+
+    private init() {
+        observer = NotificationCenter.default.addObserver(
+            forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
+            object: nil,
+            queue: nil
+        ) { [weak self] notification in
+            let changedKeys = notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String]
+            let reason = notification.userInfo?[NSUbiquitousKeyValueStoreChangeReasonKey] as? Int
+            print("Cloud settings change notification: reason=\(reason.map { String($0) } ?? "unknown"), keys=\(changedKeys?.count ?? 0)")
+            self?.queue.async { [weak self] in
+                self?.importCloudValues(for: changedKeys, missingOnly: false)
+            }
+        }
+
+        refresh()
+    }
+
+    func refresh() {
+        // Legacy installations have values only in iCloud; request them off the main thread.
+        queue.async { [weak self] in
+            guard let self, Date().timeIntervalSince(self.lastRefresh) >= 30 else { return }
+            self.lastRefresh = Date()
+            print("Cloud settings sync started")
+            let succeeded = NSUbiquitousKeyValueStore.default.synchronize()
+            print("Cloud settings sync finished: \(succeeded)")
+            self.importCloudValues(for: nil, missingOnly: true)
+        }
+    }
+
+    func set(_ value: Any, forKey key: String) {
+        // Reads always use the local mirror, even if the iCloud service stalls.
+        mirror.set(value, forKey: mirrorPrefix + key)
+        writeQueue.async {
+            NSUbiquitousKeyValueStore.default.set(value, forKey: key)
+        }
+    }
+
+    func array(forKey key: String) -> [Any]? { mirror.array(forKey: mirrorPrefix + key) }
+    func string(forKey key: String) -> String? { mirror.string(forKey: mirrorPrefix + key) }
+    func data(forKey key: String) -> Data? { mirror.data(forKey: mirrorPrefix + key) }
+    func bool(forKey key: String) -> Bool { mirror.bool(forKey: mirrorPrefix + key) }
+    func double(forKey key: String) -> Double { mirror.double(forKey: mirrorPrefix + key) }
+    func longLong(forKey key: String) -> Int64 { Int64(mirror.integer(forKey: mirrorPrefix + key)) }
+
+    private func importCloudValues(for changedKeys: [String]?, missingOnly: Bool) {
+        print("Cloud settings import started")
+        let values = NSUbiquitousKeyValueStore.default.dictionaryRepresentation
+        let keys = changedKeys ?? Array(values.keys)
+        var importedCount = 0
+        for key in keys {
+            let localKey = mirrorPrefix + key
+            if missingOnly && mirror.object(forKey: localKey) != nil { continue }
+            guard let value = values[key] else { continue }
+            mirror.set(value, forKey: localKey)
+            importedCount += 1
+        }
+        print("Cloud settings import finished: available=\(values.count), imported=\(importedCount)")
+        if importedCount > 0 {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .cloudSettingsDidChange, object: nil)
+            }
+        }
+    }
+}
+
 enum AlbireoAuthMode: String {
 	case legacyCookie
 	case albireoV2OAuth
@@ -24,6 +103,10 @@ struct VideoCDNOption: Identifiable, Hashable, Codable {
 }
 
 class SettingsHandler {
+	static func refreshCloudSettings() {
+		CloudSettingsStore.shared.refresh()
+	}
+
 	// MARK: - Keys
     private let UD_SUITE_NAME = "group.moetv"
     private let kCookie = "kCookie"
@@ -54,13 +137,10 @@ class SettingsHandler {
     private let kCheckFavStatusConflict = "kCheckFavStatusConflict"
 
     private var ud = UserDefaults() //for tvOS
-    private var ub = NSUbiquitousKeyValueStore()
-    
+    private let ub = CloudSettingsStore.shared
+
     func registerSettings(){
         ud = UserDefaults.init(suiteName: UD_SUITE_NAME) ?? UserDefaults.standard
-        ub = NSUbiquitousKeyValueStore.default
-           
-        sync()
     }
    
     // MARK: - Albireo
@@ -71,13 +151,11 @@ class SettingsHandler {
                 print("saving empty array as cookie.")
             }
             ub.set(arr, forKey: kCookie)
-            sync()
         }else{
             print("cookie array nil")
         }
     }
     func getAlbireoCookie() -> Array<Any>?{
-        sync()
         var arr = Array<Any>()
         arr = ub.array(forKey: kCookie) ?? []
         if arr.count > 0{
@@ -89,7 +167,6 @@ class SettingsHandler {
     //Server Address
     func setAlbireoServerAddr(serverInfo:String){
         ub.set(serverInfo, forKey: kServerAddr)
-        sync()
     }
     func getAlbireoServerAddr() -> String {
         return ub.string(forKey: kServerAddr) ?? ""
@@ -98,7 +175,6 @@ class SettingsHandler {
 	// MARK: - Albireo auth mode
 	func setAlbireoAuthMode(_ mode: AlbireoAuthMode) {
 		ub.set(mode.rawValue, forKey: kAlbireoAuthMode)
-		sync()
 	}
 	func getAlbireoAuthMode() -> AlbireoAuthMode {
 		AlbireoAuthMode(rawValue: ub.string(forKey: kAlbireoAuthMode) ?? "") ?? .legacyCookie
@@ -107,28 +183,24 @@ class SettingsHandler {
 	// MARK: - Albireo V2
 	func setAlbireoV2AccessToken(_ token: String) {
 		ub.set(token, forKey: kAlbireoV2AccessToken)
-		sync()
 	}
 	func getAlbireoV2AccessToken() -> String {
 		return ub.string(forKey: kAlbireoV2AccessToken) ?? ""
 	}
 	func setAlbireoV2RefreshToken(_ token: String) {
 		ub.set(token, forKey: kAlbireoV2RefreshToken)
-		sync()
 	}
 	func getAlbireoV2RefreshToken() -> String {
 		return ub.string(forKey: kAlbireoV2RefreshToken) ?? ""
 	}
 	func setAlbireoV2IDToken(_ token: String) {
 		ub.set(token, forKey: kAlbireoV2IDToken)
-		sync()
 	}
 	func getAlbireoV2IDToken() -> String {
 		return ub.string(forKey: kAlbireoV2IDToken) ?? ""
 	}
 	func setAlbireoV2ExpireTime(_ time: Int) {
 		ub.set(Int64(time), forKey: kAlbireoV2ExpireTime)
-		sync()
 	}
 	func getAlbireoV2ExpireTime() -> Int {
 		return Int(ub.longLong(forKey: kAlbireoV2ExpireTime))
@@ -144,14 +216,12 @@ class SettingsHandler {
 	}
 	func setAlbireoV2APIServerURL(_ url: String) {
 		ub.set(url, forKey: kAlbireoV2APIServerURL)
-		sync()
 	}
 	func getAlbireoV2APIServerURL() -> String {
 		return ub.string(forKey: kAlbireoV2APIServerURL) ?? ""
 	}
 	func setVideoCDNBackendID(_ backendID: String) {
 		ub.set(backendID, forKey: kVideoCDNBackendID)
-		sync()
 	}
 	func getVideoCDNBackendID() -> String {
 		ub.string(forKey: kVideoCDNBackendID) ?? ""
@@ -159,7 +229,6 @@ class SettingsHandler {
 	func setVideoCDNOptions(_ options: [VideoCDNOption]) {
 		if let data = try? JSONEncoder().encode(options) {
 			ub.set(data, forKey: kVideoCDNOptions)
-			sync()
 		}
 	}
 	func getVideoCDNOptions() -> [VideoCDNOption] {
@@ -174,7 +243,6 @@ class SettingsHandler {
 	//BGMTV Username
 	func setBGMTVUsername(username: String){
 		ub.set(username, forKey: "kBGMTVUsername")
-		sync()
 	}
 	func getBGMTVUsername() -> String {
 		return ub.string(forKey: "kBGMTVUsername") ?? ""
@@ -184,7 +252,6 @@ class SettingsHandler {
 	//BGMTV Access Token
     func setBGMTVAccessTokenKey(token:String){
         ub.set(token, forKey: kBGMTVAccessToken)
-        sync()
     }
     func getBGMTVAccessTokenKey() -> String {
         return ub.string(forKey: kBGMTVAccessToken) ?? ""
@@ -193,7 +260,6 @@ class SettingsHandler {
     //BGMTV Refresh Token
     func setBGMTVRefreshTokenKey(token:String){
         ub.set(token, forKey: kBGMTVRefreshToken)
-        sync()
     }
     func getBGMTVRefreshTokenKey() -> String {
         return ub.string(forKey: kBGMTVRefreshToken) ?? ""
@@ -202,7 +268,6 @@ class SettingsHandler {
     //BGMTV Expire Time
     func setBGMTVExpireTime(time:Int){
         ub.set(Int64(time), forKey: kBGMTVExpireTime)
-        sync()
     }
     func getBGMTVExpireTime() -> Int {
         return Int(ub.longLong(forKey: kBGMTVExpireTime))
@@ -212,7 +277,6 @@ class SettingsHandler {
 	//Hide unrelease EPs
 	func setHideUnreleaseEPs(isEnabled: Bool){
 		ub.set(isEnabled, forKey: kHideUnreleaseEPs)
-		sync()
 	}
 	func getHideUnreleaseEPs() -> Bool{
 		return ub.bool(forKey: kHideUnreleaseEPs)
@@ -221,7 +285,6 @@ class SettingsHandler {
 	//Set Bangumi status to watched when finished final EP
 	func setSetWatchedWhenFinishedFinalEP(isEnabled: Bool){
 		ub.set(isEnabled, forKey: kSetWatchedWhenFinishedFinalEP)
-		sync()
 	}
 	func getSetWatchedWhenFinishedFinalEP() -> Bool{
 		return ub.bool(forKey: kSetWatchedWhenFinishedFinalEP)
@@ -230,7 +293,6 @@ class SettingsHandler {
 	//Landscape playback
 	func setLandscapePlayback(isEnabled: Bool){
 		ub.set(isEnabled, forKey: kLandscapePlayback)
-		sync()
 	}
 	func getLandscapePlayback() -> Bool{
 		return ub.bool(forKey: kLandscapePlayback)
@@ -239,7 +301,6 @@ class SettingsHandler {
 	//Show BGM.tv while playing
 	func setShowBgmtvWebWhilePlaying(isEnabled: Bool){
 		ub.set(isEnabled, forKey: kShowBgmtvWebWhilePlaying)
-		sync()
 	}
 	func getShowBgmtvWebWhilePlaying() -> Bool{
 		return ub.bool(forKey: kShowBgmtvWebWhilePlaying)
@@ -248,7 +309,6 @@ class SettingsHandler {
 	//Playback Rate
 	func setPlaybackRate(rate:Double) {
 		ub.set(rate, forKey: kPlaybackRate)
-		sync()
 	}
 	func getPlaybackRate() -> Double {
 		if ub.double(forKey: kPlaybackRate) == 0.0 {
@@ -261,7 +321,6 @@ class SettingsHandler {
 	//Custom player UI
 	func setUseCustomPlayerUI(isEnabled: Bool) {
 		ub.set(isEnabled, forKey: kUseCustomPlayerUI)
-		sync()
 	}
 	func getUseCustomPlayerUI() -> Bool {
 		return ub.bool(forKey: kUseCustomPlayerUI)
@@ -270,7 +329,6 @@ class SettingsHandler {
     //Sync fav status
     func setCheckFavStatusConflict(isEnabled: Bool){
         ub.set(isEnabled, forKey: kCheckFavStatusConflict)
-        sync()
     }
     func getCheckFavStatusConflict() -> Bool{
         return ub.bool(forKey: kCheckFavStatusConflict)
@@ -284,7 +342,6 @@ class SettingsHandler {
 			newHistory.removeLast(history.count - 20)
 		}
 		ub.set(newHistory, forKey: kSearchHistory)
-		sync()
 	}
 	func getSearchHistory() -> Array<String>{
 		return ub.array(forKey: kSearchHistory) as? Array<String> ?? []
@@ -300,10 +357,8 @@ class SettingsHandler {
 		}
 		print("saved \(encodeArr.count) items to history")
 		ub.set(encodeArr, forKey: kPlaybackHistory)
-		sync()
 	}
 	func getPlaybackHistory() -> Array<BangumiItemModel>{
-		sync()
 		if let array = ub.array(forKey: kPlaybackHistory){
 			var decodeArr = [BangumiItemModel]()
 			array.forEach({ item in
@@ -322,12 +377,6 @@ class SettingsHandler {
 		return []
 	}
 
-    // MARK: - iCloud Support
-    func sync(){
-        ud.synchronize()
-        ub.synchronize()
-    }
-    
     // MARK: - Plist handler
     func saveToPList(key:String, data:Any) {
         if let path = getSaveFilePath(key: key){

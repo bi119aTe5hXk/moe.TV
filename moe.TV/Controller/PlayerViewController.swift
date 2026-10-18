@@ -255,8 +255,7 @@ class PlayerViewController: ObservableObject {
 		filename: String?,
 		ep: EpisodeDetailModel?,
 		isOffline: Bool,
-		isBGMTVWatched: Bool,
-		isFinalEpisode: Bool = false
+		isBGMTVWatched: Bool
 	) {
 		switch status {
 		case nil:
@@ -284,8 +283,7 @@ class PlayerViewController: ObservableObject {
 					ep: ep,
 					isOffline: isOffline,
 					filename: filename,
-					isBGMTVWatched: isBGMTVWatched,
-					isFinalEpisode: isFinalEpisode
+					isBGMTVWatched: isBGMTVWatched
 				)
 			}
 			prefetchStreamingForwardBufferForPausedPlayback()
@@ -312,8 +310,7 @@ class PlayerViewController: ObservableObject {
 		ep: EpisodeDetailModel?,
 		isOffline: Bool,
 		filename: String?,
-		isBGMTVWatched: Bool,
-		isFinalEpisode: Bool = false
+		isBGMTVWatched: Bool
 	) -> PlaybackProgressSnapshot? {
 		guard let currentItem = player.currentItem else { return nil }
 		guard hasStartedPlayback else {
@@ -395,20 +392,8 @@ class PlayerViewController: ObservableObject {
 
 				if let item = bgmItem {
 					savePlaybackHistory(item)
-
-					if settingsHandler.getSetWatchedWhenFinishedFinalEP() && isFinished && isFinalEpisode {
-						print("should set the subject/collection as watched: final episode finished")
-						if item.favorite_status == 3 {
-							changeFavStatus(
-								idstr: item.id,
-								bgmid: item.bgm_id ?? theEP.bangumi?.bgm_id,
-								status: 2
-							)
-						} else {
-							print("fav status is not watching. skip set as watched")
-						}
-					}
 				}
+
 			}
 		} else {
 			if let theFileName = filename {
@@ -468,31 +453,6 @@ class PlayerViewController: ObservableObject {
 		item.value = value as? NSCopying & NSObjectProtocol
 		item.extendedLanguageTag = "und"
 		return item.copy() as! AVMetadataItem
-	}
-
-	func changeFavStatus(idstr: String?, bgmid: Int?, status: Int) {
-		if let idstr1 = idstr {
-			print("changing fav status to \(status)")
-			changeAlbireoFavStatus(bangumi_id: idstr1, status: status, completion: { isSuccess, result in
-				print(result as Any)
-				if isSuccess {
-					print("albireo fav status change success")
-				}
-			})
-		}
-
-		if let bgm_id = bgmid {
-			setBGMCollectionStatus(subject_id: bgm_id, status: status) { isSuccess, result in
-				print(result as Any)
-				if isSuccess {
-					print("setBGMCollectionStatus success")
-				} else {
-					print("setBGMCollectionStatus retrun false")
-				}
-			}
-		} else {
-			print("bgmid not found")
-		}
 	}
 
 	@MainActor

@@ -23,6 +23,7 @@ struct BangumiDetailModel:Identifiable, Hashable, Codable, AlbireoV1CoverImagePr
     var eps:Int //how many episodes the bangumi has
 	var favorite_status:Int? //current favorite status of the bangumi, this field can be one of the following value: 1 (WISH), 2 (WATCHED), 3 (WATCHING), 4 (PAUSE), 5 (ABANDONED)
     var episodes:[BGMEpisode]? //episode list of the bangumi
+	var item_id:String? = nil //box.moe item identifier, when supplied by the server
 }
 
 struct BGMEpisode:Identifiable, Hashable, Codable{

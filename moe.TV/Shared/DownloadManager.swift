@@ -97,6 +97,10 @@ final class DownloadManager: NSObject, ObservableObject, URLSessionDownloadDeleg
     }
 
     func downloadFile(urlString: String, savedAs: String) {
+        guard let filename = localFilename(from: savedAs) else {
+            print("invalid local download filename: \(savedAs)")
+            return
+        }
         let request = DownloadRequest(
             epID: savedAs,
             bgmID: nil,
@@ -104,7 +108,7 @@ final class DownloadManager: NSObject, ObservableObject, URLSessionDownloadDeleg
             bangumiName: nil,
             episodeNo: nil,
             episodeName: nil,
-            filename: savedAs,
+            filename: filename,
             urlString: urlString
         )
         enqueueDownload(request)
@@ -296,8 +300,12 @@ final class DownloadManager: NSObject, ObservableObject, URLSessionDownloadDeleg
             print("url is missing")
             return nil
         }
-        guard let filename = videoFile.file_path else {
+        guard let serverFilePath = videoFile.file_path else {
             print("filename is missing")
+            return nil
+        }
+        guard let filename = localFilename(from: serverFilePath) else {
+            print("invalid local download filename: \(serverFilePath)")
             return nil
         }
         guard let fileURL = fixPathNotCompete(path: url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
@@ -350,6 +358,10 @@ final class DownloadManager: NSObject, ObservableObject, URLSessionDownloadDeleg
         let destinationUrl = destinationFolder.appendingPathComponent(filename)
 
         do {
+            try FileManager.default.createDirectory(
+                at: destinationUrl.deletingLastPathComponent(),
+                withIntermediateDirectories: true
+            )
             if FileManager.default.fileExists(atPath: destinationUrl.path) {
                 try FileManager.default.removeItem(at: destinationUrl)
             }
@@ -362,6 +374,10 @@ final class DownloadManager: NSObject, ObservableObject, URLSessionDownloadDeleg
                 self.activeDownloads.removeAll { $0.filename == filename }
             }
         } catch {
+            print(
+                "Download move failed: sourceExists=\(FileManager.default.fileExists(atPath: location.path)), " +
+                "destination=\(destinationUrl.path), error=\(error)"
+            )
             DispatchQueue.main.async {
                 self.updateDownload(filename: filename) { item in
                     item.state = .failed(error.localizedDescription)
@@ -394,6 +410,14 @@ final class DownloadManager: NSObject, ObservableObject, URLSessionDownloadDeleg
 
     private func isDownloading(filename: String) -> Bool {
         tasksByFilename[filename] != nil
+    }
+
+    private func localFilename(from serverPath: String) -> String? {
+        let decodedPath = serverPath.removingPercentEncoding ?? serverPath
+        let filename = URL(fileURLWithPath: decodedPath).lastPathComponent
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !filename.isEmpty, filename != ".", filename != ".." else { return nil }
+        return filename
     }
 
     private func upsertDownloadItem(_ item: DownloadItem) {

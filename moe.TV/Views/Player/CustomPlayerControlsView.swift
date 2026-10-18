@@ -49,14 +49,27 @@ struct CustomPlayerControlsView: View {
 			interactionSurface
 
 				if isControlsVisible {
+					#if os(tvOS)
+					Color.black.opacity(0.24)
+						.allowsHitTesting(false)
+					#else
+					Color.black.opacity(0.24)
+						.contentShape(Rectangle())
+						.onTapGesture(count: 2) {
+							playerVM.togglePlayPause()
+							showControlsTemporarily()
+						}
+						.onTapGesture {
+							hideControls()
+						}
+					#endif
 					VStack(spacing: 0) {
 						topBar
 						Spacer()
-						centerButton
+						centerControls
 						Spacer()
 						bottomControls
 					}
-					.background(Color.black.opacity(0.24))
 					.transition(.opacity)
 				}
 
@@ -134,10 +147,7 @@ struct CustomPlayerControlsView: View {
 			}
 			.onTapGesture {
 				if isControlsVisible {
-					hideControlsTask?.cancel()
-					withAnimation(.easeInOut(duration: 0.18)) {
-						isControlsVisible = false
-					}
+					hideControls()
 				} else {
 					scheduleControlsAutoHide()
 				}
@@ -265,8 +275,40 @@ struct CustomPlayerControlsView: View {
 	}
 #endif
 
+	private var centerControls: some View {
+		HStack(spacing: 8) {
+			centerSeekButton(by: -15, systemImage: "gobackward.15", label: "Back 15 seconds")
+			centerSeekButton(by: -5, systemImage: "gobackward.5", label: "Back 5 seconds")
+			centerPlayButton
+			centerSeekButton(by: 5, systemImage: "goforward.5", label: "Forward 5 seconds")
+			centerSeekButton(by: 15, systemImage: "goforward.15", label: "Forward 15 seconds")
+		}
+	}
+
+	private func centerSeekButton(by seconds: Double, systemImage: String, label: LocalizedStringKey) -> some View {
+		Button {
+			playerVM.seek(by: seconds, autoPlay: playerVM.isPlaying)
+			showControlsTemporarily()
+		} label: {
+			Image(systemName: systemImage)
+				.font(.system(size: 21, weight: .medium))
+				.frame(width: centerSeekButtonSize, height: centerSeekButtonSize)
+				.background(.black.opacity(0.42), in: Circle())
+		}
+		.buttonStyle(.plain)
+		.accessibilityLabel(Text(label))
+	}
+
+	private var centerSeekButtonSize: CGFloat {
+		#if os(tvOS)
+		return 64
+		#else
+		return 44
+		#endif
+	}
+
 	@ViewBuilder
-	private var centerButton: some View {
+	private var centerPlayButton: some View {
 		#if os(tvOS)
 		Image(systemName: playerVM.isPlaying ? "pause.fill" : "play.fill")
 			.font(.system(size: 34, weight: .semibold))
@@ -281,7 +323,7 @@ struct CustomPlayerControlsView: View {
 		} label: {
 			Image(systemName: playerVM.isPlaying ? "pause.fill" : "play.fill")
 				.font(.system(size: 34, weight: .semibold))
-				.frame(width: 76, height: 76)
+				.frame(width: 68, height: 68)
 				.background(.black.opacity(0.42), in: Circle())
 		}
 		.buttonStyle(.plain)
@@ -353,7 +395,9 @@ struct CustomPlayerControlsView: View {
 
 	private var regularControlRow: some View {
 		HStack(spacing: 12) {
+			#if os(tvOS)
 			transportControls
+			#endif
 			timeLabel
 			Spacer(minLength: 8)
 			secondaryControls(isCompact: false)
@@ -363,7 +407,9 @@ struct CustomPlayerControlsView: View {
 	private var compactControlRows: some View {
 		VStack(spacing: 8) {
 			HStack(spacing: 10) {
+				#if os(tvOS)
 				transportControls
+				#endif
 				timeLabel
 				Spacer(minLength: 6)
 				fullScreenButton
@@ -391,87 +437,41 @@ struct CustomPlayerControlsView: View {
 	}
 	#endif
 
+	#if os(tvOS)
 	private var transportControls: some View {
 		HStack(spacing: 8) {
 			backwardButton
-			#if !os(tvOS)
-			playPauseButton
-			#endif
 			forwardButton
 		}
 	}
 
 	private var backwardButton: some View {
 		Button {
-			playerVM.seek(by: -seekInterval, autoPlay: playerVM.isPlaying)
+			playerVM.seek(by: -5, autoPlay: playerVM.isPlaying)
 			showControlsTemporarily()
 		} label: {
-			Image(systemName: backwardSystemImage)
+			Image(systemName: "gobackward.5")
 				.font(.system(size: 22, weight: .medium))
 				.frame(width: 44, height: 38)
 		}
 		.buttonStyle(.plain)
-		#if os(tvOS)
 		.accessibilityLabel("Back 5 seconds")
 		.focused($tvFocusedControl, equals: .backward)
-		#else
-		.accessibilityLabel("Back 15 seconds")
-		#endif
-	}
-
-	private var playPauseButton: some View {
-		Button {
-			playerVM.togglePlayPause()
-			showControlsTemporarily()
-		} label: {
-			Image(systemName: playerVM.isPlaying ? "pause.fill" : "play.fill")
-				.font(.system(size: 22, weight: .semibold))
-				.frame(width: 44, height: 38)
-		}
-		.buttonStyle(.plain)
-		.accessibilityLabel(playerVM.isPlaying ? "Pause" : "Play")
 	}
 
 	private var forwardButton: some View {
 		Button {
-			playerVM.seek(by: seekInterval, autoPlay: playerVM.isPlaying)
+			playerVM.seek(by: 5, autoPlay: playerVM.isPlaying)
 			showControlsTemporarily()
 		} label: {
-			Image(systemName: forwardSystemImage)
+			Image(systemName: "goforward.5")
 				.font(.system(size: 22, weight: .medium))
 				.frame(width: 44, height: 38)
 		}
 		.buttonStyle(.plain)
-		#if os(tvOS)
 		.accessibilityLabel("Forward 5 seconds")
-		#else
-		.accessibilityLabel("Forward 15 seconds")
-		#endif
 	}
-
-	private var seekInterval: Double {
-		#if os(tvOS)
-		return 5
-		#else
-		return 15
-		#endif
-	}
-
-	private var backwardSystemImage: String {
-		#if os(tvOS)
-		return "gobackward.5"
-		#else
-		return "gobackward.15"
-		#endif
-	}
-
-	private var forwardSystemImage: String {
-		#if os(tvOS)
-		return "goforward.5"
-		#else
-		return "goforward.15"
-		#endif
-	}
+	#endif
 
 	private var timeLabel: some View {
 		Text(timeText)
@@ -646,9 +646,9 @@ struct CustomPlayerControlsView: View {
 		case .playPause:
 			playerVM.togglePlayPause()
 		case .backward:
-			playerVM.seek(by: -15, autoPlay: playerVM.isPlaying)
+			playerVM.seek(by: -5, autoPlay: playerVM.isPlaying)
 		case .forward:
-			playerVM.seek(by: 15, autoPlay: playerVM.isPlaying)
+			playerVM.seek(by: 5, autoPlay: playerVM.isPlaying)
 		case .volumeUp:
 			playerVM.adjustVolume(by: 0.05)
 			showVolumeHUD()
@@ -674,6 +674,16 @@ struct CustomPlayerControlsView: View {
 		if shouldRestoreTimelineFocus {
 			focusTVTimeline()
 		}
+		#endif
+	}
+
+	private func hideControls() {
+		hideControlsTask?.cancel()
+		withAnimation(.easeInOut(duration: 0.18)) {
+			isControlsVisible = false
+		}
+		#if os(tvOS)
+		tvFocusedControl = .wakeSurface
 		#endif
 	}
 
@@ -1045,6 +1055,10 @@ private final class KeyboardInputNSView: NSView {
 
 	override var acceptsFirstResponder: Bool {
 		true
+	}
+
+	override func hitTest(_ point: NSPoint) -> NSView? {
+		nil
 	}
 
 	override func viewDidMoveToWindow() {

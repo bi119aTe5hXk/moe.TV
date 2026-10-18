@@ -60,6 +60,5 @@ class DebugViewController: ObservableObject {
 						 accessToken: settings.getBGMTVAccessTokenKey(),
                          refreshToken: settings.getBGMTVRefreshTokenKey(),
                          expireIn: settings.getBGMTVExpireTime())
-        settings.sync()
     }
 }

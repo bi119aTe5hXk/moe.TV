@@ -200,6 +200,11 @@ struct BangumiDetailView: View {
 				}
 			}
 #endif
+			.sheet(isPresented: $detailVC.presentCollectionEditor) {
+				if let item = detailVC.detailItem {
+					BangumiCollectionEditorView(item: item, detailVC: detailVC)
+				}
+			}
 			.alert("Please select a source:",isPresented: $detailVC.presentSourceSelectAlert) {
 				if let ep = detailVC.ep{
 					ForEach(ep.video_files
@@ -250,10 +255,10 @@ struct BangumiDetailView: View {
 		if UIDevice.current.userInterfaceIdiom == .phone {
 			header
 		} else {
-			header.frame(minHeight: 300, maxHeight: 600)
+			header.frame(minHeight: 300)
 		}
 #else
-		header.frame(minHeight: 300, maxHeight: 600)
+		header.frame(minHeight: 300)
 #endif
 	}
 }

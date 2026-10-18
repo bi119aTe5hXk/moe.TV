@@ -111,6 +111,18 @@ class LoginViewController: ObservableObject {
 		settingsHandler.setAlbireoV2APIServerURL(normalizedURL)
 		return true
 	}
+
+	func reloadSavedServers() {
+		let settingsHandler = SettingsHandler()
+		if server.isEmpty {
+			server = settingsHandler.getAlbireoServerAddr()
+		}
+		let savedServer = settingsHandler.getAlbireoV2APIServerURL()
+		if albireoV2APIServer == albireoV2DefaultAPIServerURL, !savedServer.isEmpty {
+			albireoV2APIServer = savedServer
+		}
+		objectWillChange.send()
+	}
     
     init(){
 		let settingsHandler = SettingsHandler()
