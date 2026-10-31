@@ -12,6 +12,7 @@ struct moe_TVApp: App {
 #if os(iOS)
 	@UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 #endif
+	@Environment(\.scenePhase) private var scenePhase
 //    @State var showBGMDetailView:Bool = false
 //    @State var bgmID:String?
     @StateObject var networkMonitor = NetworkMonitor()
@@ -19,6 +20,12 @@ struct moe_TVApp: App {
 	@StateObject var offlinePlaybackManager = OfflinePlaybackManager()
 //	@State var selectedItem: BangumiItemModel?
 	@State private var navigationPath: [String] = []
+
+	init() {
+#if !os(tvOS)
+		EpisodeUpdateNotificationManager.shared.prepareNotifications()
+#endif
+	}
 
 
     var body: some Scene {
@@ -121,6 +128,16 @@ struct moe_TVApp: App {
                         }
                     }
                 }
+#if !os(tvOS)
+			.onAppear {
+				EpisodeUpdateNotificationManager.shared.appDidBecomeActive()
+			}
+			.onChange(of: scenePhase) { newPhase in
+				if newPhase == .active {
+					EpisodeUpdateNotificationManager.shared.appDidBecomeActive()
+				}
+			}
+#endif
         }
 #if !os(tvOS)
         .handlesExternalEvents(matching: [])

@@ -11,6 +11,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	private let settingsHandler = SettingsHandler()
 	
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+		EpisodeUpdateNotificationManager.shared.registerBackgroundTask()
 		return true
 	}
 

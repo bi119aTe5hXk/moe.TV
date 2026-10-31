@@ -38,11 +38,60 @@
         }
       }
     },
+    "%@ has %d new episode(s)." : {
+      "comment" : "Episode update notification body",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@に新しいエピソードが%2$d話あります。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ 有 %2$d 个新剧集。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ 有 %2$d 個新劇集。"
+          }
+        }
+      }
+    },
+    "%d followed shows have new episodes." : {
+      "comment" : "Episode update notification body",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォロー中の%1$d作品に新しいエピソードがあります。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关注的 %1$d 部作品有新剧集。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關注的 %1$d 部作品有新劇集。"
+          }
+        }
+      }
+    },
     "%lld" : {
       "shouldTranslate" : false
     },
-    "%lld. " : {
-      "shouldTranslate" : false
+    "%lld h" : {
+
+    },
+    "%lld." : {
+
     },
     "%lld%%" : {
       "shouldTranslate" : false
@@ -566,6 +615,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "快退15秒"
+          }
+        }
+      }
+    },
+    "Background check interval" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックグラウンド確認間隔"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "后台检查间隔"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "背景檢查間隔"
           }
         }
       }
@@ -1394,6 +1465,28 @@
         }
       }
     },
+    "Enable notifications for moe.TV in System Settings." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "システム設定でmoe.TVの通知を有効にしてください。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请在系统设置中允许 moe.TV 发送通知。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請在系統設定中允許 moe.TV 傳送通知。"
+          }
+        }
+      }
+    },
     "Error: Video URL is empty" : {
       "localizations" : {
         "ja" : {
@@ -2031,6 +2124,52 @@
         }
       }
     },
+    "New episode available" : {
+      "comment" : "Episode update notification title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいエピソードがあります"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有新剧集可看"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有新劇集可看"
+          }
+        }
+      }
+    },
+    "New episodes available" : {
+      "comment" : "Episode update notification title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいエピソードがあります"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有新剧集可看"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有新劇集可看"
+          }
+        }
+      }
+    },
     "Nickname: %@" : {
       "localizations" : {
         "ja" : {
@@ -2203,6 +2342,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未評分"
+          }
+        }
+      }
+    },
+    "Notifications are disabled" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知が無効です"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知已关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通知已關閉"
+          }
+        }
+      }
+    },
+    "Notify when followed shows have new episodes" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォロー中の作品に新しいエピソードが追加されたら通知"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关注的作品有新剧集时通知"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關注的作品有新劇集時通知"
           }
         }
       }
@@ -3682,6 +3865,125 @@
             "value" : "想看"
           }
         }
+      }
+    },
+    "Audio or video problem" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "音声または映像の問題" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "音频或视频问题" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "音訊或影片問題" } }
+      }
+    },
+    "Describe what happened" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "発生した問題を説明してください" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请描述发生的问题" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "請描述發生的問題" } }
+      }
+    },
+    "Details (optional)" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "詳細（任意）" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "详细信息（可选）" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "詳細資訊（選填）" } }
+      }
+    },
+    "Downloaded" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ダウンロード済み" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已下载" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "已下載" } }
+      }
+    },
+    "Feedback sent" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "フィードバックを送信しました" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "反馈已发送" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "回饋已傳送" } }
+      }
+    },
+    "Incorrect video content" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "動画の内容が正しくない" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "视频内容不正确" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "影片內容不正確" } }
+      }
+    },
+    "Issue type" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "問題の種類" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "问题类型" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "問題類型" } }
+      }
+    },
+    "No video source is available for feedback." : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "報告できる動画ソースがありません。" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "没有可用于反馈的视频源。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "沒有可用於回饋的影片來源。" } }
+      }
+    },
+    "Other" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "その他" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "其他" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "其他" } }
+      }
+    },
+    "Report video issue" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "動画の問題を報告" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "报告视频问题" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "回報影片問題" } }
+      }
+    },
+    "Submit" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "送信" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "提交" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "提交" } }
+      }
+    },
+    "Thank you for your feedback." : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "フィードバックありがとうございます。" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "感谢您的反馈。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "感謝您的回饋。" } }
+      }
+    },
+    "Unable to open feedback" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "フィードバック画面を開けません" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法打开反馈页面" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "無法開啟回饋頁面" } }
+      }
+    },
+    "Unable to send feedback" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "フィードバックを送信できません" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法发送反馈" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "無法傳送回饋" } }
+      }
+    },
+    "Video cannot be played" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "動画を再生できない" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "视频无法播放" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "影片無法播放" } }
+      }
+    },
+    "Video feedback" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "動画のフィードバック" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "视频反馈" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "影片回饋" } }
+      }
+    },
+    "Video source" : {
+      "localizations" : {
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "動画ソース" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "视频源" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "影片來源" } }
       }
     },
     "Yes" : {

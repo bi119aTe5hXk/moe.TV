@@ -18,6 +18,11 @@ struct SettingsView: View {
 	@State private var hideUnreleasedEps: Bool = false
 	@State private var setWatchedWhenFinishedFinalEP: Bool = false
     @State private var checkFavStatusConflict: Bool = false
+#if !os(tvOS)
+	@State private var episodeUpdateNotificationsEnabled = false
+	@State private var episodeUpdateCheckIntervalHours = 4
+	@State private var notificationPermissionDenied = false
+#endif
 
 
 //    @Binding var listVM:BangumiListViewModel
@@ -115,6 +120,43 @@ struct SettingsView: View {
 					}
 
 					Section(header: Text("Preferences")) {
+#if !os(tvOS)
+						Toggle(
+							"Notify when followed shows have new episodes",
+							isOn: Binding(
+								get: { episodeUpdateNotificationsEnabled },
+								set: { enabled in
+									episodeUpdateNotificationsEnabled = enabled
+									EpisodeUpdateNotificationManager.shared.setEnabled(enabled) { accepted in
+										if !accepted {
+											episodeUpdateNotificationsEnabled = false
+											notificationPermissionDenied = true
+										}
+									}
+								}
+							)
+						)
+						.onAppear {
+							episodeUpdateNotificationsEnabled = EpisodeUpdateNotificationManager.shared.isEnabled
+							episodeUpdateCheckIntervalHours = EpisodeUpdateNotificationManager.shared.checkIntervalHours
+						}
+						.alert("Notifications are disabled", isPresented: $notificationPermissionDenied) {
+							Button("OK", role: .cancel) {}
+						} message: {
+							Text("Enable notifications for moe.TV in System Settings.")
+						}
+
+						Picker("Background check interval", selection: $episodeUpdateCheckIntervalHours) {
+							ForEach(1...24, id: \.self) { hour in
+								Text("\(hour) h").tag(hour)
+							}
+						}
+						.disabled(!episodeUpdateNotificationsEnabled)
+						.onChange(of: episodeUpdateCheckIntervalHours) { hours in
+							EpisodeUpdateNotificationManager.shared.setCheckIntervalHours(hours)
+						}
+#endif
+
 						Toggle("Hide unrelease/empty EPs",isOn: $hideUnreleasedEps)
 							.onAppear(){
 								self.hideUnreleasedEps = settingsVC.settingsHandler.getHideUnreleaseEPs()

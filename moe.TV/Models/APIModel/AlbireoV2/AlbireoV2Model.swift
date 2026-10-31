@@ -66,6 +66,7 @@ extension PaginatedFavorite {
 			var model = favorite.bangumi.toBangumiItemModel()
 			model.favorite_status = favorite.status.legacyValue
 			model.unwatched_count = favorite.unwatchedCount ?? 0
+			model.eps_update_time = favorite.epsUpdateTime
 			return model
 		}
 	}

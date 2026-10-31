@@ -67,6 +67,7 @@ struct CustomPlayerSurfaceView: View {
 	var title: String?
 	var subtitle: String?
 	var onClose: (() -> Void)?
+	var onFeedback: (() -> Void)?
 
 	#if os(iOS)
 	@State private var presentsFullscreenPlayer = false
@@ -147,7 +148,8 @@ struct CustomPlayerSurfaceView: View {
 				},
 				title: title,
 				subtitle: subtitle,
-				onClose: onClose
+				onClose: onClose,
+				onFeedback: onFeedback
 			)
 			#elseif os(tvOS)
 			CustomPlayerControlsView(
@@ -165,7 +167,8 @@ struct CustomPlayerSurfaceView: View {
 				playerVM: playerVM,
 				title: title,
 				subtitle: subtitle,
-				onClose: onClose
+				onClose: onClose,
+				onFeedback: onFeedback
 			)
 			#endif
 		}
