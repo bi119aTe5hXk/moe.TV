@@ -179,7 +179,7 @@ struct CustomPlayerSurfaceView: View {
 	private func toggleFullscreenPresentation() {
 		#if os(iOS)
 		if UIDevice.current.userInterfaceIdiom == .phone {
-			if OrientationController.shared.isLandscapeManaged() {
+			if OrientationController.shared.isInterfaceLandscape() {
 				OrientationController.shared.lockOrientation(to: .portrait)
 			} else {
 				OrientationController.shared.lockOrientation(to: .landscapeRight)

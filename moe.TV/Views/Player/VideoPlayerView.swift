@@ -37,6 +37,9 @@ struct VideoPlayerView: View {
     @AppStorage("dividerPosition") private var dividerPosition: Double = 0.7 // left
     @GestureState private var dragOffset: CGFloat = 0
 	@State private var presentFeedback = false
+	#if os(iOS)
+	@State private var orientationRequestTask: Task<Void, Never>?
+	#endif
     
     private var playerSurfaceMode: PlayerSurfaceMode {
         #if os(tvOS)
@@ -260,9 +263,14 @@ struct VideoPlayerView: View {
         .onAppear {
             PlayerPresentationState.shared.beginPresentation()
             #if os(iOS)
-                if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback() {
-                    OrientationController.shared.lockOrientation(to: .landscapeRight)
-                }
+				orientationRequestTask?.cancel()
+				if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback() {
+					orientationRequestTask = Task { @MainActor in
+						try? await Task.sleep(nanoseconds: 150_000_000)
+						guard !Task.isCancelled else { return }
+						OrientationController.shared.lockOrientation(to: .landscapeRight)
+					}
+				}
             #endif
 			playerVM.loadFromUrl(url: url, useStreamingCache: !isOffline && !url.isFileURL)
             if let player = playerVM.avPlayer {
@@ -321,6 +329,8 @@ struct VideoPlayerView: View {
                 }
             }
             #if os(iOS)
+				orientationRequestTask?.cancel()
+				orientationRequestTask = nil
                 if UIDevice.current.userInterfaceIdiom == .phone {
                     OrientationController.shared.restorePortraitThenUnlock()
                 }

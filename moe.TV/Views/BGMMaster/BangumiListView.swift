@@ -16,8 +16,6 @@ struct BangumiListView: View {
 
 	@State private var oldValue: FuncViewModel?
 
-	private let settingsHandler = SettingsHandler()
-
     var body: some View {
         if listVC.isLoading{
             ProgressView()
@@ -42,14 +40,6 @@ struct BangumiListView: View {
             .refreshable {
                 print("refreshable.getBGMList")
                 getBGMList()
-            }
-            .onAppear(){
-#if os(iOS)
-				if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback(){
-					OrientationController.shared.unlockOrientation()
-					OrientationController.shared.currentOrientation = .portrait
-				}
-#endif
             }
             .onChange(of: selectedFunc, initial: true) {  newValue in
 				if oldValue != newValue {
