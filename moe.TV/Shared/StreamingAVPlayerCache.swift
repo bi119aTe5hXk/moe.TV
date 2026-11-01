@@ -33,6 +33,8 @@ struct StreamingCacheConfiguration {
 	var prefetchLength: Int64 = 512 * 1024 * 1024
 	var pausedPrefetchLength: Int64 = 1024 * 1024 * 1024
 	var requestChunkSize: Int64 = 10 * 1024 * 1024
+	var playbackResponseChunkSize: Int64 = 512 * 1024
+	var wholeFilePrefetchThreshold: Int64 = 1024 * 1024 * 1024
 	var maxRetryCount = 2
 	var retryBaseDelay: TimeInterval = 0.5
 	var maxCacheBytes: Int64 = 5 * 1024 * 1024 * 1024
@@ -77,6 +79,7 @@ final class StreamingCacheManager: ObservableObject {
 	private var activePrefetchRange: CachedRange?
 	private var resolvedContentURL: URL?
 	private var isStopped = false
+	private var hasStartedAutomaticPrefetch = false
 
 	init(
 		originalURL: URL,
@@ -346,6 +349,30 @@ final class StreamingCacheManager: ObservableObject {
 		)
 	}
 
+	func startAutomaticPrefetchIfNeeded() {
+		guard !isStopped,
+			  !hasStartedAutomaticPrefetch,
+			  state.contentLength > 0 else {
+			return
+		}
+
+		hasStartedAutomaticPrefetch = true
+		if state.contentLength <= configuration.wholeFilePrefetchThreshold {
+			print(
+				"Streaming cache will fill the complete file: " +
+				"contentLength=\(Self.formatBytes(state.contentLength))"
+			)
+			prefetch(from: 0, length: state.contentLength)
+		} else {
+			print(
+				"Streaming cache will use a forward window: " +
+				"contentLength=\(Self.formatBytes(state.contentLength)), " +
+				"window=\(Self.formatBytes(configuration.prefetchLength))"
+			)
+			prefetchAfterCachedRange(containing: state.lastRequestedEndOffset)
+		}
+	}
+
 	func prefetchAfterCachedRange(containing offset: Int64, length: Int64? = nil) {
 		guard state.contentLength > 0 else { return }
 		let start = firstUncachedOffset(atOrAfter: offset)
@@ -379,6 +406,7 @@ final class StreamingCacheManager: ObservableObject {
 		state.cachedRanges = []
 		state.isPrepared = false
 		state.contentLength = 0
+		hasStartedAutomaticPrefetch = false
 	}
 
 	static func streamingCacheDirectory() -> URL? {
@@ -897,6 +925,10 @@ final class StreamingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDele
 			let data = try await cacheManager.data(for: range)
 			dataRequest.respond(with: data)
 
+			await MainActor.run {
+				cacheManager.startAutomaticPrefetchIfNeeded()
+			}
+
 			let nextOffset = dataRequest.currentOffset
 			guard nextOffset > offset else {
 				throw StreamingCacheError.invalidResponse
@@ -1005,7 +1037,7 @@ final class StreamingPlayerItemFactory {
 	) throws -> AVPlayerItem {
 		let delegate = StreamingResourceLoaderDelegate(
 			cacheManager: cacheManager,
-			responseChunkSize: configuration.requestChunkSize
+			responseChunkSize: configuration.playbackResponseChunkSize
 		)
 		let assetURL = try Self.resourceLoaderURL(for: url)
 		let asset = AVURLAsset(url: assetURL)

@@ -722,10 +722,14 @@ class PlayerViewController: ObservableObject {
 
 		isRecoveringFromStall = true
 		let stalledSeconds = max(0, CMTimeGetSeconds(stalledTime))
-		let resumeSeconds = stalledSeconds.isFinite ? max(0, stalledSeconds - 10) : 0
+		let resumeSeconds = stalledSeconds.isFinite ? max(0, stalledSeconds - 2) : 0
 		let resumeTime = CMTime(
 			seconds: resumeSeconds,
 			preferredTimescale: Int32(NSEC_PER_SEC)
+		)
+		print(
+			"Streaming stall recovery: " +
+			String(format: "stalled=%.2fs, resume=%.2fs", stalledSeconds, resumeSeconds)
 		)
 		#if os(iOS) || os(tvOS) || os(visionOS)
 		let metadata = player.currentItem?.externalMetadata ?? []
@@ -759,12 +763,10 @@ class PlayerViewController: ObservableObject {
 					}
 
 					self.isSeeking = true
-					let toleranceBefore = CMTime(seconds: 5, preferredTimescale: 600)
-					let toleranceAfter = CMTime(seconds: 2, preferredTimescale: 600)
 					player.seek(
 						to: resumeTime,
-						toleranceBefore: toleranceBefore,
-						toleranceAfter: toleranceAfter
+						toleranceBefore: .zero,
+						toleranceAfter: .zero
 					) { [weak self, weak player] finished in
 						Task { @MainActor in
 							guard let self, let player else { return }
