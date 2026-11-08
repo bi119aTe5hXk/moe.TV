@@ -36,6 +36,10 @@ struct VideoPlayerView: View {
 
     @AppStorage("dividerPosition") private var dividerPosition: Double = 0.7 // left
     @GestureState private var dragOffset: CGFloat = 0
+	@State private var presentFeedback = false
+	#if os(iOS)
+	@State private var orientationRequestTask: Task<Void, Never>?
+	#endif
     
     private var playerSurfaceMode: PlayerSurfaceMode {
         #if os(tvOS)
@@ -65,8 +69,16 @@ struct VideoPlayerView: View {
         return {
             detailVC?.closePlayer()
         }
-        #endif
-    }
+		#endif
+	}
+
+	private var playerFeedbackAction: (() -> Void)? {
+		guard settingsHandler.getAlbireoAuthMode() == .albireoV2OAuth,
+			  ep?.video_files?.isEmpty == false else {
+			return nil
+		}
+		return { presentFeedback = true }
+	}
 
     private func handleStatus(_ status: AVPlayer.TimeControlStatus?) {
         playerVM.playerObserverHandler(
@@ -117,7 +129,8 @@ struct VideoPlayerView: View {
                                             mode: playerSurfaceMode,
                                             title: playerChromeTitle,
                                             subtitle: playerChromeSubtitle,
-                                            onClose: playerChromeCloseAction
+                                            onClose: playerChromeCloseAction,
+                                            onFeedback: playerFeedbackAction
                                         )
                                             .persistentSystemOverlays(.hidden)
                                     }.frame(width: leftWidth)
@@ -160,7 +173,8 @@ struct VideoPlayerView: View {
                                 mode: playerSurfaceMode,
                                 title: playerChromeTitle,
                                 subtitle: playerChromeSubtitle,
-                                onClose: playerChromeCloseAction
+                                onClose: playerChromeCloseAction,
+                                onFeedback: playerFeedbackAction
                             )
                                 .persistentSystemOverlays(.hidden)
                         }
@@ -178,7 +192,8 @@ struct VideoPlayerView: View {
                             mode: playerSurfaceMode,
                             title: playerChromeTitle,
                             subtitle: playerChromeSubtitle,
-                            onClose: playerChromeCloseAction
+                            onClose: playerChromeCloseAction,
+                            onFeedback: playerFeedbackAction
                         )
                             .persistentSystemOverlays(.hidden)
                     }
@@ -200,7 +215,8 @@ struct VideoPlayerView: View {
                                         mode: playerSurfaceMode,
                                         title: playerChromeTitle,
                                         subtitle: playerChromeSubtitle,
-                                        onClose: playerChromeCloseAction
+                                        onClose: playerChromeCloseAction,
+                                        onFeedback: playerFeedbackAction
                                     )
                                 }.frame(width: leftWidth)
                                 Divider()
@@ -237,12 +253,24 @@ struct VideoPlayerView: View {
         }
         .background(Color.black.ignoresSafeArea())
         .edgesIgnoringSafeArea(.all)
+		#if !os(tvOS)
+		.sheet(isPresented: $presentFeedback) {
+			if let ep {
+				EpisodeFeedbackView(episode: ep, preferredVideoURL: url)
+			}
+		}
+		#endif
         .onAppear {
             PlayerPresentationState.shared.beginPresentation()
             #if os(iOS)
-                if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback() {
-                    OrientationController.shared.lockOrientation(to: .landscapeRight)
-                }
+				orientationRequestTask?.cancel()
+				if UIDevice.current.userInterfaceIdiom == .phone && settingsHandler.getLandscapePlayback() {
+					orientationRequestTask = Task { @MainActor in
+						try? await Task.sleep(nanoseconds: 150_000_000)
+						guard !Task.isCancelled else { return }
+						OrientationController.shared.lockOrientation(to: .landscapeRight)
+					}
+				}
             #endif
 			playerVM.loadFromUrl(url: url, useStreamingCache: !isOffline && !url.isFileURL)
             if let player = playerVM.avPlayer {
@@ -301,6 +329,8 @@ struct VideoPlayerView: View {
                 }
             }
             #if os(iOS)
+				orientationRequestTask?.cancel()
+				orientationRequestTask = nil
                 if UIDevice.current.userInterfaceIdiom == .phone {
                     OrientationController.shared.restorePortraitThenUnlock()
                 }

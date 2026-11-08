@@ -31,6 +31,7 @@ struct CustomPlayerControlsView: View {
 	var title: String?
 	var subtitle: String?
 	var onClose: (() -> Void)?
+	var onFeedback: (() -> Void)?
 
 	@State private var isControlsVisible = true
 	@State private var scrubTime: Double = 0
@@ -186,6 +187,20 @@ struct CustomPlayerControlsView: View {
 				.padding(.horizontal, 10)
 				.padding(.vertical, 6)
 				.background(.black.opacity(0.42), in: Capsule())
+			}
+
+			if let onFeedback {
+				Button {
+					onFeedback()
+					showControlsTemporarily()
+				} label: {
+					Image(systemName: "exclamationmark.bubble")
+						.font(.system(size: 20, weight: .semibold))
+						.frame(width: 44, height: 44)
+						.background(.black.opacity(0.34), in: Circle())
+				}
+				.buttonStyle(.plain)
+				.accessibilityLabel("Report video issue")
 			}
 		}
 		.padding(.horizontal, 28)

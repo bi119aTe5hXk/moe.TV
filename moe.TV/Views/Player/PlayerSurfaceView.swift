@@ -24,6 +24,7 @@ struct PlayerSurfaceView: View {
 	var title: String?
 	var subtitle: String?
 	var onClose: (() -> Void)?
+	var onFeedback: (() -> Void)?
 
 	var body: some View {
 		Group {
@@ -49,7 +50,8 @@ struct PlayerSurfaceView: View {
 					onStatus: onStatus,
 					title: title,
 					subtitle: subtitle,
-					onClose: onClose
+					onClose: onClose,
+					onFeedback: onFeedback
 				)
 			}
 		}

@@ -8,6 +8,9 @@
 import CryptoKit
 import Foundation
 import MiraStreamingSDK
+#if os(iOS)
+import UIKit
+#endif
 
 private let albireoV2SettingsHandler = SettingsHandler()
 private let albireoV2Scopes = "openid offline_access profile bookmark"
@@ -353,7 +356,7 @@ func getAlbireoV2FavoriteList(status: FavoriteStatus,
 		operation: { configuration in
 			let response = try await FavoriteAPI(apiConfiguration: configuration).listFavorites(
 				status: status,
-				enableEpsUpdateTime: false,
+				enableEpsUpdateTime: true,
 				countUnwatched: true,
 				coverImage: false,
 				offset: offset,
@@ -460,6 +463,66 @@ func syncAlbireoV2EpisodeWatchProgress(epID: String,
 			completion(success, result)
 		}
 	)
+}
+
+func submitAlbireoV2EpisodeFeedback(
+	episodeID: String,
+	videoID: String,
+	issue: String,
+	completion: @escaping (Bool, Any?) -> Void
+) {
+	guard let episodeUUID = UUID(uuidString: episodeID),
+		  let videoUUID = UUID(uuidString: videoID) else {
+		completion(false, "Invalid Albireo V2 episode or video id.")
+		return
+	}
+
+	let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
+	let majorVersion = appVersion.split(separator: ".").first.map(String.init) ?? appVersion
+	let request = FeedbackRequest(
+		deviceType: albireoV2FeedbackDeviceType(),
+		os: ProcessInfo.processInfo.operatingSystemVersionString,
+		browser: BrowserInfo(
+			name: "moe.TV",
+			version: appVersion,
+			majorVersion: majorVersion,
+			webview: false,
+			chromium: false,
+			webkit: false
+		),
+		userAgent: AppConstants.userAgent,
+		issue: issue,
+		videoId: videoUUID
+	)
+
+	performAlbireoV2SDKRequest(
+		label: "episode feedback \(episodeID)",
+		operation: { configuration in
+			try await EpisodeAPI(apiConfiguration: configuration).submitEpisodeFeedback(
+				episodeId: episodeUUID,
+				feedbackRequest: request
+			)
+		},
+		completion: { success, result in
+			completion(success, result)
+		}
+	)
+}
+
+private func albireoV2FeedbackDeviceType() -> String {
+	#if targetEnvironment(macCatalyst)
+	return "Mac Catalyst"
+	#elseif os(iOS)
+	return UIDevice.current.model
+	#elseif os(macOS)
+	return "Mac"
+	#elseif os(tvOS)
+	return "Apple TV"
+	#elseif os(visionOS)
+	return "Apple Vision"
+	#else
+	return "Apple device"
+	#endif
 }
 
 private func performAlbireoV2SDKRequest<T: Sendable>(

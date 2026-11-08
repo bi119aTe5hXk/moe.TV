@@ -11,10 +11,14 @@ import SDWebImageSwiftUI
 
 struct EPCellView: View {
 	let newEPItem: NewEPItem
+	@Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State var showVideoFileExisitAlert = false
     @State var showNotDownloadableAlert = false
     @State private var loadFailed = false
     @State private var resolvedLocalOfflineItem: OfflineVideoItem?
+	@State private var feedbackEpisode: EpisodeDetailModel?
+	@State private var showFeedbackLoadError = false
+	@State private var feedbackLoadErrorMessage = ""
 
     @ObservedObject var detailVC: BangumiDetailViewController
     @EnvironmentObject var downloadManager: DownloadManager
@@ -39,7 +43,7 @@ struct EPCellView: View {
         return nil
     }
 
-    private var downloadMenuTitle: String {
+	private var downloadMenuTitle: LocalizedStringKey {
         if let activeDownload {
             return "Downloading \(Int(activeDownload.progress * 100))%"
         }
@@ -49,6 +53,10 @@ struct EPCellView: View {
         return "Download"
     }
 
+	private var canReportVideoIssue: Bool {
+		SettingsHandler().getAlbireoAuthMode() == .albireoV2OAuth
+	}
+
 	private var isDownloadButtonDisabled: Bool {
 		isEmptyEP || activeDownload != nil || localOfflineItem != nil
 	}
@@ -57,84 +65,92 @@ struct EPCellView: View {
 		newEPItem.ep.status != 2 && activeDownload == nil && localOfflineItem == nil
 	}
 
+	private var thumbnailWidth: CGFloat {
+		#if os(tvOS)
+		return 300
+		#else
+		return horizontalSizeClass == .compact ? 120 : 260
+		#endif
+	}
+
+	private var thumbnailHeight: CGFloat {
+		thumbnailWidth * 9 / 16
+	}
+
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             Button(
                 action: playEpisode,
                 label: {
-					if newEPItem.ep.status != 2 || loadFailed {
-						Text("No Picture")
-                    } else {
-                        ZStack {
-							if let thumbnail = newEPItem.ep.thumbnail,
-							   let thumbnailURL = resizedImageURL(
-								fixPathNotCompete(path: thumbnail),
-								pixelWidth: 600,
-								pixelHeight: 338
-							   ) {
+					HStack(spacing: 12) {
+						ZStack {
+							Color.black.opacity(0.18)
+
+							if newEPItem.ep.status != 2 || loadFailed {
+								Text("No Picture")
+									.font(.caption)
+									.foregroundColor(.secondary)
+							} else if let thumbnail = newEPItem.ep.thumbnail,
+								  let thumbnailURL = resizedImageURL(
+									fixPathNotCompete(path: thumbnail),
+									pixelWidth: 600,
+									pixelHeight: 338
+								  ) {
 								WebImage(
 									url: thumbnailURL,
 									options: [.retryFailed]
 								) { image in
-                                    image.resizable()
-                                } placeholder: {
-                                    ZStack {
-                                        ProgressView() {
-                                            VStack {
-                                                Text("Loading...")
-                                            }
-                                        }
-                                    }
-                                }
+									image.resizable()
+								} placeholder: {
+									ProgressView {
+										Text("Loading...")
+									}
+								}
 								.onFailure { error in
 									print("Episode thumbnail failed: \(thumbnailURL.absoluteString), error: \(error)")
 									DispatchQueue.main.async {
 										loadFailed = true
 									}
-                                }
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: 300)
-                                .cornerRadius(10)
+								}
+								.resizable()
+								.scaledToFit()
 
-                                if !self.isEmptyEP {
-                                    Image(systemName: "play.circle.fill")
-                                        .font(.largeTitle)
-                                        .foregroundColor(.gray)
-                                }
-                            }
-                        }
-                    }
+								if !isEmptyEP {
+									Image(systemName: "play.circle.fill")
+										.font(.largeTitle)
+										.foregroundColor(.gray)
+								}
+							}
+						}
+						.frame(width: thumbnailWidth, height: thumbnailHeight)
+						.clipShape(RoundedRectangle(cornerRadius: 10))
 
-                    Spacer()
+						VStack(alignment: .leading, spacing: 4) {
+							HStack(spacing: 4) {
+								Text("\(newEPItem.ep.episode_no ?? 0).")
+								if let name = newEPItem.ep.name, !name.isEmpty {
+									Text(name)
+										.lineLimit(1)
+								}
+							}
 
-                    VStack {
-                        HStack {
-                            Text("\(newEPItem.ep.episode_no ?? 0). ")
-                            if !((newEPItem.ep.name ?? "").isEmpty) {
-                                Text("\(newEPItem.ep.name ?? "")")
-                                    .lineLimit(1)
-                                    .background(Color.clear)
-                            }
-                        }
-                        if !((newEPItem.ep.name_cn ?? "").isEmpty) {
-                            Text("\(newEPItem.ep.name_cn ?? "")")
-                                .lineLimit(1)
-                                .background(Color.clear)
-                        }
+							if let nameCN = newEPItem.ep.name_cn, !nameCN.isEmpty {
+								Text(nameCN)
+									.lineLimit(1)
+									.foregroundColor(.secondary)
+							}
 
-                        if let activeDownload {
-                            VStack(alignment: .leading, spacing: 4) {
-                                ProgressView(value: activeDownload.progress)
-                                Text("Downloading \(Int(activeDownload.progress * 100))%")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .frame(maxWidth: 220)
-                        }
-                    }
-
-                    Spacer()
+							if let activeDownload {
+								VStack(alignment: .leading, spacing: 4) {
+									ProgressView(value: activeDownload.progress)
+									Text("Downloading \(Int(activeDownload.progress * 100))%")
+										.font(.caption)
+										.foregroundColor(.secondary)
+								}
+								.frame(maxWidth: 220)
+							}
+						}
+						.frame(maxWidth: .infinity, alignment: .leading)
 
                     EPCellProgressView(
                         bgmWatchStatus: .constant(newEPItem.bgmEP?.type ?? 0),
@@ -143,6 +159,7 @@ struct EPCellView: View {
                     )
                     .frame(maxWidth: 100, maxHeight: 100)
                     .padding(10)
+					}
                 }
             )
             .buttonStyle(.plain)
@@ -157,6 +174,11 @@ struct EPCellView: View {
                     }
                 }
                 Button("Show in bgm.tv", action: openBangumi)
+				if canReportVideoIssue {
+					Button(action: prepareFeedback) {
+						Label("Report video issue", systemImage: "exclamationmark.bubble")
+					}
+				}
             } label: {
                 Image(systemName: "ellipsis.circle")
                     .resizable()
@@ -171,6 +193,14 @@ struct EPCellView: View {
         }
         .background(Color.clear)
         .padding(10)
+		.sheet(item: $feedbackEpisode) { episode in
+			EpisodeFeedbackView(episode: episode)
+		}
+		.alert("Unable to open feedback", isPresented: $showFeedbackLoadError) {
+			Button("OK", role: .cancel) {}
+		} message: {
+			Text(feedbackLoadErrorMessage)
+		}
         .alert("Already downloaded, if you want to replace the file, please delete it in download manager.", isPresented: self.$showVideoFileExisitAlert) {
         }
         .alert("No video file.", isPresented: self.$showNotDownloadableAlert) {
@@ -179,6 +209,25 @@ struct EPCellView: View {
             resolveLocalDownloadIfNeeded()
         }
     }
+
+	private func prepareFeedback() {
+		getAlbireoEPDetail(ep_id: newEPItem.ep.id) { success, result in
+			DispatchQueue.main.async {
+				guard success, let episode = result as? EpisodeDetailModel else {
+					feedbackLoadErrorMessage = result as? String
+						?? String(localized: "Unable to open feedback")
+					showFeedbackLoadError = true
+					return
+				}
+				guard episode.video_files?.isEmpty == false else {
+					feedbackLoadErrorMessage = String(localized: "No video source is available for feedback.")
+					showFeedbackLoadError = true
+					return
+				}
+				feedbackEpisode = episode
+			}
+		}
+	}
 
     private func playEpisode() {
         detailVC.selectedID = newEPItem.ep.id
